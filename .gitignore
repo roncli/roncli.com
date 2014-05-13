@@ -249,3 +249,6 @@ UpgradeLog*.htm
 
 # Microsoft Fakes
 FakesAssemblies/
+
+### Rendr ###
+compiledTemplates.js
