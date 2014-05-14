@@ -1,113 +1,79 @@
-var path = require('path');
+var path = require("path");
 
-var stylesheetsDir = 'assets/stylesheets';
-
+/**
+ * Setup project configuration.
+ * @param {object} grunt - The grunt object.
+ */
 module.exports = function(grunt) {
-    // Project configuration.
-    grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
+    "use strict";
 
+    // Load the initial configuration.
+    grunt.initConfig({
+        // Read in the initial configuration.
+        pkg: grunt.file.readJSON("package.json"),
+
+        // Setup handlebars.
         handlebars: {
             compile: {
                 options: {
                     namespace: false,
                     commonjs: true,
+
+                    /**
+                     * Returns the require path for the file.
+                     * @param {string} filename - The filename of the template to process.
+                     */
                     processName: function(filename) {
-                        return filename.replace('app/templates/', '').replace('.hbs', '');
+                        return filename.replace("app/templates/", "").replace(".hbs", "");
                     }
                 },
                 src: "app/templates/**/*.hbs",
                 dest: "app/templates/compiledTemplates.js",
+
+                /**
+                 * Exclude files that begin with two underscores.
+                 * @param {string} filepath - The filename to filter.
+                 */
                 filter: function(filepath) {
-                    var filename = path.basename(filepath);
-                    // Exclude files that begin with '__' from being sent to the client,
-                    // i.e. __layout.hbs.
-                    return filename.slice(0, 2) !== '__';
+                    return path.basename(filepath).slice(0, 2) !== "__";
                 }
             }
         },
 
-        watch: {
-            scripts: {
-                files: 'app/**/*.js',
-                tasks: ['browserify'],
-                options: {
-                    interrupt: true
-                }
-            },
-            templates: {
-                files: 'app/**/*.hbs',
-                tasks: ['handlebars'],
-                options: {
-                    interrupt: true
-                }
-            },
-            stylesheets: {
-                files: [stylesheetsDir + '/**/*.styl', stylesheetsDir + '/**/*.css'],
-                tasks: ['stylus'],
-                options: {
-                    interrupt: true
-                }
-            }
-        },
-
+        // Setup browserify to send node assets to the client.
         browserify: {
             options: {
                 debug: true,
-                alias: [
-                    'node_modules/rendr-handlebars/index.js:rendr-handlebars'
-                ],
+                alias: ["node_modules/rendr-handlebars/index.js:rendr-handlebars"],
                 aliasMappings: [
                     {
-                        cwd: 'app/',
-                        src: ['**/*.js'],
-                        dest: 'app/'
+                        cwd: "app/",
+                        src: ["**/*.js"],
+                        dest: "app/"
                     }
                 ],
                 shim: {
                     jquery: {
-                        path: 'assets/vendor/jquery-1.9.1.min.js',
-                        exports: '$'
+                        path: "assets/vendor/jquery-2.1.1.min.js",
+                        exports: "$"
                     }
                 }
             },
             app: {
-                src: [ 'app/**/*.js' ],
-                dest: 'public/mergedAssets.js'
-            },
-            tests: {
-                src: [
-                    'test/helper.js',
-                    'test/app/**/*.js'
-                ],
-                dest: 'public/testBundle.js'
+                src: ["app/**/*.js"],
+                dest: "public/mergedAssets.js"
             }
         }
     });
 
-    grunt.loadNpmTasks('grunt-browserify');
-    grunt.loadNpmTasks('grunt-contrib-handlebars');
-    grunt.loadNpmTasks('grunt-contrib-stylus');
-    grunt.loadNpmTasks('grunt-contrib-watch');
+    // Load Browserify and Handlebars compilers.
+    grunt.loadNpmTasks("grunt-browserify");
+    grunt.loadNpmTasks("grunt-contrib-handlebars");
 
-    grunt.registerTask('runNode', function() {
-        grunt.util.spawn({
-            cmd: 'node',
-            args: ['./node_modules/nodemon/nodemon.js', 'index.js'],
-            opts: {
-                stdio: 'inherit'
-            }
-        }, function() {
-            grunt.fail.fatal(new Error("nodemon quit"));
-        });
-    });
 
-    grunt.registerTask('compile', ['handlebars', 'browserify']);
+    // Compile handlebars and browserify.
+    grunt.registerTask("compile", ["handlebars", "browserify"]);
 
-    // Run the server and watch for file changes
-    grunt.registerTask('server', ['compile', 'runNode', 'watch']);
-
-    // Default task(s).
-    grunt.registerTask('default', ['compile']);
-
+    // Default tasks.
+    grunt.registerTask("default", ["compile"]);
 };
