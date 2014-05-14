@@ -1,5 +1,5 @@
-var BaseApp = require('rendr/shared/app')
-    , handlebarsHelpers = require('./lib/handlebarsHelpers');
+var BaseApp = require('rendr/shared/app'),
+    handlebarsHelpers = require('./lib/handlebarsHelpers');
 
 // Extend the BaseApp class, adding any custom methods or overrides.
 module.exports = BaseApp.extend({
@@ -28,7 +28,7 @@ module.exports = BaseApp.extend({
             this.set({loading: false});
         }, this);
 
-        // Call 'super'.
+        // Call base function.
         BaseApp.prototype.start.call(this);
     }
 });
