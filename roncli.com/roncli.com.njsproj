@@ -16,7 +16,35 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
+    <Content Include="app\templates\home.hbs" />
+    <Content Include="app\templates\__layout.hbs" />
     <Content Include="package.json" />
+    <Content Include="README.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="app\app.js" />
+    <Compile Include="app\controllers\home_controller.js" />
+    <Compile Include="app\lib\handlebarsHelpers.js" />
+    <Compile Include="app\router.js" />
+    <Compile Include="app\routes.js" />
+    <Compile Include="app\views\home.js" />
+    <Compile Include="assets\vendor\jquery-2.1.1.min.js" />
+    <Compile Include="gruntfile.js" />
+    <Compile Include="index.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="app\" />
+    <Folder Include="app\collections\" />
+    <Folder Include="app\controllers\" />
+    <Folder Include="app\lib\" />
+    <Folder Include="app\models\" />
+    <Folder Include="app\templates\" />
+    <Folder Include="app\views\" />
+    <Folder Include="assets\" />
+    <Folder Include="assets\vendor\" />
+    <Folder Include="config\" />
+    <Folder Include="public\" />
+    <Folder Include="server\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
