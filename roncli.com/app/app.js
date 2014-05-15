@@ -30,5 +30,14 @@ module.exports = BaseApp.extend({
 
         // Call base function.
         BaseApp.prototype.start.call(this);
+    },
+
+    /**
+     * Client-only setting of the app view.
+     */
+    getAppViewClass: function() {
+        "use strict";
+
+        return require("./views/app_view");
     }
 });

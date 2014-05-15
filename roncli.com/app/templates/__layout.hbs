@@ -2,21 +2,100 @@
 <html>
 <head>
     <title>roncli.com</title>
+    <link href="/css/bootstrap-theme.css" rel="stylesheet" />
+    <link href="/css/bootstrap-override.css" rel="stylesheet" />
+    <script src="/mergedAssets.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <h1>Welcome!</h1>
-    <section id="content" class="container">
-        {{{body}}}
-    </section>
-    &copy;{{copyright}}
-    <script src="/mergedAssets.js"></script>
-    <script>
-        (function() {
-            var App = window.App = new (require('app/app'))({{json appData}});
-            App.bootstrapData({{json bootstrappedData}});
-            App.start();
-        })();
-    </script>
-
+<div class="container">
+    <div class="jumbotron text-center">
+      	<img src="http://placehold.it/459x76" /><br />
+        Music. Coding. Gaming. Life.
+  	</div>
+  	<div class="navbar navbar-default navbar-xs" role="navigation">
+      	<div class="">
+	    	<div class="navbar-header">
+		      	<button type="button" class="navbar-toggle" data-toggle="collapse" data-toggle="collapse" data-target="#navigation">
+			        <span class="sr-only">Toggle navigation</span>
+			        <span class="icon-bar"></span>
+			        <span class="icon-bar"></span>
+			        <span class="icon-bar"></span>
+				</button>
+		    </div>
+		  	<div class="collapse navbar-collapse" id="navigation">
+			    <div class="nav navbar-default">
+			        <ul class="nav navbar-nav">
+			            <li><a href="#">Test</a></li>
+			        </ul>
+			        <ul class="nav navbar-nav navbar-right">
+			            <li><a href="#">Login</a></li>
+			        </ul>
+              	</div>
+		    </div>
+	  	</div>
+  	</div>
+	<div class="row">
+	  	<div class="col-xs-4 col-sm-2">
+	      	<div class="btn-group-vertical btn-group-xs" style="width: 100%;">
+	          	<div class="btn inactive btn-info">Navigation</div>
+				<button type="button" class="btn btn-default">Home</button>
+				<button type="button" class="btn btn-default">Blog</button>
+				<button type="button" class="btn btn-default">Music</button>
+				<button type="button" class="btn btn-default">Coding</button>
+				<button type="button" class="btn btn-default">Gaming</button>
+				<button type="button" class="btn btn-default">Life</button>
+			</div>
+			<div class="well">
+            	<div class="header">
+                  	<a href="http://twitter.com" target="_blank"><img src="http://widgets.twimg.com/i/widget-logo.png" alt="Twitter"></a><br />
+                  	<a target="_blank" href="http://www.twitter.com/intent/user?screen_name=roncli">@roncli</a>
+              	</div>
+              	<div class="body">
+                  	<div id="tweets">
+                      	<img class="loading" src="http://placehold.it/32x32" alt="Loading" />
+                  	</div>
+              	</div>
+              	<div class="footer">
+                  	<a href="http://twitter.com/roncli" target="_blank">Join the conversation</a>
+              	</div>
+			</div>
+          	<div class="btn-group-vertical btn-group-xs" style="width: 100%;">
+              	<div class="btn inactive btn-info">Contacts</div>
+              	<button type="button" class="btn btn-default">Email</button>
+              	<button type="button" class="btn btn-default">Facebook</button>
+              	<button type="button" class="btn btn-default">Google+</button>
+              	<button type="button" class="btn btn-default">Twitter</button>
+          	</div>
+          	<div class="divider"></div>
+          	<div class="btn-group-vertical btn-group-xs" style="width: 100%;">
+              	<div class="btn inactive btn-info">Hosted Sites</div>
+              	<button type="button" class="btn btn-default">Cheevos FTW!</button>
+              	<button type="button" class="btn btn-default">June 20, 2009</button>
+              	<button type="button" class="btn btn-default">Outpost Music</button>
+              	<button type="button" class="btn btn-default">roncli.com Logs</button>
+              	<button type="button" class="btn btn-default">Six Minutes To Release</button>
+              	<button type="button" class="btn btn-default">The Nightstalker's Discography</button>
+              	<button type="button" class="btn btn-default">TiS Backup</button>
+          	</div>
+	  	</div>
+        <section id="content" class="container">
+            {{{body}}}
+		  	<!--div class="col-xs-8">
+		      	Center content
+	  		</div>
+	  		<div class="col-sm-2 hidden-xs">
+	      		Right nav
+	  		</div-->
+      	</section>
+ 	</div>
+</div>
+<script>
+    (function() {
+        var App = window.App = new (require('app/app'))({{json appData}});
+        App.bootstrapData({{json bootstrappedData}});
+        App.start();
+    })();
+</script>
 </body>
 </html>

@@ -1,0 +1,15 @@
+/* Fix to get the last element in a right side navbar to not go all the way to the margin. */
+ul.navbar-right li:last-child a {
+    margin-right: 15px;
+}
+
+/* Add vertical spacing to vertical button groups. */
+.btn-group-vertical {
+    margin-bottom: 20px;
+}
+
+/* Create an inactive button */
+.btn.inactive {
+    cursor: not-allowed;
+    pointer-events: none;
+}
