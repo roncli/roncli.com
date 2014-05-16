@@ -9,6 +9,7 @@
     },
     "dependencies": {
         "express": "~3",
+        "jquery": "2.1.1",
         "rendr": "0.5.0",
         "rendr-handlebars": "0.2.0",
         "underscore": "1.6.0"

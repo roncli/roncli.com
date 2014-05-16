@@ -6,23 +6,24 @@ html, body {
     min-height: 100%;
     height: auto !important;
     height: 100%;
-    margin: 0 auto -49px;
+    margin: 0 auto -51px;
 }
 
 .site-footer,
 .site-push {
-    height: 49px;
+    height: 51px;
 }
 
 .site-footer .row {
     margin: 0;
     border: none;
     border-radius: 0;
+    height: 51px;
 }
 
 .site-footer .row > div {
     text-align: center;
-    font-size: 12px;
+    font-size: 13px;
     padding: 0;
     line-height: 1.3;
 }
