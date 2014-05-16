@@ -1,15 +1,83 @@
-/* Fix to get the last element in a right side navbar to not go all the way to the margin. */
-ul.navbar-right li:last-child a {
-    margin-right: 15px;
+/* ABF font */
+@font-face {
+    font-family: "abf";
+    src: url("/fonts/abf-webfont.eot");
+    src: url("/fonts/abf-webfont.eot?#iefix") format("embedded-opentype"),
+        url("/fonts/abf-webfont.woff") format("woff"),
+        url("/fonts/abf-webfont.ttf") format("truetype"),
+        url("/fonts/abf-webfont.svg#abf-webfont") format("svg");
+    font-weight: normal;
+    font-style: normal;
 }
 
-/* Add vertical spacing to vertical button groups. */
-.btn-group-vertical {
-    margin-bottom: 20px;
+body {
+    font-size: 15px;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+    font-family: abf, Verdana, Arial, sans-serif;
 }
 
 /* Create an inactive button */
 .btn.inactive {
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Jumbotron */
+.jumbotron {
+    margin: 20px 0;
+    padding: 20px;
+}
+
+/* Navbar */
+.navbar {
+    min-height: 20px;
+}
+
+.navbar-nav > li > a {
+    padding: 5px 10px;
+}
+
+ul.navbar-right li:last-child a {
+    margin-right: 10px;
+}
+
+/* Button groups */
+.btn-group-vertical {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.btn-group-vertical .btn {
+    font-size: 15px;
+    white-space: normal;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.btn-group-vertical .btn-default:hover {
+    color: #ffffff;
+    background-color: #576e3f;
+    border-color: #4a5e36;
+}
+
+.btn-group-vertical .btn-default.active {
+    color: #ffffff;
+    background-color: #796c45;
+    border-color: #695e3c;
     cursor: not-allowed;
     pointer-events: none;
 }

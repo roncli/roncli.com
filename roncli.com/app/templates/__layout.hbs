@@ -3,92 +3,108 @@
 <head>
     <title>roncli.com</title>
     <link href="/css/bootstrap-theme.css" rel="stylesheet" />
-    <link href="/css/bootstrap-override.css" rel="stylesheet" />
+    <link href="/css/bootstrap-override.css" rel="stylesheet"/>
+    <link href="/css/site.css" rel="stylesheet"/>
     <script src="/mergedAssets.js"></script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-<div class="container">
-    <div class="jumbotron text-center">
-      	<img src="http://placehold.it/459x76" /><br />
-        Music. Coding. Gaming. Life.
-  	</div>
-  	<div class="navbar navbar-default navbar-xs" role="navigation">
-      	<div class="">
-	    	<div class="navbar-header">
-		      	<button type="button" class="navbar-toggle" data-toggle="collapse" data-toggle="collapse" data-target="#navigation">
-			        <span class="sr-only">Toggle navigation</span>
-			        <span class="icon-bar"></span>
-			        <span class="icon-bar"></span>
-			        <span class="icon-bar"></span>
-				</button>
-		    </div>
-		  	<div class="collapse navbar-collapse" id="navigation">
-			    <div class="nav navbar-default">
-			        <ul class="nav navbar-nav">
-			            <li><a href="#">Test</a></li>
-			        </ul>
-			        <ul class="nav navbar-nav navbar-right">
-			            <li><a href="#">Login</a></li>
-			        </ul>
-              	</div>
-		    </div>
-	  	</div>
-  	</div>
-	<div class="row">
-	  	<div class="col-xs-4 col-sm-2">
-	      	<div class="btn-group-vertical btn-group-xs" style="width: 100%;">
-	          	<div class="btn inactive btn-info">Navigation</div>
-				<button type="button" class="btn btn-default">Home</button>
-				<button type="button" class="btn btn-default">Blog</button>
-				<button type="button" class="btn btn-default">Music</button>
-				<button type="button" class="btn btn-default">Coding</button>
-				<button type="button" class="btn btn-default">Gaming</button>
-				<button type="button" class="btn btn-default">Life</button>
-			</div>
-			<div class="well">
-            	<div class="header">
-                  	<a href="http://twitter.com" target="_blank"><img src="http://widgets.twimg.com/i/widget-logo.png" alt="Twitter"></a><br />
-                  	<a target="_blank" href="http://www.twitter.com/intent/user?screen_name=roncli">@roncli</a>
-              	</div>
-              	<div class="body">
-                  	<div id="tweets">
-                      	<img class="loading" src="http://placehold.it/32x32" alt="Loading" />
-                  	</div>
-              	</div>
-              	<div class="footer">
-                  	<a href="http://twitter.com/roncli" target="_blank">Join the conversation</a>
-              	</div>
-			</div>
-          	<div class="btn-group-vertical btn-group-xs" style="width: 100%;">
-              	<div class="btn inactive btn-info">Contacts</div>
-              	<button type="button" class="btn btn-default">Email</button>
-              	<button type="button" class="btn btn-default">Facebook</button>
-              	<button type="button" class="btn btn-default">Google+</button>
-              	<button type="button" class="btn btn-default">Twitter</button>
-          	</div>
-          	<div class="divider"></div>
-          	<div class="btn-group-vertical btn-group-xs" style="width: 100%;">
-              	<div class="btn inactive btn-info">Hosted Sites</div>
-              	<button type="button" class="btn btn-default">Cheevos FTW!</button>
-              	<button type="button" class="btn btn-default">June 20, 2009</button>
-              	<button type="button" class="btn btn-default">Outpost Music</button>
-              	<button type="button" class="btn btn-default">roncli.com Logs</button>
-              	<button type="button" class="btn btn-default">Six Minutes To Release</button>
-              	<button type="button" class="btn btn-default">The Nightstalker's Discography</button>
-              	<button type="button" class="btn btn-default">TiS Backup</button>
-          	</div>
-	  	</div>
-        <section id="content" class="container">
-            {{{body}}}
-		  	<!--div class="col-xs-8">
-		      	Center content
-	  		</div>
-	  		<div class="col-sm-2 hidden-xs">
-	      		Right nav
-	  		</div-->
-      	</section>
- 	</div>
+<div class="site-wrapper">
+    <div class="container">
+        <div class="jumbotron text-center">
+            <img src="/images/roncliLogo.png" /><br />
+            <b>Music. Coding. Gaming. Life.</b>
+        </div>
+        <div class="navbar navbar-default navbar-xs" role="navigation">
+            <div class="">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-toggle="collapse" data-target="#navigation">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                </div>
+                <div class="collapse navbar-collapse" id="navigation">
+                    <div class="nav navbar-default">
+                        <ul class="nav navbar-nav">
+                            <li><a href="#">Test</a></li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="#">Login</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xs-4 col-sm-2">
+                <div class="btn-group-vertical btn-group-xs">
+                    <div class="btn inactive btn-info">Navigation</div>
+                    <a class="btn btn-default" href="/">Home</a>
+                    <a class="btn btn-default" href="/blog">Blog</a>
+                    <a class="btn btn-default" href="/music">Music</a>
+                    <a class="btn btn-default" href="/coding">Coding</a>
+                    <a class="btn btn-default" href="/gaming">Gaming</a>
+                    <a class="btn btn-default" href="/life">Life</a>
+                </div>
+                <div class="btn-group-vertical btn-group-xs">
+                    <a class="btn btn-info" href="http://twitter.com" target="_blank"><img src="http://widgets.twimg.com/i/widget-logo.png" alt="Twitter"></a>
+                    <a class="btn btn-default" href="http://twitter.com/roncli" target="_blank">@roncli</a>
+                    <div class="btn btn-default inactive tweets"><img src="/images/loading.gif" alt="Loading..." /></div>
+                </div>
+                <div class="btn-group-vertical btn-group-xs" style="width: 100%;">
+                    <div class="btn inactive btn-info">Contacts</div>
+                    <a class="btn btn-default" href="mailto:roncli@roncli.com">Email</a>
+                    <a class="btn btn-default" href="http://www.facebook.com/roncli" target="_blank">Facebook</a>
+                    <a class="btn btn-default" href="https://plus.google.com/+RonaldClifford" target="_blank">Google+</a>
+                    <a class="btn btn-default" href="http://twitter.com/roncli" target="_blank">Twitter</a>
+                </div>
+                <div class="divider"></div>
+                <div class="btn-group-vertical btn-group-xs" style="width: 100%;">
+                    <div class="btn inactive btn-info">Hosted Sites</div>
+                    <a class="btn btn-default">Cheevos FTW!</a>
+                    <a class="btn btn-default">June 20, 2009</a>
+                    <a class="btn btn-default">Outpost Music</a>
+                    <a class="btn btn-default">roncli.com Logs</a>
+                    <a class="btn btn-default" href="http://www.six-minutes.com" target="_blank">Six Minutes To Release</a>
+                    <a class="btn btn-default">The Nightstalker's Discography</a>
+                    <a class="btn btn-default">TiS Backup</a>
+                </div>
+            </div>
+            <section id="content" class="container">
+                {{{body}}}
+                <!--div class="col-xs-8">
+                    Center content
+                </div>
+                <div class="col-sm-2 hidden-xs">
+                    Right nav
+                </div-->
+            </section>
+        </div>
+    </div>
+    <div class="site-push"></div>
+</div>
+<div class="site-footer">
+    <div class="panel row">
+        <div class="col-sm-4 col-sm-push-4 col-xs-12">
+            Content &copy;2002-{{year}} Ronald M. Clifford<br />
+            Web Design &copy;2010-{{year}} roncli Productions<br />
+            Fugue Icons &copy;2010-{{year}} <a href="http://p.yusukekamiyamane.com/" target="_blank">Yusuke Kamiyamane</a><br />
+        </div>
+        <div class="col-sm-4 col-sm-pull-4 hidden-xs">
+            Website Version 0.0.1<br />
+            <a href="http://chrome.google.com" class="browser" target="_blank"><img src="/images/browsers/chrome.png" alt="Chrome"></a>
+            <a href="http://www.firefox.com" class="browser" target="_blank"><img src="/images/browsers/firefox.png" alt="Firefox"></a>
+            Best viewed with the latest browsers
+            <a href="http://www.apple.com/safari" class="browser" target="_blank"><img src="/images/browsers/safari.png" alt="Safari"></a>
+            <a href="http://www.microsoft.com/ie" class="browser" target="_blank"><img src="/images/browsers/ie.png" alt="Internet Explorer"></a>
+        </div>
+        <div class="col-sm-4 hidden-xs">
+            Source code available on Github<br />
+            <iframe src="http://ghbtns.com/github-btn.html?user=roncli&repo=roncli.com&type=fork&size=large" allowtransparency="true" frameborder="0" scrolling="0" width="81" height="30"></iframe>
+        </div>
+    </div>
 </div>
 <script>
     (function() {

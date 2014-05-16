@@ -1,8 +1,9 @@
 module.exports = function(Handlebars) {
+    "use strict";
+
     return {
-        copyright: function() {
-            var year = new Date();
-            return new Handlebars.SafeString(year.getFullYear());
+        year: function() {
+            return new Date().getFullYear();
         }
     };
 };

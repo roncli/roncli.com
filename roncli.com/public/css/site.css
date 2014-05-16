@@ -1,0 +1,32 @@
+html, body {
+    height: 100%;
+}
+
+.site-wrapper {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin: 0 auto -49px;
+}
+
+.site-footer,
+.site-push {
+    height: 49px;
+}
+
+.site-footer .row {
+    margin: 0;
+    border: none;
+    border-radius: 0;
+}
+
+.site-footer .row > div {
+    text-align: center;
+    font-size: 12px;
+    padding: 0;
+    line-height: 1.3;
+}
+
+.tweets {
+    height: 200px;
+}
