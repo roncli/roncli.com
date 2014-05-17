@@ -1,11 +1,11 @@
-/* ABF font */
+/* archivo_narrow font */
 @font-face {
-    font-family: "abf";
-    src: url("/fonts/abf-webfont.eot");
-    src: url("/fonts/abf-webfont.eot?#iefix") format("embedded-opentype"),
-        url("/fonts/abf-webfont.woff") format("woff"),
-        url("/fonts/abf-webfont.ttf") format("truetype"),
-        url("/fonts/abf-webfont.svg#abf-webfont") format("svg");
+    font-family: "Archivo Narrow";
+    src: url("/fonts/archivonarrow-regular-webfont.eot");
+    src: url("/fonts/archivonarrow-regular-webfont.eot?#iefix") format("embedded-opentype"),
+        url("/fonts/archivonarrow-regular-webfont.woff") format("woff"),
+        url("/fonts/archivonarrow-regular-webfont.ttf") format("truetype"),
+        url("/fonts/archivonarrow-regular-webfont.svg#archivo_narrow-webfont") format("svg");
     font-weight: normal;
     font-style: normal;
 }
@@ -27,7 +27,7 @@ h6,
 .h4,
 .h5,
 .h6 {
-    font-family: abf, Verdana, Arial, sans-serif;
+    font-family: "Archivo Narrow", Verdana, Arial, sans-serif;
 }
 
 /* Create an inactive button */
