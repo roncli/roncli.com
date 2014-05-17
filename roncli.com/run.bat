@@ -1,2 +1,2 @@
-grunt
-node index.js
+call grunt
+node.exe index.js
