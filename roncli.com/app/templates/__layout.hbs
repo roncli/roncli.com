@@ -2,6 +2,9 @@
 <html>
 <head>
     <title>roncli.com</title>
+    {{#each locals.meta}}
+        <meta name="{{@key}}" content="{{this}}"/>
+    {{/each}}
     <link href="/css/bootstrap-theme.css" rel="stylesheet" />
     <link href="/css/bootstrap-override.css" rel="stylesheet"/>
     <link href="/css/site.css" rel="stylesheet"/>

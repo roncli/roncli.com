@@ -15,10 +15,7 @@ The second is the Node project itself, which is developed via PhpStorm.  I do ha
 Libraries
 =========
 
-Where possible, the loading of all third party libraries is left as an exercise to the user.
-
-The following libraries are currently preloaded as part of the project:
-* JQuery
+Where possible, the loading of all third party libraries is left as an exercise to the user.  Be sure to at least perform an npm install on the roncli.com directory.
 
 License Details
 ===============
