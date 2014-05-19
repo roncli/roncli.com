@@ -1,7 +1,10 @@
 var express = require('express'),
     rendr = require('rendr'),
     app = express(),
-    server = rendr.createServer();
+    ApiDataAdapter = require("./server/ApiDataAdapter"),
+    server = rendr.createServer({
+        dataAdapter: new ApiDataAdapter()
+    });
 
 // Initialize Express middleware stack.
 app.use(express.compress());

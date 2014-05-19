@@ -20,24 +20,7 @@ module.exports = BaseApp.extend({
     start: function() {
         "use strict";
 
-        // Show a loading indicator when the app is fetching.
-        this.router.on('action:start', function() {
-            this.set({loading: true});
-        }, this);
-        this.router.on('action:end', function() {
-            this.set({loading: false});
-        }, this);
-
         // Call base function.
         BaseApp.prototype.start.call(this);
-    },
-
-    /**
-     * Client-only setting of the app view.
-     */
-    getAppViewClass: function() {
-        "use strict";
-
-        return require("./views/app_view");
     }
 });
