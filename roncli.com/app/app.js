@@ -20,6 +20,15 @@ module.exports = BaseApp.extend({
     start: function() {
         "use strict";
 
+        // Get the tweets.
+        var data = {
+            tweets: {collection: "Tweets"}
+        };
+
+        this.fetch(data, function(err, results) {
+            console.log(results);
+        });
+
         // Call base function.
         BaseApp.prototype.start.call(this);
     }

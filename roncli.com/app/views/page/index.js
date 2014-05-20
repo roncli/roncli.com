@@ -2,7 +2,7 @@ var BaseView = require("rendr/shared/base/view");
 
 // Sets up the home view.
 module.exports = BaseView.extend({
-    className: "page"
+    className: "page_index_view"
 });
 
-module.exports.id = "page";
+module.exports.id = "page/index";

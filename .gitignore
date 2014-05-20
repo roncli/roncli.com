@@ -253,3 +253,6 @@ FakesAssemblies/
 ### Rendr ###
 compiledTemplates.js
 mergedAssets.js
+
+### Private Files ###
+privateConfig.js
