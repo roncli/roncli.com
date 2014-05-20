@@ -4,6 +4,7 @@ module.exports = {
 
         // Return the time.
         callback({
+            id: 0,
             time: new Date().getTime()
         });
     }

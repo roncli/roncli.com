@@ -19,8 +19,8 @@ util.inherits(ApiDataAdapter, DataAdapter);
  * Override the request function with our own.
  * @param {object} req The Express request object.
  * @param {object} api The parsed path.
- * @param {object} options Options to pass through.
- * @param {function} callback The function to callback when complete.
+ * @param {object|Function} options Options to pass through.
+ * @param {function} [callback] The function to callback when complete.
  */
 ApiDataAdapter.prototype.request = function(req, api, options, callback) {
     "use strict";
@@ -29,6 +29,11 @@ ApiDataAdapter.prototype.request = function(req, api, options, callback) {
     var path = api.path.split("/"),
         file = path[1],
         filename = "./api/" + file + ".js";
+
+    if (callback === undefined) {
+        callback = options;
+        options = {};
+    }
 
     // Default the response to return JSON with a 200.
     req.res.set("content-type", "application/json").status(200);
