@@ -23,8 +23,6 @@ module.exports.get = function(req, callback) {
         return;
     }
 
-    console.log("Twitter building cache.");
-
     /**
      * @param {Tweet[]} data
      */

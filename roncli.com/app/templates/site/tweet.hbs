@@ -1,0 +1,17 @@
+<div class="tweet">
+    <div class="avatar">
+        <a href="{{toTwitterProfileUrl attributes.user}}" target="_blank"><img alt="{{attributes.user}} profile" src="{{attributes.avatarUrl}}"/></a>
+    </div>
+    <div class="text">
+        <div class="user">
+            <a href="{{toTwitterProfileUrl attributes.user}}" target="_blank">{{attributes.user}}</a>
+        </div>
+        {{attributes.html}}
+        <div class="links">
+            <a href="{{toTwitterPermanentUrl attributes.user attributes.id}}" target="_blank">{{toTimeAgo attributes.timestamp}}</a><br/>
+            <a href="{{toTwitterReplyUrl attributes.id}}" target="_blank">reply</a> ·
+            <a href="{{toTwitterRetweetUrl attributes.id}}" target="_blank">retweet</a> ·
+            <a href="{{toTwitterFavoriteUrl attributes.id}}" target="_blank">favorite</a>
+        </div>
+    </div>
+</div>

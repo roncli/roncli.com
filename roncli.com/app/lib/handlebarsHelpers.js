@@ -1,3 +1,5 @@
+var $ = require("jquery");
+
 /**
  * Helpers for handlebars rendering.
  * @param {object} Handlebars The Handlebars object.
@@ -15,11 +17,29 @@ module.exports = function(Handlebars) {
             return new Date().getFullYear();
         },
 
-        debug: function(value) {
-            console.log("Current Context:", this);
-            if (value) {
-                console.log("Value:", value);
-            }
+        toTwitterProfileUrl: function(user) {
+            return "http://twitter.com/" + user;
+        },
+
+        toTwitterPermanentUrl: function(user, id) {
+            return "http://twitter.com/" + user + "/status/" + id;
+        },
+
+        toTwitterReplyUrl: function(id) {
+            return "http://twitter.com/intent/tweet?in_reply_to=" + id;
+        },
+
+        toTwitterRetweetUrl: function(id) {
+            return "http://twitter.com/intent/retweet?tweet_id=" + id;
+        },
+
+        toTwitterFavoriteUrl: function(id) {
+            return "http://twitter.com/intent/favorite?tweet_id=" + id;
+        },
+
+        toTimeAgo: function(timestamp) {
+            var date = new Date(timestamp);
+            return $("<abbr></abbr>").addClass("setTime").attr({title: timestamp}).text((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear())[0].outerHTML;
         }
     };
 };
