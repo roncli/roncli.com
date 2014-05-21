@@ -56,6 +56,10 @@ module.exports = function(grunt) {
                     jquery: {
                         path: "node_modules/jquery/dist/jquery.min.js",
                         exports: "$"
+                    },
+                    iscroll: {
+                        path: "node_modules/iscroll/build/iscroll.js",
+                        exports: "IScroll"
                     }
                 }
             },

@@ -18,7 +18,6 @@ module.exports.get = function(req, callback) {
     var now = new Date().getTime();
 
     if (now - lastUpdate <= 900000) {
-        console.log("Twitter cache hit!");
         callback(tweets);
         return;
     }
@@ -38,11 +37,11 @@ module.exports.get = function(req, callback) {
                 avatarUrl: tweet.retweeted_status ? tweet.retweeted_status.user.profile_image_url : tweet.user.profile_image_url,
                 user: tweet.retweeted_status ? tweet.retweeted_status.user.screen_name : tweet.user.screen_name,
                 html: (tweet.retweeted_status ? tweet.retweeted_status.text : tweet.text)
-                    .replace(/(.*?)((([hH][tT][tT][pP][sS]?|[fF][tT][pP]):\/\/)?([\w\.\-]+(:[\w\.&%\$\-]+)*@)?((([^\s\(\)<>\\"\.\[\],@;:]+)(\.[^\s\(\)<>\\"\.\[\],@;:]+)*(\.[a-zA-Z]{2,4}))|((([01]?\d{1,2}|2[0-4]\d|25[0-5])\.){3}([01]?\d{1,2}|2[0-4]\d|25[0-5])))(\b:(6553[0-5]|655[0-2]\d|65[0-4]\d{2}|6[0-4]\d{3}|[1-5]\d{4}|[1-9]\d{0,3}|0)\b)?((\/[^\/][\w\.,\?'\\\/\+&%\$#=~_\-@]*)*[^\.,\?"'\(\)\[\]!;<>{}\s\x7F-\xFF])?)(.*?)/, "$1<a target=\"_blank\" href=\"$2\">$2</a>$20")
-                    .replace(/(.*?[<]a target="_blank" href=")((?!(http:\/\/|ftp:\/\/)).*)("[>]*.?)/, "$1http://$2$4")
-                    .replace(/^((?:[ ])*)@([a-zA-Z0-9_]{1,20})(.*?)/, "$1@<a target=\"_blank\" href=\"http://twitter.com/$2\">$2</a>$3")
-                    .replace(/(.*?)(^|[^a-zA-Z0-9_])@([a-zA-Z0-9_]{1,20})((?=(.|$)).*?)/, "$1$2@<a href=\"http://twitter.com/$3\">$3</a>$4")
-                    .replace(/(.*?)(^|[^a-zA-Z0-9&\/]+)(#|\uFF03)([a-zA-Z0-9_]*[a-zA-Z_]+#*)(.*?)/, "$1$2<a target=\"_blank\" href=\"http://twitter.com/search?q=%23$4\">$3$4</a>$5")
+                    .replace(/(.*?)((([hH][tT][tT][pP][sS]?|[fF][tT][pP]):\/\/)?([\w\.\-]+(:[\w\.&%\$\-]+)*@)?((([^\s\(\)<>\\"\.\[\],@;:]+)(\.[^\s\(\)<>\\"\.\[\],@;:]+)*(\.[a-zA-Z]{2,4}))|((([01]?\d{1,2}|2[0-4]\d|25[0-5])\.){3}([01]?\d{1,2}|2[0-4]\d|25[0-5])))(\b:(6553[0-5]|655[0-2]\d|65[0-4]\d{2}|6[0-4]\d{3}|[1-5]\d{4}|[1-9]\d{0,3}|0)\b)?((\/[^\/][\w\.,\?'\\\/\+&%\$#=~_\-@]*)*[^\.,\?"'\(\)\[\]!;<>{}\s\x7F-\xFF])?)(.*?)/g, "$1<a target=\"_blank\" href=\"$2\">$2</a>$20")
+                    .replace(/.*?[<]a target="_blank" href="((?!(https?:\/\/|ftp:\/\/))[^"]*)"/g, "http://$1")
+                    .replace(/^((?:[ ])*)@([a-zA-Z0-9_]{1,20})(.*?)/g, "$1@<a target=\"_blank\" href=\"http://twitter.com/$2\">$2</a>$3")
+                    .replace(/(.*?)(^|[^a-zA-Z0-9_])@([a-zA-Z0-9_]{1,20})((?=(.|$)).*?)/g, "$1$2@<a href=\"http://twitter.com/$3\">$3</a>$4")
+                    .replace(/(.*?)(^|[^a-zA-Z0-9&\/]+)(#|\uFF03)([a-zA-Z0-9_]*[a-zA-Z_]+#*)(.*?)/g, "$1$2<a target=\"_blank\" href=\"http://twitter.com/search?q=%23$4\">$3$4</a>$5")
             };
         });
 

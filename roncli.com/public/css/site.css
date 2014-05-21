@@ -35,6 +35,44 @@ html, body {
     }
 }
 
-.tweets {
+div.twitter {
+    background-color: #ffffff;
+    font-size: 12px;
+    line-height: 1;
     height: 200px;
+}
+
+div.twitter div.wrapper {
+    position: absolute;
+    overflow: hidden;
+    height: 200px;
+    width: 100%;
+}
+
+div.tweet {
+    padding: 2px;
+}
+
+div.tweet div.avatar {
+    float: left;
+}
+
+div.tweet div.avatar img {
+    width: 32px;
+    height: 32px;
+}
+
+div.tweet div.text div.user {
+    font-size: 13px;
+    font-weight: bold;
+}
+
+div.tweet div.text div.links {
+    text-align: right;
+}
+
+div.tweets div.hr {
+    background-color: #141435;
+    height: 1px;
+    margin: 2px 0;
 }

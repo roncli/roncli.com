@@ -1,5 +1,6 @@
-var BaseApp = require('rendr/shared/app'),
-    handlebarsHelpers = require('./lib/handlebarsHelpers');
+var BaseApp = require("rendr/shared/app"),
+    handlebarsHelpers = require("./lib/handlebarsHelpers"),
+    $ = require("jquery");
 
 // Extend the BaseApp class, adding any custom methods or overrides.
 module.exports = BaseApp.extend({
@@ -20,14 +21,30 @@ module.exports = BaseApp.extend({
     start: function() {
         "use strict";
 
-        // Get the tweets.
-        var data = {
-            tweets: {collection: "Tweets"}
-        };
+        var IScroll = require("iscroll");
 
-        this.fetch(data, function(err, results) {
-            console.log(results);
-        });
+        // Get the tweets.
+        var _this = this,
+            scroller,
+            loadTweets = function() {
+                var data = {
+                    tweets: {collection: "Tweets"}
+                };
+
+                _this.fetch(data, function(err, results) {
+                    var html = _this.templateAdapter.getTemplate("site/tweet")(results.tweets);
+                    $("div.tweets").html(html);
+                    if (scroller) {
+                        setTimeout(function() {
+                            scroller.refresh();
+                        }, 0);
+                    } else {
+                        scroller = new IScroll(".wrapper", {mouseWheel: true, scrollbars: true, snap: "div.tweet"});
+                    }
+                });
+            };
+        loadTweets();
+        setInterval(loadTweets, 900000);
 
         // Call base function.
         BaseApp.prototype.start.call(this);
