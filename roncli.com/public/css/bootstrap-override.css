@@ -55,6 +55,11 @@ ul.navbar-right li:last-child a {
     margin-right: 10px;
 }
 
+.navbar-text {
+    margin: 0;
+    padding: 5px 10px;
+}
+
 /* Button groups */
 .btn-group-vertical {
     width: 100%;

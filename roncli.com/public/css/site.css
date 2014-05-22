@@ -35,6 +35,20 @@ html, body {
     }
 }
 
+div.twitter-logo {
+    display: inline-block;
+    vertical-align: middle;
+    width: 80px;
+    height: 16px;
+    background-image: url("/images/twitter/logo.png");
+}
+
+@media (-webkit-min-device-pixel-ratio: 1.5) or (min-resolution: 1.5dppx) {
+    div.twitter-logo {
+        background: url("/images/twitter/logo@2x.png") 80px 16px;
+    }
+}
+
 div.twitter {
     background-color: #ffffff;
     font-size: 12px;
@@ -60,6 +74,8 @@ div.tweet div.avatar {
 div.tweet div.avatar img {
     width: 32px;
     height: 32px;
+    margin-right: 2px;
+    margin-bottom: 2px;
 }
 
 div.tweet div.text div.user {
@@ -69,6 +85,45 @@ div.tweet div.text div.user {
 
 div.tweet div.text div.links {
     text-align: right;
+    vertical-align: middle;
+}
+
+div.tweet a div.reply {
+    display: inline-block;
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+    background-image: url("/images/twitter/reply.png");
+}
+
+div.tweet a div.retweet {
+    display: inline-block;
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+    background-image: url("/images/twitter/retweet.png");
+}
+
+div.tweet a div.favorite {
+    display: inline-block;
+    vertical-align: middle;
+    width: 16px;
+    height: 16px;
+    background-image: url("/images/twitter/favorite.png");
+}
+
+@media (-webkit-min-device-pixel-ratio: 1.5) or (min-resolution: 1.5dppx) {
+    div.tweet a div.reply {
+        background: url("/images/twitter/reply@2x.png") 16px 16px;
+    }
+
+    div.tweet a div.retweet {
+        background: url("/images/twitter/retweet@2x.png") 16px 16px;
+    }
+
+    div.tweet a div.favorite {
+        background: url("/images/twitter/favorite@2x.png") 16px 16px;
+    }
 }
 
 div.tweets div.hr {

@@ -21,11 +21,13 @@ module.exports = BaseApp.extend({
     start: function() {
         "use strict";
 
-        var IScroll = require("iscroll");
-
-        // Get the tweets.
         var _this = this,
+            IScroll = require("iscroll"),
             scroller,
+
+            /**
+             * Get the tweets.
+             */
             loadTweets = function() {
                 var data = {
                     tweets: {collection: "Tweets"}
@@ -34,15 +36,25 @@ module.exports = BaseApp.extend({
                 _this.fetch(data, function(err, results) {
                     var html = _this.templateAdapter.getTemplate("site/tweet")(results.tweets);
                     $("div.tweets").html(html);
-                    if (scroller) {
-                        setTimeout(function() {
-                            scroller.refresh();
-                        }, 0);
-                    } else {
+                    $("abbr.setTime").removeClass("setTime").timeago();
+                    setTimeout(function() {
+                        if (scroller) {
+                            scroller.destroy();
+                        }
                         scroller = new IScroll(".wrapper", {mouseWheel: true, scrollbars: true, snap: "div.tweet"});
-                    }
+                    }, 0);
                 });
             };
+
+        // Setup timeago.
+        $.timeago.settings.strings.seconds = "a moment";
+        $.timeago.settings.strings.minute = "a minute";
+        $.timeago.settings.strings.hour = "an hour";
+        $.timeago.settings.strings.hours = "%d hours";
+        $.timeago.settings.strings.day = "a day";
+        $.timeago.settings.strings.month = "a month";
+        $.timeago.settings.strings.year = "a year";
+
         loadTweets();
         setInterval(loadTweets, 900000);
 

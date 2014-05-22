@@ -9,10 +9,10 @@
             </div>
             {{{attributes.html}}}
             <div class="links">
-                <a href="{{toTwitterPermanentUrl attributes.user attributes.id}}" target="_blank">{{{toTimeAgo attributes.timestamp}}}</a><br/>
-                <a href="{{toTwitterReplyUrl attributes.id}}" target="_blank">reply</a> &middot;
-                <a href="{{toTwitterRetweetUrl attributes.id}}" target="_blank">retweet</a> &middot;
-                <a href="{{toTwitterFavoriteUrl attributes.id}}" target="_blank">favorite</a>
+                <a href="{{toTwitterPermanentUrl attributes.user attributes.id}}" target="_blank">{{{toTimeAgo attributes.timestamp}}}</a>
+                <a href="{{toTwitterReplyUrl attributes.id}}" target="_blank"><div class="reply" title="Reply"></div></a>
+                <a href="{{toTwitterRetweetUrl attributes.id}}" target="_blank"><div class="retweet" title="Retweet"></div></a>
+                <a href="{{toTwitterFavoriteUrl attributes.id}}" target="_blank"><div class="favorite" title="Favorite"></div></a>
             </div>
         </div>
     </div>
