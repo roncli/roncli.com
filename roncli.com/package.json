@@ -8,6 +8,7 @@
         "url": "https://github.com/roncli/roncli.com.git"
     },
     "dependencies": {
+        "captchagen": "1.1.0",
         "express": "~3",
         "iscroll": "5.1.1",
         "jquery": "2.1.1",
