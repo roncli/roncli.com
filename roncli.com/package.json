@@ -11,6 +11,8 @@
         "express": "~3",
         "iscroll": "5.1.1",
         "jquery": "2.1.1",
+        "moment": "2.6.0",
+        "mssqlhelper": "0.2.0",
         "rendr": "0.5.0",
         "rendr-handlebars": "0.2.0",
         "twitter": "0.2.9",
