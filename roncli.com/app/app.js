@@ -33,7 +33,7 @@ module.exports = BaseApp.extend({
                     tweets: {collection: "Tweets"}
                 };
 
-                _this.fetch(data, function(err, results) {
+                _this.fetch(data, {readFromCache: false, writeToCache: false}, function(err, results) {
                     var html = _this.templateAdapter.getTemplate("site/tweet")(results.tweets);
                     $("div.tweets").html(html);
                     $("abbr.setTime").removeClass("setTime").timeago();
