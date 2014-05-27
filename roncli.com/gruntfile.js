@@ -54,7 +54,7 @@ module.exports = function(grunt) {
                 ],
                 shim: {
                     jquery: {
-                        path: "node_modules/jquery/dist/jquery.min.js",
+                        path: "node_modules/jquery/dist/cdn/jquery-2.1.1.min.js",
                         exports: "$"
                     },
                     iscroll: {
@@ -73,7 +73,6 @@ module.exports = function(grunt) {
     // Load Browserify and Handlebars compilers.
     grunt.loadNpmTasks("grunt-browserify");
     grunt.loadNpmTasks("grunt-contrib-handlebars");
-
 
     // Compile handlebars and browserify.
     grunt.registerTask("compile", ["handlebars", "browserify"]);

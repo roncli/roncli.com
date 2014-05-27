@@ -87,3 +87,71 @@ h6,
 abbr {
     border-bottom: none !important;
 }
+
+/* Nav tabs */
+.nav-tabs {
+    border-bottom: none;
+    padding: 0 5px;
+}
+
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+    color: #ffffff;
+}
+
+.nav-tabs > li > a:hover, .nav > li > a:focus {
+    color: #ffffff;
+}
+
+.nav-tabs + .panel {
+    background-color: #9a9aaa;
+}
+
+/* Bootbox */
+.bootbox .modal-header {
+    background-color: #363655;
+}
+
+.bootbox .modal-title {
+    color: #ffffff;
+    text-align: center;
+    font-weight: bold;
+}
+
+.bootbox .bootbox-close-button {
+    color: #ffffff;
+    text-shadow: 0 1px 0 #000000;
+}
+
+.bootbox .panel {
+    padding: 5px;
+}
+
+.bootbox .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+    background-color: #9a9aaa;
+    color: #000000;
+}
+
+/* Input group addon */
+.input-group-addon {
+    color: #151534;
+}
+
+/* Label */
+label {
+    margin-bottom: 0;
+    font-weight: normal;
+}
+
+/* Input */
+input[type="radio"], input[type="checkbox"] {
+    margin: 0;
+}
+
+/* Modal */
+.modal {
+    overflow-y: inherit;
+}
+
+.modal-open {
+    overflow: inherit;
+}

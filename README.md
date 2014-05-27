@@ -23,18 +23,14 @@ Windows Installation
 To run the website itself, make sure you perform the following steps. (NOTE: THESE ARE NOT WORKING.)
 
 1. Install [Python 2.7.x](https://www.python.org/downloads/).
-2. Download the all-in-one bundle for [GTK+ 2.x](http://www.gtk.org/download/win32.php).
-3. Unzip the GTK+ 2.x directory to c:\GTK.
+2. Download the all-in-one bundle for [GTK+ 2.x x86](http://www.gtk.org/download/win32.php) or [GTK+ 2.x x64](http://www.gtk.org/download/win64.php).
+3. Unzip the GTK+ 2.x directory to c:\GTK.  It is important that the files are in this directory, as that is where the canvas npm package will be looking for it.
 4. Add the c:\GTK\bin directory to your system PATH.  (This may require a restart.)
-5. From the GTK+ 2.x /bin directory, configure the GTK+ 2.x package:
-
-        pkg-config --cflags gtk+-2.0
-
-6. From an admin command prompt, install node-gyp globally:
+5. From an admin command prompt, install node-gyp globally:
 
         npm install -g node-gyp
 
-7. Install the node modules from the roncli.com directory:
+6. Install the node modules from the roncli.com directory:
 
         npm install -msvs_version=2013
 

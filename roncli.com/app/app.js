@@ -1,3 +1,4 @@
+/*global bootbox*/
 var BaseApp = require("rendr/shared/app"),
     handlebarsHelpers = require("./lib/handlebarsHelpers"),
     $ = require("jquery");
@@ -55,6 +56,18 @@ module.exports = BaseApp.extend({
         $.timeago.settings.strings.month = "a month";
         $.timeago.settings.strings.year = "a year";
 
+        // Setup login form.
+        $("#login").on("click", function() {
+            bootbox.dialog({
+                title: "Log In",
+                message: _this.templateAdapter.getTemplate("site/login")()
+            });
+
+            $("#loginTab").defaultButton("#loginButton");
+            $("#loginEmail").focus();
+        });
+
+        // Start loading tweets.
         loadTweets();
         setInterval(loadTweets, 900000);
 
