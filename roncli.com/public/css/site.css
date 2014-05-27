@@ -155,3 +155,11 @@ div.tweets div.hr {
 .text-middle {
     vertical-align: middle;
 }
+
+.vertical-margin {
+    margin: 3px 0;
+}
+
+.panel-padding {
+    padding: 20px;
+}

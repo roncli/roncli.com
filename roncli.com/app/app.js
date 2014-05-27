@@ -23,6 +23,7 @@ module.exports = BaseApp.extend({
         "use strict";
 
         var _this = this,
+            twitterShown = false,
             IScroll = require("iscroll"),
             scroller,
 
@@ -35,8 +36,18 @@ module.exports = BaseApp.extend({
                 };
 
                 _this.fetch(data, {readFromCache: false, writeToCache: false}, function(err, results) {
-                    var html = _this.templateAdapter.getTemplate("site/tweet")(results.tweets);
-                    $("div.tweets").html(html);
+                    var divTwitter = $("div.twitter");
+
+                    if (!results) {
+                        if (!twitterShown) {
+                            divTwitter.hide();
+                        }
+                        return;
+                    }
+                    divTwitter.show();
+                    twitterShown = true;
+
+                    $("div.tweets").html(_this.templateAdapter.getTemplate("site/tweet")(results.tweets));
                     $("abbr.setTime").removeClass("setTime").timeago();
                     setTimeout(function() {
                         if (scroller) {
@@ -58,13 +69,52 @@ module.exports = BaseApp.extend({
 
         // Setup login form.
         $("#login").on("click", function() {
+            var navs, tabs, loginTab, loginEmail, registerTab, forgotPasswordTab;
+
             bootbox.dialog({
                 title: "Log In",
                 message: _this.templateAdapter.getTemplate("site/login")()
             });
 
-            $("#loginTab").defaultButton("#loginButton");
-            $("#loginEmail").focus();
+            navs = $("#loginNavs").children();
+            tabs = $("#loginTabs").children();
+            loginTab = $("#loginTab");
+            loginEmail = $("#loginEmail");
+            registerTab = $("#registerTab");
+            forgotPasswordTab = $("#forgotPasswordTab");
+
+            tabs.hide();
+            loginTab.show();
+
+            $("#loginNav").on("click", function() {
+                navs.removeClass("active");
+                $("#loginNavTab").addClass("active");
+                tabs.hide();
+                loginTab.show();
+                loginEmail.focus();
+            });
+
+            $("#registerNav").on("click", function() {
+                navs.removeClass("active");
+                $("#registerNavTab").addClass("active");
+                tabs.hide();
+                $("#registerCaptchaImage").attr("src", "/images/captcha.png");
+                registerTab.show();
+                $("#registerEmail").focus();
+            });
+
+            $("#forgotPasswordNav").on("click", function() {
+                navs.removeClass("active");
+                $("#forgotPasswordNavTab").addClass("active");
+                tabs.hide();
+                forgotPasswordTab.show();
+                $("#forgotPasswordEmail").focus();
+            });
+
+            loginTab.defaultButton("#loginButton");
+            registerTab.defaultButton("#registerButton");
+            forgotPasswordTab.defaultButton("#forgotPasswordButton");
+            loginEmail.focus();
         });
 
         // Start loading tweets.

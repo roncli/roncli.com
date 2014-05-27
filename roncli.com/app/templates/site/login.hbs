@@ -1,30 +1,72 @@
 <div class="panel text-center">
     Log in, or register with roncli.com for free.
 </div>
-<ul class="nav nav-tabs">
-    <li class="active"><a href="javascript:;">Login</a></li>
-    <li><a href="javascript:;">Register</a></li>
-    <li><a href="javascript:;">Forgot Password</a></li>
+<ul id="loginNavs" class="nav nav-tabs">
+    <li id="loginNavTab" class="active"><a id="loginNav" href="javascript:;">Login</a></li>
+    <li id="registerNavTab"><a id="registerNav" href="javascript:;">Register</a></li>
+    <li id="forgotPasswordNavTab"><a id="forgotPasswordNav" href="javascript:;">Forgot Password</a></li>
 </ul>
-<div class="panel">
-    <div id="loginTab" class="text-center">
+<div id="loginTabs" class="panel text-center">
+    <div id="loginTab">
         <div class="input-group">
             <span class="input-group-addon">Email:</span>
-            <input id="loginEmail" name="loginEmail" type="text" size="20" maxlength="256" class="Validate form-control"/>
+            <input id="loginEmail" name="loginEmail" type="text" maxlength="256" class="Validate form-control" placeholder="yourname@domain.com"/>
         </div>
         <div class="input-group">
             <span class="input-group-addon">Password:</span>
-            <input id="loginPassword" name="loginPassword" type="password" size="20" maxlength="20" class="Validate form-control"/>
+            <input id="loginPassword" name="loginPassword" type="password" maxlength="20" class="Validate form-control" placeholder="Secure123!"/>
         </div>
-        <input id="loginSaveLogin" type="checkbox" class="text-middle"/><label for="loginSaveLogin" class="text-middle"> Save Login</label><br/>
+        <div class="vertical-margin">
+            <input id="loginSaveLogin" type="checkbox" class="text-middle"/><label for="loginSaveLogin" class="text-middle"> Save Login</label><br/>
+        </div>
         <input id="loginButton" type="button" value="Log In"/>
         <div id="loginErrors"></div>
         <div id="loginServerErrors" class="error"></div>
     </div>
-    <div id="registerTab" class="panel hidden">
-
+    <div id="registerTab">
+        <div class="input-group">
+            <span class="input-group-addon">Email:</span>
+            <input id="registerEmail" name="registerEmail" type="text" maxlength="256" class="Validate form-control" placeholder="yourname@domain.com"/>
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">Password:</span>
+            <input id="registerPassword" name="registerPassword" type="password" maxlength="20" class="Validate form-control" placeholder="Secure123!"/>
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">Retype Password:</span>
+            <input id="registerRetypePassword" name="registerRetypePassword" type="password" maxlength="20" class="Validate form-control" placeholder="Secure123!"/>
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">Alias:</span>
+            <input id="registerAlias" name="registerAlias" type="text" maxlength="20" class="Validate form-control" placeholder="Your Nickname"/>
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">
+                <div class="hidden-xs">(<a href="http://www.onguardonline.gov/articles/0031-protecting-your-childs-privacy-online" target="_blank">COPPA</a> compliance) Date of Birth:</div>
+                <div class="visible-xs">(<a href="http://www.onguardonline.gov/articles/0031-protecting-your-childs-privacy-online" target="_blank">COPPA</a>) DOB:</div>
+            </span>
+            <input id="registerDOB" name="registerDOB" type="text" class="disabled Validate ValidateIgnore form-control" placeholder="Must be 13 years or older"/>
+            <span class="input-group-btn"><button class="btn btn-default" type="button">Pick Date</button></span>
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">Type the characters below:</span>
+            <input id="registerCaptcha" name="registerCaptcha" type="text" maxlength="8" class="Validate form-control"/>
+        </div>
+        <img id="registerCaptchaImage" alt="[Captcha Image]" class="text-center" /><br />
+        <input id="registerRegister" type="button" value="Register" />
+        <div id="registerErrors"></div>
+        <div id="registerServerErrors" class="error"></div>
     </div>
-    <div id="forgotPasswordTab" class="panel hidden">
-
+    <div id="forgotPasswordTab">
+        <div class="text-left panel-padding">
+            To recover your password, enter your email address below.  You will be sent an email that will include a link that you can use to change your password.
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">Email:</span>
+            <input id="forgotPasswordEmail" name="forgotPasswordEmail" type="text" maxlength="256" class="Validate form-control" placeholder="yourname@domain.com"/>
+        </div>
+        <input id="forgotPasswordButton" type="button" value="Recover Password"/>
+        <div id="forgotPasswordErrors"></div>
+        <div id="forgotPasswordServerErrors" class="error"></div>
     </div>
 </div>

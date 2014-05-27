@@ -20,7 +20,7 @@ Be sure to have Visual Studio 2013, and node.js 0.10.28 or later installed with 
 Windows Installation
 ====================
 
-To run the website itself, make sure you perform the following steps. (NOTE: THESE ARE NOT WORKING.)
+To run the website itself, make sure you perform the following steps.
 
 1. Install [Python 2.7.x](https://www.python.org/downloads/).
 2. Download the all-in-one bundle for [GTK+ 2.x x86](http://www.gtk.org/download/win32.php) or [GTK+ 2.x x64](http://www.gtk.org/download/win64.php).
