@@ -160,6 +160,7 @@ input[type="radio"], input[type="checkbox"] {
 .modal {
     overflow-y: inherit;
     z-index: 10001;
+    position: absolute;
 }
 
 .modal-backdrop {
@@ -168,4 +169,9 @@ input[type="radio"], input[type="checkbox"] {
 
 .modal-open {
     overflow: inherit;
+}
+
+/* Datepicker */
+.datepicker {
+    z-index: 10002 !important;
 }

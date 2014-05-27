@@ -60,6 +60,10 @@ module.exports = function(grunt) {
                     iscroll: {
                         path: "node_modules/iscroll/build/iscroll.js",
                         exports: "IScroll"
+                    },
+                    moment: {
+                        path: "node_modules/moment/min/moment.min.js",
+                        exports: "moment"
                     }
                 }
             },
