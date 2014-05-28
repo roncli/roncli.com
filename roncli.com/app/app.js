@@ -2,7 +2,9 @@
 var BaseApp = require("rendr/shared/app"),
     handlebarsHelpers = require("./lib/handlebarsHelpers"),
     $ = require("jquery"),
-    moment = require("moment");
+    moment = require("moment"),
+    User = require("./models/user"),
+    Captcha = require("./models/captcha");
 
 // Extend the BaseApp class, adding any custom methods or overrides.
 module.exports = BaseApp.extend({
@@ -92,10 +94,6 @@ module.exports = BaseApp.extend({
             registerTab = $("#registerTab");
             forgotPasswordTab = $("#forgotPasswordTab");
 
-            // Show only the login tab.
-            tabs.hide();
-            loginTab.show();
-
             // Switch to the login tab when clicked.
             $("#loginNav").on("click", function() {
                 navs.removeClass("active");
@@ -146,7 +144,7 @@ module.exports = BaseApp.extend({
                 $("#registerCaptcha").focus();
             });
 
-            // Ensure the date picker appears when clicked.
+            // Ensure the date picker appears when the date is selected.
             $("#registerDOB").on("focus", function() {
                 $("#registerDOBButton").click();
                 $(this).blur();
@@ -154,7 +152,6 @@ module.exports = BaseApp.extend({
 
             // Set up validation for login tab.
             $("#loginForm").validate({
-                onsubmit: false,
                 rules: {
                     loginEmail: {
                         required: true,
@@ -175,10 +172,140 @@ module.exports = BaseApp.extend({
                         minlength: "Your password must be at least 6 characters."
                     }
                 },
-                errorPlacement: function(error) {
-                    $("#loginErrors").append(error);
+                errorContainer: "#loginErrorList",
+                errorLabelContainer: "#loginErrors"
+            });
+
+            // Set up validation for the register tab.
+            $("#registerForm").validate({
+                rules: {
+                    registerEmail: {
+                        required: true,
+                        email: true,
+                        backbone: {
+                            model: User,
+                            inverse: true,
+                            data: function() {
+                                return {
+                                    emailExists: $("#registerEmail").val()
+                                };
+                            },
+                            settings: {
+                                url: "/user/validate"
+                            }
+                        }
+                    },
+                    registerPassword: {
+                        required: true,
+                        minlength: 6
+                    },
+                    registerRetypePassword: {
+                        equalTo: "#registerPassword"
+                    },
+                    registerAlias: {
+                        required: true,
+                        minlength: 3,
+                        backbone: {
+                            model: User,
+                            inverse: true,
+                            data: function() {
+                                return {
+                                    aliasExists: $("#registerAlias").val()
+                                };
+                            },
+                            settings: {
+                                url: "/user/validate"
+                            }
+                        }
+                    },
+                    registerDOB: {
+                        required: true,
+                        backbone: {
+                            model: User,
+                            data: function() {
+                                return {
+                                    coppaDob: $("#registerDOB").val()
+                                };
+                            },
+                            settings: {
+                                url: "/user/validate"
+                            }
+                        }
+                    },
+                    registerCaptcha: {
+                        required: true,
+                        backbone: {
+                            model: Captcha,
+                            data: function() {
+                                return {
+                                    response: $("#registerCaptcha").val()
+                                };
+                            },
+                            settings: {
+                                url: "/captcha/validate"
+                            }
+                        }
+                    }
                 },
-                errorElement: "div"
+                messages: {
+                    registerEmail: {
+                        required: "You must enter an email address.",
+                        email: "The email address you entered is not valid.",
+                        backbone: "The email address you entered is already in use."
+                    },
+                    registerPassword: {
+                        required: "You must enter a password.",
+                        minlength: "Your password must be at least 6 characters."
+                    },
+                    registerRetypePassword: {
+                        equalTo: "The passwords you entered don't match."
+                    },
+                    registerAlias: {
+                        required: "You must enter an alias.",
+                        minlength: "Your alias must be at least 3 characters.",
+                        backbone: "The alias you entered is already in use."
+                    },
+                    registerDOB: {
+                        required: "You must enter a date of birth.",
+                        backbone: "You must be 13 years of age or older to register."
+                    },
+                    registerCaptcha: {
+                        required: "You must type in the characters as shown.",
+                        backbone: "The characters you typed do not match the image."
+                    }
+                },
+                errorContainer: "#registerErrorList",
+                errorLabelContainer: "#registerErrors"
+            });
+
+            // Setup validation for the forgot password tab.
+            $("#forgotPasswordForm").validate({
+                rules: {
+                    forgotPasswordEmail: {
+                        required: true,
+                        email: true,
+                        backbone: {
+                            model: User,
+                            data: function() {
+                                return {
+                                    "emailExists": $("#forgotPasswordEmail").val()
+                                };
+                            },
+                            settings: {
+                                url: "/user/validate"
+                            }
+                        }
+                    }
+                },
+                messages: {
+                    forgotPasswordEmail: {
+                        required: "You must enter your email address.",
+                        email: "You must enter a valid email address.",
+                        backbone: "The email address you entered does not exist."
+                    }
+                },
+                errorContainer: "#forgotPasswordErrorList",
+                errorLabelContainer: "#forgotPasswordErrors"
             });
 
         });

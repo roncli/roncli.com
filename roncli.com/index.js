@@ -14,6 +14,8 @@ app.use(express.logger("[:date] :remote-addr :method :url HTTP/:http-version :st
 app.use(express.cookieParser("tmp"));
 app.use(express.session());
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.json());
+app.use(express.urlencoded());
 
 // Remove powered by header.
 app.use(function(err, req, res, next) {

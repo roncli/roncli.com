@@ -126,7 +126,7 @@ abbr {
     text-shadow: 0 1px 0 #000000;
 }
 
-.bootbox .panel {
+.bootbox-body > .panel {
     padding: 5px;
 }
 
@@ -161,6 +161,7 @@ input[type="radio"], input[type="checkbox"] {
     overflow-y: inherit;
     z-index: 10001;
     position: absolute;
+    bottom: inherit;
 }
 
 .modal-backdrop {

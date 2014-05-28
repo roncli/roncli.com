@@ -28,7 +28,7 @@ module.exports.aliasExists = function(alias, userId, callback) {
                 return;
             }
 
-            callback(null, data.tables[0].rows.length > 0);
+            callback(null, data.tables && data.tables[0] && data.tables[0].rows.length > 0);
         }
     );
 };
@@ -59,7 +59,7 @@ module.exports.emailExists = function(email, userId, callback) {
                 return;
             }
 
-            callback(null, data.tables[0].rows.length > 0);
+            callback(null, data.tables && data.tables[0] && data.tables[0].rows.length > 0);
         }
     );
 };
@@ -89,7 +89,7 @@ module.exports.login = function(email, password, saveLogin, callback) {
                 return;
             }
 
-            if (data.tables[0].rows.length === 0) {
+            if (!data.tables || !data.tables[0] || data.tables[0].rows.length === 0) {
                 callback({
                     error: "Invalid email address or password.",
                     type: "invalid"
@@ -132,16 +132,18 @@ module.exports.login = function(email, password, saveLogin, callback) {
                             text: "Account"
                         }];
 
-                        _(data.tables[0].rows).each(function(row) {
-                            switch (row.Role) {
-                                case "SiteAdmin":
-                                    accountLinks.push({
-                                        url: "admin",
-                                        text: "Admin"
-                                    });
-                                    break;
-                            }
-                        });
+                        if (data.tables && data.tables[0]) {
+                            _(data.tables[0].rows).each(function(row) {
+                                switch (row.Role) {
+                                    case "SiteAdmin":
+                                        accountLinks.push({
+                                            url: "admin",
+                                            text: "Admin"
+                                        });
+                                        break;
+                                }
+                            });
+                        }
 
                         callback(null, {
                             id: user.UserID,

@@ -11,7 +11,7 @@ module.exports.post = function(req, callback) {
                         callback({
                             valid: req.session.captcha &&
                                 req.body.response === req.session.captcha.text &&
-                                new Date().getTime() < req.session.captcha.expires.getTime()
+                                new Date().getTime() < new Date(req.session.captcha.expires).getTime()
                         });
                         return;
                     }

@@ -167,3 +167,8 @@ div.tweets div.hr {
 .image-margin {
     margin: 20px;
 }
+
+.top-margin-only {
+    margin-top: 20px;
+    margin-bottom: 0;
+}
