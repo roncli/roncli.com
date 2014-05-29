@@ -2,12 +2,12 @@
     Log in, or register with roncli.com for free.
 </div>
 <ul id="loginNavs" class="nav nav-tabs">
-    <li id="loginNavTab" class="active"><a id="loginNav" href="javascript:;">Login</a></li>
-    <li id="registerNavTab"><a id="registerNav" href="javascript:;">Register</a></li>
-    <li id="forgotPasswordNavTab"><a id="forgotPasswordNav" href="javascript:;">Forgot Password</a></li>
+    <li id="loginNavTab" class="active"><a id="loginNav" href="#loginTab" data-toggle="tab">Login</a></li>
+    <li id="registerNavTab"><a id="registerNav" href="#registerTab" data-toggle="tab">Register</a></li>
+    <li id="forgotPasswordNavTab"><a id="forgotPasswordNav" href="#forgotPasswordTab" data-toggle="tab">Forgot Password</a></li>
 </ul>
-<div id="loginTabs" class="panel text-center">
-    <div id="loginTab">
+<div id="loginTabs" class="tab-content panel text-center">
+    <div id="loginTab" class="tab-pane active">
         <form id="loginForm" class="VaildationForm">
             <div class="input-group">
                 <span class="input-group-addon">Email:</span>
@@ -28,7 +28,7 @@
             <div id="loginServerErrors" class="error"></div>
         </form>
     </div>
-    <div id="registerTab" hidden>
+    <div id="registerTab" class="tab-pane">
         <form id="registerForm" class="VaildationForm">
             <div class="input-group">
                 <span class="input-group-addon">Email:</span>
@@ -67,7 +67,7 @@
             <div id="registerServerErrors" class="error"></div>
         </form>
     </div>
-    <div id="forgotPasswordTab" hidden>
+    <div id="forgotPasswordTab" class="tab-pane">
         <form id="forgotPasswordForm" class="VaildationForm">
             <div class="text-left panel-padding">
                 To recover your password, enter your email address below.  You will be sent an email that will include a link that you can use to change your password.

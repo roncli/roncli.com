@@ -88,37 +88,21 @@ module.exports = BaseApp.extend({
             }).modal("show");
 
             // Cache jQuery objects once the dialog box is shown.
-            navs = $("#loginNavs").children();
-            tabs = $("#loginTabs").children();
             loginTab = $("#loginTab");
             registerTab = $("#registerTab");
             forgotPasswordTab = $("#forgotPasswordTab");
 
-            // Switch to the login tab when clicked.
-            $("#loginNav").on("click", function() {
-                navs.removeClass("active");
-                $("#loginNavTab").addClass("active");
-                tabs.hide();
-                loginTab.show();
+            // Set focus when tabs are clicked.
+            $("#loginNav").on("shown.bs.tab", function() {
                 $("#loginEmail").focus();
             });
 
-            // Switch to the register tab when clicked.
-            $("#registerNav").on("click", function() {
-                navs.removeClass("active");
-                $("#registerNavTab").addClass("active");
-                tabs.hide();
+            $("#registerNav").on("shown.bs.tab", function() {
                 $("#registerCaptchaImage").attr("src", "/images/captcha.png");
-                registerTab.show();
                 $("#registerEmail").focus();
             });
 
-            // Switch to the forgot password tab when clicked.
-            $("#forgotPasswordNav").on("click", function() {
-                navs.removeClass("active");
-                $("#forgotPasswordNavTab").addClass("active");
-                tabs.hide();
-                forgotPasswordTab.show();
+            $("#forgotPasswordNav").on("shown.bs.tab", function() {
                 $("#forgotPasswordEmail").focus();
             });
 
