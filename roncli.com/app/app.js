@@ -34,11 +34,7 @@ module.exports = BaseApp.extend({
              * Get the tweets.
              */
             loadTweets = function() {
-                var data = {
-                    tweets: {collection: "Tweets"}
-                };
-
-                _this.fetch(data, {readFromCache: false, writeToCache: false}, function(err, results) {
+                _this.fetch({tweets: {collection: "Tweets"}}, {readFromCache: false, writeToCache: false}, function(err, results) {
                     var divTwitter = $("div.twitter");
 
                     if (!results) {
@@ -292,11 +288,25 @@ module.exports = BaseApp.extend({
                 errorLabelContainer: "#forgotPasswordErrors"
             });
 
+            // Setup login button.
+            $("#loginButton").click("on", function() {
+                
+            });
+
         });
 
         // Start loading tweets.
         loadTweets();
         setInterval(loadTweets, 900000);
+
+        // Determine if the user is logged in.
+        _this.fetch({user: {model: "User"}}, {readFromCache: false, writeToCache: false}, function(err, results) {
+            if (results) {
+                $("div#site-nav").html(_this.templateAdapter.getTemplate("site/loggedIn")(results.user));
+            } else {
+                $("div#site-nav").html(_this.templateAdapter.getTemplate("site/loggedOut")());
+            }
+        });
 
         // Call base function.
         BaseApp.prototype.start.call(this);

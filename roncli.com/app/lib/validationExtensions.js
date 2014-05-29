@@ -16,7 +16,8 @@ module.exports = function() {
             unhighlight: function(el, errorClass, validClass) {
                 window.$(el).closest(".input-group").addClass(validClass).removeClass(errorClass);
             },
-            errorElement: "div"
+            errorElement: "div",
+            onkeyup: false
         });
 
         // Add the backbone validation method.
