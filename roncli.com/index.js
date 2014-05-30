@@ -1,5 +1,6 @@
 var express = require("express"),
     path = require("path"),
+    moment = require("moment"),
     rendr = require("rendr"),
     captchagen = require("./server/captcha/captchagen.js"),
     app = express(),
@@ -31,7 +32,7 @@ app.get("/images/captcha.png", function(req, res) {
 
     var captcha = captchagen();
 
-    req.session.captcha = {text: captcha.text(), expires: new Date(new Date().getTime() + 5 * 60 * 1000)};
+    req.session.captcha = {text: captcha.text(), expires: moment().add("minutes", 5)};
 
     res.writeHead(200, {"Content-Type": "image/png"});
     res.end(captcha.buffer());

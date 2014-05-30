@@ -27,10 +27,11 @@ module.exports.get = function(req, callback) {
      */
     twitter.get("/statuses/user_timeline.json", {count: 200}, function(data) {
         if (data instanceof Error) {
+            console.log("Bad response from Twitter.");
+            console.log(data);
             req.res.status(502);
             callback({
-                error: "Bad response from Twitter.",
-                data: data
+                error: "Bad response from Twitter."
             });
         } else {
             /**

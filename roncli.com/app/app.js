@@ -84,10 +84,10 @@ module.exports = BaseApp.extend({
             // Setup login form.
             $("#login").on("click", function() {
                 var today = moment().startOf("day"),
-                    dialog, loginTab, registerTab, forgotPasswordTab;
+                    loginTab, registerTab, forgotPasswordTab;
 
                 // Display the dialog box.
-                dialog = bootbox.dialog({
+                bootbox.dialog({
                     title: "Log In",
                     message: app.templateAdapter.getTemplate("site/login")(),
                     show: false
@@ -134,6 +134,7 @@ module.exports = BaseApp.extend({
                         $(this).datepicker("setDate", registerDOB.val());
                     }
                     $("#registerCaptcha").focus();
+                    $("#registerForm").validate().element("#registerDOB");
                 });
 
                 // Ensure the date picker appears when the date is selected.

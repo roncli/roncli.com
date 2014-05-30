@@ -1,6 +1,27 @@
-var db = require("../database/database.js"),
+var moment = require("moment"),
+    db = require("../database/database.js"),
     crypto = require("crypto"),
-    _ = require("underscore");
+    _ = require("underscore"),
+    captcha = require("./captcha"),
+    promise = require("promised-io/promise"),
+    Deferred = promise.Deferred,
+    all = promise.all;
+
+module.exports.isDobValid = function(dob, callback) {
+    "use strict";
+
+    var date = moment(new Date(dob));
+
+    if (date === false) {
+        callback({
+            error: "Invalid date of birth.",
+            status: 400
+        });
+        return;
+    }
+
+    callback(null, moment().diff(date, "years", true) >= 13);
+};
 
 /**
  * Determines whether the alias already exists.
@@ -22,8 +43,8 @@ module.exports.aliasExists = function(alias, userId, callback) {
                 console.log("Database error in user.aliasExists.");
                 console.log(data.err);
                 callback({
-                    error: "Database error in user.aliasExists.",
-                    data: data.err
+                    error: "There was a database error in user.aliasExists.  Please reload the page and try again.",
+                    status: 500
                 });
                 return;
             }
@@ -53,8 +74,8 @@ module.exports.emailExists = function(email, userId, callback) {
                 console.log("Database error in user.emailExists.");
                 console.log(data.err);
                 callback({
-                    error: "Database error in user.emailExists.",
-                    data: data.err
+                    error: "There was a database error in user.emailExists.  Please reload the page and try again.",
+                    status: 500
                 });
                 return;
             }
@@ -81,9 +102,8 @@ module.exports.login = function(email, password, callback) {
                 console.log("Database error in user.login.");
                 console.log(data.err);
                 callback({
-                    error: "Database error in user.login.",
-                    data: data.err,
-                    type: "database"
+                    error: "There was a database error in user.login.  Please reload the page and try again.",
+                    status: 500
                 });
                 return;
             }
@@ -91,7 +111,7 @@ module.exports.login = function(email, password, callback) {
             if (!data.tables || !data.tables[0] || data.tables[0].rows.length === 0) {
                 callback({
                     error: "Invalid email address or password.",
-                    type: "invalid"
+                    status: 401
                 });
                 return;
             }
@@ -106,7 +126,7 @@ module.exports.login = function(email, password, callback) {
                 if (hashedPassword !== user.PasswordHash) {
                     callback({
                         error: "Invalid email address or password.",
-                        type: "invalid"
+                        status: 401
                     });
                     return;
                 }
@@ -119,9 +139,8 @@ module.exports.login = function(email, password, callback) {
                             console.log("Database error in user.login.");
                             console.log(data.err);
                             callback({
-                                error: "Database error in user.login.",
-                                data: data.err,
-                                type: "database"
+                                error: "There was a database error in user.login.  Please reload the page and try again.",
+                                status: 500
                             });
                             return;
                         }
@@ -154,6 +173,155 @@ module.exports.login = function(email, password, callback) {
                     }
                 );
             });
+        }
+    );
+};
+
+/**
+ * Registers a user.
+ * @param {string} email The user's email address.
+ * @param {string} password The user's desired password.
+ * @param {string} alias The user's desired alias.
+ * @param {string} dob The user's date of birth.
+ * @param {object} captcha The captcha response from the server.
+ * @param {string} captchaResponse
+ * @param {function(null, object)|function(object)} callback The callback function.
+ */
+module.exports.register = function(email, password, alias, dob, captcha, captchaResponse, callback) {
+    "use strict";
+
+    // First, we will run the non-database validations.
+    all(
+        // Basic data checks.
+        (function() {
+            var deferred = new Deferred();
+
+            // Email is required.
+            if (typeof email !== "string" || email.length === 0) {
+                deferred.reject({
+                    error: "You must enter an email address.",
+                    status: 400
+                });
+                return false;
+            }
+
+            // Email must be an email address.
+            if (!/^[a-zA-Z0-9.!#$%&'*+\/=?\^_`{|}~\-]+@[a-zA-Z0-9](?:[a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*$/.test(email)) {
+                deferred.reject({
+                    error: "The email address you entered is not valid.",
+                    status: 400
+                });
+                return false;
+            }
+
+            if (typeof password !== "string" || password.length === 0) {
+                deferred.reject({
+                    error: "You must enter a password.",
+                    status: 400
+                });
+                return false;
+            }
+
+            if (password.length < 6) {
+                deferred.reject({
+                    error: "Your password must be at least 6 characters.",
+                    status: 400
+                });
+                return false;
+            }
+
+            if (typeof alias !== "string" || alias.length === 0) {
+                deferred.reject({
+                    error: "You must enter an alias.",
+                    status: 400
+                });
+                return false;
+            }
+
+            if (alias.length < 3) {
+                deferred.reject({
+                    error: "Your alias must be at least 3 characters.",
+                    status: 400
+                });
+                return false;
+            }
+
+            if (typeof dob !== "string" || dob.length === 0) {
+                deferred.reject({
+                    error: "You must enter a date of birth.",
+                    status: 400
+                });
+                return false;
+            }
+
+            if (typeof captchaResponse !== "string" || captchaResponse.length === 0) {
+                deferred.reject({
+                    error: "You must type in the characters as shown.",
+                    status: 400
+                });
+                return false;
+            }
+
+            deferred.resolve(true);
+
+            return true;
+        }()),
+
+        // Ensure the user is of age for COPPA.
+        (function() {
+            var deferred = new Deferred();
+
+            this.isDobValid(dob, function(err, data) {
+                if (err) {
+                    deferred.reject(err);
+                    return;
+                }
+
+                if (!data) {
+                    deferred.reject({
+                        error: "You must be at least 13 years of age to register.",
+                        status: 400
+                    });
+                    return;
+                }
+
+                deferred.resolve(true);
+            });
+
+            return deferred.promise;
+        }()),
+
+        // Ensure the captcha value is correct.
+        (function() {
+            var deferred = new Deferred();
+
+            captcha.isCaptchaValid(captcha, captchaResponse, function(err, data) {
+                if (err) {
+                    deferred.reject(err);
+                    return;
+                }
+
+                if (!data) {
+                    deferred.reject({
+                        error: "The characters you typed do not match the image.",
+                        status: 400
+                    });
+                    return;
+                }
+
+                deferred.resolve(true);
+            });
+
+            return deferred.promise;
+        }())
+    ).then(
+        function() {
+            // Next, we will run the database validations.
+        },
+
+        // If any of the all functions error out, it will be handled here.
+        function(err) {
+            callback(err);
         }
     );
 };

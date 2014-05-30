@@ -1,3 +1,5 @@
+var captcha = ("../models/captcha");
+
 module.exports.post = function(req, callback) {
     "use strict";
 
@@ -7,15 +9,19 @@ module.exports.post = function(req, callback) {
                 case "validate":
                     // Attempt to validate data.
                     if (req.body.response) {
-                        // Ensure the CAPTCHA image is not expired.
-                        callback({
-                            valid: req.session.captcha &&
-                                req.body.response === req.session.captcha.text &&
-                                new Date().getTime() < new Date(req.session.captcha.expires).getTime()
+                        captcha.isCaptchaValid(req.session.captcha, req.body.response, function(err, valid) {
+                            if (err) {
+                                req.res.status(err.status);
+                                callback(err);
+                                return;
+                            }
+                            callback({valid: valid});
                         });
                         return;
                     }
 
+                    req.res.status(400);
+                    callback({error: "You must type in the characters as shown."});
                     break;
             }
             break;

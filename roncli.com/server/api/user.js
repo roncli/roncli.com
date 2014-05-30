@@ -1,5 +1,15 @@
-var moment = require("moment");
-var user = require("../models/user.js");
+var moment = require("moment"),
+    user = require("../models/user.js"),
+    handleError = function(err, req) {
+        "use strict";
+
+        if (!err.status) {
+            console.log("Unknown error");
+            console.log(err);
+            err.status = 500;
+        }
+        req.res.status(err.status);
+    };
 
 module.exports.get = function(req, callback) {
     "use strict";
@@ -17,20 +27,9 @@ module.exports.get = function(req, callback) {
             if (req.cookies.login) {
                 user.login(req.cookies.login.email, req.cookies.login.password, function(err, data) {
                     if (err) {
-                        switch (err.type) {
-                            case "database":
-                                req.res.status(500);
-                                callback(err);
-                                return;
-                            case "invalid":
-                                req.res.status(401);
-                                callback(err);
-                                return;
-                            default:
-                                req.res.status(500);
-                                callback(err);
-                                return;
-                        }
+                        handleError(err, req);
+                        callback(err);
+                        return;
                     }
                     req.session.user = data;
 
@@ -51,8 +50,7 @@ module.exports.get = function(req, callback) {
 module.exports.post = function(req, callback) {
     "use strict";
 
-    var userId = req.session.user ? req.session.user.id : 0,
-        date;
+    var userId = req.session.user ? req.session.user.id : 0;
 
     switch (req.parsedPath.length) {
         case 1:
@@ -61,15 +59,15 @@ module.exports.post = function(req, callback) {
                     // Attempt to validate data.
                     if (req.body.coppaDob) {
                         // Ensure the user's DOB is at least 13 years old.
-                        date = moment(req.body.coppaDob);
+                        user.isDobValid(req.body.coppaDob, function(err, data) {
+                            if (err) {
+                                handleError(err, req);
+                                callback(err);
+                                return;
+                            }
 
-                        if (date === false) {
-                            req.res.status(400);
-                            callback({error: "Invalid date."});
-                            return;
-                        }
-
-                        callback({valid: moment().diff(date, "years", true) >= 13});
+                            callback({valid: data});
+                        });
                         return;
                     }
 
@@ -77,7 +75,7 @@ module.exports.post = function(req, callback) {
                         // Ensure the chosen alias is unique.
                         user.aliasExists(req.body.aliasExists, userId, function(err, data) {
                             if (err) {
-                                req.res.status(500);
+                                handleError(err, req);
                                 callback(err);
                                 return;
                             }
@@ -91,7 +89,7 @@ module.exports.post = function(req, callback) {
                         // Ensure the chosen email is unique.
                         user.emailExists(req.body.emailExists, userId, function(err, data) {
                             if (err) {
-                                req.res.status(500);
+                                handleError(err, req);
                                 callback(err);
                                 return;
                             }
@@ -105,20 +103,9 @@ module.exports.post = function(req, callback) {
                 case "login":
                     user.login(req.body.email, req.body.password, function(err, data) {
                         if (err) {
-                            switch (err.type) {
-                                case "database":
-                                    req.res.status(500);
-                                    callback(err);
-                                    return;
-                                case "invalid":
-                                    req.res.status(401);
-                                    callback(err);
-                                    return;
-                                default:
-                                    req.res.status(500);
-                                    callback(err);
-                                    return;
-                            }
+                            handleError(err, req);
+                            callback(err);
+                            return;
                         }
                         req.session.user = data;
 
