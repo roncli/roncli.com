@@ -46,8 +46,6 @@ module.exports = function() {
 
                 validate = function() {
                     var model = new ModelClass();
-                    model.app = window.App;
-
                     model.fetch(window.$.extend(param.settings || {}, {
                         data: JSON.stringify(data),
                         type: "POST",

@@ -1,0 +1,27 @@
+<div class="navbar navbar-default navbar-xs" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-toggle="collapse" data-target="#navigation">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+        </div>
+        <div class="collapse navbar-collapse" id="navigation">
+            <div class="navbar-left">
+                <ul class="nav navbar-nav">
+                    {{#each attributes.accountLinks}}
+                        <li><a href="{{url}}">{{text}}</a></li>
+                    {{/each}}
+                </ul>
+            </div>
+            <div class="navbar-right">
+                <ul class="nav navbar-nav">
+                    <li class="navbar-text">You are logged in as <b>{{attributes.alias}}</b>.</li>
+                    <li><a id="logout" href="javascript:;">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

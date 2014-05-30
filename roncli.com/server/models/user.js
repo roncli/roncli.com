@@ -68,10 +68,9 @@ module.exports.emailExists = function(email, userId, callback) {
  * Logs a user in.
  * @param {string} email The email address.
  * @param {string} password The password.
- * @param {boolean} saveLogin Whether or not to save a successful login.
  * @param {function(null, object)|function(object)} callback The callback function.
  */
-module.exports.login = function(email, password, saveLogin, callback) {
+module.exports.login = function(email, password, callback) {
     "use strict";
 
     db.query(
@@ -128,7 +127,7 @@ module.exports.login = function(email, password, saveLogin, callback) {
                         }
 
                         var accountLinks = [{
-                            url: "account",
+                            url: "/account",
                             text: "Account"
                         }];
 
@@ -137,7 +136,7 @@ module.exports.login = function(email, password, saveLogin, callback) {
                                 switch (row.Role) {
                                     case "SiteAdmin":
                                         accountLinks.push({
-                                            url: "admin",
+                                            url: "/admin",
                                             text: "Admin"
                                         });
                                         break;

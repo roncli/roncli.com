@@ -20,12 +20,15 @@
             <div class="vertical-margin">
                 <input id="loginSaveLogin" type="checkbox" class="text-middle"/><label for="loginSaveLogin" class="text-middle"> Save Login</label><br/>
             </div>
-            <button id="loginButton" class="btn btn-primary">Log In</button>
+            <button type="button" id="loginButton" class="btn btn-primary">Log In</button>
             <div id="loginErrorList" class="panel panel-danger top-margin-only" hidden>
                 <div class="panel-heading">Please correct the following errors before logging in:</div>
                 <div id="loginErrors" class="panel-body"></div>
             </div>
-            <div id="loginServerErrors" class="error"></div>
+            <div id="loginServerErrorList" class="panel panel-danger top-margin-only" hidden>
+                <div class="panel-heading">There was an error while logging in:</div>
+                <div id="loginServerErrors" class="panel-body"></div>
+            </div>
         </form>
     </div>
     <div id="registerTab" class="tab-pane">
@@ -52,14 +55,14 @@
                     <div class="visible-xs">(<a href="http://www.onguardonline.gov/articles/0031-protecting-your-childs-privacy-online" target="_blank">COPPA</a>) DOB:</div>
                 </span>
                 <input id="registerDOB" name="registerDOB" type="text" class="Validate form-control" placeholder="Must be 13 years or older"/>
-                <span class="input-group-btn"><button id="registerDOBButton" class="btn btn-warning" type="button"><span class="glyphicon glyphicon-calendar"></span></button></span>
+                <span class="input-group-btn"><button type="button" id="registerDOBButton" class="btn btn-warning"><span class="glyphicon glyphicon-calendar"></span></button></span>
             </div>
             <div class="input-group">
                 <span class="input-group-addon">Type the characters below:</span>
                 <input id="registerCaptcha" name="registerCaptcha" type="text" maxlength="8" class="Validate form-control" placeholder="Prove you are a human"/>
             </div>
             <img id="registerCaptchaImage" alt="[Captcha Image]" class="text-center image-margin" width="180" height="50" /><br />
-            <button id="registerRegister" class="btn btn-primary">Register</button>
+            <button type="button" id="registerRegister" class="btn btn-primary">Register</button>
             <div id="registerErrorList" class="panel panel-danger top-margin-only" hidden>
                 <div class="panel-heading">Please correct the following errors before registering:</div>
                 <div id="registerErrors" class="panel-body"></div>
@@ -76,7 +79,7 @@
                 <span class="input-group-addon">Email:</span>
                 <input id="forgotPasswordEmail" name="forgotPasswordEmail" type="text" maxlength="256" class="Validate form-control" placeholder="yourname@domain.com"/>
             </div>
-            <button id="forgotPasswordButton" class="btn btn-primary top-margin-only">Recover Password</button>
+            <button type="button" id="forgotPasswordButton" class="btn btn-primary top-margin-only">Recover Password</button>
             <div id="forgotPasswordErrorList" class="panel panel-danger top-margin-only" hidden>
                 <div class="panel-heading">Please correct the following errors before recovering your password:</div>
                 <div id="forgotPasswordErrors" class="panel-body"></div>

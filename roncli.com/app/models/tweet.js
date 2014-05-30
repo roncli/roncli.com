@@ -1,4 +1,4 @@
-var Model = require("rendr/shared/base/model");
+var Model = require("./base");
 
 module.exports = Model.extend();
 

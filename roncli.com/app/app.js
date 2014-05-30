@@ -25,16 +25,16 @@ module.exports = BaseApp.extend({
     start: function() {
         "use strict";
 
-        var _this = this,
+        var app = this,
             twitterShown = false,
             IScroll = require("iscroll"),
-            scroller,
+            scroller, logInUser, logOutUser, attemptLogin,
 
             /**
              * Get the tweets.
              */
             loadTweets = function() {
-                _this.fetch({tweets: {collection: "Tweets"}}, {readFromCache: false, writeToCache: false}, function(err, results) {
+                app.fetch({tweets: {collection: "Tweets"}}, {readFromCache: false, writeToCache: false}, function(err, results) {
                     var divTwitter = $("div.twitter");
 
                     if (!results) {
@@ -46,7 +46,7 @@ module.exports = BaseApp.extend({
                     divTwitter.show();
                     twitterShown = true;
 
-                    $("div.tweets").html(_this.templateAdapter.getTemplate("site/tweet")(results.tweets));
+                    $("div.tweets").html(app.templateAdapter.getTemplate("site/tweet")(results.tweets));
                     $("abbr.setTime").removeClass("setTime").timeago();
                     setTimeout(function() {
                         if (scroller) {
@@ -56,6 +56,301 @@ module.exports = BaseApp.extend({
                     }, 0);
                 });
             };
+
+        /**
+         * Sets the user to logged in.
+         */
+        logInUser = function() {
+            $("div#site-nav").html(app.templateAdapter.getTemplate("site/loggedIn")(app.user));
+
+            // Setup logout button.
+            $("#logout").click("on", function() {
+                var user = new User();
+                user.fetch({
+                    url: "/user/logout",
+                    type: "POST"
+                });
+                logOutUser();
+            });
+        };
+
+        /**
+         * Sets the user to logged out.
+         */
+        logOutUser = function() {
+            app.user = null;
+            $("div#site-nav").html(app.templateAdapter.getTemplate("site/loggedOut")());
+
+            // Setup login form.
+            $("#login").on("click", function() {
+                var today = moment().startOf("day"),
+                    dialog, loginTab, registerTab, forgotPasswordTab;
+
+                // Display the dialog box.
+                dialog = bootbox.dialog({
+                    title: "Log In",
+                    message: app.templateAdapter.getTemplate("site/login")(),
+                    show: false
+                }).off("shown.bs.modal").on("shown.bs.modal", function() {
+                    $("#loginEmail").focus();
+                }).modal("show");
+
+                // Cache jQuery objects once the dialog box is shown.
+                loginTab = $("#loginTab");
+                registerTab = $("#registerTab");
+                forgotPasswordTab = $("#forgotPasswordTab");
+
+                // Set focus when tabs are clicked.
+                $("#loginNav").on("shown.bs.tab", function() {
+                    $("#loginEmail").focus();
+                });
+
+                $("#registerNav").on("shown.bs.tab", function() {
+                    $("#registerCaptchaImage").attr("src", "/images/captcha.png");
+                    $("#registerEmail").focus();
+                });
+
+                $("#forgotPasswordNav").on("shown.bs.tab", function() {
+                    $("#forgotPasswordEmail").focus();
+                });
+
+                // Set the default buttons for each tab.
+                loginTab.defaultButton("#loginButton");
+                registerTab.defaultButton("#registerButton");
+                forgotPasswordTab.defaultButton("#forgotPasswordButton");
+
+                // Setup the DOB date picker.
+                $("#registerDOBButton").datepicker({
+                    format: "MM d, yyyy",
+                    startDate: today.clone().subtract("years", 150).toDate(),
+                    endDate: today.clone().subtract("years", 13).toDate(),
+                    startView: "decade",
+                    autoclose: true
+                }).on("changeDate", function(e) {
+                    var registerDOB = $("#registerDOB");
+                    if (e.date) {
+                        registerDOB.val(moment(e.date).format("MMMM D, YYYY"));
+                    } else {
+                        $(this).datepicker("setDate", registerDOB.val());
+                    }
+                    $("#registerCaptcha").focus();
+                });
+
+                // Ensure the date picker appears when the date is selected.
+                $("#registerDOB").on("focus", function() {
+                    $("#registerDOBButton").click();
+                    $(this).blur();
+                });
+
+                // Set up validation for login tab.
+                $("#loginForm").validate({
+                    rules: {
+                        loginEmail: {
+                            required: true,
+                            email: true
+                        },
+                        loginPassword: {
+                            required: true,
+                            minlength: 6
+                        }
+                    },
+                    messages: {
+                        loginEmail: {
+                            required: "You must enter your email address.",
+                            email: "The email address you entered is not valid."
+                        },
+                        loginPassword: {
+                            required: "You must enter your password.",
+                            minlength: "Your password must be at least 6 characters."
+                        }
+                    },
+                    errorContainer: "#loginErrorList",
+                    errorLabelContainer: "#loginErrors"
+                });
+
+                // Set up validation for the register tab.
+                $("#registerForm").validate({
+                    rules: {
+                        registerEmail: {
+                            required: true,
+                            email: true,
+                            backbone: {
+                                model: User,
+                                inverse: true,
+                                data: function() {
+                                    return {
+                                        emailExists: $("#registerEmail").val()
+                                    };
+                                },
+                                settings: {
+                                    url: "/user/validate"
+                                }
+                            }
+                        },
+                        registerPassword: {
+                            required: true,
+                            minlength: 6
+                        },
+                        registerRetypePassword: {
+                            equalTo: "#registerPassword"
+                        },
+                        registerAlias: {
+                            required: true,
+                            minlength: 3,
+                            backbone: {
+                                model: User,
+                                inverse: true,
+                                data: function() {
+                                    return {
+                                        aliasExists: $("#registerAlias").val()
+                                    };
+                                },
+                                settings: {
+                                    url: "/user/validate"
+                                }
+                            }
+                        },
+                        registerDOB: {
+                            required: true,
+                            backbone: {
+                                model: User,
+                                data: function() {
+                                    return {
+                                        coppaDob: $("#registerDOB").val()
+                                    };
+                                },
+                                settings: {
+                                    url: "/user/validate"
+                                }
+                            }
+                        },
+                        registerCaptcha: {
+                            required: true,
+                            backbone: {
+                                model: Captcha,
+                                data: function() {
+                                    return {
+                                        response: $("#registerCaptcha").val()
+                                    };
+                                },
+                                settings: {
+                                    url: "/captcha/validate"
+                                }
+                            }
+                        }
+                    },
+                    messages: {
+                        registerEmail: {
+                            required: "You must enter an email address.",
+                            email: "The email address you entered is not valid.",
+                            backbone: "The email address you entered is already in use."
+                        },
+                        registerPassword: {
+                            required: "You must enter a password.",
+                            minlength: "Your password must be at least 6 characters."
+                        },
+                        registerRetypePassword: {
+                            equalTo: "The passwords you entered don't match."
+                        },
+                        registerAlias: {
+                            required: "You must enter an alias.",
+                            minlength: "Your alias must be at least 3 characters.",
+                            backbone: "The alias you entered is already in use."
+                        },
+                        registerDOB: {
+                            required: "You must enter a date of birth.",
+                            backbone: "You must be 13 years of age or older to register."
+                        },
+                        registerCaptcha: {
+                            required: "You must type in the characters as shown.",
+                            backbone: "The characters you typed do not match the image."
+                        }
+                    },
+                    errorContainer: "#registerErrorList",
+                    errorLabelContainer: "#registerErrors"
+                });
+
+                // Setup validation for the forgot password tab.
+                $("#forgotPasswordForm").validate({
+                    rules: {
+                        forgotPasswordEmail: {
+                            required: true,
+                            email: true,
+                            backbone: {
+                                model: User,
+                                data: function() {
+                                    return {
+                                        "emailExists": $("#forgotPasswordEmail").val()
+                                    };
+                                },
+                                settings: {
+                                    url: "/user/validate"
+                                }
+                            }
+                        }
+                    },
+                    messages: {
+                        forgotPasswordEmail: {
+                            required: "You must enter your email address.",
+                            email: "You must enter a valid email address.",
+                            backbone: "The email address you entered does not exist."
+                        }
+                    },
+                    errorContainer: "#forgotPasswordErrorList",
+                    errorLabelContainer: "#forgotPasswordErrors"
+                });
+
+                // Setup login button.
+                $("#loginButton").click("on", function() {
+                    attemptLogin({
+                        email: $("#loginEmail").val(),
+                        password: $("#loginPassword").val(),
+                        saveLogin: $("#loginSaveLogin").is(":checked")
+                    }, function(err) {
+                        if (err) {
+                            $("#loginServerErrors").text(err);
+                            $("#loginServerErrorList").show();
+                        } else {
+                            bootbox.hideAll();
+                        }
+                    });
+                });
+            });
+        };
+
+        /**
+         * Attempts to log in the user with the specified data.
+         * @param {object} data The data to log in with.
+         * @param {function} [callback] An optional callback to call upon success.
+         */
+        attemptLogin = function(data, callback) {
+            app.user = new User();
+            app.user.fetch({
+                url: "/user/login",
+                data: JSON.stringify(data),
+                type: "POST",
+                contentType: "application/json",
+                dataType: "json",
+                success: function() {
+                    logInUser();
+                    callback();
+                },
+                error: function(xhr, error) {
+                    var message;
+                    if (error && error.body && error.body.error) {
+                        message = error.body.error;
+                    } else {
+                        message = "There was a server error processing your login.  Please try again later";
+                    }
+                    callback(message);
+                }
+            });
+        };
+
+        // Don't submit any forms.
+        $("body").on("submit", "form", function() {
+            return false;
+        });
 
         // Setup jQuery validation extensions.
         require("./lib/validationExtensions")();
@@ -69,242 +364,17 @@ module.exports = BaseApp.extend({
         $.timeago.settings.strings.month = "a month";
         $.timeago.settings.strings.year = "a year";
 
-        // Setup login form.
-        $("#login").on("click", function() {
-            var today = moment().startOf("day"),
-                navs, tabs, loginTab, registerTab, forgotPasswordTab;
-
-            // Display the dialog box.
-            bootbox.dialog({
-                title: "Log In",
-                message: _this.templateAdapter.getTemplate("site/login")(),
-                show: false
-            }).off("shown.bs.modal").on("shown.bs.modal", function() {
-                $("#loginEmail").focus();
-            }).modal("show");
-
-            // Cache jQuery objects once the dialog box is shown.
-            loginTab = $("#loginTab");
-            registerTab = $("#registerTab");
-            forgotPasswordTab = $("#forgotPasswordTab");
-
-            // Set focus when tabs are clicked.
-            $("#loginNav").on("shown.bs.tab", function() {
-                $("#loginEmail").focus();
-            });
-
-            $("#registerNav").on("shown.bs.tab", function() {
-                $("#registerCaptchaImage").attr("src", "/images/captcha.png");
-                $("#registerEmail").focus();
-            });
-
-            $("#forgotPasswordNav").on("shown.bs.tab", function() {
-                $("#forgotPasswordEmail").focus();
-            });
-
-            // Set the default buttons for each tab.
-            loginTab.defaultButton("#loginButton");
-            registerTab.defaultButton("#registerButton");
-            forgotPasswordTab.defaultButton("#forgotPasswordButton");
-
-            // Setup the DOB date picker.
-            $("#registerDOBButton").datepicker({
-                format: "MM d, yyyy",
-                startDate: today.clone().subtract("years", 150).toDate(),
-                endDate: today.clone().subtract("years", 13).toDate(),
-                startView: "decade",
-                autoclose: true
-            }).on("changeDate", function(e) {
-                var registerDOB = $("#registerDOB");
-                if (e.date) {
-                    registerDOB.val(moment(e.date).format("MMMM D, YYYY"));
-                } else {
-                    $(this).datepicker("setDate", registerDOB.val());
-                }
-                $("#registerCaptcha").focus();
-            });
-
-            // Ensure the date picker appears when the date is selected.
-            $("#registerDOB").on("focus", function() {
-                $("#registerDOBButton").click();
-                $(this).blur();
-            });
-
-            // Set up validation for login tab.
-            $("#loginForm").validate({
-                rules: {
-                    loginEmail: {
-                        required: true,
-                        email: true
-                    },
-                    loginPassword: {
-                        required: true,
-                        minlength: 6
-                    }
-                },
-                messages: {
-                    loginEmail: {
-                        required: "You must enter your email address.",
-                        email: "The email address you entered is not valid."
-                    },
-                    loginPassword: {
-                        required: "You must enter your password.",
-                        minlength: "Your password must be at least 6 characters."
-                    }
-                },
-                errorContainer: "#loginErrorList",
-                errorLabelContainer: "#loginErrors"
-            });
-
-            // Set up validation for the register tab.
-            $("#registerForm").validate({
-                rules: {
-                    registerEmail: {
-                        required: true,
-                        email: true,
-                        backbone: {
-                            model: User,
-                            inverse: true,
-                            data: function() {
-                                return {
-                                    emailExists: $("#registerEmail").val()
-                                };
-                            },
-                            settings: {
-                                url: "/user/validate"
-                            }
-                        }
-                    },
-                    registerPassword: {
-                        required: true,
-                        minlength: 6
-                    },
-                    registerRetypePassword: {
-                        equalTo: "#registerPassword"
-                    },
-                    registerAlias: {
-                        required: true,
-                        minlength: 3,
-                        backbone: {
-                            model: User,
-                            inverse: true,
-                            data: function() {
-                                return {
-                                    aliasExists: $("#registerAlias").val()
-                                };
-                            },
-                            settings: {
-                                url: "/user/validate"
-                            }
-                        }
-                    },
-                    registerDOB: {
-                        required: true,
-                        backbone: {
-                            model: User,
-                            data: function() {
-                                return {
-                                    coppaDob: $("#registerDOB").val()
-                                };
-                            },
-                            settings: {
-                                url: "/user/validate"
-                            }
-                        }
-                    },
-                    registerCaptcha: {
-                        required: true,
-                        backbone: {
-                            model: Captcha,
-                            data: function() {
-                                return {
-                                    response: $("#registerCaptcha").val()
-                                };
-                            },
-                            settings: {
-                                url: "/captcha/validate"
-                            }
-                        }
-                    }
-                },
-                messages: {
-                    registerEmail: {
-                        required: "You must enter an email address.",
-                        email: "The email address you entered is not valid.",
-                        backbone: "The email address you entered is already in use."
-                    },
-                    registerPassword: {
-                        required: "You must enter a password.",
-                        minlength: "Your password must be at least 6 characters."
-                    },
-                    registerRetypePassword: {
-                        equalTo: "The passwords you entered don't match."
-                    },
-                    registerAlias: {
-                        required: "You must enter an alias.",
-                        minlength: "Your alias must be at least 3 characters.",
-                        backbone: "The alias you entered is already in use."
-                    },
-                    registerDOB: {
-                        required: "You must enter a date of birth.",
-                        backbone: "You must be 13 years of age or older to register."
-                    },
-                    registerCaptcha: {
-                        required: "You must type in the characters as shown.",
-                        backbone: "The characters you typed do not match the image."
-                    }
-                },
-                errorContainer: "#registerErrorList",
-                errorLabelContainer: "#registerErrors"
-            });
-
-            // Setup validation for the forgot password tab.
-            $("#forgotPasswordForm").validate({
-                rules: {
-                    forgotPasswordEmail: {
-                        required: true,
-                        email: true,
-                        backbone: {
-                            model: User,
-                            data: function() {
-                                return {
-                                    "emailExists": $("#forgotPasswordEmail").val()
-                                };
-                            },
-                            settings: {
-                                url: "/user/validate"
-                            }
-                        }
-                    }
-                },
-                messages: {
-                    forgotPasswordEmail: {
-                        required: "You must enter your email address.",
-                        email: "You must enter a valid email address.",
-                        backbone: "The email address you entered does not exist."
-                    }
-                },
-                errorContainer: "#forgotPasswordErrorList",
-                errorLabelContainer: "#forgotPasswordErrors"
-            });
-
-            // Setup login button.
-            $("#loginButton").click("on", function() {
-                
-            });
-
-        });
-
         // Start loading tweets.
         loadTweets();
         setInterval(loadTweets, 900000);
 
         // Determine if the user is logged in.
-        _this.fetch({user: {model: "User"}}, {readFromCache: false, writeToCache: false}, function(err, results) {
+        app.fetch({user: {model: "User"}}, {readFromCache: false, writeToCache: false}, function(err, results) {
             if (results) {
-                $("div#site-nav").html(_this.templateAdapter.getTemplate("site/loggedIn")(results.user));
+                app.user = results.user;
+                logInUser();
             } else {
-                $("div#site-nav").html(_this.templateAdapter.getTemplate("site/loggedOut")());
+                logOutUser();
             }
         });
 

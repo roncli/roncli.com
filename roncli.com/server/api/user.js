@@ -13,6 +13,32 @@ module.exports.get = function(req, callback) {
                 return;
             }
 
+            // Attempt to log in the user from a cookie.
+            if (req.cookies.login) {
+                user.login(req.cookies.login.email, req.cookies.login.password, function(err, data) {
+                    if (err) {
+                        switch (err.type) {
+                            case "database":
+                                req.res.status(500);
+                                callback(err);
+                                return;
+                            case "invalid":
+                                req.res.status(401);
+                                callback(err);
+                                return;
+                            default:
+                                req.res.status(500);
+                                callback(err);
+                                return;
+                        }
+                    }
+                    req.session.user = data;
+
+                    callback(data);
+                });
+                return;
+            }
+
             req.res.status(401);
             callback({error: "You are not logged in."});
             return;
@@ -77,7 +103,7 @@ module.exports.post = function(req, callback) {
 
                     break;
                 case "login":
-                    user.login(req.body.email, req.body.password, req.body.saveLogin, function(err, data) {
+                    user.login(req.body.email, req.body.password, function(err, data) {
                         if (err) {
                             switch (err.type) {
                                 case "database":
@@ -85,7 +111,7 @@ module.exports.post = function(req, callback) {
                                     callback(err);
                                     return;
                                 case "invalid":
-                                    req.res.status(400);
+                                    req.res.status(401);
                                     callback(err);
                                     return;
                                 default:
@@ -96,11 +122,16 @@ module.exports.post = function(req, callback) {
                         }
                         req.session.user = data;
 
+                        if (req.body.saveLogin) {
+                            req.res.cookie("login", {email: req.body.email, password: req.body.password}, {expires: moment().add("years", 1).toDate()});
+                        }
+
                         callback(data);
                     });
                     return;
                 case "logout":
                     delete req.session.user;
+                    req.res.clearCookie("login");
                     req.res.status(204);
                     callback();
                     return;
