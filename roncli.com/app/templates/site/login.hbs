@@ -62,12 +62,15 @@
                 <input id="registerCaptcha" name="registerCaptcha" type="text" maxlength="8" class="Validate form-control" placeholder="Prove you are a human"/>
             </div>
             <img id="registerCaptchaImage" alt="[Captcha Image]" class="text-center image-margin" width="180" height="50" /><br />
-            <button type="button" id="registerRegister" class="btn btn-primary">Register</button>
+            <button type="button" id="registerButton" class="btn btn-primary">Register</button>
             <div id="registerErrorList" class="panel panel-danger top-margin-only" hidden>
                 <div class="panel-heading">Please correct the following errors before registering:</div>
                 <div id="registerErrors" class="panel-body"></div>
             </div>
-            <div id="registerServerErrors" class="error"></div>
+            <div id="registerServerErrorList" class="panel panel-danger top-margin-only" hidden>
+                <div class="panel-heading">There was an error while registering:</div>
+                <div id="registerServerErrors" class="panel-body"></div>
+            </div>
         </form>
     </div>
     <div id="forgotPasswordTab" class="tab-pane">

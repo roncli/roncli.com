@@ -3,9 +3,20 @@ var moment = require("moment"),
     crypto = require("crypto"),
     _ = require("underscore"),
     captcha = require("./captcha"),
+    guid = require("../guid"),
     promise = require("promised-io/promise"),
     Deferred = promise.Deferred,
-    all = promise.all;
+    all = promise.all,
+
+    getHashedPassword = function(password, salt, callback) {
+        "use strict";
+
+        var sha1 = crypto.createHash("sha1");
+        sha1.write(password + "-" + salt, "utf8", function() {
+            sha1.end();
+            callback(sha1.read().toString("hex").toUpperCase());
+        });
+    };
 
 module.exports.isDobValid = function(dob, callback) {
     "use strict";
@@ -116,13 +127,10 @@ module.exports.login = function(email, password, callback) {
                 return;
             }
 
-            var sha1 = crypto.createHash("sha1"),
-                user = data.tables[0].rows[0];
+            var user = data.tables[0].rows[0],
+                salt = guid.unparse(user.Salt);
 
-            sha1.write(password + "-" + user.Salt, "utf8", function() {
-                sha1.end();
-                var hashedPassword = sha1.read().toString("hex").toUpperCase();
-
+            getHashedPassword(password, salt, function(hashedPassword) {
                 if (hashedPassword !== user.PasswordHash) {
                     callback({
                         error: "Invalid email address or password.",
@@ -183,12 +191,14 @@ module.exports.login = function(email, password, callback) {
  * @param {string} password The user's desired password.
  * @param {string} alias The user's desired alias.
  * @param {string} dob The user's date of birth.
- * @param {object} captcha The captcha response from the server.
- * @param {string} captchaResponse
+ * @param {object} captchaData The captcha data from the server.
+ * @param {string} captchaResponse The captcha response from the user.
  * @param {function(null, object)|function(object)} callback The callback function.
  */
-module.exports.register = function(email, password, alias, dob, captcha, captchaResponse, callback) {
+module.exports.register = function(email, password, alias, dob, captchaData, captchaResponse, callback) {
     "use strict";
+
+    var User = this;
 
     // First, we will run the non-database validations.
     all(
@@ -271,7 +281,7 @@ module.exports.register = function(email, password, alias, dob, captcha, captcha
         (function() {
             var deferred = new Deferred();
 
-            this.isDobValid(dob, function(err, data) {
+            User.isDobValid(dob, function(err, data) {
                 if (err) {
                     deferred.reject(err);
                     return;
@@ -295,7 +305,7 @@ module.exports.register = function(email, password, alias, dob, captcha, captcha
         (function() {
             var deferred = new Deferred();
 
-            captcha.isCaptchaValid(captcha, captchaResponse, function(err, data) {
+            captcha.isCaptchaValid(captchaData, captchaResponse, function(err, data) {
                 if (err) {
                     deferred.reject(err);
                     return;
@@ -317,9 +327,91 @@ module.exports.register = function(email, password, alias, dob, captcha, captcha
     ).then(
         function() {
             // Next, we will run the database validations.
+            all(
+                // Ensure the email address is not in use.
+                (function() {
+                    var deferred = new Deferred();
+
+                    User.emailExists(email, 0, function(err, data) {
+                        if (err) {
+                            deferred.reject(err);
+                            return;
+                        }
+
+                        if (data) {
+                            deferred.reject({
+                                error: "The email address you entered is already in use.",
+                                status: 400
+                            });
+                            return;
+                        }
+
+                        deferred.resolve(true);
+                    });
+                }()),
+
+                // Ensure the alias is not in use.
+                (function () {
+                    var deferred = new Deferred();
+
+                    User.aliasExists(alias, 0, function(err, data) {
+                        if (err) {
+                            deferred.reject(err);
+                            return;
+                        }
+
+                        if (data) {
+                            deferred.reject({
+                                error: "The alias you entered is already in use.",
+                                status: 400
+                            });
+                            return;
+                        }
+
+                        deferred.resolve(true);
+                    });
+                }())
+            ).then(
+                function() {
+                    // All the validations passed, run the registration.
+                    var salt = guid.v4();
+                    getHashedPassword(password, salt, function(hashedPassword) {
+                        var validationCode = guid.v4();
+                        db.query(
+                            "INSERT INTO tblUser (Email, DOB, Alias, Salt, PasswordHash, Validated, ValidationCode) VALUES (@email, @dob, @alias, @salt, @passwordHash, 0, @validationCode); SELECT SCOPE_IDENTITY() UserID;",
+                            {
+                                email: {type: "varchar", size: 256, value: email},
+                                dob: {type: "datetime", value: new Date(dob)},
+                                alias: {type: "varchar", size: 20, value: alias},
+                                salt: {type: "uniqueidentifier", value: salt},
+                                passwordHash: {type: "varchar", size: 256, value: hashedPassword},
+                                validationCode: {type: "uniqueidentifier", value: validationCode}
+                            },
+                            function(data) {
+                                if (data.err) {
+                                    console.log("Database error in user.aliasExists.");
+                                    console.log(data.err);
+                                    callback({
+                                        error: "There was a database error in user.register.  Please reload the page and try again.",
+                                        status: 500
+                                    });
+                                    return;
+                                }
+
+                                // Send validation email.
+                            }
+                        );
+                    });
+                },
+
+                // If any of the functions error out, it will be handled here.
+                function(err) {
+                    callback(err);
+                }
+            );
         },
 
-        // If any of the all functions error out, it will be handled here.
+        // If any of the functions error out, it will be handled here.
         function(err) {
             callback(err);
         }

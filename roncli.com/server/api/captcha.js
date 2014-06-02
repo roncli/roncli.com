@@ -1,4 +1,4 @@
-var captcha = ("../models/captcha");
+var captcha = require("../models/captcha");
 
 module.exports.post = function(req, callback) {
     "use strict";

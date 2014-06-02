@@ -115,12 +115,27 @@ module.exports.post = function(req, callback) {
 
                         callback(data);
                     });
+
+                    return;
+                case "register":
+                    user.register(req.body.email, req.body.password, req.body.alias, req.body.dob, req.session.captcha, req.body.captcha, function(err, data) {
+                        if (err) {
+                            handleError(err, req);
+                            callback(err);
+                            return;
+                        }
+
+                        req.res.status(204);
+                        callback();
+                    });
+
                     return;
                 case "logout":
                     delete req.session.user;
                     req.res.clearCookie("login");
                     req.res.status(204);
                     callback();
+
                     return;
             }
             break;

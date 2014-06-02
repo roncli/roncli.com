@@ -303,18 +303,64 @@ module.exports = BaseApp.extend({
 
                 // Setup login button.
                 $("#loginButton").click("on", function() {
-                    attemptLogin({
-                        email: $("#loginEmail").val(),
-                        password: $("#loginPassword").val(),
-                        saveLogin: $("#loginSaveLogin").is(":checked")
-                    }, function(err) {
-                        if (err) {
-                            $("#loginServerErrors").text(err);
-                            $("#loginServerErrorList").show();
-                        } else {
-                            bootbox.hideAll();
-                        }
-                    });
+                    var loginButton = $(this);
+                    if ($("#loginForm").valid()) {
+                        loginButton.attr("disabled", "");
+                        attemptLogin({
+                            email: $("#loginEmail").val(),
+                            password: $("#loginPassword").val(),
+                            saveLogin: $("#loginSaveLogin").is(":checked")
+                        }, function(err) {
+                            if (err) {
+                                $("#loginServerErrors").text(err);
+                                $("#loginServerErrorList").show();
+                                loginButton.removeAttr("disabled");
+                            } else {
+                                bootbox.hideAll();
+                            }
+                        });
+                    }
+                });
+
+                // Setup register button.
+                $("#registerButton").click("on", function() {
+                    var registerForm = $("#registerForm"),
+                        registerButton = $(this),
+                        user;
+
+                    registerForm.validate().element("#registerRetypePassword");
+                    if (registerForm.valid()) {
+                        registerButton.attr("disabled", "");
+                        user = new User();
+                        user.fetch({
+                            url: "/user/register",
+                            data: JSON.stringify({
+                                email: $("#registerEmail").val(),
+                                password: $("#registerPassword").val(),
+                                alias: $("#registerAlias").val(),
+                                dob: $("#registerDOB").val(),
+                                captcha: $("#registerCaptcha").val()
+                            }),
+                            type: "POST",
+                            contentType: "application/json",
+                            dataType: "json",
+                            success: function() {
+                                bootbox.hideAll();
+                                // TODO: Inform user that a validation email has been sent out.
+                            },
+                            error: function(xhr, error) {
+                                var message;
+                                if (error && error.body && error.body.error) {
+                                    message = error.body.error;
+                                } else {
+                                    message = "There was a server error processing your registration.  Plesae try again later.";
+                                }
+                                $("#registerServerErrors").text(message);
+                                $("#registerServerErrorList").show();
+                                registerButton.removeAttr("disabled");
+                            }
+                        });
+                    }
                 });
             });
         };

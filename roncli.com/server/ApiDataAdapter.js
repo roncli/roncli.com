@@ -1,6 +1,7 @@
 var DataAdapter = require("rendr/server/data_adapter"),
     fs = require("fs"),
-    util = require("util");
+    util = require("util"),
+    domain = require("domain");
 
 /**
  * Creates an instance of the API Data Adapter.
@@ -40,7 +41,7 @@ ApiDataAdapter.prototype.request = function(req, api, options, callback) {
 
     // Check to ensure the API being requested exists.
     fs.exists(filename.replace(".", __dirname), function(exists) {
-        var script, method;
+        var script, method, d;
 
         if (exists) {
             // Check to ensure the method on the API exists.
@@ -48,10 +49,31 @@ ApiDataAdapter.prototype.request = function(req, api, options, callback) {
             method = api.method.toLowerCase();
 
             if (typeof script[method] === "function") {
-                // Call the API.
+                // Call the API from within a domain.
                 req.parsedPath = path.slice(2);
-                script[method](req, function(json) {
-                    callback(null, req.res, json);
+
+                d = domain.create();
+
+                d.add(req);
+                d.add(callback);
+
+                d.on("error", function(err) {
+                    try {
+                        console.log("Unknown server error.");
+                        console.log(err);
+                        console.log(err.stack);
+                        req.res.status(500);
+                        callback(null, req.res, {error: "Unknown server error."});
+                    } catch (err2) {
+                        console.log("Error sending 500.");
+                        console.log(err2);
+                    }
+                });
+
+                d.run(function() {
+                    script[method](req, function(json) {
+                        callback(null, req.res, json);
+                    });
                 });
             } else {
                 // Return a 405 when the method is not allowed.
