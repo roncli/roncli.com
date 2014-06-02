@@ -118,7 +118,7 @@ module.exports.post = function(req, callback) {
 
                     return;
                 case "register":
-                    user.register(req.body.email, req.body.password, req.body.alias, req.body.dob, req.session.captcha, req.body.captcha, function(err, data) {
+                    user.register(req.body.email, req.body.password, req.body.alias, req.body.dob, req.session.captcha, req.body.captcha, function(err) {
                         if (err) {
                             handleError(err, req);
                             callback(err);

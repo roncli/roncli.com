@@ -3,6 +3,8 @@ var moment = require("moment"),
     crypto = require("crypto"),
     _ = require("underscore"),
     captcha = require("./captcha"),
+    mail = require("./mail"),
+    template = require("../templates/template.js"),
     guid = require("../guid"),
     promise = require("promised-io/promise"),
     Deferred = promise.Deferred,
@@ -193,7 +195,7 @@ module.exports.login = function(email, password, callback) {
  * @param {string} dob The user's date of birth.
  * @param {object} captchaData The captcha data from the server.
  * @param {string} captchaResponse The captcha response from the user.
- * @param {function(null, object)|function(object)} callback The callback function.
+ * @param {function(null)|function(object)} callback The callback function.
  */
 module.exports.register = function(email, password, alias, dob, captchaData, captchaResponse, callback) {
     "use strict";
@@ -392,13 +394,26 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
                                     console.log("Database error in user.aliasExists.");
                                     console.log(data.err);
                                     callback({
-                                        error: "There was a database error in user.register.  Please reload the page and try again.",
+                                        error: "There was a database error in user.register.  If you need help registering, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
                                         status: 500
                                     });
                                     return;
                                 }
 
                                 // Send validation email.
+                                User.sendValidationEmail(data.UserID, email, alias, validationCode, function(err, data) {
+                                    if (err) {
+                                        console.log("Error sending validation email.");
+                                        console.log(err.err);
+                                        callback({
+                                            error: "There was an email error in user.register.  If you need help registering, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                                            status: 500
+                                        });
+                                        return;
+                                    }
+
+                                    callback();
+                                });
                             }
                         );
                     });
@@ -412,6 +427,81 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
         },
 
         // If any of the functions error out, it will be handled here.
+        function(err) {
+            callback(err);
+        }
+    );
+};
+
+/**
+ * Sends a validation email to the user.
+ * @param {number} userId The user ID.
+ * @param {string} email The user's email address.
+ * @param {string} alias The user's alias.
+ * @param {string} validationCode The validation code.
+ * @param {function(null)|function(object)} callback The callback function.
+ */
+module.exports.sendValidationEmail = function(userId, email, alias, validationCode, callback) {
+    "use strict";
+
+    var toTemplate, htmlTemplate, textTemplate;
+
+    all(
+        (function() {
+            var deferred = new Deferred();
+
+            template.get("email/to", function(err, template) {
+                if (err) {
+                    deferred.reject(err);
+                    return;
+                }
+
+                toTemplate = template;
+                deferred.resolve(true);
+            });
+
+            return deferred.promise;
+        }()),
+        (function() {
+            var deferred = new Deferred();
+
+            template.get("validation/html", function(err, template) {
+                if (err) {
+                    deferred.reject(err);
+                    return;
+                }
+
+                htmlTemplate = template;
+                deferred.resolve(true);
+            });
+
+            return deferred.promise;
+        }()),
+        (function() {
+            var deferred = new Deferred();
+
+            template.get("validation/text", function(err, template) {
+                if (err) {
+                    deferred.reject(err);
+                    return;
+                }
+
+                textTemplate = template;
+                deferred.resolve(true);
+            });
+
+            return deferred.promise;
+        }())
+    ).then(
+        function() {
+            mail.send({
+                to: toTemplate({alias: alias, email: email}),
+                subject: "[roncli.com] Please validate your registration",
+                html: toTemplate({alias: alias, email: email, userId: userId, validationCode: validationCode}),
+                text: textTemplate({alias: alias, email: email, userId: userId, validationCode: validationCode})
+            }, callback);
+        },
+
         function(err) {
             callback(err);
         }

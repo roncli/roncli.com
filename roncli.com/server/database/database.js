@@ -23,8 +23,6 @@ sql.query = function(sqlStr, params, callback) {
                 _(table.rows).each(function(row, index) {
                     var result = {};
                     _(columns).each(function(column) {
-                        console.log(row);
-                        console.log(column);
                         result[column] = row.getValue(column);
                     });
                     table.rows[index] = result;
