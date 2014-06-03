@@ -444,66 +444,26 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
 module.exports.sendValidationEmail = function(userId, email, alias, validationCode, callback) {
     "use strict";
 
-    var toTemplate, htmlTemplate, textTemplate;
-
-    all(
-        (function() {
-            var deferred = new Deferred();
-
-            template.get("email/to", function(err, template) {
-                if (err) {
-                    deferred.reject(err);
-                    return;
-                }
-
-                toTemplate = template;
-                deferred.resolve(true);
-            });
-
-            return deferred.promise;
-        }()),
-        (function() {
-            var deferred = new Deferred();
-
-            template.get("validation/html", function(err, template) {
-                if (err) {
-                    deferred.reject(err);
-                    return;
-                }
-
-                htmlTemplate = template;
-                deferred.resolve(true);
-            });
-
-            return deferred.promise;
-        }()),
-        (function() {
-            var deferred = new Deferred();
-
-            template.get("validation/text", function(err, template) {
-                if (err) {
-                    deferred.reject(err);
-                    return;
-                }
-
-                textTemplate = template;
-                deferred.resolve(true);
-            });
-
-            return deferred.promise;
-        }())
-    ).then(
-        function() {
-            mail.send({
-                to: toTemplate({alias: alias, email: email}),
-                subject: "[roncli.com] Please validate your registration",
-                html: toTemplate({alias: alias, email: email, userId: userId, validationCode: validationCode}),
-                text: textTemplate({alias: alias, email: email, userId: userId, validationCode: validationCode})
-            }, callback);
-        },
-
-        function(err) {
+    template.get(["email/to", "email/htmlTemplate", "email/textTemplate", "email/validation/html", "email/validation/text"], function(err, templates) {
+        if (err) {
             callback(err);
+            return;
         }
-    );
+        mail.send({
+            to: templates["email/to"]({to: [{alias: alias, email: email}]}),
+            subject: "Please validate your registration",
+            html: templates["email/htmlTemplate"]({
+                html: templates["email/validation/html"]({}),
+                email: email,
+                reason: "this email address was registered on the site",
+                year: moment().year()
+            }),
+            text: templates["email/textTemplate"]({
+                text: templates["email/validation/text"]({}),
+                email: email,
+                reason: "this email address was registered on the site",
+                year: moment().year()
+            })
+        }, callback);
+    });
 };

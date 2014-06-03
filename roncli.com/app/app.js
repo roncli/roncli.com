@@ -358,6 +358,11 @@ module.exports = BaseApp.extend({
                                 $("#registerServerErrors").text(message);
                                 $("#registerServerErrorList").show();
                                 registerButton.removeAttr("disabled");
+
+                                // Reload the captcha image.
+                                $("#registerCaptchaImage").attr("src", "/images/captcha.png");
+                                $("#registerCaptcha").val("");
+                                $("#registerForm").validate().element("#registerCaptcha");
                             }
                         });
                     }
