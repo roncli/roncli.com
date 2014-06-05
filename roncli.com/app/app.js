@@ -312,7 +312,7 @@ module.exports = BaseApp.extend({
                             saveLogin: $("#loginSaveLogin").is(":checked")
                         }, function(err) {
                             if (err) {
-                                $("#loginServerErrors").text(err);
+                                $("#loginServerErrors").html(err);
                                 $("#loginServerErrorList").show();
                                 loginButton.removeAttr("disabled");
                             } else {
@@ -355,7 +355,7 @@ module.exports = BaseApp.extend({
                                 } else {
                                     message = "There was a server error processing your registration.  Plesae try again later.";
                                 }
-                                $("#registerServerErrors").text(message);
+                                $("#registerServerErrors").html(message);
                                 $("#registerServerErrorList").show();
                                 registerButton.removeAttr("disabled");
 

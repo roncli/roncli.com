@@ -3,9 +3,9 @@ var moment = require("moment"),
     crypto = require("crypto"),
     _ = require("underscore"),
     captcha = require("./captcha"),
-    mail = require("./mail"),
+    mail = require("../mail/mail"),
     template = require("../templates/template.js"),
-    guid = require("../guid"),
+    guid = require("../guid/guid"),
     promise = require("promised-io/promise"),
     Deferred = promise.Deferred,
     all = promise.all,
@@ -404,7 +404,7 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
                                 User.sendValidationEmail(data.UserID, email, alias, validationCode, function(err, data) {
                                     if (err) {
                                         console.log("Error sending validation email.");
-                                        console.log(err.err);
+                                        console.log(err);
                                         callback({
                                             error: "There was an email error in user.register.  If you need help registering, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
                                             status: 500
