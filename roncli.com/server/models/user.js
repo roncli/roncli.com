@@ -400,10 +400,20 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
                                     return;
                                 }
 
+                                if (!data.tables || !data.tables[0] || data.tables[0].rows.length === 0) {
+                                    console.log("Newly created user not found in the database.");
+                                    console.log(email);
+                                    callback({
+                                        error: "There was a database error in user.register.  If you need help registering, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                                        status: 500
+                                    });
+                                    return;
+                                }
+
                                 // Send validation email.
-                                User.sendValidationEmail(data.UserID, email, alias, validationCode, function(err, data) {
+                                User.sendValidationEmail(data.tables[0].rows[0].UserID, email, alias, validationCode, function(err) {
                                     if (err) {
-                                        console.log("Error sending validation email.");
+                                        console.log("Error sending validation email in user.register.");
                                         console.log(err);
                                         callback({
                                             error: "There was an email error in user.register.  If you need help registering, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
@@ -431,6 +441,167 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
             callback(err);
         }
     );
+};
+
+/**
+ * Sends a user an email to begin the password recovery process.
+ * @param {string} email The user's email address.
+ * @param {function} callback The callback function.
+ */
+module.exports.forgotPassword = function(email, callback) {
+    "use strict";
+
+    var User = this;
+
+    // Email is required.
+    if (typeof email !== "string" || email.length === 0) {
+        callback({
+            error: "You must enter an email address.",
+            status: 400
+        });
+        return;
+    }
+
+    // Ensure the email exists.
+    User.emailExists(email, 0, function(err, data) {
+        if (err) {
+            callback(err);
+            return;
+        }
+
+        if (!data) {
+            callback({
+                error: "The email address does not exist in our system.",
+                status: 400
+            });
+            return;
+        }
+
+        // Get the user information.
+        db.query(
+            "SELECT UserId, Email, Alias, Validated FROM tblUser WHERE Email = @email",
+            {
+                email: {type: "varchar", size: 256, value: email}
+            },
+            function(data) {
+                var user;
+
+                if (data.err) {
+                    console.log("Database error retrieving user in user.forgotPassword.");
+                    console.log(data.err);
+                    callback({
+                        error: "There was a database error in user.forgotPassword.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                if (!data.tables || !data.tables[0] || data.tables[0].rows.length === 0) {
+                    console.log("Confirmed user not found in the database.");
+                    console.log(email);
+                    callback({
+                        error: "There was a database error in user.forgotPassword.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                user = data.tables[0].rows[0];
+
+                if (user.Validated) {
+                    // Get whether the user already has an active reset password request.
+                    db.query(
+                        "SELECT COUNT(AuthorizationID) Requests FROM tblPasswordChangeAuthorization WHERE UserID = @userId AND ExpirationDate > GETDATE()",
+                        {
+                            userId: {type: "int", value: user.UserID}
+                        },
+                        function(data) {
+                            var authorizationCode;
+
+                            if (data.err) {
+                                console.log("Database error checking for existing authorizations in user.forgotPassword.");
+                                console.log(data.err);
+                                callback({
+                                    error: "There was a database error in user.forgotPassword.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                                    status: 500
+                                });
+                                return;
+                            }
+
+                            if (!data.tables || !data.tables[0] || data.tables[0].rows.length === 0) {
+                                console.log("Missing authorization counts in database.");
+                                console.log(data);
+                                callback({
+                                    error: "There was a database error in user.forgotPassword.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                                    status: 500
+                                });
+                                return;
+                            }
+
+                            if (data.tables[0].rows[0].Requests === 0) {
+                                callback({
+                                    error: "You have requested a reset password request too recently.  Please try again later.",
+                                    status: 403
+                                });
+                                return;
+                            }
+
+                            authorizationCode = guid.v4();
+
+                            db.query(
+                                "INSERT INTO tblPasswordChangeAuthorization (UserID, AuthorizationCode, ExpirationDate, CrDate) VALUES (@userId, @authorizationCode, DATEADD('hour', 2, GETDATE()), GETDATE());",
+                                {
+                                    userId: {type: "int", value: user.UserID},
+                                    authorizationCode: {type: "uniqueidentifier", value: authorizationCode}
+                                },
+                                function(data) {
+                                    if (data.err) {
+                                        console.log("Database error creating database authorizations in user.forgotPassword.");
+                                        console.log(data.err);
+                                        callback({
+                                            error: "There was a database error in user.forgotPassword.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                                            status: 500
+                                        });
+                                        return;
+                                    }
+
+                                    User.sendResetPasswordEmail(data.UserID, email, alias, authorizationCode, function(err) {
+                                        if (err) {
+                                            console.log("Error sending reset password email in user.forgotPassword.");
+                                            console.log(err);
+                                            callback({
+                                                error: "There was an email error in user.forgotPassword.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                                                status: 500
+                                            });
+                                            return;
+                                        }
+
+                                        callback(null, {validationRequired: false});
+                                    })
+                                }
+                            )
+                        }
+                    );
+                } else {
+                    // User requires validation, resend validation email.
+                    // TODO: Limit to one per hour.
+                    User.sendValidationEmail(data.UserID, email, alias, validationCode, function(err) {
+                        if (err) {
+                            console.log("Error sending validation email in user.forgotPassword.");
+                            console.log(err);
+                            callback({
+                                error: "There was an email error in user.forgotPassword.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                                status: 500
+                            });
+                            return;
+                        }
+
+                        callback(null, {validationRequired: true});
+                    });
+                }
+            }
+        );
+    });
 };
 
 /**
@@ -462,6 +633,43 @@ module.exports.sendValidationEmail = function(userId, email, alias, validationCo
                 text: templates["email/validation/text"]({}),
                 email: email,
                 reason: "this email address was registered on the site",
+                year: moment().year()
+            })
+        }, callback);
+    });
+};
+
+/**
+ * Sends a reset password email to the user.
+ * @param {number} userId The user ID.
+ * @param {string} email The user's email address.
+ * @param {string} alias The user's alias.
+ * @param {string} authorizationCode The authorization code.
+ * @param {function(null)|function(object)} callback The callback function.
+ */
+module.exports.sendResetPasswordEmail = function(userId, email, alias, authorizationCode, callback) {
+    "use strict";
+
+    template.get(["email/to", "email/htmlTemplate", "email/textTemplate", "email/resetPassword/html", "email/resetPassword/text"], function(err, templates) {
+        if (err) {
+            callback(err);
+            return;
+        }
+        mail.send({
+            to: templates["email/to"]({to: [
+                {alias: alias, email: email}
+            ]}),
+            subject: "Reset password request",
+            html: templates["email/htmlTemplate"]({
+                html: templates["email/resetPassword/html"]({}),
+                email: email,
+                reason: "a password reset was requested for this email address",
+                year: moment().year()
+            }),
+            text: templates["email/textTemplate"]({
+                text: templates["email/resetPassword/text"]({}),
+                email: email,
+                reason: "a password reset was requested for this email address",
                 year: moment().year()
             })
         }, callback);

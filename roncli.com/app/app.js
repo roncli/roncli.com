@@ -64,7 +64,7 @@ module.exports = BaseApp.extend({
             $("div#site-nav").html(app.templateAdapter.getTemplate("site/loggedIn")(app.user));
 
             // Setup logout button.
-            $("#logout").click("on", function() {
+            $("#logout").on("click", function() {
                 var user = new User();
                 user.fetch({
                     url: "/user/logout",
@@ -302,7 +302,7 @@ module.exports = BaseApp.extend({
                 });
 
                 // Setup login button.
-                $("#loginButton").click("on", function() {
+                $("#loginButton").on("click", function() {
                     var loginButton = $(this);
                     if ($("#loginForm").valid()) {
                         loginButton.attr("disabled", "");
@@ -323,7 +323,7 @@ module.exports = BaseApp.extend({
                 });
 
                 // Setup register button.
-                $("#registerButton").click("on", function() {
+                $("#registerButton").on("click", function() {
                     var registerForm = $("#registerForm"),
                         registerButton = $(this),
                         user;
@@ -363,6 +363,39 @@ module.exports = BaseApp.extend({
                                 $("#registerCaptchaImage").attr("src", "/images/captcha.png");
                                 $("#registerCaptcha").val("");
                                 $("#registerForm").validate().element("#registerCaptcha");
+                            }
+                        });
+                    }
+                });
+
+                // Setup forgot password button.
+                $("#forgotPasswordButton").on("click", function() {
+                    var forgotPasswordButton = $(this);
+                    if ($("#forgotPasswordForm").valid()) {
+                        forgotPasswordButton.attr("disabled");
+                        User = new User();
+                        user.fetch({
+                            url: "/user/forgot-password",
+                            data: JSON.stringify({
+                                email: $("forgotPasswordEmail").val()
+                            }),
+                            type: "POST",
+                            contentType: "application/json",
+                            dataType: "json",
+                            success: function() {
+                                bootbox.hideAll();
+                                // TODO: Inform user that they are being sent either a password recovery request email or validation email.
+                            },
+                            error: function(xhr, error) {
+                                var message;
+                                if (error && error.body && error.body.error) {
+                                    message = error.body.error;
+                                } else {
+                                    message = "There was a server error processing your password recovery request.  Please try again later.";
+                                }
+                                $("#forgotPasswordServerErrors").html(message);
+                                $("#forgotPasswordServerErrorList").show();
+                                forgotPasswordButton.removeAttr("disabled");
                             }
                         });
                     }

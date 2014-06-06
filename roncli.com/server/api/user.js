@@ -130,6 +130,18 @@ module.exports.post = function(req, callback) {
                     });
 
                     return;
+                case "forgot-password":
+                    user.forgotPassword(req.body.email, function(err, validationRequired) {
+                        if (err) {
+                            handleError(err, req);
+                            callback(err);
+                            return;
+                        }
+
+                        callback({validationRequired: validationRequired});
+                    });
+
+                    return;
                 case "logout":
                     delete req.session.user;
                     req.res.clearCookie("login");
