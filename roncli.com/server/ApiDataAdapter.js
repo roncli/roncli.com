@@ -54,10 +54,7 @@ ApiDataAdapter.prototype.request = function(req, api, options, callback) {
 
                 d = domain.create();
 
-                d.add(req);
-                d.add(callback);
-
-                d.on("error", function(err) {
+                d.once("error", function(err) {
                     try {
                         console.log("Unknown server error.");
                         console.log(err);

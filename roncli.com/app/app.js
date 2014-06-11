@@ -370,14 +370,16 @@ module.exports = BaseApp.extend({
 
                 // Setup forgot password button.
                 $("#forgotPasswordButton").on("click", function() {
-                    var forgotPasswordButton = $(this);
+                    var forgotPasswordButton = $(this),
+                        user;
+
                     if ($("#forgotPasswordForm").valid()) {
                         forgotPasswordButton.attr("disabled");
-                        User = new User();
+                        user = new User();
                         user.fetch({
                             url: "/user/forgot-password",
                             data: JSON.stringify({
-                                email: $("forgotPasswordEmail").val()
+                                email: $("#forgotPasswordEmail").val()
                             }),
                             type: "POST",
                             contentType: "application/json",
