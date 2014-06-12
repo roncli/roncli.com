@@ -1,4 +1,5 @@
 var express = require("express"),
+    domain = require("domain"),
     path = require("path"),
     moment = require("moment"),
     rendr = require("rendr"),
@@ -19,11 +20,30 @@ app.use(express.json());
 app.use(express.urlencoded());
 
 // Remove powered by header.
-app.use(function(err, req, res, next) {
+app.use(function(req, res, next) {
     "use strict";
 
     res.removeHeader("X-Powered-By");
     next();
+});
+
+// Setup domains.
+app.use(function(req, res, next) {
+    "use strict";
+
+    var d = domain.create();
+    d.add(req);
+    d.add(res);
+
+    res.on("close", function() {
+        d.dispose();
+    });
+
+    d.on("error", function(err) {
+        next(err);
+    });
+
+    d.run(next);
 });
 
 // Set up Captcha route.

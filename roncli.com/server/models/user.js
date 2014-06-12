@@ -479,7 +479,7 @@ module.exports.forgotPassword = function(email, callback) {
 
         // Get the user information.
         db.query(
-            "SELECT UserId, Email, Alias, Validated FROM tblUser WHERE Email = @email",
+            "SELECT UserID, Email, Alias, Validated FROM tblUser WHERE Email = @email",
             {
                 email: {type: "varchar", size: 256, value: email}
             },
@@ -538,7 +538,7 @@ module.exports.forgotPassword = function(email, callback) {
                                 return;
                             }
 
-                            if (data.tables[0].rows[0].Requests === 0) {
+                            if (data.tables[0].rows[0].Requests > 0) {
                                 callback({
                                     error: "You have requested a reset password request too recently.  Please try again later.",
                                     status: 403
@@ -549,7 +549,7 @@ module.exports.forgotPassword = function(email, callback) {
                             authorizationCode = guid.v4();
 
                             db.query(
-                                "INSERT INTO tblPasswordChangeAuthorization (UserID, AuthorizationCode, ExpirationDate, CrDate) VALUES (@userId, @authorizationCode, DATEADD('hour', 2, GETDATE()), GETDATE());",
+                                "INSERT INTO tblPasswordChangeAuthorization (UserID, AuthorizationCode, ExpirationDate, CrDate) VALUES (@userId, @authorizationCode, DATEADD(hh, 2, GETDATE()), GETDATE());",
                                 {
                                     userId: {type: "int", value: user.UserID},
                                     authorizationCode: {type: "uniqueidentifier", value: authorizationCode}

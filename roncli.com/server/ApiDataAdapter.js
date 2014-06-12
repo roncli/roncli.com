@@ -41,7 +41,8 @@ ApiDataAdapter.prototype.request = function(req, api, options, callback) {
 
     // Check to ensure the API being requested exists.
     fs.exists(filename.replace(".", __dirname), function(exists) {
-        var script, method, d;
+        var parentDomain = process.domain,
+            script, method, d;
 
         if (exists) {
             // Check to ensure the method on the API exists.
@@ -61,6 +62,7 @@ ApiDataAdapter.prototype.request = function(req, api, options, callback) {
                         console.log(err.stack);
                         req.res.status(500);
                         callback(null, req.res, {error: "Unknown server error."});
+                        parentDomain.emit("error", err);
                     } catch (err2) {
                         console.log("Error sending 500.");
                         console.log(err2);
