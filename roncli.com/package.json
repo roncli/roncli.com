@@ -14,7 +14,7 @@
         "iscroll": "5.1.1",
         "jquery": "2.1.1",
         "moment": "2.6.0",
-        "mssqlhelper": "git://github.com/roncli/mssqlhelper.git",
+        "mssql": "0.5.3",
         "node-uuid": "1.4.1",
         "nodemailer": "0.6.5",
         "promised-io": "0.3.4",

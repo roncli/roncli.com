@@ -48,13 +48,13 @@ module.exports.aliasExists = function(alias, userId, callback) {
     db.query(
         "SELECT UserID FROM tblUser WHERE Alias = @alias and UserID <> @userId",
         {
-            alias: {type: "varchar", size: 50, value: alias},
-            userId: {type: "int", value: userId}
+            alias: {type: db.VARCHAR(50), value: alias},
+            userId: {type: db.INT, value: userId}
         },
-        function(data) {
-            if (data.err) {
+        function(err, data) {
+            if (err) {
                 console.log("Database error in user.aliasExists.");
-                console.log(data.err);
+                console.log(err);
                 callback({
                     error: "There was a database error in user.aliasExists.  Please reload the page and try again.",
                     status: 500
@@ -79,13 +79,13 @@ module.exports.emailExists = function(email, userId, callback) {
     db.query(
         "SELECT UserID FROM tblUser WHERE Email = @email and UserID <> @userId",
         {
-            email: {type: "varchar", size: 255, value: email},
-            userId: {type: "int", value: userId}
+            email: {type: db.VARCHAR(256), value: email},
+            userId: {type: db.INT, value: userId}
         },
-        function(data) {
-            if (data.err) {
+        function(err, data) {
+            if (err) {
                 console.log("Database error in user.emailExists.");
-                console.log(data.err);
+                console.log(err);
                 callback({
                     error: "There was a database error in user.emailExists.  Please reload the page and try again.",
                     status: 500
@@ -109,11 +109,11 @@ module.exports.login = function(email, password, callback) {
 
     db.query(
         "SELECT UserID, PasswordHash, Salt, Alias, Email, DOB FROM tblUser WHERE Email = @email",
-        {email: {type: "varchar", size: 255, value: email}},
-        function(data) {
-            if (data.err) {
+        {email: {type: db.VARCHAR(256), value: email}},
+        function(err, data) {
+            if (err) {
                 console.log("Database error in user.login.");
-                console.log(data.err);
+                console.log(err);
                 callback({
                     error: "There was a database error in user.login.  Please reload the page and try again.",
                     status: 500
@@ -143,11 +143,11 @@ module.exports.login = function(email, password, callback) {
 
                 db.query(
                     "SELECT r.Role from tblRole r INNER JOIN tblUserRole ur ON r.RoleID = ur.RoleID WHERE ur.UserID = @userId",
-                    {userId: {type: "int", value: user.UserID}},
-                    function(data) {
-                        if (data.err) {
+                    {userId: {type: db.INT, value: user.UserID}},
+                    function(err, data) {
+                        if (err) {
                             console.log("Database error in user.login.");
-                            console.log(data.err);
+                            console.log(err);
                             callback({
                                 error: "There was a database error in user.login.  Please reload the page and try again.",
                                 status: 500
@@ -382,17 +382,17 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
                         db.query(
                             "INSERT INTO tblUser (Email, DOB, Alias, Salt, PasswordHash, Validated, ValidationCode) VALUES (@email, @dob, @alias, @salt, @passwordHash, 0, @validationCode); SELECT SCOPE_IDENTITY() UserID;",
                             {
-                                email: {type: "varchar", size: 256, value: email},
-                                dob: {type: "datetime", value: new Date(dob)},
-                                alias: {type: "varchar", size: 20, value: alias},
-                                salt: {type: "uniqueidentifier", value: salt},
-                                passwordHash: {type: "varchar", size: 256, value: hashedPassword},
-                                validationCode: {type: "uniqueidentifier", value: validationCode}
+                                email: {type: db.VARCHAR(256), value: email},
+                                dob: {type: db.DATETIME, value: new Date(dob)},
+                                alias: {type: db.VARCHAR(20), value: alias},
+                                salt: {type: db.UNIQUEIDENTIFIER, value: salt},
+                                passwordHash: {type: db.VARCHAR(256), value: hashedPassword},
+                                validationCode: {type: db.UNIQUEIDENTIFIER, value: validationCode}
                             },
-                            function(data) {
-                                if (data.err) {
+                            function(err, data) {
+                                if (err) {
                                     console.log("Database error in user.aliasExists.");
-                                    console.log(data.err);
+                                    console.log(err);
                                     callback({
                                         error: "There was a database error in user.register.  If you need help registering, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
                                         status: 500
@@ -479,16 +479,16 @@ module.exports.forgotPassword = function(email, callback) {
 
         // Get the user information.
         db.query(
-            "SELECT UserID, Email, Alias, Validated FROM tblUser WHERE Email = @email",
+            "SELECT UserID, Email, Alias, ValidationCode, Validated FROM tblUser WHERE Email = @email",
             {
-                email: {type: "varchar", size: 256, value: email}
+                email: {type: db.VARCHAR(256), value: email}
             },
-            function(data) {
+            function(err, data) {
                 var user;
 
-                if (data.err) {
+                if (err) {
                     console.log("Database error retrieving user in user.forgotPassword.");
-                    console.log(data.err);
+                    console.log(err);
                     callback({
                         error: "There was a database error in user.forgotPassword.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
                         status: 500
@@ -513,14 +513,14 @@ module.exports.forgotPassword = function(email, callback) {
                     db.query(
                         "SELECT COUNT(AuthorizationID) Requests FROM tblPasswordChangeAuthorization WHERE UserID = @userId AND ExpirationDate > GETDATE()",
                         {
-                            userId: {type: "int", value: user.UserID}
+                            userId: {type: db.INT, value: user.UserID}
                         },
-                        function(data) {
+                        function(err, data) {
                             var authorizationCode;
 
-                            if (data.err) {
+                            if (err) {
                                 console.log("Database error checking for existing authorizations in user.forgotPassword.");
-                                console.log(data.err);
+                                console.log(err);
                                 callback({
                                     error: "There was a database error in user.forgotPassword.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
                                     status: 500
@@ -551,13 +551,13 @@ module.exports.forgotPassword = function(email, callback) {
                             db.query(
                                 "INSERT INTO tblPasswordChangeAuthorization (UserID, AuthorizationCode, ExpirationDate, CrDate) VALUES (@userId, @authorizationCode, DATEADD(hh, 2, GETDATE()), GETDATE());",
                                 {
-                                    userId: {type: "int", value: user.UserID},
-                                    authorizationCode: {type: "uniqueidentifier", value: authorizationCode}
+                                    userId: {type: db.INT, value: user.UserID},
+                                    authorizationCode: {type: db.UNIQUEIDENTIFIER, value: authorizationCode}
                                 },
-                                function(data) {
-                                    if (data.err) {
+                                function(err, data) {
+                                    if (err) {
                                         console.log("Database error creating database authorizations in user.forgotPassword.");
-                                        console.log(data.err);
+                                        console.log(err);
                                         callback({
                                             error: "There was a database error in user.forgotPassword.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
                                             status: 500
@@ -565,7 +565,7 @@ module.exports.forgotPassword = function(email, callback) {
                                         return;
                                     }
 
-                                    User.sendResetPasswordEmail(data.UserID, email, alias, authorizationCode, function(err) {
+                                    User.sendResetPasswordEmail(data.UserID, email, data.Alias, authorizationCode, function(err) {
                                         if (err) {
                                             console.log("Error sending reset password email in user.forgotPassword.");
                                             console.log(err);
@@ -577,15 +577,15 @@ module.exports.forgotPassword = function(email, callback) {
                                         }
 
                                         callback(null, {validationRequired: false});
-                                    })
+                                    });
                                 }
-                            )
+                            );
                         }
                     );
                 } else {
                     // User requires validation, resend validation email.
                     // TODO: Limit to one per hour.
-                    User.sendValidationEmail(data.UserID, email, alias, validationCode, function(err) {
+                    User.sendValidationEmail(data.UserID, email, data.Alias, data.ValidationCode, function(err) {
                         if (err) {
                             console.log("Error sending validation email in user.forgotPassword.");
                             console.log(err);

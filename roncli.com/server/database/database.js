@@ -1,39 +1,57 @@
 var config = require("../privateConfig").database,
-    sql = require("mssqlhelper"),
-    _ = require("underscore"),
-    moment = require("moment"),
-    query = sql.query;
+    sql = require("mssql"),
+    _ = require("underscore");
 
-sql.config(config);
-
-sql.query = function(sqlStr, params, callback) {
+module.exports.query = function(sqlStr, params, callback) {
     "use strict";
 
-    query.apply(sql, [sqlStr, params, function(data) {
-        if (data.tables) {
-            _(data.tables).each(function(table, index) {
-                var columns = [];
+    var conn = new sql.Connection(config, function(err) {
+        var ps;
 
-                // Get the column types.
-                _(table.rows[0].metadata.columns).each(function(column) {
-                    columns.push(column.name);
-                });
-
-                // Create the results.
-                _(table.rows).each(function(row, index) {
-                    var result = {};
-                    _(columns).each(function(column) {
-                        result[column] = row.getValue(column);
-                    });
-                    table.rows[index] = result;
-                });
-
-                data.tables[index] = table;
-            });
+        if (err) {
+            callback(err);
+            return;
         }
 
-        callback(data);
-    }]);
+        ps = new sql.PreparedStatement(conn);
+        _(params).each(function(param, key) {
+            ps.input(key, param.type);
+        });
+        ps.multiple = true;
+        ps.prepare(sqlStr, function(err) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            ps.execute(
+                _.object(_(params).map(function(param, key) {
+                    return [key, param.value];
+                })), function(err, tables) {
+                    if (err) {
+                        callback(err);
+                        return;
+                    }
+
+                    ps.unprepare(function(err) {
+                        if (err) {
+                            callback(err);
+                            return;
+                        }
+
+                        callback(null, tables);
+                    });
+                }
+            );
+        });
+    });
 };
 
-module.exports = sql;
+module.exports.TYPES = sql.TYPES;
+
+_(sql.TYPES).each(function(value, key) {
+    "use strict";
+
+    module.exports[key] = value;
+    module.exports[key.toUpperCase()] = value;
+});
