@@ -36,10 +36,12 @@ app.use(function(req, res, next) {
     d.add(res);
 
     res.on("close", function() {
+        console.log("res closed");
         d.dispose();
     });
 
     d.on("error", function(err) {
+        console.log("d on error");
         next(err);
     });
 

@@ -27,7 +27,7 @@ module.exports.query = function(sqlStr, params, callback) {
             ps.execute(
                 _.object(_(params).map(function(param, key) {
                     return [key, param.value];
-                })), function(err, tables) {
+                })), function(err, data) {
                     if (err) {
                         callback(err);
                         return;
@@ -38,8 +38,7 @@ module.exports.query = function(sqlStr, params, callback) {
                             callback(err);
                             return;
                         }
-
-                        callback(null, tables);
+                        callback(null, data);
                     });
                 }
             );

@@ -62,7 +62,7 @@ module.exports.aliasExists = function(alias, userId, callback) {
                 return;
             }
 
-            callback(null, data.tables && data.tables[0] && data.tables[0].rows.length > 0);
+            callback(null, data[0] && data[0].length > 0);
         }
     );
 };
@@ -93,7 +93,7 @@ module.exports.emailExists = function(email, userId, callback) {
                 return;
             }
 
-            callback(null, data.tables && data.tables[0] && data.tables[0].rows.length > 0);
+            callback(null, data[0] && data[0].length > 0);
         }
     );
 };
@@ -121,7 +121,7 @@ module.exports.login = function(email, password, callback) {
                 return;
             }
 
-            if (!data.tables || !data.tables[0] || data.tables[0].rows.length === 0) {
+            if (!data[0] || data[0].length === 0) {
                 callback({
                     error: "Invalid email address or password.",
                     status: 401
@@ -129,7 +129,7 @@ module.exports.login = function(email, password, callback) {
                 return;
             }
 
-            var user = data.tables[0].rows[0],
+            var user = data[0][0],
                 salt = guid.unparse(user.Salt);
 
             getHashedPassword(password, salt, function(hashedPassword) {
@@ -160,8 +160,8 @@ module.exports.login = function(email, password, callback) {
                             text: "Account"
                         }];
 
-                        if (data.tables && data.tables[0]) {
-                            _(data.tables[0].rows).each(function(row) {
+                        if (data[0]) {
+                            _(data[0]).each(function(row) {
                                 switch (row.Role) {
                                     case "SiteAdmin":
                                         accountLinks.push({
@@ -350,6 +350,8 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
 
                         deferred.resolve(true);
                     });
+
+                    return deferred.promise;
                 }()),
 
                 // Ensure the alias is not in use.
@@ -372,6 +374,8 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
 
                         deferred.resolve(true);
                     });
+
+                    return deferred.promise;
                 }())
             ).then(
                 function() {
@@ -400,7 +404,7 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
                                     return;
                                 }
 
-                                if (!data.tables || !data.tables[0] || data.tables[0].rows.length === 0) {
+                                if (!data[0] || data[0].length === 0) {
                                     console.log("Newly created user not found in the database.");
                                     console.log(email);
                                     callback({
@@ -411,7 +415,7 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
                                 }
 
                                 // Send validation email.
-                                User.sendValidationEmail(data.tables[0].rows[0].UserID, email, alias, validationCode, function(err) {
+                                User.sendValidationEmail(data[0][0].UserID, email, alias, validationCode, function(err) {
                                     if (err) {
                                         console.log("Error sending validation email in user.register.");
                                         console.log(err);
@@ -496,7 +500,7 @@ module.exports.forgotPassword = function(email, callback) {
                     return;
                 }
 
-                if (!data.tables || !data.tables[0] || data.tables[0].rows.length === 0) {
+                if (!data[0] || data[0].length === 0) {
                     console.log("Confirmed user not found in the database.");
                     console.log(email);
                     callback({
@@ -528,7 +532,7 @@ module.exports.forgotPassword = function(email, callback) {
                                 return;
                             }
 
-                            if (!data.tables || !data.tables[0] || data.tables[0].rows.length === 0) {
+                            if (!data[0] || data[0].length === 0) {
                                 console.log("Missing authorization counts in database.");
                                 console.log(data);
                                 callback({
@@ -538,7 +542,7 @@ module.exports.forgotPassword = function(email, callback) {
                                 return;
                             }
 
-                            if (data.tables[0].rows[0].Requests > 0) {
+                            if (data[0][0].Requests > 0) {
                                 callback({
                                     error: "You have requested a reset password request too recently.  Please try again later.",
                                     status: 403
@@ -565,7 +569,7 @@ module.exports.forgotPassword = function(email, callback) {
                                         return;
                                     }
 
-                                    User.sendResetPasswordEmail(data.UserID, email, data.Alias, authorizationCode, function(err) {
+                                    User.sendResetPasswordEmail(data[0][0].UserID, email, data[0][0].Alias, authorizationCode, function(err) {
                                         if (err) {
                                             console.log("Error sending reset password email in user.forgotPassword.");
                                             console.log(err);
@@ -585,7 +589,7 @@ module.exports.forgotPassword = function(email, callback) {
                 } else {
                     // User requires validation, resend validation email.
                     // TODO: Limit to one per hour.
-                    User.sendValidationEmail(data.UserID, email, data.Alias, data.ValidationCode, function(err) {
+                    User.sendValidationEmail(data[0][0].UserID, email, data[0][0].Alias, data[0][0].ValidationCode, function(err) {
                         if (err) {
                             console.log("Error sending validation email in user.forgotPassword.");
                             console.log(err);

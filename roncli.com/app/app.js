@@ -346,7 +346,14 @@ module.exports = BaseApp.extend({
                             dataType: "json",
                             success: function() {
                                 bootbox.hideAll();
-                                // TODO: Inform user that a validation email has been sent out.
+
+                                // Display the dialog box.
+                                bootbox.dialog({
+                                    title: "Email Validation Required",
+                                    message: app.templateAdapter.getTemplate("site/validationSent")(),
+                                    buttons: {ok: {label: "OK"}},
+                                    show: false
+                                }).off("shown.bs.modal").modal("show");
                             },
                             error: function(xhr, error) {
                                 var message;
@@ -464,6 +471,9 @@ module.exports = BaseApp.extend({
                 logOutUser();
             }
         });
+
+        // TODO: If the user is attempting to validate their account, display the appropriate screen.
+        // TODO: If the user is attempting to recover their password, display the appropriate screen.
 
         // Call base function.
         BaseApp.prototype.start.call(this);
