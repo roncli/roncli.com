@@ -1,15 +1,6 @@
 var moment = require("moment"),
     user = require("../models/user.js"),
-    handleError = function(err, req) {
-        "use strict";
-
-        if (!err.status) {
-            console.log("Unknown error");
-            console.log(err);
-            err.status = 500;
-        }
-        req.res.status(err.status);
-    };
+    handleError = require("../handleError");
 
 module.exports.get = function(req, callback) {
     "use strict";
@@ -109,16 +100,34 @@ module.exports.post = function(req, callback) {
                         }
                         req.session.user = data;
 
-                        if (req.body.saveLogin) {
+                        if (req.body.saveLogin && data.validated) {
                             req.res.cookie("login", {email: req.body.email, password: req.body.password}, {expires: moment().add("years", 1).toDate()});
                         }
 
+                        if (data.validated) {
+                            req.res.status(400);
+                            callback({error: "You must validate your account before you can log in.  If you need help validating your account, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>."});
+                            return;
+                        }
                         callback(data);
                     });
 
                     return;
                 case "register":
                     user.register(req.body.email, req.body.password, req.body.alias, req.body.dob, req.session.captcha, req.body.captcha, function(err) {
+                        if (err) {
+                            handleError(err, req);
+                            callback(err);
+                            return;
+                        }
+
+                        req.res.status(204);
+                        callback();
+                    });
+
+                    return;
+                case "validate-account":
+                    user.validateAccount(req.body.userId, req.body.validationCode, function(err) {
                         if (err) {
                             handleError(err, req);
                             callback(err);

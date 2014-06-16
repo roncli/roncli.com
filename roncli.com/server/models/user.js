@@ -108,9 +108,11 @@ module.exports.login = function(email, password, callback) {
     "use strict";
 
     db.query(
-        "SELECT UserID, PasswordHash, Salt, Alias, Email, DOB FROM tblUser WHERE Email = @email",
+        "SELECT UserID, PasswordHash, Salt, Alias, Email, DOB, Validated FROM tblUser WHERE Email = @email",
         {email: {type: db.VARCHAR(256), value: email}},
         function(err, data) {
+            var user, salt;
+
             if (err) {
                 console.log("Database error in user.login.");
                 console.log(err);
@@ -129,8 +131,14 @@ module.exports.login = function(email, password, callback) {
                 return;
             }
 
-            var user = data[0][0],
-                salt = guid.unparse(user.Salt);
+            user = data[0][0];
+
+            if (!user.Validated) {
+                callback(null, {validated: false});
+                return;
+            }
+
+            salt = guid.unparse(user.Salt);
 
             getHashedPassword(password, salt, function(hashedPassword) {
                 if (hashedPassword !== user.PasswordHash) {
@@ -178,6 +186,7 @@ module.exports.login = function(email, password, callback) {
                             alias: user.Alias,
                             email: user.Email,
                             dob: new Date(user.DOB).toISOString(),
+                            validated: user.Validated,
                             accountLinks: accountLinks
                         });
                     }
@@ -447,6 +456,60 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
     );
 };
 
+module.exports.validateAccount = function(userId, validationCode, callback) {
+    "use strict";
+
+    userId = +userId;
+    db.query(
+        "SELECT UserID FROM tblUser WHERE UserID = @userId AND ValidationCode = @validationCode",
+        {
+            userId: {type: db.INT, value: userId},
+            validationCode: {type: db.UNIQUEIDENTIFIER, value: validationCode}
+        },
+        function(err, data) {
+            if (err) {
+                console.log("Database error retrieving user in user.validateAccount.");
+                console.log(err);
+                callback({
+                    error: "There was a database error in user.validateAccount.  If you need help validating your account, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                    status: 500
+                });
+                return;
+            }
+
+            if (!data[0] || data[0].length === 0) {
+                console.log("Validation information not found in the database.");
+                console.log(userId, validationCode);
+                callback({
+                    error: "Your validation information was incorrect.  If you need help validating your account, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                    status: 400
+                });
+                return;
+            }
+
+            db.query(
+                "UPDATE tblUser SET Validated = 1, ValidationDate = GETUTCDATE() WHERE UserId = @userId",
+                {
+                    userId: {type: db.INT, value: userId}
+                },
+                function(err) {
+                    if (err) {
+                        console.log("Database error validating user in user.validateAccount.");
+                        console.log(err);
+                        callback({
+                            error: "There was a database error in user.validateAccount.  If you need help validating your account, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                            status: 500
+                        });
+                        return;
+                    }
+
+                    callback();
+                }
+            );
+        }
+    );
+};
+
 /**
  * Sends a user an email to begin the password recovery process.
  * @param {string} email The user's email address.
@@ -510,7 +573,7 @@ module.exports.forgotPassword = function(email, callback) {
                     return;
                 }
 
-                user = data.tables[0].rows[0];
+                user = data[0][0];
 
                 if (user.Validated) {
                     // Get whether the user already has an active reset password request.

@@ -28,7 +28,8 @@ module.exports = BaseApp.extend({
         var app = this,
             twitterShown = false,
             IScroll = require("iscroll"),
-            scroller, logInUser, logOutUser, attemptLogin,
+            querystring = $.getParam(),
+            scroller, logInUser, logOutUser, attemptLogin, user,
 
             /**
              * Get the tweets.
@@ -349,7 +350,7 @@ module.exports = BaseApp.extend({
 
                                 // Display the dialog box.
                                 bootbox.dialog({
-                                    title: "Email Validation Required",
+                                    title: "Account Validation Required",
                                     message: app.templateAdapter.getTemplate("site/validationSent")(),
                                     buttons: {ok: {label: "OK"}},
                                     show: false
@@ -472,8 +473,45 @@ module.exports = BaseApp.extend({
             }
         });
 
-        // TODO: If the user is attempting to validate their account, display the appropriate screen.
-        // TODO: If the user is attempting to recover their password, display the appropriate screen.
+        switch (querystring["go"]) {
+            case "validation":
+                if (querystring.u && +querystring.u !== 0 && querystring.v) {
+                    user = new User();
+                    user.fetch({
+                        url: "/user/validate-account",
+                        data: JSON.stringify({
+                            userId: +querystring.u,
+                            validationCode: querystring.v
+                        }),
+                        type: "POST",
+                        contentType: "application/json",
+                        dataType: "json",
+                        success: function() {
+                            bootbox.dialog({
+                                title: "Registration Complete!",
+                                message: app.templateAdapter.getTemplate("site/validationSuccess")(),
+                                buttons: {ok: {label: "OK"}},
+                                show: false,
+                                ok: function() {
+                                    $("#login").click();
+                                }
+                            }).off("shown.bs.modal").modal("show");
+                        },
+                        error: function() {
+                            bootbox.dialog({
+                                title: "Account Validation Failed",
+                                message: app.templateAdapter.getTemplate("site/validationError")(),
+                                buttons: {ok: {label: "OK"}},
+                                show: false
+                            }).off("shown.bs.modal").modal("show");
+                        }
+                    });
+                }
+                break;
+            case "passwordReset":
+                // TODO: If the user is attempting to recover their password, display the appropriate screen.
+                break;
+        }
 
         // Call base function.
         BaseApp.prototype.start.call(this);
