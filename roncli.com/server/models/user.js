@@ -56,7 +56,7 @@ module.exports.aliasExists = function(alias, userId, callback) {
                 console.log("Database error in user.aliasExists.");
                 console.log(err);
                 callback({
-                    error: "There was a database error in user.aliasExists.  Please reload the page and try again.",
+                    error: "There was a database error checking whether the alias exists.  Please reload the page and try again.",
                     status: 500
                 });
                 return;
@@ -87,7 +87,7 @@ module.exports.emailExists = function(email, userId, callback) {
                 console.log("Database error in user.emailExists.");
                 console.log(err);
                 callback({
-                    error: "There was a database error in user.emailExists.  Please reload the page and try again.",
+                    error: "There was a database error checking whether the email address exists.  Please reload the page and try again.",
                     status: 500
                 });
                 return;
@@ -117,7 +117,7 @@ module.exports.login = function(email, password, callback) {
                 console.log("Database error in user.login.");
                 console.log(err);
                 callback({
-                    error: "There was a database error in user.login.  Please reload the page and try again.",
+                    error: "There was a database error logging in.  Please reload the page and try again.",
                     status: 500
                 });
                 return;
@@ -157,7 +157,7 @@ module.exports.login = function(email, password, callback) {
                             console.log("Database error in user.login.");
                             console.log(err);
                             callback({
-                                error: "There was a database error in user.login.  Please reload the page and try again.",
+                                error: "There was a database error logging in.  Please reload the page and try again.",
                                 status: 500
                             });
                             return;
@@ -235,6 +235,7 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
                 return false;
             }
 
+            // Password is required.
             if (typeof password !== "string" || password.length === 0) {
                 deferred.reject({
                     error: "You must enter a password.",
@@ -243,6 +244,7 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
                 return false;
             }
 
+            // Password must be at least 6 characters.
             if (password.length < 6) {
                 deferred.reject({
                     error: "Your password must be at least 6 characters.",
@@ -251,6 +253,7 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
                 return false;
             }
 
+            // Alias is required.
             if (typeof alias !== "string" || alias.length === 0) {
                 deferred.reject({
                     error: "You must enter an alias.",
@@ -259,6 +262,7 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
                 return false;
             }
 
+            // Alias must be at least 3 characters.
             if (alias.length < 3) {
                 deferred.reject({
                     error: "Your alias must be at least 3 characters.",
@@ -267,6 +271,7 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
                 return false;
             }
 
+            // DOB is required.
             if (typeof dob !== "string" || dob.length === 0) {
                 deferred.reject({
                     error: "You must enter a date of birth.",
@@ -275,6 +280,7 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
                 return false;
             }
 
+            // Captcha response is required.
             if (typeof captchaResponse !== "string" || captchaResponse.length === 0) {
                 deferred.reject({
                     error: "You must type in the characters as shown.",
@@ -336,8 +342,8 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
             return deferred.promise;
         }())
     ).then(
+        // Next, we will run the database validations.
         function() {
-            // Next, we will run the database validations.
             all(
                 // Ensure the email address is not in use.
                 (function() {
@@ -407,7 +413,7 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
                                     console.log("Database error in user.aliasExists.");
                                     console.log(err);
                                     callback({
-                                        error: "There was a database error in user.register.  If you need help registering, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                                        error: "There was a database error registering your account.  If you need help registering, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
                                         status: 500
                                     });
                                     return;
@@ -417,7 +423,7 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
                                     console.log("Newly created user not found in the database.");
                                     console.log(email);
                                     callback({
-                                        error: "There was a database error in user.register.  If you need help registering, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                                        error: "There was a database error registering your account.  If you need help registering, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
                                         status: 500
                                     });
                                     return;
@@ -456,6 +462,12 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
     );
 };
 
+/**
+ * Validates an account.
+ * @param {number} userId The user ID of the account to validate.
+ * @param {string} validationCode The validation code.
+ * @param {function} callback The callback function.
+ */
 module.exports.validateAccount = function(userId, validationCode, callback) {
     "use strict";
 
@@ -471,7 +483,7 @@ module.exports.validateAccount = function(userId, validationCode, callback) {
                 console.log("Database error retrieving user in user.validateAccount.");
                 console.log(err);
                 callback({
-                    error: "There was a database error in user.validateAccount.  If you need help validating your account, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                    error: "There was a database error validating your account.  If you need help validating your account, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
                     status: 500
                 });
                 return;
@@ -497,7 +509,7 @@ module.exports.validateAccount = function(userId, validationCode, callback) {
                         console.log("Database error validating user in user.validateAccount.");
                         console.log(err);
                         callback({
-                            error: "There was a database error in user.validateAccount.  If you need help validating your account, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                            error: "There was a database validating your account.  If you need help validating your account, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
                             status: 500
                         });
                         return;
@@ -557,7 +569,7 @@ module.exports.forgotPassword = function(email, callback) {
                     console.log("Database error retrieving user in user.forgotPassword.");
                     console.log(err);
                     callback({
-                        error: "There was a database error in user.forgotPassword.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                        error: "There was a database error requesting reset password authorization.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
                         status: 500
                     });
                     return;
@@ -567,7 +579,7 @@ module.exports.forgotPassword = function(email, callback) {
                     console.log("Confirmed user not found in the database.");
                     console.log(email);
                     callback({
-                        error: "There was a database error in user.forgotPassword.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                        error: "There was a database error requesting reset password authorization.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
                         status: 500
                     });
                     return;
@@ -578,7 +590,7 @@ module.exports.forgotPassword = function(email, callback) {
                 if (user.Validated) {
                     // Get whether the user already has an active reset password request.
                     db.query(
-                        "SELECT COUNT(AuthorizationID) Requests FROM tblPasswordChangeAuthorization WHERE UserID = @userId AND ExpirationDate > GETDATE()",
+                        "SELECT COUNT(AuthorizationID) Requests FROM tblPasswordChangeAuthorization WHERE UserID = @userId AND ExpirationDate > GETUTCDATE()",
                         {
                             userId: {type: db.INT, value: user.UserID}
                         },
@@ -589,17 +601,17 @@ module.exports.forgotPassword = function(email, callback) {
                                 console.log("Database error checking for existing authorizations in user.forgotPassword.");
                                 console.log(err);
                                 callback({
-                                    error: "There was a database error in user.forgotPassword.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                                    error: "There was a database error requesting reset password authorization.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
                                     status: 500
                                 });
                                 return;
                             }
 
                             if (!data[0] || data[0].length === 0) {
-                                console.log("Missing authorization counts in database.");
+                                console.log("Missing authorization counts in database in user.forgotPassword.");
                                 console.log(data);
                                 callback({
-                                    error: "There was a database error in user.forgotPassword.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                                    error: "There was a database error requesting reset password authorization.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
                                     status: 500
                                 });
                                 return;
@@ -616,7 +628,7 @@ module.exports.forgotPassword = function(email, callback) {
                             authorizationCode = guid.v4();
 
                             db.query(
-                                "INSERT INTO tblPasswordChangeAuthorization (UserID, AuthorizationCode, ExpirationDate, CrDate) VALUES (@userId, @authorizationCode, DATEADD(hh, 2, GETDATE()), GETDATE());",
+                                "INSERT INTO tblPasswordChangeAuthorization (UserID, AuthorizationCode, ExpirationDate, CrDate) VALUES (@userId, @authorizationCode, DATEADD(hh, 2, GETUTCDATE()), GETUTCDATE());",
                                 {
                                     userId: {type: db.INT, value: user.UserID},
                                     authorizationCode: {type: db.UNIQUEIDENTIFIER, value: authorizationCode}
@@ -626,7 +638,7 @@ module.exports.forgotPassword = function(email, callback) {
                                         console.log("Database error creating database authorizations in user.forgotPassword.");
                                         console.log(err);
                                         callback({
-                                            error: "There was a database error in user.forgotPassword.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                                            error: "There was a database error requesting reset password authorization.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
                                             status: 500
                                         });
                                         return;
@@ -669,6 +681,172 @@ module.exports.forgotPassword = function(email, callback) {
             }
         );
     });
+};
+
+/**
+ * Checks to see if a password reset request is authorized.
+ * @param {number} userId The user ID.
+ * @param {string} authorizationCode The authorization code.
+ * @param {function} callback The callback function.
+ */
+module.exports.passwordResetRequest = function(userId, authorizationCode, callback) {
+    "use strict";
+
+    userId = +userId;
+
+    db.query(
+        "SELECT COUNT(AuthorizationID) Requests FROM tblPasswordChangeAuthorization WHERE UserID = @userId AND AuthorizationCode = @authorizationCode AND ExpirationDate <= GETUTCDATE()",
+        {
+            userId: {type: db.INT, value: userId},
+            authroizationCode: {type: db.UNIQUEIDENTIFIER, value: authorizationCode}
+        },
+        function(err, data) {
+            if (err) {
+                console.log("Database error retrieving password reset request in user.passwordResetRequest.");
+                console.log(err);
+                callback({
+                    error: "There was a database error confirming your password reset request.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                    status: 500
+                });
+                return;
+            }
+
+            if (!data[0] || data[0].length === 0) {
+                console.log("Missing authorization counts in database in user.passwordResetRequest.");
+                console.log(err);
+                callback({
+                    error: "There was a database error confirming your password reset request.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                    status: 500
+                });
+                return;
+            }
+
+            if (data[0][0].Requests > 0) {
+                callback({
+                    error: "The request to reset your password is not valid.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                    status: 400
+                });
+                return;
+            }
+
+            callback();
+        }
+    );
+};
+
+/**
+ * Resets a user's password.
+ * @param {number} userId The user ID.
+ * @param {string} authorizationCode The authorizationCode.
+ * @param {string} password The user's desired password.
+ * @param {object} captchaData The captcha data from the server.
+ * @param {string} captchaResponse The captcha response from the user.
+ * @param {function} callback The callback function.
+ */
+module.exports.passwordReset = function(userId, authorizationCode, password, captchaData, captchaResponse, callback) {
+    "use strict";
+
+    userId = +userId;
+
+    var User = this;
+
+    // First, we will run the non-database validations.
+    all(
+        // Basic data checks.
+        (function() {
+            var deferred = new Deferred();
+
+            // Password is required.
+            if (typeof password !== "string" || password.length === 0) {
+                deferred.reject({
+                    error: "You must enter a password.",
+                    status: 400
+                });
+                return false;
+            }
+
+            // Password must be at least 6 characters.
+            if (password.length < 6) {
+                deferred.reject({
+                    error: "Your password must be at least 6 characters.",
+                    status: 400
+                });
+                return false;
+            }
+
+            // Captcha response is required.
+            if (typeof captchaResponse !== "string" || captchaResponse.length === 0) {
+                deferred.reject({
+                    error: "You must type in the characters as shown.",
+                    status: 400
+                });
+                return false;
+            }
+
+            deferred.resolve(true);
+
+            return true;
+        }()),
+
+        // Ensure the captcha value is correct.
+        (function() {
+            var deferred = new Deferred();
+
+            captcha.isCaptchaValid(captchaData, captchaResponse, function(err, data) {
+                if (err) {
+                    deferred.reject(err);
+                    return;
+                }
+
+                if (!data) {
+                    deferred.reject({
+                        error: "The characters you typed do not match the image.",
+                        status: 400
+                    });
+                    return;
+                }
+
+                deferred.resolve(true);
+            });
+
+            return deferred.promise;
+        }())
+    ).then(
+        // Next, we will run the database validations.
+        User.passwordResetRequest(userId, authorizationCode, function(err) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            // All the validations passed, reset the password.
+            var salt = guid.v4();
+            getHashedPassword(password, salt, function(hashedPassword) {
+                db.query(
+                    "UPDATE tblPasswordChangeAuthorization SET ExpirationDate = GETUTCNOW() WHERE UserID = @userId AND AuthorizationCode = @authorizationCode; UPDATE tblUser SET PasswordHash = @passwordHash, Salt = @salt WHERE UserID = @userId",
+                    {
+                        userId: {type: db.INT, value: userId},
+                        authorizationCode: {type: db.UNIQUEIDENTIFIER, value: authorizationCode},
+                        passwordHash: {type: db.VARCHAR(256), value: hashedPassword},
+                        salt: {type: db.UNIQUEIDENTIFIER, value: salt}
+                    },
+                    function(err) {
+                        if (err) {
+                            console.log("Database error in user.passwordReset.");
+                            console.log(err);
+                            callback({
+                                error: "There was a database error while resetting your password.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                                status: 500
+                            });
+                            return;
+                        }
+
+                        callback();
+                    }
+                );
+            });
+        });
+    );
 };
 
 /**

@@ -151,6 +151,32 @@ module.exports.post = function(req, callback) {
                     });
 
                     return;
+                case "password-reset-request":
+                    user.passwordResetRequest(req.body.userId, req.body.authorizationCode, function(err) {
+                        if (err) {
+                            handleError(err, req);
+                            callback(err);
+                            return;
+                        }
+
+                        req.res.status(204);
+                        callback();
+                    });
+
+                    return;
+                case "password-reset":
+                    user.passwordReset(req.body.userId, req.body.authorizationCode, req.body.password, req.session.captcha, req.body.captcha, function(err) {
+                        if (err) {
+                            handleError(err, req);
+                            callback(err);
+                            return;
+                        }
+
+                        req.res.status(204);
+                        callback();
+                    });
+
+                    return;
                 case "logout":
                     delete req.session.user;
                     req.res.clearCookie("login");

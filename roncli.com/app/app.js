@@ -509,7 +509,137 @@ module.exports = BaseApp.extend({
                 }
                 break;
             case "passwordReset":
-                // TODO: If the user is attempting to recover their password, display the appropriate screen.
+                if (querystring.u && +querystring.u !== 0 && querystring.a) {
+                    user = new User();
+                    user.fetch({
+                        url: "/user/password-reset-request",
+                        data: JSON.stringify({
+                            userId: +querystring.u,
+                            authorizationCode: querystring.a
+                        }),
+                        type: "POST",
+                        contentType: "application/json",
+                        dataType: "json",
+                        success: function() {
+                            var passwordResetForm;
+
+                            bootbox.dialog({
+                                title: "Reset Your Password",
+                                message: app.templateAdapter.getTemplate("site/passwordResetRequest")(),
+                                show: false
+                            }).off("shown.bs.modal").on("shown.bs.modal", function() {
+                                $("#passwordResetCaptchaImage").attr("src", "/images/captcha.png");
+                                $("#passwordResetNewPassword").focus();
+                            }).modal("show");
+
+                            // Cache jQuery objects once the dialog box is shown.
+                            passwordResetForm = $("#passwordResetForm");
+
+                            passwordResetForm.defaultButton("#passwordResetButton");
+
+                            // Set up validation for the form.
+                            passwordResetForm.validate({
+                                rules: {
+                                    passwordResetNewPassword: {
+                                        required: true,
+                                        minlength: 6
+                                    },
+                                    passwordResetRetypePassword: {
+                                        equalTo: "#passwordResetNewPassword"
+                                    },
+                                    passwordResetCaptcha: {
+                                        required: true,
+                                        backbone: {
+                                            model: Captcha,
+                                            data: function() {
+                                                return {
+                                                    response: $("#passwordResetCaptcha").val()
+                                                };
+                                            },
+                                            settings: {
+                                                url: "/captcha/validate"
+                                            }
+                                        }
+                                    }
+                                },
+                                messages: {
+                                    passwordResetNewPassword: {
+                                        required: "You must enter a new password.",
+                                        minlength: "Your new password must be at least 6 characters."
+                                    },
+                                    passwordResetRetypePassword: {
+                                        equalTo: "The passwords you entered don't match."
+                                    },
+                                    passwordResetCaptcha: {
+                                        required: "You must type in the characters as shown.",
+                                        backbone: "The characters you typed do not match the image."
+                                    }
+                                },
+                                errorContainer: "#passwordResetErrorList",
+                                errorLabelContainer: "#passwordResetErrors"
+                            });
+
+                            // Setup reset password button.
+                            $("#passwordResetButton").on("click", function() {
+                                var passwordResetButton = $(this),
+                                    user;
+
+                                passwordResetForm.validate().element("#passwordResetRetypePassword");
+                                if (passwordResetForm.valid()) {
+                                    passwordResetButton.attr("disabled", "");
+                                    user = new User();
+                                    user.fetch({
+                                        url: "/user/password-reset",
+                                        data: JSON.stringify({
+                                            userId: +querystring.u,
+                                            authorizationCode: querystring.a,
+                                            password: $("#passwordResetNewPassword").val(),
+                                            captcha: $("#passwordResetCaptcha").val()
+                                        }),
+                                        type: "POST",
+                                        contentType: "application/json",
+                                        dataType: "json",
+                                        success: function() {
+                                            bootbox.hideAll();
+
+                                            // Display the dialog box.
+                                            bootbox.dialog({
+                                                title: "Password Reset!",
+                                                message: app.templateAdapter.getTemplate("site/passwordReset")(),
+                                                buttons: {ok: {label: "OK"}},
+                                                show: false
+                                            }).off("shown.bs.modal").modal("show");
+                                        },
+                                        error: function(xhr, error) {
+                                            var message;
+                                            if (error && error.body && error.body.error) {
+                                                message = error.body.error;
+                                            } else {
+                                                message = "There was a server error while resetting your password.  Plesae try again later.";
+                                            }
+                                            $("#passwordResetServerErrors").html(message);
+                                            $("#passwordResetServerErrorList").show();
+                                            passwordResetButton.removeAttr("disabled");
+
+                                            // Reload the captcha image.
+                                            $("#passwordResetCaptchaImage").attr("src", "/images/captcha.png");
+                                            $("#passwordResetCaptcha").val("");
+                                            $("#passwordResetForm").validate().element("#passwordResetCaptcha");
+                                        }
+                                    });
+                                }
+                            });
+                        },
+                        error: function() {
+                            bootbox.dialog({
+                                title: "Password Reset Request Failed",
+                                message: app.templateAdapter.getTemplate("site/passwordResetRequestError")(),
+                                buttons: {ok: {label: "OK"}},
+                                show: false
+                            }).off("shown.bs.modal").modal("show");
+                        }
+                    });
+                }
                 break;
         }
 
