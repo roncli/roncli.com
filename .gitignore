@@ -256,3 +256,7 @@ mergedAssets.js
 
 ### Private Files ###
 privateConfig.js
+
+### Mac Junk Files ###
+.DS_Store
+
