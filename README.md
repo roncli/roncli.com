@@ -58,7 +58,7 @@ To run the website on Windows, make sure you perform the following steps.
     - From the /roncli.com/node_modules/captchagen directory, rebuild the canvas module:
     
             npm rebuild canvas -msvs_version=2013 -f
-            
+
     These extra steps are temporary until the canvas module publishes this fix and the captchagen library moves to this version of the canvas library.
 8. Add /roncli.com/server/privateConfig.js with the following data:
 
