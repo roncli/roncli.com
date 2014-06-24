@@ -33,19 +33,34 @@ Windows Installation
 
 To run the website on Windows, make sure you perform the following steps.
 
-1. Install [Python 2.7.x](https://www.python.org/downloads/).
-2. Download the all-in-one bundle for [GTK+ 2.x x86](http://www.gtk.org/download/win32.php) or [GTK+ 2.x x64](http://www.gtk.org/download/win64.php).
-3. Unzip the GTK+ 2.x directory to c:\GTK.  It is important that the files are in this directory, as that is where the canvas npm package will be looking for it.
-4. Add the c:\GTK\bin directory to your system PATH.  (This may require a restart.)
-5. From an admin command prompt, install node-gyp and grunt-cli globally:
+1. Install [Visual Studio 2013 Express](http://download.microsoft.com/download/7/2/E/72E0F986-D247-4289-B9DC-C4FB07374894/wdexpress_full.exe) if you do not already have Visual Studio 2013 installed.
+2. Install [Python 2.7.x](https://www.python.org/downloads/).
+3. Download the all-in-one bundle for [GTK+ 2.x x86](http://www.gtk.org/download/win32.php) or [GTK+ 2.x x64](http://www.gtk.org/download/win64.php).
+4. Unzip the GTK+ 2.x directory to c:\GTK.  It is important that the files are in this directory, as that is where the canvas npm package will be looking for it.
+5. Add the c:\GTK\bin\ directory to your system PATH.  (This may require a restart.)
+6. From an admin command prompt, install node-gyp and grunt-cli globally:
 
         npm install -g node-gyp grunt-cli
 
-6. Install the node modules from the roncli.com directory:
+7. Install the node modules from the /roncli.com directory:
 
         npm install -msvs_version=2013
 
-7. Add /roncli.com/server/privateConfig.js with the following data:
+    If this step fails, you're going to have to get your hands dirty!  Perform the following steps:
+    - Rerun the command with the -f flag:
+    
+            npm install -msvs_version=2013 -f
+
+    - Using a text editor, open /roncli.com/node_modules/captchagen/node_modeules/canvas/src/CanvasRenderingContext2d.cc and add the line following line in the includes section at the top after the include to vector:
+
+            #include <algorithm>
+
+    - From the /roncli.com/node_modules/captchagen directory, rebuild the canvas module:
+    
+            npm rebuild canvas -msvs_version=2013 -f
+            
+    These extra steps are temporary until the canvas module publishes this fix and the captchagen library moves to this version of the canvas library.
+8. Add /roncli.com/server/privateConfig.js with the following data:
 
         module.exports = {
             twitter: {
@@ -71,7 +86,7 @@ To run the website on Windows, make sure you perform the following steps.
             }
         };
 
-8. Run /roncli.com/run.bat to start the web server.
+9. Run /roncli.com/run.bat to start the web server.
 
 Other Installations
 ===================
