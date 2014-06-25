@@ -14,7 +14,7 @@ var express = require("express"),
 app.use(express.compress());
 app.use(express.logger("[:date] :remote-addr :method :url HTTP/:http-version :status :res[content-length] \":user-agent\" :response-time \":referrer\""));
 app.use(express.cookieParser("tmp"));
-app.use(express.session());
+app.use(express.session({secret: "tmp"}));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use(express.urlencoded());
