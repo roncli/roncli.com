@@ -11,7 +11,7 @@ module.exports.get = function(req, callback) {
             return;
         }
 
-        req.res.status(204);
+        req.res.status(200);
         callback(data);
     });
 };
