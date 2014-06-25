@@ -473,7 +473,7 @@ module.exports = BaseApp.extend({
             }
         });
 
-        switch (querystring["go"]) {
+        switch (querystring.go) {
             case "validation":
                 if (querystring.u && +querystring.u !== 0 && querystring.v) {
                     user = new User();
