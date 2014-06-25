@@ -393,8 +393,8 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
                     return deferred.promise;
                 }())
             ).then(
+                // All the validations passed, run the registration.
                 function() {
-                    // All the validations passed, run the registration.
                     var salt = guid.v4();
                     getHashedPassword(password, salt, function(hashedPassword) {
                         var validationCode = guid.v4();
@@ -813,39 +813,46 @@ module.exports.passwordReset = function(userId, authorizationCode, password, cap
         }())
     ).then(
         // Next, we will run the database validations.
-        User.passwordResetRequest(userId, authorizationCode, function(err) {
-            if (err) {
-                callback(err);
-                return;
-            }
+        function() {
+            User.passwordResetRequest(userId, authorizationCode, function(err) {
+                if (err) {
+                    callback(err);
+                    return;
+                }
 
-            // All the validations passed, reset the password.
-            var salt = guid.v4();
-            getHashedPassword(password, salt, function(hashedPassword) {
-                db.query(
-                    "UPDATE tblPasswordChangeAuthorization SET ExpirationDate = GETUTCNOW() WHERE UserID = @userId AND AuthorizationCode = @authorizationCode; UPDATE tblUser SET PasswordHash = @passwordHash, Salt = @salt WHERE UserID = @userId",
-                    {
-                        userId: {type: db.INT, value: userId},
-                        authorizationCode: {type: db.UNIQUEIDENTIFIER, value: authorizationCode},
-                        passwordHash: {type: db.VARCHAR(256), value: hashedPassword},
-                        salt: {type: db.UNIQUEIDENTIFIER, value: salt}
-                    },
-                    function(err) {
-                        if (err) {
-                            console.log("Database error in user.passwordReset.");
-                            console.log(err);
-                            callback({
-                                error: "There was a database error while resetting your password.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
-                                status: 500
-                            });
-                            return;
+                // All the validations passed, reset the password.
+                var salt = guid.v4();
+                getHashedPassword(password, salt, function(hashedPassword) {
+                    db.query(
+                        "UPDATE tblPasswordChangeAuthorization SET ExpirationDate = GETUTCNOW() WHERE UserID = @userId AND AuthorizationCode = @authorizationCode; UPDATE tblUser SET PasswordHash = @passwordHash, Salt = @salt WHERE UserID = @userId",
+                        {
+                            userId: {type: db.INT, value: userId},
+                            authorizationCode: {type: db.UNIQUEIDENTIFIER, value: authorizationCode},
+                            passwordHash: {type: db.VARCHAR(256), value: hashedPassword},
+                            salt: {type: db.UNIQUEIDENTIFIER, value: salt}
+                        },
+                        function(err) {
+                            if (err) {
+                                console.log("Database error in user.passwordReset.");
+                                console.log(err);
+                                callback({
+                                    error: "There was a database error while resetting your password.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                                    status: 500
+                                });
+                                return;
+                            }
+
+                            callback();
                         }
-
-                        callback();
-                    }
-                );
+                    );
+                });
             });
-        });
+        },
+
+        // If any of the functions error out, it will be handled here.
+        function(err) {
+            callback(err);
+        }
     );
 };
 
