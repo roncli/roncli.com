@@ -876,13 +876,21 @@ module.exports.sendValidationEmail = function(userId, email, alias, validationCo
             to: templates["email/to"]({to: [{alias: alias, email: email}]}),
             subject: "Please validate your registration",
             html: templates["email/htmlTemplate"]({
-                html: templates["email/validation/html"]({}),
+                html: templates["email/validation/html"]({
+                    alias: alias,
+                    userId: userId,
+                    validationCode: validationCode
+                }),
                 email: email,
                 reason: "this email address was registered on the site",
                 year: moment().year()
             }),
             text: templates["email/textTemplate"]({
-                text: templates["email/validation/text"]({}),
+                text: templates["email/validation/text"]({
+                    alias: alias,
+                    userId: userId,
+                    validationCode: validationCode
+                }),
                 email: email,
                 reason: "this email address was registered on the site",
                 year: moment().year()
@@ -913,13 +921,21 @@ module.exports.sendResetPasswordEmail = function(userId, email, alias, authoriza
             ]}),
             subject: "Reset password request",
             html: templates["email/htmlTemplate"]({
-                html: templates["email/resetPassword/html"]({}),
+                html: templates["email/resetPassword/html"]({
+                    alias: alias,
+                    userId: userId,
+                    authorizationCode: authorizationCode
+                }),
                 email: email,
                 reason: "a password reset was requested for this email address",
                 year: moment().year()
             }),
             text: templates["email/textTemplate"]({
-                text: templates["email/resetPassword/text"]({}),
+                text: templates["email/resetPassword/text"]({
+                    alias: alias,
+                    userId: userId,
+                    authorizationCode: authorizationCode
+                }),
                 email: email,
                 reason: "a password reset was requested for this email address",
                 year: moment().year()

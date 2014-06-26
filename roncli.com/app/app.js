@@ -382,7 +382,7 @@ module.exports = BaseApp.extend({
                         user;
 
                     if ($("#forgotPasswordForm").valid()) {
-                        forgotPasswordButton.attr("disabled");
+                        forgotPasswordButton.attr("disabled", "");
                         user = new User();
                         user.fetch({
                             url: "/user/forgot-password",

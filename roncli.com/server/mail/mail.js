@@ -12,5 +12,9 @@ module.exports.send = function(options, callback) {
         options.subject = "[roncli.com]";
     }
 
+    if (!options.from) {
+        options.from = "Ronald M. Clifford <roncli@roncli.com>";
+    }
+
     transport.sendMail(options, callback);
 };
