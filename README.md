@@ -86,15 +86,53 @@ To run the website on Windows, make sure you perform the following steps.
             }
         };
 
-9. Run /roncli.com/run.bat to start the web server.
+9. If using [iisnode](https://github.com/tjanczuk/iisnode), point an IIS application to the inner /roncli.com directory.  Otherwise, run using a standalone installation from the cmomand line:
+
+        /roncli.com/run.bat
 
 Other Installations
 ===================
 
-The roncli.com website requires the [Cairo](https://github.com/LearnBoost/node-canvas/wiki) library to be installed.  Make sure you follow the Cairo installation instructions for your operating system, and then repeat steps 6 through 8 above to run the server.  If you're not running a Linux-based operating system, you will need to manually run the following commands to start the server:
+1. The roncli.com website requires the [Cairo](https://github.com/LearnBoost/node-canvas/wiki) library to be installed.  Make sure you follow the Cairo installation instructions for your operating system.
+2. From an admin command prompt, install grunt-cli globally:
+
+        npm install -g grunt-cli
+
+3. Install the node modules from the /roncli.com directory:
+
+        npm install
+
+4. Add /roncli.com/server/privateConfig.js with the following data:
+
+        module.exports = {
+            twitter: {
+                consumer_key: "(Your Twitter API key)",
+                consumer_secret: "(Your Twitter API secret)",
+                access_token_key: "(Your Twitter access token key)",
+                access_token_secret: "(Your Twitter access token secret)"
+            },
+            database: {
+				server: "(Your SQL Server hostname)",
+				port: (Your SQL Server port),
+				user: "(Your SQL Server login name)",
+				password: "(Your SQL Server login password)",
+				database: "(Your SQL Server database name)",
+				pool: {
+					min: 0,
+					max: 50,
+					idleTimeoutMillis: 30000
+				}
+            },
+            smtp: {
+                host: "(Your SMTP server hostname)"
+            }
+        };
+
+5. Run /roncli.com/run.bat to start the web server.  Alternatively, you can run the following commands instead:
 
         grunt
         node index.js
+
 
 License Details
 ===============
