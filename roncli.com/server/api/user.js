@@ -98,17 +98,19 @@ module.exports.post = function(req, callback) {
                             callback(err);
                             return;
                         }
+
+                        if (!data.validated) {
+                            req.res.status(400);
+                            callback({error: "You must validate your account before you can log in.  If you need help validating your account, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>."});
+                            return;
+                        }
+
                         req.session.user = data;
 
                         if (req.body.saveLogin && data.validated) {
                             req.res.cookie("login", {email: req.body.email, password: req.body.password}, {expires: moment().add("years", 1).toDate()});
                         }
 
-                        if (data.validated) {
-                            req.res.status(400);
-                            callback({error: "You must validate your account before you can log in.  If you need help validating your account, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>."});
-                            return;
-                        }
                         callback(data);
                     });
 

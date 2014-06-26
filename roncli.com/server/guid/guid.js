@@ -40,7 +40,7 @@ module.exports.unparse = function(guid) {
 
     args = Array.prototype.slice.call(arguments);
     args[0] = uuid;
-    return unparse.apply(module.exports, args);
+    return unparse.apply(module.exports, args).toUpperCase();
 };
 
 module.exports.v4 = function() {
