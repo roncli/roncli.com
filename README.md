@@ -86,9 +86,7 @@ To run the website on Windows, make sure you perform the following steps.
             }
         };
 
-9. If using [iisnode](https://github.com/tjanczuk/iisnode), point an IIS application to the inner /roncli.com directory.  Otherwise, run using a standalone installation from the cmomand line:
-
-        /roncli.com/run.bat
+9. If using [iisnode](https://github.com/tjanczuk/iisnode), point an IIS application to the inner /roncli.com directory.  Otherwise, run using a standalone installation from the command line by running /roncli.com/run.bat.
 
 Other Installations
 ===================
