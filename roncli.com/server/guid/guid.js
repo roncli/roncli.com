@@ -1,13 +1,14 @@
 module.exports = require("node-uuid");
 
 var parse = module.exports.parse,
-    unparse = module.exports.unparse;
+    unparse = module.exports.unparse,
+    v4 = module.exports.v4;
 
 module.exports.parse = function() {
     "use strict";
 
-    var uuid = parse.apply(module.exports, arguments);
-    var guid = new Buffer(16);
+    var uuid = new Buffer(parse.apply(module.exports, arguments)),
+        guid = new Buffer(16);
     uuid.copy(guid, 0, 3, 4);
     uuid.copy(guid, 1, 2, 3);
     uuid.copy(guid, 2, 1, 2);
@@ -23,18 +24,27 @@ module.exports.parse = function() {
 module.exports.unparse = function(guid) {
     "use strict";
 
-    var uuid = new Buffer(16), args;
-    guid.copy(uuid, 0, 3, 4);
-    guid.copy(uuid, 1, 2, 3);
-    guid.copy(uuid, 2, 1, 2);
-    guid.copy(uuid, 3, 0, 1);
-    guid.copy(uuid, 4, 5, 6);
-    guid.copy(uuid, 5, 4, 5);
-    guid.copy(uuid, 6, 7, 8);
-    guid.copy(uuid, 7, 6, 7);
-    guid.copy(uuid, 8, 8);
+    var uuid = new Buffer(16),
+        buf = new Buffer(guid),
+        args;
+
+    buf.copy(uuid, 0, 3, 4);
+    buf.copy(uuid, 1, 2, 3);
+    buf.copy(uuid, 2, 1, 2);
+    buf.copy(uuid, 3, 0, 1);
+    buf.copy(uuid, 4, 5, 6);
+    buf.copy(uuid, 5, 4, 5);
+    buf.copy(uuid, 6, 7, 8);
+    buf.copy(uuid, 7, 6, 7);
+    buf.copy(uuid, 8, 8);
 
     args = Array.prototype.slice.call(arguments);
     args[0] = uuid;
     return unparse.apply(module.exports, args);
+};
+
+module.exports.v4 = function() {
+    "use strict";
+
+    return module.exports.unparse(new Buffer(parse(v4.apply(module.exports, arguments))));
 };

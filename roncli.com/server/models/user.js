@@ -138,9 +138,7 @@ module.exports.login = function(email, password, callback) {
                 return;
             }
 
-            salt = guid.unparse(user.Salt);
-
-            getHashedPassword(password, salt, function(hashedPassword) {
+            getHashedPassword(password, user.Salt, function(hashedPassword) {
                 if (hashedPassword !== user.PasswordHash) {
                     callback({
                         error: "Invalid email address or password.",
