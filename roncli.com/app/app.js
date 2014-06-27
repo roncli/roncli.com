@@ -394,7 +394,24 @@ module.exports = BaseApp.extend({
                             dataType: "json",
                             success: function() {
                                 bootbox.hideAll();
-                                // TODO: Inform user that they are being sent either a password recovery request email or validation email.
+
+                                if (user.get("validationRequired")) {
+                                    // Display the dialog box.
+                                    bootbox.dialog({
+                                        title: "Account Validation Required",
+                                        message: app.templateAdapter.getTemplate("site/validationSent")(),
+                                        buttons: {ok: {label: "OK"}},
+                                        show: false
+                                    }).off("shown.bs.modal").modal("show");
+                                } else {
+                                    // Display the dialog box.
+                                    bootbox.dialog({
+                                        title: "Password Reset Request",
+                                        message: app.templateAdapter.getTemplate("site/passwordRequestSent")(),
+                                        buttons: {ok: {label: "OK"}},
+                                        show: false
+                                    }).off("shown.bs.modal").modal("show");
+                                }
                             },
                             error: function(xhr, error) {
                                 var message;
