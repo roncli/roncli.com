@@ -631,7 +631,7 @@ module.exports.forgotPassword = function(email, callback) {
                                     userId: {type: db.INT, value: user.UserID},
                                     authorizationCode: {type: db.UNIQUEIDENTIFIER, value: authorizationCode}
                                 },
-                                function(err, data) {
+                                function(err) {
                                     if (err) {
                                         console.log("Database error creating database authorizations in user.forgotPassword.");
                                         console.log(err);
