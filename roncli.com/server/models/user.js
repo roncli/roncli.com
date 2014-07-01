@@ -642,7 +642,7 @@ module.exports.forgotPassword = function(email, callback) {
                                         return;
                                     }
 
-                                    User.sendResetPasswordEmail(user[0][0].UserID, email, user[0][0].Alias, authorizationCode, function(err) {
+                                    User.sendResetPasswordEmail(user.UserID, email, user.Alias, authorizationCode, function(err) {
                                         if (err) {
                                             console.log("Error sending reset password email in user.forgotPassword.");
                                             console.log(err);
