@@ -653,7 +653,7 @@ module.exports.forgotPassword = function(email, callback) {
                                             return;
                                         }
 
-                                        callback(null, {validationRequired: false});
+                                        callback(null, false);
                                     });
                                 }
                             );
@@ -673,7 +673,7 @@ module.exports.forgotPassword = function(email, callback) {
                             return;
                         }
 
-                        callback(null, {validationRequired: true});
+                        callback(null, true);
                     });
                 }
             }
