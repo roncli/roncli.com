@@ -5,7 +5,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{2858679a-63b5-4963-aca8-f09ac5f819ad}</ProjectGuid>
     <ProjectHome />
-    <ProjectView>ProjectFiles</ProjectView>
+    <ProjectView>ShowAllFiles</ProjectView>
     <StartupFile />
     <WorkingDirectory>.</WorkingDirectory>
     <OutputPath>.</OutputPath>
@@ -16,21 +16,94 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
-    <Content Include="app\templates\home.hbs" />
+    <Content Include="app\templates\home\index.hbs" />
+    <Content Include="app\templates\page\index.hbs" />
+    <Content Include="app\templates\site\loggedIn.hbs" />
+    <Content Include="app\templates\site\loggedOut.hbs" />
+    <Content Include="app\templates\site\login.hbs" />
+    <Content Include="app\templates\site\passwordRequestSent.hbs" />
+    <Content Include="app\templates\site\passwordReset.hbs" />
+    <Content Include="app\templates\site\passwordResetRequest.hbs" />
+    <Content Include="app\templates\site\passwordResetRequestError.hbs" />
+    <Content Include="app\templates\site\tweet.hbs" />
+    <Content Include="app\templates\site\validationError.hbs" />
+    <Content Include="app\templates\site\validationSent.hbs" />
+    <Content Include="app\templates\site\validationSuccess.hbs" />
     <Content Include="app\templates\__layout.hbs" />
+    <Content Include="assets\tools\bootstrap-magic.less" />
     <Content Include="package.json" />
+    <Content Include="public\css\bootstrap-override.css" />
+    <Content Include="public\css\bootstrap-theme.css" />
+    <Content Include="public\css\site.css" />
+    <Content Include="public\images\browsers\chrome.png" />
+    <Content Include="public\images\browsers\firefox.png" />
+    <Content Include="public\images\browsers\ie.png" />
+    <Content Include="public\images\browsers\safari.png" />
+    <Content Include="public\images\favicon.ico" />
+    <Content Include="public\images\loading.gif" />
+    <Content Include="public\images\loadingSmall.gif" />
+    <Content Include="public\images\roncliLogo%402x.png" />
+    <Content Include="public\images\roncliLogo%404x.png" />
+    <Content Include="public\images\roncliLogo.png" />
+    <Content Include="public\images\twitter\favorite%402x.png" />
+    <Content Include="public\images\twitter\favorite.png" />
+    <Content Include="public\images\twitter\favorite_hover%402x.png" />
+    <Content Include="public\images\twitter\favorite_hover.png" />
+    <Content Include="public\images\twitter\logo%402x.png" />
+    <Content Include="public\images\twitter\logo.png" />
+    <Content Include="public\images\twitter\reply%402x.png" />
+    <Content Include="public\images\twitter\reply.png" />
+    <Content Include="public\images\twitter\reply_hover%402x.png" />
+    <Content Include="public\images\twitter\reply_hover.png" />
+    <Content Include="public\images\twitter\retweet%402x.png" />
+    <Content Include="public\images\twitter\retweet.png" />
+    <Content Include="public\images\twitter\retweet_hover%402x.png" />
+    <Content Include="public\images\twitter\retweet_hover.png" />
     <Content Include="README.md" />
+    <Content Include="run.bat" />
+    <Content Include="server\templates\email\htmlTemplate.hbs" />
+    <Content Include="server\templates\email\resetPassword\html.hbs" />
+    <Content Include="server\templates\email\resetPassword\text.hbs" />
+    <Content Include="server\templates\email\textTemplate.hbs" />
+    <Content Include="server\templates\email\to.hbs" />
+    <Content Include="server\templates\email\validation\html.hbs" />
+    <Content Include="server\templates\email\validation\text.hbs" />
+    <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="app\app.js" />
+    <Compile Include="app\collections\tweets.js" />
     <Compile Include="app\controllers\home_controller.js" />
+    <Compile Include="app\controllers\page_controller.js" />
     <Compile Include="app\lib\handlebarsHelpers.js" />
+    <Compile Include="app\lib\validationExtensions.js" />
+    <Compile Include="app\models\base.js" />
+    <Compile Include="app\models\captcha.js" />
+    <Compile Include="app\models\time.js" />
+    <Compile Include="app\models\tweet.js" />
+    <Compile Include="app\models\user.js" />
     <Compile Include="app\router.js" />
     <Compile Include="app\routes.js" />
-    <Compile Include="app\views\home.js" />
-    <Compile Include="assets\vendor\jquery-2.1.1.min.js" />
+    <Compile Include="app\views\home\index.js" />
+    <Compile Include="app\views\page\index.js" />
     <Compile Include="gruntfile.js" />
     <Compile Include="index.js" />
+    <Compile Include="public\js\jquery-defaultButton-1.2.0.min.js" />
+    <Compile Include="public\js\jquery-getParam.min.js" />
+    <Compile Include="server\ApiDataAdapter.js" />
+    <Compile Include="server\api\captcha.js" />
+    <Compile Include="server\api\time.js" />
+    <Compile Include="server\api\tweet.js" />
+    <Compile Include="server\api\user.js" />
+    <Compile Include="server\captcha\captchagen.js" />
+    <Compile Include="server\database\database.js" />
+    <Compile Include="server\guid\guid.js" />
+    <Compile Include="server\handleError.js" />
+    <Compile Include="server\mail\mail.js" />
+    <Compile Include="server\models\captcha.js" />
+    <Compile Include="server\models\tweet.js" />
+    <Compile Include="server\models\user.js" />
+    <Compile Include="server\templates\template.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="app\" />
@@ -39,12 +112,31 @@
     <Folder Include="app\lib\" />
     <Folder Include="app\models\" />
     <Folder Include="app\templates\" />
+    <Folder Include="app\templates\home\" />
+    <Folder Include="app\templates\page\" />
+    <Folder Include="app\templates\site\" />
     <Folder Include="app\views\" />
+    <Folder Include="app\views\home\" />
+    <Folder Include="app\views\page\" />
     <Folder Include="assets\" />
-    <Folder Include="assets\vendor\" />
-    <Folder Include="config\" />
+    <Folder Include="assets\tools\" />
     <Folder Include="public\" />
+    <Folder Include="public\css\" />
+    <Folder Include="public\images\" />
+    <Folder Include="public\images\browsers\" />
+    <Folder Include="public\images\twitter\" />
+    <Folder Include="public\js\" />
     <Folder Include="server\" />
+    <Folder Include="server\api\" />
+    <Folder Include="server\captcha\" />
+    <Folder Include="server\database\" />
+    <Folder Include="server\guid\" />
+    <Folder Include="server\mail\" />
+    <Folder Include="server\models\" />
+    <Folder Include="server\templates\" />
+    <Folder Include="server\templates\email\" />
+    <Folder Include="server\templates\email\resetPassword\" />
+    <Folder Include="server\templates\email\validation\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />

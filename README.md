@@ -132,6 +132,62 @@ Other Installations
         node index.js
 
 
+Version History
+===============
+
+0.1
+---
+
+This version introduces the bare bones of the website, including the layout, Twitter feed, contacts, and hosted sites. Users can register, login, and request password reset authorizations.
+
+Planned Versions
+================
+
+0.1.1
+-----
+
+* Implement the Account page.
+
+0.2
+---
+
+* Implement Blogger integration.
+
+0.3
+---
+
+* Implement HTML pages.
+
+0.3.1
+-----
+
+* Implement comments system for HTML pages.
+
+0.4
+---
+
+* Implement Music section.
+
+0.5
+---
+
+* Implement Coding section with GitHub connectivity.
+
+0.6
+---
+
+* Implement Gaming section with Battle.Net, Steam, and other gaming functionality.
+
+0.7
+---
+
+* Implement Life section.
+
+1.0
+---
+
+* Website launch.
+
 License Details
 ===============
 
