@@ -719,7 +719,7 @@ module.exports.passwordResetRequest = function(userId, authorizationCode, callba
                 return;
             }
 
-            if (data[0][0].Requests > 0) {
+            if (data[0][0].Requests === 0) {
                 callback({
                     error: "The request to reset your password is not valid.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
                     status: 400
