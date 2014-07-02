@@ -693,7 +693,7 @@ module.exports.passwordResetRequest = function(userId, authorizationCode, callba
     userId = +userId;
 
     db.query(
-        "SELECT COUNT(AuthorizationID) Requests FROM tblPasswordChangeAuthorization WHERE UserID = @userId AND AuthorizationCode = @authorizationCode AND ExpirationDate <= GETUTCDATE()",
+        "SELECT COUNT(AuthorizationID) Requests FROM tblPasswordChangeAuthorization WHERE UserID = @userId AND AuthorizationCode = @authorizationCode AND ExpirationDate >= GETUTCDATE()",
         {
             userId: {type: db.INT, value: userId},
             authorizationCode: {type: db.UNIQUEIDENTIFIER, value: authorizationCode}
