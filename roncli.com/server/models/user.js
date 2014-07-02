@@ -709,7 +709,7 @@ module.exports.passwordResetRequest = function(userId, authorizationCode, callba
                 return;
             }
 
-            if (!data[0] || data[0].length === 0) {
+            if (!data[0] || data[0].length === 0 || !data[0][0] || data[0][0].length === 0) {
                 console.log("Missing authorization counts in database in user.passwordResetRequest.");
                 console.log(err);
                 callback({
