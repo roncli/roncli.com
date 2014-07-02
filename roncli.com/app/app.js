@@ -621,7 +621,7 @@ module.exports = BaseApp.extend({
 
                                             // Display the dialog box.
                                             bootbox.dialog({
-                                                title: "Password Reset!",
+                                                title: "Password Reset",
                                                 message: app.templateAdapter.getTemplate("site/passwordReset")(),
                                                 buttons: {ok: {label: "OK"}},
                                                 show: false
