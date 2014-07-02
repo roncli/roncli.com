@@ -822,7 +822,7 @@ module.exports.passwordReset = function(userId, authorizationCode, password, cap
                 var salt = guid.v4();
                 getHashedPassword(password, salt, function(hashedPassword) {
                     db.query(
-                        "UPDATE tblPasswordChangeAuthorization SET ExpirationDate = GETUTCNOW() WHERE UserID = @userId AND AuthorizationCode = @authorizationCode; UPDATE tblUser SET PasswordHash = @passwordHash, Salt = @salt WHERE UserID = @userId",
+                        "UPDATE tblPasswordChangeAuthorization SET ExpirationDate = GETUTCDATE() WHERE UserID = @userId AND AuthorizationCode = @authorizationCode; UPDATE tblUser SET PasswordHash = @passwordHash, Salt = @salt WHERE UserID = @userId",
                         {
                             userId: {type: db.INT, value: userId},
                             authorizationCode: {type: db.UNIQUEIDENTIFIER, value: authorizationCode},
