@@ -1,4 +1,5 @@
-var path = require("path");
+var path = require("path"),
+    remapify = require("remapify");
 
 /**
  * Setup project configuration.
@@ -27,8 +28,9 @@ module.exports = function(grunt) {
                         return filename.replace("app/templates/", "").replace(".hbs", "");
                     }
                 },
-                src: "app/templates/**/*.hbs",
-                dest: "app/templates/compiledTemplates.js",
+                files: {
+                    "app/templates/compiledTemplates.js": ["app/templates/**/*.hbs"]
+                },
 
                 /**
                  * Exclude files that begin with two underscores.
@@ -42,34 +44,38 @@ module.exports = function(grunt) {
 
         // Setup browserify to send node assets to the client.
         browserify: {
-            options: {
-                debug: true,
-                alias: ["node_modules/rendr-handlebars/index.js:rendr-handlebars"],
-                aliasMappings: [
-                    {
-                        cwd: "app/",
-                        src: ["**/*.js"],
-                        dest: "app/"
-                    }
-                ],
-                shim: {
-                    jquery: {
-                        path: "node_modules/jquery/dist/cdn/jquery-2.1.1.min.js",
-                        exports: "$"
+            dist: {
+                options: {
+                    debug: true,
+                    alias: ["node_modules/rendr-handlebars/index.js:rendr-handlebars"],
+                    preBundleCB: function(b) {
+                        b.plugin(remapify, [
+                            {
+                                src: "**/*.js",
+                                expose: "app",
+                                cwd: "app",
+                                config: {verbose: true}
+                            }
+                        ]);
                     },
-                    iscroll: {
-                        path: "node_modules/iscroll/build/iscroll.js",
-                        exports: "IScroll"
-                    },
-                    moment: {
-                        path: "node_modules/moment/min/moment.min.js",
-                        exports: "moment"
+                    shim: {
+                        jquery: {
+                            path: "node_modules/jquery/dist/cdn/jquery-2.1.1.min.js",
+                            exports: "$"
+                        },
+                        iscroll: {
+                            path: "node_modules/iscroll/build/iscroll.js",
+                            exports: "IScroll"
+                        },
+                        moment: {
+                            path: "node_modules/moment/min/moment.min.js",
+                            exports: "moment"
+                        }
                     }
+                },
+                files: {
+                    "public/mergedAssets.js": ["app/**/*.js"]
                 }
-            },
-            app: {
-                src: ["app/**/*.js"],
-                dest: "public/mergedAssets.js"
             }
         }
     });
