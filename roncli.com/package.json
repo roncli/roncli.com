@@ -14,7 +14,7 @@
         "iscroll": "5.1.2",
         "jquery": "2.1.1",
         "moment": "2.7.0",
-        "mssql": "0.5.5",
+        "mssql": "0.6.0",
         "node-uuid": "1.4.1",
         "nodemailer": "0.7.0",
         "promised-io": "0.3.4",
@@ -25,13 +25,24 @@
     },
     "devDependencies": {
         "browserify": "4.2.0",
+        "browserify-shim": "3.6.0",
         "grunt": "0.4.5",
-        "grunt-browserify": "2.1.2",
+        "grunt-browserify": "2.1.3",
         "grunt-contrib-handlebars": "0.8.0",
         "remapify": "0.1.6"
     },
     "license": "None",
     "engines": {
         "node": ">=0.10.28"
+    },
+    "browser": {
+        "jquery": "./node_modules/jquery/dist/cdn/jquery-2.1.1.min.js",
+        "rendr-handlebars": "./node_modules/rendr-handlebars/index.js",
+        "iscroll": "./node_modules/iscroll/build/iscroll.js",
+        "moment": "./node_modules/moment/min/moment.min.js"
+    },
+    "browserify-shim": "./shims.js",
+    "browserify": {
+        "transform": ["browserify-shim"]
     }
 }

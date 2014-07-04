@@ -1,5 +1,6 @@
 var path = require("path"),
-    remapify = require("remapify");
+    remapify = require("remapify"),
+    pjson = require('./package.json');
 
 /**
  * Setup project configuration.
@@ -46,31 +47,23 @@ module.exports = function(grunt) {
         browserify: {
             dist: {
                 options: {
-                    debug: true,
-                    alias: ["node_modules/rendr-handlebars/index.js:rendr-handlebars"],
+                    transforms: ["browserify-shim"],
+                    require: Object.keys(pjson.browser),
                     preBundleCB: function(b) {
-                        b.plugin(remapify, [
+                        b.plugin(remapify,
                             {
                                 src: "**/*.js",
                                 expose: "app",
-                                cwd: "app",
-                                config: {verbose: true}
+                                cwd: "./app"
                             }
-                        ]);
-                    },
-                    shim: {
-                        jquery: {
-                            path: "node_modules/jquery/dist/cdn/jquery-2.1.1.min.js",
-                            exports: "$"
-                        },
-                        iscroll: {
-                            path: "node_modules/iscroll/build/iscroll.js",
-                            exports: "IScroll"
-                        },
-                        moment: {
-                            path: "node_modules/moment/min/moment.min.js",
-                            exports: "moment"
-                        }
+                        );
+                        b.on("remapify:files", function(file, expandedAliases) {
+                            Object.keys(expandedAliases).forEach(function(key) {
+                                if (key.indexOf(".js") === -1) {
+                                    b.require(expandedAliases[key], {expose: key});
+                                }
+                            });
+                        });
                     }
                 },
                 files: {
