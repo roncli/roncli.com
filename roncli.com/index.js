@@ -75,7 +75,7 @@ function start() {
 }
 
 // Only start server if this script is executed, and not called via require.
-if (require.main === module || (require.main.filename === "C:\\Program Files\\iisnode\\interceptor.js" && require.main.children[0] === module)) {
+if (require.main && (require.main === module || (require.main.filename === "C:\\Program Files\\iisnode\\interceptor.js" && require.main.children[0] === module))) {
     start();
 } else {
     console.error("You can only load this website if it is the main script that is executed, or if it is loaded through iisnode.  If iisnode is installed in a non-standard location, you will need to modify the location in the index.js file.");

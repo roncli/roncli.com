@@ -40,9 +40,5 @@
         "rendr-handlebars": "./node_modules/rendr-handlebars/index.js",
         "iscroll": "./node_modules/iscroll/build/iscroll.js",
         "moment": "./node_modules/moment/min/moment.min.js"
-    },
-    "browserify-shim": "./shims.js",
-    "browserify": {
-        "transform": ["browserify-shim"]
     }
 }
