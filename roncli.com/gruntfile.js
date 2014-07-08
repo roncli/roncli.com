@@ -47,7 +47,6 @@ module.exports = function(grunt) {
         browserify: {
             dist: {
                 options: {
-                    transforms: ["browserify-shim"],
                     require: Object.keys(pjson.browser),
                     preBundleCB: function(b) {
                         b.plugin(remapify,
