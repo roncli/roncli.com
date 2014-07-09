@@ -15,7 +15,7 @@ The second is the Node project itself, which is developed via PhpStorm.  I do ha
 Requirements
 ============
 
-Be sure to have Visual Studio 2013,  and node.js 0.10.28 or later installed with npm.
+Be sure to have Visual Studio 2013, and node.js 0.10.28 or later installed with npm.
 
 Database Setup
 ==============
@@ -46,21 +46,10 @@ To run the website on Windows, make sure you perform the following steps.
 
         npm install -msvs_version=2013
 
-    If this step fails, you're going to have to get your hands dirty!  Perform the following steps:
-    - Rerun the command with the -f flag:
-    
-            npm install -msvs_version=2013 -f
-
-    - Using a text editor, open /roncli.com/node_modules/captchagen/node_modeules/canvas/src/CanvasRenderingContext2d.cc and add the line following line in the includes section at the top after the include to vector:
-
-            #include <algorithm>
-
-    - From the /roncli.com/node_modules/captchagen directory, rebuild the canvas module:
-    
-            npm rebuild canvas -msvs_version=2013 -f
-
-    These extra steps are temporary until the canvas module publishes this fix and the captchagen library moves to this version of the canvas library.
-8. Add /roncli.com/server/privateConfig.js with the following data:
+8. Apply the following patches.  This is temporary until these projects accept these pull requests.
+    - [joeybaker/remapify Pull Request 7](https://github.com/joeybaker/remapify/pull/7) - Required to allow browserify to find rendr's client and shared modules.
+    - [rendrjs/rendr Pull Request 379](https://github.com/rendrjs/rendr/pull/379) - Required to allow rendr to work with express.
+9. Add /roncli.com/server/privateConfig.js with the following data:
 
         module.exports = {
             twitter: {
@@ -86,7 +75,7 @@ To run the website on Windows, make sure you perform the following steps.
             }
         };
 
-9. If using [iisnode](https://github.com/tjanczuk/iisnode), point an IIS application to the inner /roncli.com directory, and run ```grunt``` from the same directory when installing and after every time you change code.  Otherwise, run using a standalone installation from the command line by running /roncli.com/run.bat.
+10. If using [iisnode](https://github.com/tjanczuk/iisnode), point an IIS application to the inner /roncli.com directory, and run ```grunt``` from the same directory when installing and after every time you change code.  Otherwise, run using a standalone installation from the command line by running /roncli.com/run.bat.
 
 Other Installations
 ===================
@@ -100,7 +89,10 @@ Other Installations
 
         npm install
 
-4. Add /roncli.com/server/privateConfig.js with the following data:
+4. Apply the following patches.  This is temporary until these projects accept these pull requests.
+    - [joeybaker/remapify Pull Request 7](https://github.com/joeybaker/remapify/pull/7) - Required to allow browserify to find rendr's client and shared modules.
+    - [rendrjs/rendr Pull Request 379](https://github.com/rendrjs/rendr/pull/379) - Required to allow rendr to work with express.
+5. Add /roncli.com/server/privateConfig.js with the following data:
 
         module.exports = {
             twitter: {
@@ -126,7 +118,7 @@ Other Installations
             }
         };
 
-5. Run /roncli.com/run.bat to start the web server.  Alternatively, you can run the following commands instead:
+6. Run /roncli.com/run.bat to start the web server.  Alternatively, you can run the following commands instead:
 
         grunt
         node index.js

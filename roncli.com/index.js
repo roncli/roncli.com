@@ -4,20 +4,30 @@ var express = require("express"),
     moment = require("moment"),
     rendr = require("rendr"),
     captchagen = require("./server/captcha/captchagen.js"),
+    compression = require("compression"),
+    morgan = require("morgan"),
+    cookieParser = require("cookie-parser"),
+    session = require("express-session"),
+    bodyParser = require("body-parser"),
     app = express(),
     ApiDataAdapter = require("./server/ApiDataAdapter"),
     server = rendr.createServer({
-        dataAdapter: new ApiDataAdapter()
+        dataAdapter: new ApiDataAdapter(),
+        errorHandler: require("errorhandler")
     });
 
-// Initialize Express middleware stack.
-app.use(express.compress());
-app.use(express.logger("[:date] :remote-addr :method :url HTTP/:http-version :status :res[content-length] \":user-agent\" :response-time \":referrer\""));
-app.use(express.cookieParser("tmp"));
-app.use(express.session({secret: "tmp"}));
+// Initialize middleware stack.
+app.use(compression());
+app.use(morgan("[:date] :remote-addr :method :url HTTP/:http-version :status :res[content-length] \":user-agent\" :response-time \":referrer\""));
+app.use(cookieParser("tmp"));
+app.use(session({
+    secret: "tmp",
+    resave: true,
+    saveUninitialized: true
+}));
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.json());
-app.use(express.urlencoded());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
 
 // Remove powered by header.
 app.use(function(req, res, next) {
@@ -61,7 +71,7 @@ app.get("/images/captcha.png", function(req, res) {
 });
 
 // Add the rendr server.
-app.use(server);
+app.use(server.handle);
 
 /**
  * Start the Express server.
