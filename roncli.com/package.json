@@ -31,7 +31,6 @@
     },
     "devDependencies": {
         "browserify": "4.2.0",
-        "browserify-shim": "3.6.0",
         "grunt": "0.4.5",
         "grunt-browserify": "2.1.3",
         "grunt-contrib-handlebars": "0.8.0",
