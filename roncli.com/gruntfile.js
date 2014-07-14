@@ -1,6 +1,7 @@
 var path = require("path"),
     remapify = require("remapify"),
-    pjson = require('./package.json');
+    pjson = require("./package.json"),
+    minifier = require("html-minifier");
 
 /**
  * Setup project configuration.
@@ -27,6 +28,28 @@ module.exports = function(grunt) {
                      */
                     processName: function(filename) {
                         return filename.replace("app/templates/", "").replace(".hbs", "");
+                    },
+
+                    /**
+                     * Minify HTML content
+                     */
+                    processContent: function(content, file) {
+                        console.log();
+                        console.log("===" + file.toUpperCase() + "===");
+                        console.log("PREFORMATTED");
+                        console.log(content);
+                        content = minifier.minify(content, {
+                            removeComments: true,
+                            collapseWhitespace: true,
+                            conservativeCollapse: true,
+                            minifyJS: true,
+                            minifyCSS: true
+                        });
+                        console.log();
+                        console.log("===" + file.toUpperCase() + "===");
+                        console.log("FORMATTED");
+                        console.log(content);
+                        return content;
                     }
                 },
                 files: {
