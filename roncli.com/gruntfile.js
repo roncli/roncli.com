@@ -17,7 +17,7 @@ module.exports = function(grunt) {
 
         // Setup handlebars.
         handlebars: {
-            compile: {
+            compile_rendr_templates: {
                 options: {
                     namespace: false,
                     commonjs: true,
@@ -59,7 +59,7 @@ module.exports = function(grunt) {
 
         // Setup browserify to send node assets to the client.
         browserify: {
-            dist: {
+            combine_render_assets: {
                 options: {
                     require: Object.keys(pjson.browser),
                     preBundleCB: function(b) {
@@ -80,35 +80,51 @@ module.exports = function(grunt) {
                     }
                 },
                 files: {
-                    "public/js/mergedAssets.js": ["app/**/*.js"]
+                    "assets/js/mergedAssets.js": ["app/**/*.js"]
                 }
             }
         },
 
         // Setup cssmin to send CSS assets to the client.
         cssmin: {
-            combine: {
+            combine_css_files: {
                 files: {
-                    "assets/css/mergedAssets.css": ["assets/css/*.css", "!assets/css/mergedAssets.css"]
+                    "assets/css/mergedAssets.css": ["assets/css/bootstrap-theme.css", "assets/css/*.css", "!assets/css/mergedAssets.css"]
                 }
             },
-            minify: {
+            minify_css_files: {
                 expand: true,
                 cwd: "assets/css/",
                 src: ["mergedAssets.css"],
                 dest: "public/css/",
                 ext: ".min.css"
             }
+        },
+
+        // Setup uglify to send JS assets to the client.
+        uglify: {
+            minify_js_fiels: {
+                options: {
+                    preserveComments: false
+                },
+                files: {
+                    "public/js/mergedAssets.min.js": ["assets/js/mergedAssets.js", "assets/js/loadJQuery.js", "assets/js/*.js"]
+                }
+            }
         }
     });
 
-    // Load handlebars, browserify, and cssmin.
+    // Load handlebars, browserify, cssmin, and uglify.
     grunt.loadNpmTasks("grunt-contrib-handlebars");
     grunt.loadNpmTasks("grunt-browserify");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
+    grunt.loadNpmTasks("grunt-contrib-uglify");
 
     // Compile handlebars, browserify, and cssmin.
-    grunt.registerTask("compile", ["handlebars", "browserify", "cssmin"]);
+    grunt.registerTask("compile", ["handlebars", "browserify", "cssmin", "uglify"]);
+
+    // Noop task.
+    grunt.registerTask("noop", []);
 
     // Default tasks.
     grunt.registerTask("default", ["compile"]);
