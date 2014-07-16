@@ -34,22 +34,13 @@ module.exports = function(grunt) {
                      * Minify HTML content
                      */
                     processContent: function(content, file) {
-                        console.log();
-                        console.log("===" + file.toUpperCase() + "===");
-                        console.log("PREFORMATTED");
-                        console.log(content);
-                        content = minifier.minify(content, {
+                        return minifier.minify(content, {
                             removeComments: true,
                             collapseWhitespace: true,
                             conservativeCollapse: true,
                             minifyJS: true,
                             minifyCSS: true
                         });
-                        console.log();
-                        console.log("===" + file.toUpperCase() + "===");
-                        console.log("FORMATTED");
-                        console.log(content);
-                        return content;
                     }
                 },
                 files: {
@@ -89,18 +80,35 @@ module.exports = function(grunt) {
                     }
                 },
                 files: {
-                    "public/mergedAssets.js": ["app/**/*.js"]
+                    "public/js/mergedAssets.js": ["app/**/*.js"]
                 }
+            }
+        },
+
+        // Setup cssmin to send CSS assets to the client.
+        cssmin: {
+            combine: {
+                files: {
+                    "assets/css/mergedAssets.css": ["assets/css/*.css", "!assets/css/mergedAssets.css"]
+                }
+            },
+            minify: {
+                expand: true,
+                cwd: "assets/css/",
+                src: ["mergedAssets.css"],
+                dest: "public/css/",
+                ext: ".min.css"
             }
         }
     });
 
-    // Load Browserify and Handlebars compilers.
-    grunt.loadNpmTasks("grunt-browserify");
+    // Load handlebars, browserify, and cssmin.
     grunt.loadNpmTasks("grunt-contrib-handlebars");
+    grunt.loadNpmTasks("grunt-browserify");
+    grunt.loadNpmTasks("grunt-contrib-cssmin");
 
-    // Compile handlebars and browserify.
-    grunt.registerTask("compile", ["handlebars", "browserify"]);
+    // Compile handlebars, browserify, and cssmin.
+    grunt.registerTask("compile", ["handlebars", "browserify", "cssmin"]);
 
     // Default tasks.
     grunt.registerTask("default", ["compile"]);
