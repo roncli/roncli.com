@@ -103,7 +103,7 @@ module.exports = function(grunt) {
 
         // Setup uglify to send JS assets to the client.
         uglify: {
-            minify_js_fiels: {
+            minify_js_files: {
                 options: {
                     preserveComments: false
                 },
