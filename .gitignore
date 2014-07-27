@@ -250,9 +250,9 @@ UpgradeLog*.htm
 # Microsoft Fakes
 FakesAssemblies/
 
-### Rendr ###
+### Grunt ###
 compiledTemplates.js
-mergedAssets.js
+mergedAssets.*
 
 ### Private Files ###
 privateConfig.js
