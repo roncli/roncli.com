@@ -81,6 +81,9 @@ module.exports = BaseApp.extend({
         logOutUser = function() {
             app.user = null;
             $("div#site-nav").html(app.templateAdapter.getTemplate("site/loggedOut")());
+            if (typeof app.router.currentView.onLogout === "function") {
+                app.router.currentView.onLogout();
+            }
 
             // Setup login form.
             $("#login").on("click", function() {
@@ -484,8 +487,10 @@ module.exports = BaseApp.extend({
         app.fetch({user: {model: "User"}}, {readFromCache: false, writeToCache: false}, function(err, results) {
             if (results) {
                 app.user = results.user;
+                app.trigger("logged-in", {user: app.user});
                 logInUser();
             } else {
+                app.trigger("logged-in", {error: "You are not logged in."});
                 logOutUser();
             }
         });
@@ -659,6 +664,10 @@ module.exports = BaseApp.extend({
                 }
                 break;
         }
+
+        this.once("start", function() {
+            this.started = true;
+        });
 
         // Call base function.
         BaseApp.prototype.start.call(this);

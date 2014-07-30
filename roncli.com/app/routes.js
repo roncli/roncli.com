@@ -16,7 +16,7 @@ module.exports = function(match) {
     // The home page.
     match("", "home#index");
 
-    match("/page", "page#index");
+    match("/account", "account#index");
 
     // TODO: Add a 404 handler
 };
