@@ -5,6 +5,12 @@ var BaseView = require("rendr/shared/base/view"),
 module.exports = BaseView.extend({
     className: "account_index_view",
 
+    events: {
+        "click button#accountChangeEmail": "changeEmail",
+        "click button#accountChangePassword": "changePassword",
+        "click button#accountChangeAlias": "changeAlias"
+    },
+
     postRender: function() {
         "use strict";
 
@@ -32,6 +38,24 @@ module.exports = BaseView.extend({
         "use strict";
 
         this.app.router.navigate("/", true);
+    },
+
+    changeEmail: function() {
+        "use strict";
+
+        alert("Change Email");
+    },
+
+    changePassword: function() {
+        "use strict";
+
+        alert("Change Password");
+    },
+
+    changeAlias: function() {
+        "use strict";
+
+        alert("Change Alias");
     }
 });
 
