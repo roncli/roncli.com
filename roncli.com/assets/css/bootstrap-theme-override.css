@@ -33,6 +33,7 @@ h6,
 /* Navbar */
 .navbar {
     min-height: 20px;
+    border-radius: 4px;
 }
 
 .navbar-nav > li > a {
@@ -163,4 +164,23 @@ input[type="radio"], input[type="checkbox"] {
 /* Datepicker */
 .datepicker {
     z-index: 10002 !important;
+}
+
+/* Panel */
+.panel-title {
+    font-size: inherit;
+    text-align: center;
+}
+
+.panel-title > * {
+    margin: 0;
+}
+
+.panel-primary > .panel-heading {
+    background-color: #363655;
+    border-color: #2c2c45;
+}
+
+.panel.panel-primary {
+    border: none;
 }

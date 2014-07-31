@@ -1,16 +1,17 @@
-var BaseView = require("rendr/shared/base/view");
+var BaseView = require("rendr/shared/base/view"),
+    $ = require("jquery");
 
 // Sets up the account view.
 module.exports = BaseView.extend({
     className: "account_index_view",
 
-    preRender: function() {
+    postRender: function() {
         "use strict";
 
         var app = this.app,
             checkLogin = function() {
                 if (app.user && app.user.get("id") !== 0) {
-                    // TODO: Trigger render of page.
+                    $("div#account-panel").html(app.templateAdapter.getTemplate("account/account")(app.user.attributes));
                 } else {
                     if (app.router) {
                         app.router.navigate("/", true);

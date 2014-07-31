@@ -59,7 +59,7 @@ module.exports = function(grunt) {
 
         // Setup browserify to send node assets to the client.
         browserify: {
-            combine_render_assets: {
+            combine_rendr_assets: {
                 options: {
                     require: Object.keys(pjson.browser),
                     preBundleCB: function(b) {
