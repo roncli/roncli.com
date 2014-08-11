@@ -2,6 +2,10 @@ html, body {
     height: 100%;
 }
 
+ol {
+    -webkit-padding-start: 0;
+}
+
 .site-wrapper {
     min-height: 100%;
     height: auto !important;
@@ -157,7 +161,7 @@ div.tweets div.hr {
 }
 
 .vertical-margin {
-    margin: 3px 0;
+    margin: 20px 0;
 }
 
 .panel-padding {
@@ -171,4 +175,9 @@ div.tweets div.hr {
 .top-margin-only {
     margin-top: 20px;
     margin-bottom: 0;
+}
+
+.right-side-nav {
+    padding: 2px;
+    font-size: 13px;
 }
