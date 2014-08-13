@@ -15,6 +15,9 @@ module.exports = function(match) {
 
     // The home page.
     match("", "home#index");
+    match("/", "home#index");
+    match("?*qs", "home#index");
+    match("/?*qs", "home#index");
 
     match("/account", "account#index");
 

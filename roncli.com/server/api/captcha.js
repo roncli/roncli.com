@@ -22,7 +22,7 @@ module.exports.post = function(req, callback) {
 
                     req.res.status(400);
                     callback({error: "You must type in the characters as shown."});
-                    break;
+                    return;
             }
             break;
     }

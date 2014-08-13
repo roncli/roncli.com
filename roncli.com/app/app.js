@@ -373,7 +373,7 @@ module.exports = BaseApp.extend({
                                 // Reload the captcha image.
                                 $("#registerCaptchaImage").attr("src", "/images/captcha.png");
                                 $("#registerCaptcha").val("");
-                                $("#registerForm").validate().element("#registerCaptcha");
+                                registerForm.validate().element("#registerCaptcha");
                             }
                         });
                     }
@@ -646,7 +646,7 @@ module.exports = BaseApp.extend({
                                             // Reload the captcha image.
                                             $("#passwordResetCaptchaImage").attr("src", "/images/captcha.png");
                                             $("#passwordResetCaptcha").val("");
-                                            $("#passwordResetForm").validate().element("#passwordResetCaptcha");
+                                            passwordResetForm.validate().element("#passwordResetCaptcha");
                                         }
                                     });
                                 }

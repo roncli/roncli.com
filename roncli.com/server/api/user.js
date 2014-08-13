@@ -179,6 +179,19 @@ module.exports.post = function(req, callback) {
                     });
 
                     return;
+                case "email-change-request":
+                    user.emailChangeRequest(req.body.userId, req.body.password, req.session.captcha, req.body.captcha, function(err) {
+                        if (err) {
+                            handleError(err, req);
+                            callback(err);
+                            return;
+                        }
+
+                        req.res.status(204);
+                        callback();
+                    });
+
+                    return;
                 case "logout":
                     delete req.session.user;
                     req.res.clearCookie("login");

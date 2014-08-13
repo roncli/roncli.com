@@ -108,7 +108,7 @@ module.exports.login = function(email, password, callback) {
     "use strict";
 
     db.query(
-        "SELECT UserID, PasswordHash, Salt, Alias, Email, DOB, Validated FROM tblUser WHERE Email = @email",
+        "SELECT UserID, PasswordHash, Salt, Alias, DOB, Validated FROM tblUser WHERE Email = @email",
         {email: {type: db.VARCHAR(256), value: email}},
         function(err, data) {
             var user, salt;
@@ -182,7 +182,7 @@ module.exports.login = function(email, password, callback) {
                         callback(null, {
                             id: user.UserID,
                             alias: user.Alias,
-                            email: user.Email,
+                            email: email,
                             dob: new Date(user.DOB).toISOString(),
                             validated: user.Validated,
                             accountLinks: accountLinks
@@ -556,7 +556,7 @@ module.exports.forgotPassword = function(email, callback) {
 
         // Get the user information.
         db.query(
-            "SELECT UserID, Email, Alias, ValidationCode, Validated FROM tblUser WHERE Email = @email",
+            "SELECT UserID, Alias, ValidationCode, Validated FROM tblUser WHERE Email = @email",
             {
                 email: {type: db.VARCHAR(256), value: email}
             },
@@ -626,7 +626,7 @@ module.exports.forgotPassword = function(email, callback) {
                             authorizationCode = guid.v4();
 
                             db.query(
-                                "INSERT INTO tblPasswordChangeAuthorization (UserID, AuthorizationCode, ExpirationDate, CrDate) VALUES (@userId, @authorizationCode, DATEADD(hh, 2, GETUTCDATE()), GETUTCDATE());",
+                                "INSERT INTO tblPasswordChangeAuthorization (UserID, AuthorizationCode, ExpirationDate, CrDate) VALUES (@userId, @authorizationCode, DATEADD(HOUR, 2, GETUTCDATE()), GETUTCDATE());",
                                 {
                                     userId: {type: db.INT, value: user.UserID},
                                     authorizationCode: {type: db.UNIQUEIDENTIFIER, value: authorizationCode}
@@ -744,9 +744,9 @@ module.exports.passwordResetRequest = function(userId, authorizationCode, callba
 module.exports.passwordReset = function(userId, authorizationCode, password, captchaData, captchaResponse, callback) {
     "use strict";
 
-    userId = +userId;
-
     var User = this;
+
+    userId = +userId;
 
     // First, we will run the non-database validations.
     all(
@@ -855,6 +855,106 @@ module.exports.passwordReset = function(userId, authorizationCode, password, cap
 };
 
 /**
+ * Creates a request for an email change.
+ * @param {number} userId The user ID.
+ * @param {string} password The user's password.
+ * @param {object} captchaData The captcha data from the server.
+ * @param {string} captchaResponse The captcha response from the user.
+ * @param {function} callback The callback function.
+ */
+module.exports.emailChangeRequest = function(userId, password, captchaData, captchaResponse, callback) {
+    "use strict";
+
+    var User = this;
+
+    userId = +userId;
+
+    db.query(
+        "SELECT PasswordHash, Salt, Alias, Email, Validated FROM tblUser WHERE UserID = @userId",
+        {userId: {type: db.INT, value: userId}},
+        function(err, data) {
+            var user;
+
+            if (err) {
+                console.log("Database error in user.login.");
+                console.log(err);
+                callback({
+                    error: "There was a database error logging in.  Please reload the page and try again.",
+                    status: 500
+                });
+                return;
+            }
+
+            if (!data[0] || data[0].length === 0) {
+                callback({
+                    error: "Invalid user.  Please reload the page and try again.",
+                    status: 401
+                });
+                return;
+            }
+
+            user = data[0][0];
+
+            if (!user.Validated) {
+                callback({
+                    error: "This account is not yet validated.  Please reload the page and try again.",
+                    status: 401
+                });
+                return;
+            }
+
+            getHashedPassword(password, user.Salt, function(hashedPassword) {
+                var authorizationCode;
+
+                if (hashedPassword !== user.PasswordHash) {
+                    callback({
+                        error: "Invalid password.",
+                        status: 401
+                    });
+                    return;
+                }
+
+                authorizationCode = guid.v4();
+
+                db.query(
+                    "INSERT INTO tblEmailChangeAuthorization (UserID, AuthorizationCode, ExpirationDate, CrDate) VALUES (@userId, @authorizationCode, DATEADD(HOUR, 2, GETUTCDATE()), GETUTCDATE())",
+                    {
+                        userId: {type: db.INT, value: userId},
+                        authorizationCode: {type: db.UNIQUEIDENTIFIER, value: authorizationCode}
+                    },
+                    function(err) {
+                        if (err) {
+                            console.log("Database error in user.emailChangeRequest.");
+                            console.log(err);
+                            callback({
+                                error: "There was a database error processing your email change request.  Please reload the page and try again.",
+                                status: 500
+                            });
+                            return;
+                        }
+
+                        // Send email change request email.
+                        User.sendEmailChangeRequestEmail(userId, user.Email, user.Alias, authorizationCode, function(err) {
+                            if (err) {
+                                console.log("Error sending change request email in user.emailChangeRequest.");
+                                console.log(err);
+                                callback({
+                                    error: "There was an email error in user.emailChangeRequest.  If you need help changing your email address, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                                    status: 500
+                                });
+                                return;
+                            }
+
+                            callback();
+                        });
+                    }
+                );
+            });
+        }
+    );
+};
+
+/**
  * Sends a validation email to the user.
  * @param {number} userId The user ID.
  * @param {string} email The user's email address.
@@ -936,6 +1036,51 @@ module.exports.sendResetPasswordEmail = function(userId, email, alias, authoriza
                 }),
                 email: email,
                 reason: "a password reset was requested for this email address",
+                year: moment().year()
+            })
+        }, callback);
+    });
+};
+
+/**
+ * Sends a change request email to the user.
+ * @param {number} userId The user ID.
+ * @param {string} email The user's email address.
+ * @param {string} alias The user's alias.
+ * @param {string} authorizationCode The authorization code.
+ * @param {function(null)|function(object)} callback The callback function.
+ */
+module.exports.sendEmailChangeRequestEmail = function(userId, email, alias, authorizationCode, callback) {
+    "use strict";
+
+    template.get(["email/to", "email/htmlTemplate", "email/textTemplate", "email/changeEmail/html", "email/changeEmail/text"], function(err, templates) {
+        if (err) {
+            callback(err);
+            return;
+        }
+        mail.send({
+            to: templates["email/to"]({to: [
+                {alias: alias, email: email}
+            ]}),
+            subject: "Change email request",
+            html: templates["email/htmlTemplate"]({
+                html: templates["email/changeEmail/html"]({
+                    alias: alias,
+                    userId: userId,
+                    authorizationCode: authorizationCode
+                }),
+                email: email,
+                reason: "an email change was requested for this email address",
+                year: moment().year()
+            }),
+            text: templates["email/textTemplate"]({
+                text: templates["email/changeEmail/text"]({
+                    alias: alias,
+                    userId: userId,
+                    authorizationCode: authorizationCode
+                }),
+                email: email,
+                reason: "an email change was requested for this email address",
                 year: moment().year()
             })
         }, callback);

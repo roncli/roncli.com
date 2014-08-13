@@ -62,11 +62,11 @@ ApiDataAdapter.prototype.request = function(req, api, options, callback) {
                         console.log(err.stack);
                         req.res.status(500);
                         callback(null, req.res, {error: "Unknown server error."});
-                        parentDomain.emit("error", err);
                     } catch (err2) {
                         console.log("Error sending 500.");
                         console.log(err2);
                     }
+                    parentDomain.emit("error", err);
                 });
 
                 d.run(function() {
