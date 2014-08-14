@@ -180,7 +180,13 @@ module.exports.post = function(req, callback) {
 
                     return;
                 case "email-change-request":
-                    user.emailChangeRequest(req.body.userId, req.body.password, req.session.captcha, req.body.captcha, function(err) {
+                    if (!req.session.user || !req.session.user.id) {
+                        req.res.status(401);
+                        callback({error: "You are not logged in."});
+                        return;
+                    }
+
+                    user.emailChangeRequest(req.session.user.id, req.body.password, req.session.captcha, req.body.captcha, function(err) {
                         if (err) {
                             handleError(err, req);
                             callback(err);

@@ -869,89 +869,96 @@ module.exports.emailChangeRequest = function(userId, password, captchaData, capt
 
     userId = +userId;
 
-    db.query(
-        "SELECT PasswordHash, Salt, Alias, Email, Validated FROM tblUser WHERE UserID = @userId",
-        {userId: {type: db.INT, value: userId}},
-        function(err, data) {
-            var user;
+    captcha.isCaptchaValid(captchaData, captchaResponse, function(err, data) {
+        if (err) {
+            callback(err);
+            return;
+        }
 
-            if (err) {
-                console.log("Database error in user.login.");
-                console.log(err);
-                callback({
-                    error: "There was a database error logging in.  Please reload the page and try again.",
-                    status: 500
-                });
-                return;
-            }
+        db.query(
+            "SELECT PasswordHash, Salt, Alias, Email, Validated FROM tblUser WHERE UserID = @userId",
+            {userId: {type: db.INT, value: userId}},
+            function(err, data) {
+                var user;
 
-            if (!data[0] || data[0].length === 0) {
-                callback({
-                    error: "Invalid user.  Please reload the page and try again.",
-                    status: 401
-                });
-                return;
-            }
-
-            user = data[0][0];
-
-            if (!user.Validated) {
-                callback({
-                    error: "This account is not yet validated.  Please reload the page and try again.",
-                    status: 401
-                });
-                return;
-            }
-
-            getHashedPassword(password, user.Salt, function(hashedPassword) {
-                var authorizationCode;
-
-                if (hashedPassword !== user.PasswordHash) {
+                if (err) {
+                    console.log("Database error in user.login.");
+                    console.log(err);
                     callback({
-                        error: "Invalid password.",
+                        error: "There was a database error logging in.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                if (!data[0] || data[0].length === 0) {
+                    callback({
+                        error: "Invalid user.  Please reload the page and try again.",
                         status: 401
                     });
                     return;
                 }
 
-                authorizationCode = guid.v4();
+                user = data[0][0];
 
-                db.query(
-                    "INSERT INTO tblEmailChangeAuthorization (UserID, AuthorizationCode, ExpirationDate, CrDate) VALUES (@userId, @authorizationCode, DATEADD(HOUR, 2, GETUTCDATE()), GETUTCDATE())",
-                    {
-                        userId: {type: db.INT, value: userId},
-                        authorizationCode: {type: db.UNIQUEIDENTIFIER, value: authorizationCode}
-                    },
-                    function(err) {
-                        if (err) {
-                            console.log("Database error in user.emailChangeRequest.");
-                            console.log(err);
-                            callback({
-                                error: "There was a database error processing your email change request.  Please reload the page and try again.",
-                                status: 500
-                            });
-                            return;
-                        }
+                if (!user.Validated) {
+                    callback({
+                        error: "This account is not yet validated.  Please reload the page and try again.",
+                        status: 401
+                    });
+                    return;
+                }
 
-                        // Send email change request email.
-                        User.sendEmailChangeRequestEmail(userId, user.Email, user.Alias, authorizationCode, function(err) {
+                getHashedPassword(password, user.Salt, function(hashedPassword) {
+                    var authorizationCode;
+
+                    if (hashedPassword !== user.PasswordHash) {
+                        callback({
+                            error: "Invalid password.",
+                            status: 401
+                        });
+                        return;
+                    }
+
+                    authorizationCode = guid.v4();
+
+                    db.query(
+                        "INSERT INTO tblEmailChangeAuthorization (UserID, AuthorizationCode, ExpirationDate, CrDate) VALUES (@userId, @authorizationCode, DATEADD(HOUR, 2, GETUTCDATE()), GETUTCDATE())",
+                        {
+                            userId: {type: db.INT, value: userId},
+                            authorizationCode: {type: db.UNIQUEIDENTIFIER, value: authorizationCode}
+                        },
+                        function(err) {
                             if (err) {
-                                console.log("Error sending change request email in user.emailChangeRequest.");
+                                console.log("Database error in user.emailChangeRequest.");
                                 console.log(err);
                                 callback({
-                                    error: "There was an email error in user.emailChangeRequest.  If you need help changing your email address, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                                    error: "There was a database error processing your email change request.  Please reload the page and try again.",
                                     status: 500
                                 });
                                 return;
                             }
 
-                            callback();
-                        });
-                    }
-                );
-            });
-        }
-    );
+                            // Send email change request email.
+                            User.sendEmailChangeRequestEmail(userId, user.Email, user.Alias, authorizationCode, function(err) {
+                                if (err) {
+                                    console.log("Error sending change request email in user.emailChangeRequest.");
+                                    console.log(err);
+                                    callback({
+                                        error: "There was an email error in user.emailChangeRequest.  If you need help changing your email address, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                                        status: 500
+                                    });
+                                    return;
+                                }
+
+                                callback();
+                            });
+                        }
+                    );
+                });
+            }
+        );
+    });
 };
 
 /**

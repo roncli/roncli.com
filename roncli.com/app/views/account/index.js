@@ -55,7 +55,7 @@ module.exports = BaseView.extend({
             message: this.app.templateAdapter.getTemplate("account/changeEmailRequest")(),
             show: false
         }).off("shown.bs.modal").on("shown.bs.modal",function() {
-            $("#emailChangeRequestCaptchaImage").attr("src", "/images/captcha.png");
+            $("#emailChangeRequestCaptchaImage").attr("src", "/images/captcha.png?_=" + new Date().getTime());
             $("#emailChangeRequestPassword").focus();
         }).modal("show");
 
@@ -103,7 +103,6 @@ module.exports = BaseView.extend({
                 user.fetch({
                     url: "/user/email-change-request",
                     data: JSON.stringify({
-                        userId: view.app.user.userId,
                         password: $("#emailChangeRequestPassword").val(),
                         captcha: $("#emailChangeRequestCaptcha").val()
                     }),
@@ -133,7 +132,7 @@ module.exports = BaseView.extend({
                         emailChangeRequestButton.removeAttr("disabled");
 
                         // Reload the captcha image.
-                        $("#emailChangeRequestCaptchaImage").attr("src", "/images/captcha.png");
+                        $("#emailChangeRequestCaptchaImage").attr("src", "/images/captcha.png?_=" + new Date().getTime());
                         $("#emailChangeRequestCaptcha").val("");
                         emailChangeRequestForm.validate().element("#emailChangeRequestCaptcha");
                     }

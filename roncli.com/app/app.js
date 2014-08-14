@@ -110,7 +110,7 @@ module.exports = BaseApp.extend({
                 });
 
                 $("#registerNav").on("shown.bs.tab", function() {
-                    $("#registerCaptchaImage").attr("src", "/images/captcha.png");
+                    $("#registerCaptchaImage").attr("src", "/images/captcha.png?_=" + new Date().getTime());
                     $("#registerEmail").focus();
                 });
 
@@ -364,14 +364,14 @@ module.exports = BaseApp.extend({
                                 if (error && error.body && error.body.error) {
                                     message = error.body.error;
                                 } else {
-                                    message = "There was a server error processing your registration.  Plesae try again later.";
+                                    message = "There was a server error processing your registration.  Please try again later.";
                                 }
                                 $("#registerServerErrors").html(message);
                                 $("#registerServerErrorList").show();
                                 registerButton.removeAttr("disabled");
 
                                 // Reload the captcha image.
-                                $("#registerCaptchaImage").attr("src", "/images/captcha.png");
+                                $("#registerCaptchaImage").attr("src", "/images/captcha.png?_=" + new Date().getTime());
                                 $("#registerCaptcha").val("");
                                 registerForm.validate().element("#registerCaptcha");
                             }
@@ -550,7 +550,7 @@ module.exports = BaseApp.extend({
                                 message: app.templateAdapter.getTemplate("site/passwordResetRequest")(),
                                 show: false
                             }).off("shown.bs.modal").on("shown.bs.modal", function() {
-                                $("#passwordResetCaptchaImage").attr("src", "/images/captcha.png");
+                                $("#passwordResetCaptchaImage").attr("src", "/images/captcha.png?_=" + new Date().getTime());
                                 $("#passwordResetNewPassword").focus();
                             }).modal("show");
 
@@ -637,14 +637,14 @@ module.exports = BaseApp.extend({
                                             if (error && error.body && error.body.error) {
                                                 message = error.body.error;
                                             } else {
-                                                message = "There was a server error while resetting your password.  Plesae try again later.";
+                                                message = "There was a server error while resetting your password.  Please try again later.";
                                             }
                                             $("#passwordResetServerErrors").html(message);
                                             $("#passwordResetServerErrorList").show();
                                             passwordResetButton.removeAttr("disabled");
 
                                             // Reload the captcha image.
-                                            $("#passwordResetCaptchaImage").attr("src", "/images/captcha.png");
+                                            $("#passwordResetCaptchaImage").attr("src", "/images/captcha.png?_=" + new Date().getTime());
                                             $("#passwordResetCaptcha").val("");
                                             passwordResetForm.validate().element("#passwordResetCaptcha");
                                         }
