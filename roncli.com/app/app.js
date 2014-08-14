@@ -29,7 +29,7 @@ module.exports = BaseApp.extend({
             twitterShown = false,
             IScroll = require("iscroll"),
             querystring = $.getParam(),
-            scroller, logInUser, logOutUser, attemptLogin, user,
+            scroller, logInUser, doLogout, logOutUser, attemptLogin, user,
 
             /**
              * Get the tweets.
@@ -66,13 +66,20 @@ module.exports = BaseApp.extend({
 
             // Setup logout button.
             $("#logout").on("click", function() {
-                var user = new User();
-                user.fetch({
-                    url: "/user/logout",
-                    type: "POST"
-                });
-                logOutUser();
+                doLogout();
             });
+        };
+
+        /**
+         * Logs out a user at the server.
+         */
+        doLogout = function() {
+            var user = new User();
+            user.fetch({
+                url: "/user/logout",
+                type: "POST"
+            });
+            logOutUser();
         };
 
         /**
@@ -656,6 +663,118 @@ module.exports = BaseApp.extend({
                             bootbox.dialog({
                                 title: "Password Reset Request Failed",
                                 message: app.templateAdapter.getTemplate("site/passwordResetRequestError")(),
+                                buttons: {ok: {label: "OK"}},
+                                show: false
+                            }).off("shown.bs.modal").modal("show");
+                        }
+                    });
+                }
+                break;
+            case "changeEmail":
+                if (querystring.u && +querystring.u !== 0 && querystring.a) {
+                    user = new User();
+                    user.fetch({
+                        url: "/user/email-change-request",
+                        data: JSON.stringify({
+                            userId: +querystring.u,
+                            authorizationCode: querystring.a
+                        }),
+                        type: "POST",
+                        contentType: "application/json",
+                        dataType: "json",
+                        success: function() {
+                            var emailChangeForm;
+
+                            bootbox.dialog({
+                                title: "Change Your Email Address",
+                                message: app.templateAdapter.getTemplate("site/emailChange")(),
+                                show: false
+                            }).off("shown.bs.modal").on("shown.bs.modal", function() {
+                                $("#emailChangeNewEmail").focus();
+                            }).modal("show");
+
+                            // Cache jQuery objects once the dialog box is shown.
+                            emailChangeForm = $("#emailChangeForm");
+
+                            emailChangeForm.defaultButton("#emailChangeButton");
+
+                            // Set up validation for the form.
+                            emailChangeForm.validate({
+                                rules: {
+                                    emailChangeNewEmail: {
+                                        required: true,
+                                        email: true
+                                    },
+                                    emailChangePassword: {
+                                        required: true,
+                                        minlength: 6
+                                    }
+                                },
+                                messages: {
+                                    emailChangeNewEmail: {
+                                        required: "You must enter a new email address.",
+                                        email: "The email address you entered is not valid."
+                                    },
+                                    emailChangePassword: {
+                                        required: "You must enter your password.",
+                                        minlength: "Your password must be at least 6 characters."
+                                    }
+                                },
+                                errorContainer: "#emailChangeErrorList",
+                                errorLabelContainer: "#emailChangeErrors"
+                            });
+
+                            // Setup reset password button.
+                            $("#emailChangeButton").on("click", function() {
+                                var emailChangeButton = $(this),
+                                    user;
+
+                                if (emailChangeForm.valid()) {
+                                    emailChangeButton.attr("disabled", "");
+                                    user = new User();
+                                    user.fetch({
+                                        url: "/user/email-change",
+                                        data: JSON.stringify({
+                                            userId: +querystring.u,
+                                            authorizationCode: querystring.a,
+                                            email: $("#emailChangeNewEmail").val(),
+                                            password: $("#emailChangePassword").val()
+                                        }),
+                                        type: "POST",
+                                        contentType: "application/json",
+                                        dataType: "json",
+                                        success: function() {
+                                            bootbox.hideAll();
+
+                                            doLogout();
+
+                                            // Display the dialog box.
+                                            bootbox.dialog({
+                                                title: "Account Validation Required",
+                                                message: app.templateAdapter.getTemplate("site/emailChangeValidationSent")(),
+                                                buttons: {ok: {label: "OK"}},
+                                                show: false
+                                            }).off("shown.bs.modal").modal("show");
+                                        },
+                                        error: function(xhr, error) {
+                                            var message;
+                                            if (error && error.body && error.body.error) {
+                                                message = error.body.error;
+                                            } else {
+                                                message = "There was a server error while changing your email address.  Please try again later.";
+                                            }
+                                            $("#emailChangeServerErrors").html(message);
+                                            $("#emailChangeServerErrorList").show();
+                                            emailChangeButton.removeAttr("disabled");
+                                        }
+                                    });
+                                }
+                            });
+                        },
+                        error: function() {
+                            bootbox.dialog({
+                                title: "Email Change Request Failed",
+                                message: app.templateAdapter.getTemplate("site/emailChangeRequestError")(),
                                 buttons: {ok: {label: "OK"}},
                                 show: false
                             }).off("shown.bs.modal").modal("show");

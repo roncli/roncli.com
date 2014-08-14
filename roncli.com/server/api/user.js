@@ -179,14 +179,40 @@ module.exports.post = function(req, callback) {
                     });
 
                     return;
-                case "email-change-request":
+                case "change-email":
                     if (!req.session.user || !req.session.user.id) {
                         req.res.status(401);
                         callback({error: "You are not logged in."});
                         return;
                     }
 
-                    user.emailChangeRequest(req.session.user.id, req.body.password, req.session.captcha, req.body.captcha, function(err) {
+                    user.changeEmail(req.session.user.id, req.body.password, req.session.captcha, req.body.captcha, function(err) {
+                        if (err) {
+                            handleError(err, req);
+                            callback(err);
+                            return;
+                        }
+
+                        req.res.status(204);
+                        callback();
+                    });
+
+                    return;
+                case "email-change-request":
+                    user.emailChangeRequest(req.body.userId, req.body.authorizationCode, function(err) {
+                        if (err) {
+                            handleError(err, req);
+                            callback(err);
+                            return;
+                        }
+
+                        req.res.status(204);
+                        callback();
+                    });
+
+                    return;
+                case "email-change":
+                    user.emailChange(req.body.userId, req.body.authorizationCode, req.body.password, req.body.newEmail, function(err) {
                         if (err) {
                             handleError(err, req);
                             callback(err);

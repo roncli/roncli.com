@@ -499,9 +499,7 @@ module.exports.validateAccount = function(userId, validationCode, callback) {
 
             db.query(
                 "UPDATE tblUser SET Validated = 1, ValidationDate = GETUTCDATE() WHERE UserId = @userId",
-                {
-                    userId: {type: db.INT, value: userId}
-                },
+                {userId: {type: db.INT, value: userId}},
                 function(err) {
                     if (err) {
                         console.log("Database error validating user in user.validateAccount.");
@@ -557,9 +555,7 @@ module.exports.forgotPassword = function(email, callback) {
         // Get the user information.
         db.query(
             "SELECT UserID, Alias, ValidationCode, Validated FROM tblUser WHERE Email = @email",
-            {
-                email: {type: db.VARCHAR(256), value: email}
-            },
+            {email: {type: db.VARCHAR(256), value: email}},
             function(err, data) {
                 var user;
 
@@ -589,9 +585,7 @@ module.exports.forgotPassword = function(email, callback) {
                     // Get whether the user already has an active reset password request.
                     db.query(
                         "SELECT COUNT(AuthorizationID) Requests FROM tblPasswordChangeAuthorization WHERE UserID = @userId AND ExpirationDate > GETUTCDATE()",
-                        {
-                            userId: {type: db.INT, value: user.UserID}
-                        },
+                        {userId: {type: db.INT, value: user.UserID}},
                         function(err, data) {
                             var authorizationCode;
 
@@ -862,7 +856,7 @@ module.exports.passwordReset = function(userId, authorizationCode, password, cap
  * @param {string} captchaResponse The captcha response from the user.
  * @param {function} callback The callback function.
  */
-module.exports.emailChangeRequest = function(userId, password, captchaData, captchaResponse, callback) {
+module.exports.changeEmail = function(userId, password, captchaData, captchaResponse, callback) {
     "use strict";
 
     var User = this;
@@ -920,45 +914,145 @@ module.exports.emailChangeRequest = function(userId, password, captchaData, capt
                         return;
                     }
 
-                    authorizationCode = guid.v4();
-
+                    // Get whether the user already has an active email change request.
                     db.query(
-                        "INSERT INTO tblEmailChangeAuthorization (UserID, AuthorizationCode, ExpirationDate, CrDate) VALUES (@userId, @authorizationCode, DATEADD(HOUR, 2, GETUTCDATE()), GETUTCDATE())",
-                        {
-                            userId: {type: db.INT, value: userId},
-                            authorizationCode: {type: db.UNIQUEIDENTIFIER, value: authorizationCode}
-                        },
-                        function(err) {
+                        "SELECT COUNT(AuthorizationID) Requests FROM tblEmailChangeAuthorization WHERE UserID = @userId AND ExpirationDate > GETUTCDATE()",
+                        {userId: {type: db.INT, value: user.UserID}},
+                        function(err, data) {
+                            var authorizationCode;
+
                             if (err) {
-                                console.log("Database error in user.emailChangeRequest.");
+                                console.log("Database error checking for existing authorizations in user.changeEmail.");
                                 console.log(err);
                                 callback({
-                                    error: "There was a database error processing your email change request.  Please reload the page and try again.",
+                                    error: "There was a database error requesting email change authorization.  If you need help changing your email address, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
                                     status: 500
                                 });
                                 return;
                             }
 
-                            // Send email change request email.
-                            User.sendEmailChangeRequestEmail(userId, user.Email, user.Alias, authorizationCode, function(err) {
-                                if (err) {
-                                    console.log("Error sending change request email in user.emailChangeRequest.");
-                                    console.log(err);
-                                    callback({
-                                        error: "There was an email error in user.emailChangeRequest.  If you need help changing your email address, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
-                                        status: 500
-                                    });
-                                    return;
-                                }
+                            if (!data[0] || data[0].length === 0) {
+                                console.log("Missing authorization counts in database in user.changeEmail.");
+                                console.log(data);
+                                callback({
+                                    error: "There was a database error requesting email change authorization.  If you need help changing your email address, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                                    status: 500
+                                });
+                                return;
+                            }
 
-                                callback();
-                            });
+                            if (data[0][0].Requests > 0) {
+                                callback({
+                                    error: "You have requested an email change request too recently.  Please try again later.",
+                                    status: 403
+                                });
+                                return;
+                            }
+
+                            authorizationCode = guid.v4();
+
+                            db.query(
+                                "INSERT INTO tblEmailChangeAuthorization (UserID, AuthorizationCode, ExpirationDate, CrDate) VALUES (@userId, @authorizationCode, DATEADD(HOUR, 2, GETUTCDATE()), GETUTCDATE())",
+                                {
+                                    userId: {type: db.INT, value: userId},
+                                    authorizationCode: {type: db.UNIQUEIDENTIFIER, value: authorizationCode}
+                                },
+                                function(err) {
+                                    if (err) {
+                                        console.log("Database error in user.emailChangeRequest.");
+                                        console.log(err);
+                                        callback({
+                                            error: "There was a database error processing your email change request.  Please reload the page and try again.",
+                                            status: 500
+                                        });
+                                        return;
+                                    }
+
+                                    // Send email change request email.
+                                    User.sendEmailChangeRequestEmail(userId, user.Email, user.Alias, authorizationCode, function(err) {
+                                        if (err) {
+                                            console.log("Error sending change request email in user.emailChangeRequest.");
+                                            console.log(err);
+                                            callback({
+                                                error: "There was an email error in user.emailChangeRequest.  If you need help changing your email address, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                                                status: 500
+                                            });
+                                            return;
+                                        }
+
+                                        callback();
+                                    });
+                                }
+                            );
                         }
                     );
                 });
             }
         );
     });
+};
+
+/**
+ * Checks to see if an email change request is authorized.
+ * @param {number} userId The user ID.
+ * @param {string} authorizationCode The authorization code.
+ * @param {function} callback The callback function.
+ */
+module.exports.emailChangeRequest = function(userId, authorizationCode, callback) {
+    "use strict";
+
+    userId = +userId;
+
+    db.query(
+        "SELECT COUNT(AuthorizationID) Requests FROM tblEmailChangeAuthorization WHERE UserID = @userId AND AuthorizationCode = @authorizationCode AND ExpirationDate >= GETUTCDATE()",
+        {
+            userId: {type: db.INT, value: userId},
+            authorizationCode: {type: db.UNIQUEIDENTIFIER, value: authorizationCode}
+        },
+        function(err, data) {
+            if (err) {
+                console.log("Database error retrieving email change request in user.emailChangeRequest.");
+                console.log(err);
+                callback({
+                    error: "There was a database error confirming your email change request.  If you need help changing your email address, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                    status: 500
+                });
+                return;
+            }
+
+            if (!data[0] || data[0].length === 0 || !data[0][0] || data[0][0].length === 0) {
+                console.log("Missing authorization counts in database in user.emailChangeRequest.");
+                console.log(err);
+                callback({
+                    error: "There was a database error confirming your email change request.  If you need help changing your email address, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                    status: 500
+                });
+                return;
+            }
+
+            if (data[0][0].Requests === 0) {
+                callback({
+                    error: "The request to change your email address is not valid.  If you need help changing your email address, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                    status: 400
+                });
+                return;
+            }
+
+            callback();
+        }
+    );
+};
+
+/**
+ * Changes a user's email address.
+ * @param {number} userId The user ID.
+ * @param {string} authorizationCode The authorization code.
+ * @param {string} password The user's password.
+ * @param {string} newEmail The user's new email address.
+ * @param {function} callback The callback function.
+ */
+module.exports.emailChange = function(userId, authorizationCode, password, newEmail, callback) {
+
 };
 
 /**

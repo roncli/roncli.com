@@ -101,7 +101,7 @@ module.exports = BaseView.extend({
                 emailChangeRequestButton.attr("disabled", "");
                 user = new User();
                 user.fetch({
-                    url: "/user/email-change-request",
+                    url: "/user/change-email",
                     data: JSON.stringify({
                         password: $("#emailChangeRequestPassword").val(),
                         captcha: $("#emailChangeRequestCaptcha").val()
