@@ -1052,7 +1052,157 @@ module.exports.emailChangeRequest = function(userId, authorizationCode, callback
  * @param {function} callback The callback function.
  */
 module.exports.emailChange = function(userId, authorizationCode, password, newEmail, callback) {
+    "use strict";
 
+    var User = this;
+
+    userId = +userId;
+
+    // Email is required.
+    if (typeof newEmail !== "string" || newEmail.length === 0) {
+        callback({
+            error: "You must enter an email address.",
+            status: 400
+        });
+        return;
+    }
+
+    // Email must be an email address.
+    if (!/^[a-zA-Z0-9.!#$%&'*+\/=?\^_`{|}~\-]+@[a-zA-Z0-9](?:[a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?)*$/.test(newEmail)) {
+        callback({
+            error: "The email address you entered is not valid.",
+            status: 400
+        });
+        return;
+    }
+
+    all(
+        // Check email exists.
+        (function() {
+            var deferred = new Deferred();
+
+            User.emailExists(function(err, data) {
+                if (err) {
+                    deferred.reject(err);
+                    return;
+                }
+
+                if (data) {
+                    deferred.reject({
+                        error: "The email address you entered is already in use.",
+                        status: 400
+                    });
+                    return;
+                }
+
+                deferred.resolve(true);
+            });
+
+            return deferred.promise;
+        }()),
+
+        // Check authorization.
+        (function() {
+            var deferred = new Deferred();
+
+            User.emailChangeRequest(userId, authorizationCode, function(err) {
+                if (err) {
+                    deferred.reject(err);
+                    return;
+                }
+
+                deferred.resolve(true);
+            });
+
+            return deferred.promise;
+        }())
+    ).then(
+        // Change email address.
+        function() {
+            // Check the password.
+            db.query(
+                "SELECT Salt, PasswordHash, Alias FROM tblUser WHERE UserID = @userId",
+                {userId: {type: db.INT, value: userId}},
+                function(err, data) {
+                    if (err) {
+                        console.log("Database error getting user password in user.emailChange.");
+                        console.log(err);
+                        callback({
+                            error: "There was a database error while changing your email address.  If you need help changing your email address, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                            status: 500
+                        });
+                        return;
+                    }
+
+                    if (!data[0] || data[0].length === 0 || !data[0][0] || data[0][0].length === 0) {
+                        console.log("Missing user data in database in user.emailChange.");
+                        console.log(err);
+                        callback({
+                            error: "There was a database error while changing your email address.  If you need help changing your email address, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                            status: 500
+                        });
+                        return;
+                    }
+
+                    getHashedPassword(password, data[0][0].Salt, function(hashedPassword) {
+                        var validationCode;
+
+                        if (hashedPassword !== data[0][0].PasswordHash) {
+                            callback({
+                                error: "Invalid email address or password.",
+                                status: 401
+                            });
+                            return;
+                        }
+
+                        validationCode = guid.v4();
+
+                        // Change the email.
+                        db.query(
+                            "UPDATE tblEmailChangeAuthorization SET ExpirationDate = GETUTCDATE() WHERE UserID = @userId AND AuthorizationCode = @authorizationCode; UPDATE tblUser SET Email = @email, Validated = 0, ValidationCode = @validationCode, ValidationDate = NULL WHERE UserID = @userId;",
+                            {
+                                userId: {type: db.INT, value: userId},
+                                authorizationCode: {type: db.UNIQUEIDENTIFIER, value: authorizationCode},
+                                email: {type: db.VARCHAR(256), value: newEmail},
+                                validationCode: {type: db.UNIQUEIDENTIFIER, value: validationCode}
+                            },
+                            function(err) {
+                                if (err) {
+                                    console.log("Database error changing email in user.emailChange.");
+                                    console.log(err);
+                                    callback({
+                                        error: "There was a database error while changing your email address.  If you need help changing your email address, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                                        status: 500
+                                    });
+                                    return;
+                                }
+
+                                // Send validation email.
+                                User.sendValidationEmail(userId, newEmail, data[0][0].Alias, validationCode, function(err) {
+                                    if (err) {
+                                        console.log("Error sending validation email in user.emailChange.");
+                                        console.log(err);
+                                        callback({
+                                            error: "There was an email error in user.emailChange.  If you need help changing your email address, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                                            status: 500
+                                        });
+                                        return;
+                                    }
+
+                                    callback();
+                                });
+                            }
+                        );
+                    });
+                }
+            );
+        },
+
+        // If any of the functions error out, it will be handled here.
+        function(err) {
+            callback(err);
+        }
+    );
 };
 
 /**
