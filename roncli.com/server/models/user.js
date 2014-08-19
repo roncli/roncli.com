@@ -1225,8 +1225,6 @@ module.exports.emailChange = function(userId, authorizationCode, password, newEm
 module.exports.changePassword = function(userId, oldPassword, newPassword, captchaData, captchaResponse, callback) {
     "use strict";
 
-    var User = this;
-
     userId = +userId;
 
     // Check for valid captcha.
@@ -1318,6 +1316,57 @@ module.exports.changePassword = function(userId, oldPassword, newPassword, captc
                         );
                     });
                 });
+            }
+        );
+    });
+};
+
+/**
+ * Changes a user's alias.
+ * @param {number} userId The user ID.
+ * @param {string} alias The new alias.
+ * @param {function} callback The callback function.
+ */
+module.exports.changeAlias = function(userId, alias, callback) {
+    "use strict";
+
+    userId = +userId;
+
+    // Ensure the alias is not in use.
+    this.aliasExists(alias, userId, function(err, data) {
+        if (err) {
+            callback(err);
+            return;
+        }
+
+        if (data) {
+            callback({
+                error: "The alias you entered is already in use.",
+                status: 400
+            });
+            return;
+        }
+
+        // Change the email address.
+        db.query(
+            "UPDATE tblUser SET Alias = @alias WHERE UserID = @userId",
+            {
+                alias: {type: db.VARCHAR(50), value: alias},
+                userId: {type: db.INT, value: userId}
+            },
+            function(err) {
+                if (err) {
+                    console.log("Database error in user.changeAlias.");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while changing your alias.  If you need help changing your alias, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                // Update successful.
+                callback();
             }
         );
     });

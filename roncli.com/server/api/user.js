@@ -237,6 +237,19 @@ module.exports.post = function(req, callback) {
                     });
 
                     return;
+                case "change-alias":
+                    user.changeAlias(req.session.user.id, req.body.alias, function(err) {
+                        if (err) {
+                            handleError(err, req);
+                            callback(err);
+                            return;
+                        }
+
+                        req.res.status(204);
+                        callback();
+                    });
+
+                    return;
                 case "logout":
                     delete req.session.user;
                     req.res.clearCookie("login");

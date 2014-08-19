@@ -95,7 +95,7 @@ module.exports = BaseApp.extend({
             // Setup login form.
             $("#login").on("click", function() {
                 var today = moment().startOf("day"),
-                    loginTab, registerTab, forgotPasswordTab;
+                    loginForm, loginTab, registerForm, registerTab, forgotPasswordForm, forgotPasswordTab;
 
                 // Display the dialog box.
                 bootbox.dialog({
@@ -107,8 +107,11 @@ module.exports = BaseApp.extend({
                 }).modal("show");
 
                 // Cache jQuery objects once the dialog box is shown.
+                loginForm = $("#loginForm");
                 loginTab = $("#loginTab");
+                registerForm = $("#registerForm");
                 registerTab = $("#registerTab");
+                forgotPasswordForm = $("#forgotPasswordForm");
                 forgotPasswordTab = $("#forgotPasswordTab");
 
                 // Set focus when tabs are clicked.
@@ -145,7 +148,7 @@ module.exports = BaseApp.extend({
                         $(this).datepicker("setDate", registerDOB.val());
                     }
                     $("#registerCaptcha").focus();
-                    $("#registerForm").validate().element("#registerDOB");
+                    registerForm.validate().element("#registerDOB");
                 });
 
                 // Ensure the date picker appears when the date is selected.
@@ -155,7 +158,7 @@ module.exports = BaseApp.extend({
                 });
 
                 // Set up validation for login tab.
-                $("#loginForm").validate({
+                loginForm.validate({
                     rules: {
                         loginEmail: {
                             required: true,
@@ -181,7 +184,7 @@ module.exports = BaseApp.extend({
                 });
 
                 // Set up validation for the register tab.
-                $("#registerForm").validate({
+                registerForm.validate({
                     rules: {
                         registerEmail: {
                             required: true,
@@ -283,7 +286,7 @@ module.exports = BaseApp.extend({
                 });
 
                 // Setup validation for the forgot password tab.
-                $("#forgotPasswordForm").validate({
+                forgotPasswordForm.validate({
                     rules: {
                         forgotPasswordEmail: {
                             required: true,
@@ -314,9 +317,8 @@ module.exports = BaseApp.extend({
 
                 // Setup login button.
                 $("#loginButton").on("click", function() {
-                    var loginButton = $(this);
-                    if ($("#loginForm").valid()) {
-                        loginButton.attr("disabled", "");
+                    if (loginForm.valid()) {
+                        loginForm.find("input, button").attr("disabled", "");
                         attemptLogin({
                             email: $("#loginEmail").val(),
                             password: $("#loginPassword").val(),
@@ -325,7 +327,7 @@ module.exports = BaseApp.extend({
                             if (err) {
                                 $("#loginServerErrors").html(err);
                                 $("#loginServerErrorList").show();
-                                loginButton.removeAttr("disabled");
+                                loginForm.find("input, button").removeAttr("disabled");
                             } else {
                                 bootbox.hideAll();
                             }
@@ -335,13 +337,11 @@ module.exports = BaseApp.extend({
 
                 // Setup register button.
                 $("#registerButton").on("click", function() {
-                    var registerForm = $("#registerForm"),
-                        registerButton = $(this),
-                        user;
+                    var user;
 
                     registerForm.validate().element("#registerRetypePassword");
                     if (registerForm.valid()) {
-                        registerButton.attr("disabled", "");
+                        registerForm.find("input, button").attr("disabled", "");
                         user = new User();
                         user.fetch({
                             url: "/user/register",
@@ -375,7 +375,7 @@ module.exports = BaseApp.extend({
                                 }
                                 $("#registerServerErrors").html(message);
                                 $("#registerServerErrorList").show();
-                                registerButton.removeAttr("disabled");
+                                registerForm.find("input, button").removeAttr("disabled");
 
                                 // Reload the captcha image.
                                 $("#registerCaptchaImage").attr("src", "/images/captcha.png?_=" + new Date().getTime());
@@ -388,11 +388,10 @@ module.exports = BaseApp.extend({
 
                 // Setup forgot password button.
                 $("#forgotPasswordButton").on("click", function() {
-                    var forgotPasswordButton = $(this),
-                        user;
+                    var user;
 
-                    if ($("#forgotPasswordForm").valid()) {
-                        forgotPasswordButton.attr("disabled", "");
+                    if (forgotPasswordForm.valid()) {
+                        forgotPasswordForm.find("input, button").attr("disabled", "");
                         user = new User();
                         user.fetch({
                             url: "/user/forgot-password",
@@ -432,7 +431,7 @@ module.exports = BaseApp.extend({
                                 }
                                 $("#forgotPasswordServerErrors").html(message);
                                 $("#forgotPasswordServerErrorList").show();
-                                forgotPasswordButton.removeAttr("disabled");
+                                forgotPasswordForm.find("input, button").removeAttr("disabled");
                             }
                         });
                     }
@@ -610,12 +609,11 @@ module.exports = BaseApp.extend({
 
                             // Setup reset password button.
                             $("#passwordResetButton").on("click", function() {
-                                var passwordResetButton = $(this),
-                                    user;
+                                var user;
 
                                 passwordResetForm.validate().element("#passwordResetRetypePassword");
                                 if (passwordResetForm.valid()) {
-                                    passwordResetButton.attr("disabled", "");
+                                    passwordResetForm.find("input, button").attr("disabled", "");
                                     user = new User();
                                     user.fetch({
                                         url: "/user/password-reset",
@@ -648,7 +646,7 @@ module.exports = BaseApp.extend({
                                             }
                                             $("#passwordResetServerErrors").html(message);
                                             $("#passwordResetServerErrorList").show();
-                                            passwordResetButton.removeAttr("disabled");
+                                            passwordResetForm.find("input, button").removeAttr("disabled");
 
                                             // Reload the captcha image.
                                             $("#passwordResetCaptchaImage").attr("src", "/images/captcha.png?_=" + new Date().getTime());
@@ -726,11 +724,10 @@ module.exports = BaseApp.extend({
 
                             // Setup reset password button.
                             $("#emailChangeButton").on("click", function() {
-                                var emailChangeButton = $(this),
-                                    user;
+                                var user;
 
                                 if (emailChangeForm.valid()) {
-                                    emailChangeButton.attr("disabled", "");
+                                    emailChangeForm.find("input, button").attr("disabled", "");
                                     user = new User();
                                     user.fetch({
                                         url: "/user/email-change",
@@ -765,7 +762,7 @@ module.exports = BaseApp.extend({
                                             }
                                             $("#emailChangeServerErrors").html(message);
                                             $("#emailChangeServerErrorList").show();
-                                            emailChangeButton.removeAttr("disabled");
+                                            emailChangeForm.find("input, button").removeAttr("disabled");
                                         }
                                     });
                                 }
