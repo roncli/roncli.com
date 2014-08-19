@@ -869,6 +869,14 @@ module.exports.changeEmail = function(userId, password, captchaData, captchaResp
             return;
         }
 
+        if (!data) {
+            callback({
+                error: "The characters you typed do not match the image.",
+                status: 400
+            });
+            return;
+        }
+
         db.query(
             "SELECT PasswordHash, Salt, Alias, Email, Validated FROM tblUser WHERE UserID = @userId",
             {userId: {type: db.INT, value: userId}},
@@ -908,7 +916,7 @@ module.exports.changeEmail = function(userId, password, captchaData, captchaResp
 
                     if (hashedPassword !== user.PasswordHash) {
                         callback({
-                            error: "Invalid password.",
+                            error: "The password is incorrect.",
                             status: 401
                         });
                         return;
@@ -1149,7 +1157,7 @@ module.exports.emailChange = function(userId, authorizationCode, password, newEm
 
                         if (hashedPassword !== data[0][0].PasswordHash) {
                             callback({
-                                error: "Invalid email address or password.",
+                                error: "Invalid password.",
                                 status: 401
                             });
                             return;
@@ -1203,6 +1211,116 @@ module.exports.emailChange = function(userId, authorizationCode, password, newEm
             callback(err);
         }
     );
+};
+
+/**
+ * Changes a user's password.
+ * @param {number} userId The user ID.
+ * @param {string} oldPassword The user's old password.
+ * @param {string} newPassword The user's new password.
+ * @param {object} captchaData The captcha data from the server.
+ * @param {string} captchaResponse The captcha response from the user.
+ * @param {function} callback The callback function.
+ */
+module.exports.changePassword = function(userId, oldPassword, newPassword, captchaData, captchaResponse, callback) {
+    "use strict";
+
+    var User = this;
+
+    userId = +userId;
+
+    // Check for valid captcha.
+    captcha.isCaptchaValid(captchaData, captchaResponse, function(err, data) {
+        if (err) {
+            callback(err);
+            return;
+        }
+
+        if (!data) {
+            callback({
+                error: "The characters you typed do not match the image.",
+                status: 400
+            });
+            return;
+        }
+
+        // Ensure old password is valid.
+        db.query(
+            "SELECT Salt, PasswordHash, Validated FROM tblUser WHERE UserID = @userId",
+            {userId: {type: db.INT, value: userId}},
+            function(err, data) {
+                if (err) {
+                    console.log("Database error getting user in user.changePassword.");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while changing your password.  If you need help changing your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                if (!data[0] || data[0].length === 0 || !data[0][0] || data[0][0].length === 0) {
+                    console.log("Missing user data in database in user.emailChange.");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while changing your password.  If you need help changing your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                // Check that we're validated.
+                if (!data[0][0].Validated) {
+                    callback({
+                        error: "This account is not yet validated.  Please reload the page and try again.",
+                        status: 401
+                    });
+                    return;
+                }
+
+                // Check the password.
+                getHashedPassword(oldPassword, data[0][0].Salt, function(hashedPassword) {
+                    var salt;
+
+                    if (hashedPassword !== data[0][0].PasswordHash) {
+                        callback({
+                            error: "The current password is incorrect.",
+                            status: 401
+                        });
+                        return;
+                    }
+
+                    // Update the password.
+                    salt = guid.v4();
+
+                    getHashedPassword(newPassword, salt, function(hashedPassword) {
+                        db.query(
+                            "UPDATE tblUser SET Salt = @salt, PasswordHash = @passwordHash WHERE UserID = @userId",
+                            {
+                                salt: {type: db.UNIQUEIDENTIFIER, value: salt},
+                                passwordHash: {type: db.VARCHAR(256), value: hashedPassword},
+                                userId: {type: db.INT, value: userId}
+                            },
+                            function(err) {
+                                if (err) {
+                                    console.log("Database error updating password in user.changePassword.");
+                                    console.log(err);
+                                    callback({
+                                        error: "There was a database error while changing your password.  If you need help changing your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                                        status: 500
+                                    });
+                                    return;
+                                }
+
+                                // Update successful.
+                                callback();
+                            }
+                        );
+                    });
+                });
+            }
+        );
+    });
 };
 
 /**
