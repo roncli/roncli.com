@@ -75,7 +75,13 @@ To run the website on Windows, make sure you perform the following steps.
             }
         };
 
-10. If using [iisnode](https://github.com/tjanczuk/iisnode), point an IIS application to the inner /roncli.com directory, and run ```grunt``` from the same directory when installing and after every time you change code.  Otherwise, run using a standalone installation from the command line by running /roncli.com/run.bat.
+10. If using [iisnode](https://github.com/tjanczuk/iisnode):
+    - Point an IIS application to the inner /roncli.com directory
+    - Run ```grunt``` from the same directory when installing and after every time you change code.
+    - Be sure to create the directory "logs" in the root of the application and give your application pool write permission.  For instance, if your application pool is ```roncli.com```, you'll give permissions to the account ```IIS AppPool\roncli.com```.
+    - Don't forget to restart the application from within IIS after you run ```grunt```.
+
+    Otherwise, run using a standalone installation from the command line by running /roncli.com/run.bat.
 
 Other Installations
 ===================
@@ -127,6 +133,11 @@ Other Installations
 Version History
 ===============
 
+0.1.1
+-----
+
+This version introduces the account page where you can change your email, password, or alias.  This version is branched as the ```base``` branch, and will be kept updated as portions of the code pertaining to this branch are updated.
+
 0.1
 ---
 
@@ -134,11 +145,6 @@ This version introduces the bare bones of the website, including the layout, Twi
 
 Planned Versions
 ================
-
-0.1.1
------
-
-* Implement the Account page.
 
 0.2
 ---
