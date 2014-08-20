@@ -1,7 +1,7 @@
 var nodemailer = require("nodemailer"),
     config = require("../privateConfig").smtp;
 
-var transport = nodemailer.createTransport("SMTP", config);
+var transport = nodemailer.createTransport(config);
 
 module.exports.send = function(options, callback) {
     "use strict";
