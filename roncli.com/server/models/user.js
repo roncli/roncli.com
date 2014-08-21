@@ -1089,7 +1089,7 @@ module.exports.emailChange = function(userId, authorizationCode, password, newEm
         (function() {
             var deferred = new Deferred();
 
-            User.emailExists(function(err, data) {
+            User.emailExists(newEmail, userId, function(err, data) {
                 if (err) {
                     deferred.reject(err);
                     return;
