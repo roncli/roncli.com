@@ -212,7 +212,7 @@ module.exports.post = function(req, callback) {
 
                     return;
                 case "email-change":
-                    user.emailChange(req.body.userId, req.body.authorizationCode, req.body.password, req.body.newEmail, function(err) {
+                    user.emailChange(req.body.userId, req.body.authorizationCode, req.body.password, req.body.email, function(err) {
                         if (err) {
                             handleError(err, req);
                             callback(err);
