@@ -14,10 +14,10 @@ module.exports = function(match) {
     "use strict";
 
     // The home page.  Includes optional querystring.
-    match(/^(?:\?.*)?$/, "home#index");
+    match(/^\/?(?:\?.*)?$/, "home#index");
 
     // The account page.
-    match(/^account$/, "account#index");
+    match(/^\/?account$/, "account#index");
 
     // The default route if none of the above match.
     match(/(?:.*)/, "default#index");

@@ -72,6 +72,11 @@ To run the website on Windows, make sure you perform the following steps.
             },
             smtp: {
                 host: "(Your SMTP server hostname)"
+            },
+            redis: {
+                host: "(Your redis server hostname)",
+                port: (Your redis server hostname),
+                password: "(Your redis server password)"
             }
         };
 

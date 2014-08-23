@@ -24,6 +24,7 @@
         "node-uuid": "1.4.1",
         "nodemailer": "1.0.4",
         "promised-io": "0.3.4",
+        "redis": "0.12.1",
         "rendr": "0.5.0",
         "rendr-handlebars": "0.2.0",
         "twitter": "0.2.9",
