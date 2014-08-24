@@ -16,8 +16,18 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
+    <Content Include="app\templates\account\account.hbs" />
+    <Content Include="app\templates\account\aliasChanged.hbs" />
+    <Content Include="app\templates\account\changeAlias.hbs" />
+    <Content Include="app\templates\account\changeEmailRequest.hbs" />
+    <Content Include="app\templates\account\changeEmailRequestSent.hbs" />
+    <Content Include="app\templates\account\changePassword.hbs" />
+    <Content Include="app\templates\account\index.hbs" />
+    <Content Include="app\templates\account\passwordChanged.hbs" />
+    <Content Include="app\templates\default\index.hbs" />
     <Content Include="app\templates\home\index.hbs" />
-    <Content Include="app\templates\page\index.hbs" />
+    <Content Include="app\templates\site\emailChange.hbs" />
+    <Content Include="app\templates\site\emailChangeValidationSent.hbs" />
     <Content Include="app\templates\site\loggedIn.hbs" />
     <Content Include="app\templates\site\loggedOut.hbs" />
     <Content Include="app\templates\site\login.hbs" />
@@ -30,11 +40,11 @@
     <Content Include="app\templates\site\validationSent.hbs" />
     <Content Include="app\templates\site\validationSuccess.hbs" />
     <Content Include="app\templates\__layout.hbs" />
+    <Content Include="assets\css\bootstrap-theme-override.css" />
+    <Content Include="assets\css\bootstrap-theme.css" />
+    <Content Include="assets\css\site.css" />
     <Content Include="assets\tools\bootstrap-magic.less" />
     <Content Include="package.json" />
-    <Content Include="public\css\bootstrap-override.css" />
-    <Content Include="public\css\bootstrap-theme.css" />
-    <Content Include="public\css\site.css" />
     <Content Include="public\images\browsers\chrome.png" />
     <Content Include="public\images\browsers\firefox.png" />
     <Content Include="public\images\browsers\ie.png" />
@@ -61,6 +71,8 @@
     <Content Include="public\images\twitter\retweet_hover.png" />
     <Content Include="README.md" />
     <Content Include="run.bat" />
+    <Content Include="server\templates\email\changeEmail\html.hbs" />
+    <Content Include="server\templates\email\changeEmail\text.hbs" />
     <Content Include="server\templates\email\htmlTemplate.hbs" />
     <Content Include="server\templates\email\resetPassword\html.hbs" />
     <Content Include="server\templates\email\resetPassword\text.hbs" />
@@ -73,8 +85,9 @@
   <ItemGroup>
     <Compile Include="app\app.js" />
     <Compile Include="app\collections\tweets.js" />
+    <Compile Include="app\controllers\account_controller.js" />
+    <Compile Include="app\controllers\default_controller.js" />
     <Compile Include="app\controllers\home_controller.js" />
-    <Compile Include="app\controllers\page_controller.js" />
     <Compile Include="app\lib\handlebarsHelpers.js" />
     <Compile Include="app\lib\validationExtensions.js" />
     <Compile Include="app\models\base.js" />
@@ -84,17 +97,20 @@
     <Compile Include="app\models\user.js" />
     <Compile Include="app\router.js" />
     <Compile Include="app\routes.js" />
+    <Compile Include="app\views\account\index.js" />
+    <Compile Include="app\views\default\index.js" />
     <Compile Include="app\views\home\index.js" />
-    <Compile Include="app\views\page\index.js" />
+    <Compile Include="assets\js\jquery-defaultButton-1.2.0.min.js" />
+    <Compile Include="assets\js\jquery-getParam.min.js" />
+    <Compile Include="assets\js\loadJQuery.js" />
     <Compile Include="gruntfile.js" />
     <Compile Include="index.js" />
-    <Compile Include="public\js\jquery-defaultButton-1.2.0.min.js" />
-    <Compile Include="public\js\jquery-getParam.min.js" />
     <Compile Include="server\ApiDataAdapter.js" />
     <Compile Include="server\api\captcha.js" />
     <Compile Include="server\api\time.js" />
     <Compile Include="server\api\tweet.js" />
     <Compile Include="server\api\user.js" />
+    <Compile Include="server\cache\cache.js" />
     <Compile Include="server\captcha\captchagen.js" />
     <Compile Include="server\database\database.js" />
     <Compile Include="server\guid\guid.js" />
@@ -112,13 +128,17 @@
     <Folder Include="app\lib\" />
     <Folder Include="app\models\" />
     <Folder Include="app\templates\" />
+    <Folder Include="app\templates\account\" />
+    <Folder Include="app\templates\default\" />
     <Folder Include="app\templates\home\" />
-    <Folder Include="app\templates\page\" />
     <Folder Include="app\templates\site\" />
     <Folder Include="app\views\" />
+    <Folder Include="app\views\account\" />
+    <Folder Include="app\views\default\" />
     <Folder Include="app\views\home\" />
-    <Folder Include="app\views\page\" />
     <Folder Include="assets\" />
+    <Folder Include="assets\css\" />
+    <Folder Include="assets\js\" />
     <Folder Include="assets\tools\" />
     <Folder Include="public\" />
     <Folder Include="public\css\" />
@@ -128,6 +148,7 @@
     <Folder Include="public\js\" />
     <Folder Include="server\" />
     <Folder Include="server\api\" />
+    <Folder Include="server\cache\" />
     <Folder Include="server\captcha\" />
     <Folder Include="server\database\" />
     <Folder Include="server\guid\" />
@@ -135,6 +156,7 @@
     <Folder Include="server\models\" />
     <Folder Include="server\templates\" />
     <Folder Include="server\templates\email\" />
+    <Folder Include="server\templates\email\changeEmail\" />
     <Folder Include="server\templates\email\resetPassword\" />
     <Folder Include="server\templates\email\validation\" />
   </ItemGroup>

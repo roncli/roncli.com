@@ -260,3 +260,5 @@ privateConfig.js
 ### Mac Junk Files ###
 .DS_Store
 
+### Node Tools for Visual Studio ###
+.ntvs_analysis.dat
