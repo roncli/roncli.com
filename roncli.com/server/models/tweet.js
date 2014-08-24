@@ -16,7 +16,6 @@ module.exports.getTweets = function(callback) {
 
     cache.get("roncli.com:tweets", function(tweets) {
         if (tweets) {
-            console.log("CACHE HIT!");
             callback(null, tweets);
             return;
         }
