@@ -15,7 +15,7 @@ The second is the Node project itself, which is developed via PhpStorm.  I do ha
 Requirements
 ============
 
-Be sure to have Visual Studio 2013, and node.js 0.10.28 or later installed with npm.
+Be sure to have Visual Studio 2013, and node.js 0.10.31 or later installed with npm.
 
 Database Setup
 ==============
@@ -100,9 +100,9 @@ Other Installations
 
         npm install
 
-4. Apply the following patches.  This is temporary until these projects accept these pull requests.
-    - [joeybaker/remapify Pull Request 7](https://github.com/joeybaker/remapify/pull/7) - Required to allow browserify to find rendr's client and shared modules.
-    - [rendrjs/rendr Pull Request 379](https://github.com/rendrjs/rendr/pull/379) - Required to allow rendr to work with express.
+4. Apply the following patches.  This is temporary until these projects accept these pull requests and release a new version.
+    - [joeybaker/remapify Pull Request 7](https://github.com/joeybaker/remapify/pull/7) - Required to allow browserify to find rendr's client and shared modules. (This has yet to be accepted by remapify.)
+    - [rendrjs/rendr Pull Request 379](https://github.com/rendrjs/rendr/pull/379) - Required to allow rendr to work with express. (This has been accepted by rendr, but a new version with the update hasn't been released yet.)
 5. Add /roncli.com/server/privateConfig.js with the following data:
 
         module.exports = {
@@ -126,6 +126,11 @@ Other Installations
             },
             smtp: {
                 host: "(Your SMTP server hostname)"
+            },
+            redis: {
+                host: "(Your redis server hostname)",
+                port: (Your redis server hostname),
+                password: "(Your redis server password)"
             }
         };
 
