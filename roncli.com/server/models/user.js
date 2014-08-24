@@ -6,6 +6,7 @@ var moment = require("moment"),
     mail = require("../mail/mail"),
     template = require("../templates/template.js"),
     guid = require("../guid/guid"),
+    cache = require("../cache/cache.js"),
     promise = require("promised-io/promise"),
     Deferred = promise.Deferred,
     all = promise.all,
@@ -655,7 +656,6 @@ module.exports.forgotPassword = function(email, callback) {
                     );
                 } else {
                     // User requires validation, resend validation email.
-                    // TODO: Limit to one per hour.
                     User.sendValidationEmail(data[0][0].UserID, email, data[0][0].Alias, data[0][0].ValidationCode, function(err) {
                         if (err) {
                             console.log("Error sending validation email in user.forgotPassword.");
@@ -1383,35 +1383,45 @@ module.exports.changeAlias = function(userId, alias, callback) {
 module.exports.sendValidationEmail = function(userId, email, alias, validationCode, callback) {
     "use strict";
 
-    template.get(["email/to", "email/htmlTemplate", "email/textTemplate", "email/validation/html", "email/validation/text"], function(err, templates) {
-        if (err) {
-            callback(err);
+    var cacheKey = "roncli.com:validation_sent:" + userId;
+    cache.get(cacheKey, function(data) {
+        if (data) {
+            // Validation was sent recently, do not resend.
+            callback();
             return;
         }
-        mail.send({
-            to: templates["email/to"]({to: [{alias: alias, email: email}]}),
-            subject: "Please validate your registration",
-            html: templates["email/htmlTemplate"]({
-                html: templates["email/validation/html"]({
-                    alias: alias,
-                    userId: userId,
-                    validationCode: validationCode
+
+        template.get(["email/to", "email/htmlTemplate", "email/textTemplate", "email/validation/html", "email/validation/text"], function(err, templates) {
+            if (err) {
+                callback(err);
+                return;
+            }
+            mail.send({
+                to: templates["email/to"]({to: [{alias: alias, email: email}]}),
+                subject: "Please validate your registration",
+                html: templates["email/htmlTemplate"]({
+                    html: templates["email/validation/html"]({
+                        alias: alias,
+                        userId: userId,
+                        validationCode: validationCode
+                    }),
+                    email: email,
+                    reason: "this email address was registered on the site",
+                    year: moment().year()
                 }),
-                email: email,
-                reason: "this email address was registered on the site",
-                year: moment().year()
-            }),
-            text: templates["email/textTemplate"]({
-                text: templates["email/validation/text"]({
-                    alias: alias,
-                    userId: userId,
-                    validationCode: validationCode
-                }),
-                email: email,
-                reason: "this email address was registered on the site",
-                year: moment().year()
-            })
-        }, callback);
+                text: templates["email/textTemplate"]({
+                    text: templates["email/validation/text"]({
+                        alias: alias,
+                        userId: userId,
+                        validationCode: validationCode
+                    }),
+                    email: email,
+                    reason: "this email address was registered on the site",
+                    year: moment().year()
+                })
+            }, callback);
+            cache.set(cacheKey, true, 3600);
+        });
     });
 };
 
