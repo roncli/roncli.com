@@ -36,9 +36,9 @@ var config = require("../privateConfig").google,
             return a.category.localeCompare(b.category);
         });
 
-        cache.set(
+        cache.zadd(
             "roncli.com:blogger:categories", sortedCategories.map(function(category) {
-                return category.category;
+                return {value: category.category, score: 0};
             }), 86400
         );
     };
@@ -84,7 +84,7 @@ module.exports.categories = function(callback) {
 
     var Blogger = this;
 
-    cache.get("roncli.com:blogger:categories", function(categories) {
+    cache.zrangebylex("roncli.com:blogger:categories", function(categories) {
         if (categories) {
             callback(null, categories);
             return;
