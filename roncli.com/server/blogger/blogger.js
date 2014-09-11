@@ -2,6 +2,7 @@ var config = require("../privateConfig").google,
     google = require("googleapis"),
     blogger = google.blogger("v3"),
     cache = require("../cache/cache.js"),
+    moment = require("moment"),
     processPosts = function(posts) {
         "use strict";
 
@@ -72,7 +73,15 @@ module.exports.posts = function(callback) {
 
             posts = data.items;
 
-            cache.set("roncli.com:blogger:posts", posts, 86400);
+            cache.set("roncli.com:blogger:posts", posts.map(function(post) {
+                return {
+                    type: "blogger",
+                    id: post.id,
+                    labels: post.labels,
+                    published: new Date(post.published).getTime(),
+                    title: post.title
+                };
+            }), 86400);
             processPosts(posts);
             callback(null, posts);
         });

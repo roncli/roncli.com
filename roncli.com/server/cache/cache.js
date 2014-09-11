@@ -54,7 +54,7 @@ module.exports.set = function(key, value, expiration, callback) {
 /**
  * Gets an item from the cache.
  * @param {string} key The key to get from the cache.
- * @param {function} callback The optional callback function.
+ * @param {function} callback The callback function.
  */
 module.exports.get = function(key, callback) {
     "use strict";
@@ -91,7 +91,7 @@ module.exports.zadd = function(key, valueScorePairs, expiration, callback) {
     "use strict";
 
     login(function(err, client) {
-        var values = [key];
+        var values;
 
         if (err) {
             if (typeof callback === "function") {
@@ -100,8 +100,10 @@ module.exports.zadd = function(key, valueScorePairs, expiration, callback) {
             return;
         }
 
+        values = [key];
+
         valueScorePairs.forEach(function(pair) {
-            values.push(pair.score, pair.value);
+            values.push(pair.score, JSON.stringify(pair.value));
         });
 
         client.zadd(values, function(err) {
@@ -117,6 +119,72 @@ module.exports.zadd = function(key, valueScorePairs, expiration, callback) {
             if (typeof callback === "function") {
                 callback();
             }
+        });
+    });
+};
+
+/**
+ * Retrieves items from a sorted set in the cache.
+ * @param {string} key The key to get the sorted set from in the cache.
+ * @param {number} start The start of the range.
+ * @param {number} end The end of the range.
+ * @param {function} callback The callback function.
+ */
+module.exports.zrange = function(key, start, end, callback) {
+    "use strict";
+
+    login(function(err, client) {
+        if (err) {
+            callback();
+            return;
+        }
+
+        client.zrange(key, start, end, function(err, data) {
+            client.end();
+
+            if (err) {
+                console.log("Error getting cache using zrange", key, start, end);
+                console.log(err);
+                callback();
+                return;
+            }
+
+            callback(data.map(function(item) {
+                return JSON.parse(item);
+            }));
+        });
+    });
+};
+
+/**
+ * Retrieves items from a sorted set in the cache in reverse order.
+ * @param {string} key The key to get the sorted set from in the cache.
+ * @param {number} start The start of the range.
+ * @param {number} end The end of the range.
+ * @param {function} callback The callback function.
+ */
+module.exports.zrevrange = function(key, start, end, callback) {
+    "use strict";
+
+    login(function(err, client) {
+        if (err) {
+            callback();
+            return;
+        }
+
+        client.zrevrange(key, start, end, function(err, data) {
+            client.end();
+
+            if (err) {
+                console.log("Error getting cache using zrevrange", key, start, end);
+                console.log(err);
+                callback();
+                return;
+            }
+
+            callback(data.map(function(item) {
+                return JSON.parse(item);
+            }));
         });
     });
 };
