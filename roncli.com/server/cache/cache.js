@@ -4,18 +4,36 @@ var config = require("../privateConfig").redis,
     login = function(callback) {
         "use strict";
 
-        var client = redis.createClient(config.port, config.host, config.options);
+        var client = redis.createClient(config.port, config.host, config.options),
+            errorCallback = function(err) {
+                console.log("Error while connecting to redis");
+                console.log(err);
+                client.end();
+                if (typeof callback === "function") {
+                    callback(err);
+                    callback = null;
+                }
+            };
+
         client.auth(config.password, function(err) {
             if (err) {
                 console.log("Error sending password");
                 console.log(err);
                 client.end();
-                callback(err);
+                if (typeof callback === "function") {
+                    callback(err);
+                    callback = null;
+                }
                 return;
             }
 
-            callback(null, client);
+            client.removeListener("error", errorCallback);
+            if (typeof callback === "function") {
+                callback(null, client);
+                callback = null;
+            }
         });
+        client.on("error", errorCallback);
     };
 
 /**
@@ -29,9 +47,20 @@ module.exports.set = function(key, value, expiration, callback) {
     "use strict";
 
     login(function(err, client) {
+        client.on("error", function(err) {
+            console.log("Error setting cache using set", key, value);
+            console.log(err);
+            client.end();
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+        });
+
         if (err) {
             if (typeof callback === "function") {
                 callback();
+                callback = null;
             }
             return;
         }
@@ -46,6 +75,7 @@ module.exports.set = function(key, value, expiration, callback) {
 
             if (typeof callback === "function") {
                 callback();
+                callback = null;
             }
         });
     });
@@ -60,8 +90,21 @@ module.exports.get = function(key, callback) {
     "use strict";
 
     login(function(err, client) {
+        client.on("error", function(err) {
+            console.log("Error retrieving cache using get", key);
+            console.log(err);
+            client.end();
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+        });
+
         if (err) {
-            callback();
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
             return;
         }
 
@@ -71,11 +114,17 @@ module.exports.get = function(key, callback) {
             if (err) {
                 console.log("Error retrieving cache using get", key);
                 console.log(err);
-                callback();
+                if (typeof callback === "function") {
+                    callback();
+                    callback = null;
+                }
                 return;
             }
 
-            callback(JSON.parse(data));
+            if (typeof callback === "function") {
+                callback(JSON.parse(data));
+                callback = null;
+            }
         });
     });
 };
@@ -91,11 +140,22 @@ module.exports.zadd = function(key, valueScorePairs, expiration, callback) {
     "use strict";
 
     login(function(err, client) {
+        client.on("error", function(err) {
+            console.log("Error setting cache using zadd", key, valueScorePairs);
+            console.log(err);
+            client.end();
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+        });
+
         var values;
 
         if (err) {
             if (typeof callback === "function") {
                 callback();
+                callback = null;
             }
             return;
         }
@@ -107,17 +167,17 @@ module.exports.zadd = function(key, valueScorePairs, expiration, callback) {
         });
 
         client.zadd(values, function(err) {
-            client.end();
-
             if (err) {
                 console.log("Error setting cache using zadd", key, valueScorePairs);
                 console.log(err);
             }
 
             client.expire(key, expiration);
+            client.end();
 
             if (typeof callback === "function") {
                 callback();
+                callback = null;
             }
         });
     });
@@ -134,8 +194,21 @@ module.exports.zrange = function(key, start, end, callback) {
     "use strict";
 
     login(function(err, client) {
+        client.on("error", function(err) {
+            console.log("Error retrieving cache using set", key, start, end);
+            console.log(err);
+            client.end();
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+        });
+
         if (err) {
-            callback();
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
             return;
         }
 
@@ -143,15 +216,21 @@ module.exports.zrange = function(key, start, end, callback) {
             client.end();
 
             if (err) {
-                console.log("Error getting cache using zrange", key, start, end);
+                console.log("Error retrieving cache using zrange", key, start, end);
                 console.log(err);
-                callback();
+                if (typeof callback === "function") {
+                    callback();
+                    callback = null;
+                }
                 return;
             }
 
-            callback(data.map(function(item) {
-                return JSON.parse(item);
-            }));
+            if (typeof callback === "function") {
+                callback(data.map(function(item) {
+                    return JSON.parse(item);
+                }));
+                callback = null;
+            }
         });
     });
 };
@@ -167,8 +246,21 @@ module.exports.zrevrange = function(key, start, end, callback) {
     "use strict";
 
     login(function(err, client) {
+        client.on("error", function(err) {
+            console.log("Error retrieving cache using set", key, start, end);
+            console.log(err);
+            client.end();
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+        });
+
         if (err) {
-            callback();
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
             return;
         }
 
@@ -176,15 +268,21 @@ module.exports.zrevrange = function(key, start, end, callback) {
             client.end();
 
             if (err) {
-                console.log("Error getting cache using zrevrange", key, start, end);
+                console.log("Error retrieving cache using zrevrange", key, start, end);
                 console.log(err);
-                callback();
+                if (typeof callback === "function") {
+                    callback();
+                    callback = null;
+                }
                 return;
             }
 
-            callback(data.map(function(item) {
-                return JSON.parse(item);
-            }));
+            if (typeof callback === "function") {
+                callback(data.map(function(item) {
+                    return JSON.parse(item);
+                }));
+                callback = null;
+            }
         });
     });
 };
