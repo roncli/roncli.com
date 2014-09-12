@@ -257,3 +257,39 @@ module.exports.categoryPosts = function(category, callback) {
         });
     });
 };
+
+/**
+ * Retrieves a single post.
+ * @param {number} id The post ID to retrieve.
+ * @param {function} callback The callback function.
+ */
+module.exports.post = function(id, callback) {
+    "use strict";
+
+    cache.get("roncli.com:tumblr:post:" + id, function(post) {
+        if (post) {
+            callback(null, post);
+            return;
+        }
+
+        blog.posts({id: id}, function(err, posts) {
+            var post;
+
+            if (err || !posts || !posts.posts || !posts.posts[0]) {
+                console.log("Bad response from Tumblr.");
+                console.log(err);
+                callback({
+                    error: "Bad resposne from Tumblr.",
+                    status: 502
+                });
+                return;
+            }
+
+            post = posts.posts[0];
+
+            cache.set("roncli.com:tumblr:post:" + id, post, 86400);
+
+            callback(null, post)
+        });
+    });
+};
