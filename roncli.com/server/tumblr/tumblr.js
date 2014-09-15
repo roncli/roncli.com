@@ -1,7 +1,7 @@
 var config = require("../privateConfig").tumblr,
     tumblr = require("tumblr"),
-    cache = require("../cache/cache.js"),
     blog = new tumblr.Blog("roncli.tumblr.com", config),
+    cache = require("../cache/cache.js"),
     promise = require("promised-io/promise"),
     Deferred = promise.Deferred,
     all = promise.all,
@@ -50,7 +50,8 @@ var config = require("../privateConfig").tumblr,
                                     id: post.id,
                                     categories: post.tags,
                                     published: post.timestamp,
-                                    title: post.title
+                                    title: post.title,
+                                    url: "tumblr/" + post.id + "/" + post.slug
                                 }
                             };
                         });
@@ -75,6 +76,20 @@ var config = require("../privateConfig").tumblr,
                                 var deferred = new Deferred();
 
                                 cache.zadd("roncli.com:tumblr:posts", posts, 86400, function() {
+                                    deferred.resolve(true);
+                                });
+
+                                return deferred.promise;
+                            }()),
+                            (function() {
+                                var deferred = new Deferred();
+
+                                cache.hmset("roncli.com:urls", posts.map(function(post) {
+                                    return {
+                                        key: post.value.url,
+                                        value: post.value
+                                    };
+                                }), 0, function() {
                                     deferred.resolve(true);
                                 });
 
@@ -289,7 +304,7 @@ module.exports.post = function(id, callback) {
 
             cache.set("roncli.com:tumblr:post:" + id, post, 86400);
 
-            callback(null, post)
+            callback(null, post);
         });
     });
 };

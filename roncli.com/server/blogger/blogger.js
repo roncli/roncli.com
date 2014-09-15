@@ -2,64 +2,26 @@ var config = require("../privateConfig").google,
     google = require("googleapis"),
     blogger = google.blogger("v3"),
     cache = require("../cache/cache.js"),
-    moment = require("moment"),
-    processPosts = function(posts) {
+    promise = require("promised-io/promise"),
+    Deferred = promise.Deferred,
+    all = promise.all,
+    seq = promise.seq,
+
+    /**
+     * Caches the posts from Blogger.
+     * @param {function} callback The callback function.
+     */
+    cachePosts = function(callback) {
         "use strict";
-
-        var categories = {},
-            sortedCategories = [],
-            key;
-
-        posts.forEach(function(post) {
-            post.labels.forEach(function(label) {
-                if (!categories[label]) {
-                    categories[label] = [];
-                }
-                categories[label].push(post);
-            });
-        });
-
-        for (key in categories) {
-            if (categories.hasOwnProperty(key)) {
-                sortedCategories.push({category: key, count: categories[key].length});
-                cache.set("roncli.com:blogger:category:" + key, categories[key], 86400);
-            }
-        }
-
-        sortedCategories.sort(function(a, b) {
-            if (a.count < b.count) {
-                return 1;
-            }
-            if (a.count > b.count) {
-                return -1;
-            }
-
-            return a.category.localeCompare(b.category);
-        });
-
-        cache.zadd(
-            "roncli.com:blogger:categories", sortedCategories.map(function(category) {
-                return {value: category.category, score: 0};
-            }), 86400
-        );
-    };
-
-module.exports.posts = function(callback) {
-    "use strict";
-
-    cache.get("roncli.com:blogger:posts", function(posts) {
-        if (posts) {
-            callback(null, posts);
-            return;
-        }
 
         blogger.posts.list({
             blogId: config.blog_id,
             maxResults: 100000,
-            fields: "items(id,labels,published,title)",
+            fields: "items(id,labels,published,title,url)",
             key: config.api_key
         }, function(err, data) {
-            var posts;
+            var urlPattern = /^http:\/\/blog\.roncli\.com\/[0-9]{4}\/[0-9]{2}\/(.*)\.html$/,
+                posts, categories, categoryPosts, promises;
 
             if (err) {
                 console.log("Bad response from Google.");
@@ -71,73 +33,253 @@ module.exports.posts = function(callback) {
                 return;
             }
 
-            posts = data.items;
+            posts = data.items.map(function(post) {
+                var urlParsed = urlPattern.exec(post.url);
 
-            cache.set("roncli.com:blogger:posts", posts.map(function(post) {
                 return {
-                    type: "blogger",
-                    id: post.id,
-                    labels: post.labels,
-                    published: new Date(post.published).getTime(),
-                    title: post.title
+                    score: new Date(post.published).getTime(),
+                    value: {
+                        type: "blogger",
+                        id: post.id,
+                        categories: post.labels,
+                        published: new Date(post.published).getTime(),
+                        title: post.title,
+                        url: "blogger/" + post.id + (urlParsed ? "/" + urlParsed[1] : "")
+                    }
                 };
-            }), 86400);
-            processPosts(posts);
-            callback(null, posts);
-        });
-    });
-};
+            });
 
-module.exports.categories = function(callback) {
+            categories = {};
+            categoryPosts = {};
+            posts.forEach(function(post) {
+                if (post.value.categories) {
+                    post.value.categories.forEach(function(category) {
+                        categories[category] = 0;
+
+                        if (!categoryPosts.hasOwnProperty(category)) {
+                            categoryPosts[category] = [];
+                        }
+                        categoryPosts[category].push(post);
+                    });
+                }
+            });
+
+            promises = [
+                (function() {
+                    var deferred = new Deferred();
+
+                    cache.zadd("roncli.com:blogger:posts", posts, 86400, function() {
+                        deferred.resolve(true);
+                    });
+
+                    return deferred.promise;
+                }()),
+                (function() {
+                    var deferred = new Deferred();
+
+                    cache.hmset("roncli.com:urls", posts.map(function(post) {
+                        return {
+                            key: post.value.url,
+                            value: post.value
+                        };
+                    }), 0, function() {
+                        deferred.resolve(true);
+                    });
+
+                    return deferred.promise;
+                }()),
+                (function() {
+                    var deferred = new Deferred();
+
+                    cache.zadd("roncli.com:blogger:categories", Object.keys(categories).map(function(category) {
+                        return {
+                            score: -categoryPosts[category].length,
+                            value: category
+                        };
+                    }), 86400, function() {
+                        deferred.resolve(true);
+                    });
+
+                    return deferred.promise;
+                }())
+            ];
+
+            Object.keys(categories).forEach(function(category) {
+                promises.push(
+                    (function() {
+                        var deferred = new Deferred();
+
+                        cache.zadd("roncli.com:blogger:category:" + category, categoryPosts[category], 86400, function() {
+                            deferred.resolve(true);
+                        });
+
+                        return deferred.promise;
+                    }())
+                );
+            });
+
+            all(promises).then(function() {
+                callback();
+            });
+        });
+    };
+
+/**
+ * Retrieves the posts from the cache, retrieving from Blogger if they are not in the cache.
+ * @param {function} callback The callback function.
+ */
+module.exports.posts = function(callback) {
     "use strict";
 
-    var Blogger = this;
+    /**
+     * Retrieves the posts from the cache.
+     * @param {function} failureCallback The callback function to perform if the posts are not in the cache.
+     */
+    var getPosts = function(failureCallback) {
+        cache.zrevrange("roncli.com:blogger:posts", 0, -1, function(posts) {
+            if (posts && posts.length > 0) {
+                callback(null, posts);
+                return;
+            }
 
-    cache.zrangebylex("roncli.com:blogger:categories", function(categories) {
-        if (categories) {
-            callback(null, categories);
-            return;
-        }
+            failureCallback();
+        });
+    };
 
-        Blogger.posts(function(err) {
+    getPosts(function() {
+        cachePosts(function(err) {
             if (err) {
                 callback(err);
                 return;
             }
 
-            Blogger.categories(callback);
+            getPosts(function() {
+                callback({
+                    error: "Blogger posts do not exist.",
+                    status: 400
+                });
+            });
         });
     });
 };
 
-module.exports.postsByCategory = function(category, callback) {
+/**
+ * Retrieves the categories from the cache, retrieving from Blogger if they are not in the cache.
+ * @param {function} callback The callback function.
+ */
+module.exports.categories = function(callback) {
     "use strict";
 
-    var Blogger = this;
+    /**
+     * Retrieves the categories from the cache.
+     * @param {function} failureCallback The callback function to perform if the categories are not in the cache.
+     */
+    var getCategories = function(failureCallback) {
+        cache.zrange("roncli.com:blogger:categories", 0, -1, function(categories) {
+            if (categories && categories.length > 0) {
+                callback(null, categories);
+                return;
+            }
 
-    cache.get("roncli.com:blogger:category:" + category, function(posts) {
-        if (posts) {
-            callback(null, posts);
-            return;
-        }
+            failureCallback();
+        });
+    };
 
-        Blogger.categories(function(categories) {
-            if (categories.indexOf(category) === -1) {
+    getCategories(function() {
+        cachePosts(function(err) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            getCategories(function() {
                 callback({
-                    error: "Category does not exist.",
+                    error: "Blogger categories do not exist.",
+                    status: 400
+                });
+            });
+        });
+    });
+};
+
+/**
+ * Retrieves posts from a single category.
+ * @param {string} category The category to get posts for.
+ * @param {function} callback The callback function.
+ */
+module.exports.categoryPosts = function(category, callback) {
+    "use strict";
+
+    var Blogger = this,
+
+        /**
+         * Retrieves the category posts from the cache.
+         * @param {function} failureCallback The callback function to perform if the posts are not in the cache.
+         */
+        getCategoryPosts = function(failureCallback) {
+            cache.zrevrange("roncli.com:blogger:category:" + category, 0, -1, function(posts) {
+                if (posts && posts.length > 0) {
+                    callback(null, posts);
+                    return;
+                }
+
+                failureCallback();
+            });
+        };
+
+    getCategoryPosts(function() {
+        Blogger.categories(function(categories) {
+            if (categories && categories.indexOf(category) === -1) {
+                callback({
+                    error: "Blogger posts for category do not exist.",
                     status: 400
                 });
                 return;
             }
 
-            Blogger.posts(function(err) {
-                if (err) {
-                    callback(err);
-                    return;
-                }
-
-                Blogger.postsByCategory(category, callback);
+            getCategoryPosts(function() {
+                callback({
+                    error: "Blogger posts for category do not exist.",
+                    status: 400
+                });
             });
+        });
+    });
+};
+
+/**
+ * Retrieves a single post.
+ * @param {number} id The post ID to retrieve.
+ * @param {function} callback The callback function.
+ */
+module.exports.post = function(id, callback) {
+    "use strict";
+
+    cache.get("roncli.com:blogger:post:" + id, function(post) {
+        if (post) {
+            callback(null, post);
+            return;
+        }
+
+        blogger.posts.get({
+            blogId: config.blog_id,
+            postId: id,
+            fields: "id,published,title,content",
+            key: config.api_key
+        }, function(err, post) {
+            if (err || !post) {
+                console.log("Bad response from Blogger.");
+                console.log(err);
+                callback({
+                    error: "Bad resposne from Blogger.",
+                    status: 502
+                });
+                return;
+            }
+
+            cache.set("roncli.com:blogger:post:" + id, post, 86400);
+
+            callback(null, post);
         });
     });
 };

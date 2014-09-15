@@ -47,6 +47,16 @@ module.exports.set = function(key, value, expiration, callback) {
     "use strict";
 
     login(function(err, client) {
+        var parameters;
+
+        if (err) {
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+            return;
+        }
+
         client.on("error", function(err) {
             console.log("Error setting cache using set", key, value);
             console.log(err);
@@ -57,15 +67,12 @@ module.exports.set = function(key, value, expiration, callback) {
             }
         });
 
-        if (err) {
-            if (typeof callback === "function") {
-                callback();
-                callback = null;
-            }
-            return;
+        parameters = [key, JSON.stringify(value)];
+        if (expiration > 0) {
+            parameters.push("EX");
+            parameters.push(expiration);
         }
-
-        client.set(key, JSON.stringify(value), "EX", expiration, function(err) {
+        client.set(parameters, function(err) {
             client.end();
 
             if (err) {
@@ -90,6 +97,14 @@ module.exports.get = function(key, callback) {
     "use strict";
 
     login(function(err, client) {
+        if (err) {
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+            return;
+        }
+
         client.on("error", function(err) {
             console.log("Error retrieving cache using get", key);
             console.log(err);
@@ -99,14 +114,6 @@ module.exports.get = function(key, callback) {
                 callback = null;
             }
         });
-
-        if (err) {
-            if (typeof callback === "function") {
-                callback();
-                callback = null;
-            }
-            return;
-        }
 
         client.get(key, function(err, data) {
             client.end();
@@ -130,7 +137,7 @@ module.exports.get = function(key, callback) {
 };
 
 /**
- * Adds an item to a sorted set in the cache.
+ * Adds items to a sorted set in the cache.
  * @param {string} key The key to add to a sorted set in the cache.
  * @param {{value: object, score: number}[]} valueScorePairs An array of objects contaning a value and a score.
  * @param {number} expiration The expiration in seconds.
@@ -140,16 +147,6 @@ module.exports.zadd = function(key, valueScorePairs, expiration, callback) {
     "use strict";
 
     login(function(err, client) {
-        client.on("error", function(err) {
-            console.log("Error setting cache using zadd", key, valueScorePairs);
-            console.log(err);
-            client.end();
-            if (typeof callback === "function") {
-                callback();
-                callback = null;
-            }
-        });
-
         var values;
 
         if (err) {
@@ -159,6 +156,16 @@ module.exports.zadd = function(key, valueScorePairs, expiration, callback) {
             }
             return;
         }
+
+        client.on("error", function(err) {
+            console.log("Error setting cache using zadd", key, valueScorePairs);
+            console.log(err);
+            client.end();
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+        });
 
         values = [key];
 
@@ -172,7 +179,9 @@ module.exports.zadd = function(key, valueScorePairs, expiration, callback) {
                 console.log(err);
             }
 
-            client.expire(key, expiration);
+            if (expiration > 0) {
+                client.expire(key, expiration);
+            }
             client.end();
 
             if (typeof callback === "function") {
@@ -194,6 +203,14 @@ module.exports.zrange = function(key, start, end, callback) {
     "use strict";
 
     login(function(err, client) {
+        if (err) {
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+            return;
+        }
+
         client.on("error", function(err) {
             console.log("Error retrieving cache using set", key, start, end);
             console.log(err);
@@ -203,14 +220,6 @@ module.exports.zrange = function(key, start, end, callback) {
                 callback = null;
             }
         });
-
-        if (err) {
-            if (typeof callback === "function") {
-                callback();
-                callback = null;
-            }
-            return;
-        }
 
         client.zrange(key, start, end, function(err, data) {
             client.end();
@@ -246,6 +255,14 @@ module.exports.zrevrange = function(key, start, end, callback) {
     "use strict";
 
     login(function(err, client) {
+        if (err) {
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+            return;
+        }
+
         client.on("error", function(err) {
             console.log("Error retrieving cache using set", key, start, end);
             console.log(err);
@@ -255,14 +272,6 @@ module.exports.zrevrange = function(key, start, end, callback) {
                 callback = null;
             }
         });
-
-        if (err) {
-            if (typeof callback === "function") {
-                callback();
-                callback = null;
-            }
-            return;
-        }
 
         client.zrevrange(key, start, end, function(err, data) {
             client.end();
@@ -281,6 +290,62 @@ module.exports.zrevrange = function(key, start, end, callback) {
                 callback(data.map(function(item) {
                     return JSON.parse(item);
                 }));
+                callback = null;
+            }
+        });
+    });
+};
+
+/**
+ * Adds items to a hash in the cache.
+ * @param {string} key The key to add to a hash in the cache.
+ * @param {{key: string, value: object}[]} keyValuePairs An array of objects contaning a key and a value.
+ * @param {number} expiration The expiration in seconds.
+ * @param {function} callback= The optional callback function.
+ */
+module.exports.hmset = function(key, keyValuePairs, expiration, callback) {
+    "use strict";
+
+    login(function(err, client) {
+        var values;
+
+        if (err) {
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+            return;
+        }
+
+        client.on("error", function(err) {
+            console.log("Error setting cache using hmset", key, keyValuePairs);
+            console.log(err);
+            client.end();
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+        });
+
+        values = [key];
+
+        keyValuePairs.forEach(function(pair) {
+            values.push(pair.key, JSON.stringify(pair.value));
+        });
+
+        client.hmset(values, function(err) {
+            if (err) {
+                console.log("Error setting cache using hmset", key, keyValuePairs);
+                console.log(err);
+            }
+
+            if (expiration > 0) {
+                client.expire(key, expiration);
+            }
+            client.end();
+
+            if (typeof callback === "function") {
+                callback();
                 callback = null;
             }
         });
