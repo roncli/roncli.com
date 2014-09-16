@@ -5,7 +5,6 @@ var config = require("../privateConfig").google,
     promise = require("promised-io/promise"),
     Deferred = promise.Deferred,
     all = promise.all,
-    seq = promise.seq,
 
     /**
      * Caches the posts from Blogger.
@@ -34,15 +33,16 @@ var config = require("../privateConfig").google,
             }
 
             posts = data.items.map(function(post) {
-                var urlParsed = urlPattern.exec(post.url);
+                var urlParsed = urlPattern.exec(post.url),
+                    timestamp = new Date(post.published).getTime() / 1000;
 
                 return {
-                    score: new Date(post.published).getTime(),
+                    score: timestamp,
                     value: {
                         type: "blogger",
                         id: post.id,
                         categories: post.labels,
-                        published: new Date(post.published).getTime(),
+                        published: timestamp,
                         title: post.title,
                         url: "blogger/" + post.id + (urlParsed ? "/" + urlParsed[1] : "")
                     }
@@ -123,6 +123,29 @@ var config = require("../privateConfig").google,
             });
         });
     };
+
+/**
+ * Ensures that the posts are cached.
+ * @param {boolean} force Forces the caching of posts.
+ * @param {function} callback The callback function.
+ */
+module.exports.cachePosts = function(force, callback) {
+    "use strict";
+
+    if (force) {
+        cachePosts(callback);
+        return;
+    }
+
+    cache.keys("roncli.com:blogger:posts", function(keys) {
+        if (keys && keys.length > 0) {
+            callback();
+            return;
+        }
+
+        cachePosts(callback);
+    });
+};
 
 /**
  * Retrieves the posts from the cache, retrieving from Blogger if they are not in the cache.

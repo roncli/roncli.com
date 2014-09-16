@@ -151,6 +151,29 @@ var config = require("../privateConfig").tumblr,
     };
 
 /**
+ * Ensures that the posts are cached.
+ * @param {boolean} force Forces the caching of posts.
+ * @param {function} callback The callback function.
+ */
+module.exports.cachePosts = function(force, callback) {
+    "use strict";
+
+    if (force) {
+        cachePosts(callback);
+        return;
+    }
+
+    cache.keys("roncli.com:tumblr:posts", function(keys) {
+        if (keys && keys.length > 0) {
+            callback();
+            return;
+        }
+
+        cachePosts(callback);
+    });
+};
+
+/**
  * Retrieves the posts from the cache, retrieving from Tumblr if they are not in the cache.
  * @param {function} callback The callback function.
  */

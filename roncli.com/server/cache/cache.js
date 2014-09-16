@@ -337,15 +337,112 @@ module.exports.hmset = function(key, keyValuePairs, expiration, callback) {
             if (err) {
                 console.log("Error setting cache using hmset", key, keyValuePairs);
                 console.log(err);
+            } else {
+                if (expiration > 0) {
+                    client.expire(key, expiration);
+                }
             }
 
-            if (expiration > 0) {
-                client.expire(key, expiration);
-            }
             client.end();
 
             if (typeof callback === "function") {
                 callback();
+                callback = null;
+            }
+        });
+    });
+};
+
+/**
+ * Stores the union of two sorted sets into a new sorted set.
+ * @param {string} key The key to store the resulting set in.
+ * @param {string[]} keys An array of keys to use.
+ * @param {function} callback The callback function.
+ */
+module.exports.zunionstore = function(key, keys, expiration, callback) {
+    "use strict";
+
+    login(function(err, client) {
+        if (err) {
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+            return;
+        }
+
+        client.on("error", function(err) {
+            console.log("Error setting cache using zunionstore", key, keys);
+            console.log(err);
+            client.end();
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+        });
+
+        keys.unshift(keys.length);
+        keys.unshift(key);
+
+        client.zunionstore(keys, function(err) {
+            if (err) {
+                console.log("Error setting cache using zunionstore", key, keys);
+                console.log(err);
+            } else {
+                if (expiration > 0) {
+                    client.expire(key, expiration);
+                }
+            }
+
+            client.end();
+
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+        });
+    });
+};
+
+/**
+ * Returns the keys that match the input.
+ * @param {string} key The key to search for.
+ * @param {function} callback The callback function.
+ */
+module.exports.keys = function(key, callback) {
+    "use strict";
+
+    login(function(err, client) {
+        if (err) {
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+            return;
+        }
+
+        client.on("error", function(err) {
+            console.log("Error getting cache using keys", key);
+            console.log();
+            client.end();
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+        });
+
+        client.keys(key, function(err, keys) {
+            client.end();
+
+            if (err) {
+                console.log("Error getting cache using keys", key);
+                console.log(err);
+                callback();
+                return;
+            }
+
+            if (typeof callback === "function") {
+                callback(keys);
                 callback = null;
             }
         });
