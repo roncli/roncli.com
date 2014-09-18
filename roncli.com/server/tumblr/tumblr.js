@@ -84,7 +84,7 @@ var config = require("../privateConfig").tumblr,
                             (function() {
                                 var deferred = new Deferred();
 
-                                cache.hmset("roncli.com:urls", posts.map(function(post) {
+                                cache.hmset("roncli.com:blog:urls", posts.map(function(post) {
                                     return {
                                         key: post.value.url,
                                         value: post.value

@@ -37,6 +37,205 @@ var config = require("../privateConfig").redis,
     };
 
 /**
+ * Gets an item from the cache.
+ * @param {string} key The key to get from the cache.
+ * @param {function} callback The callback function.
+ */
+module.exports.get = function(key, callback) {
+    "use strict";
+
+    login(function(err, client) {
+        if (err) {
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+            return;
+        }
+
+        client.on("error", function(err) {
+            console.log("Error retrieving cache using get", key);
+            console.log(err);
+            client.end();
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+        });
+
+        client.get(key, function(err, data) {
+            client.end();
+
+            if (err) {
+                console.log("Error retrieving cache using get", key);
+                console.log(err);
+                if (typeof callback === "function") {
+                    callback();
+                    callback = null;
+                }
+                return;
+            }
+
+            if (typeof callback === "function") {
+                callback(JSON.parse(data));
+                callback = null;
+            }
+        });
+    });
+};
+
+/**
+ * Gets an item from a hash in the cache.
+ * @param {string} key The key to get from the cache.
+ * @param {string} field The field to get from the hash.
+ * @param {function} callback The callback function.
+ */
+module.exports.hget = function(key, field, callback) {
+    "use strict";
+
+    login(function(err, client) {
+        if (err) {
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+            return;
+        }
+
+        client.on("error", function(err) {
+            console.log("Error retrieving cache using hget", key, field);
+            console.log(err);
+            client.end();
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+        });
+
+        client.hget(key, field, function(err, data) {
+            client.end();
+
+            if (err) {
+                console.log("Error retrieving cache using hget", key, field);
+                console.log(err);
+                if (typeof callback === "function") {
+                    callback();
+                    callback = null;
+                }
+                return;
+            }
+
+            if (typeof callback === "function") {
+                callback(JSON.parse(data));
+                callback = null;
+            }
+        });
+    });
+};
+
+/**
+ * Adds items to a hash in the cache.
+ * @param {string} key The key to add to a hash in the cache.
+ * @param {{key: string, value: object}[]} keyValuePairs An array of objects contaning a key and a value.
+ * @param {number} expiration The expiration in seconds.
+ * @param {function} callback= The optional callback function.
+ */
+module.exports.hmset = function(key, keyValuePairs, expiration, callback) {
+    "use strict";
+
+    login(function(err, client) {
+        var values;
+
+        if (err) {
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+            return;
+        }
+
+        client.on("error", function(err) {
+            console.log("Error setting cache using hmset", key, keyValuePairs);
+            console.log(err);
+            client.end();
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+        });
+
+        values = [key];
+
+        keyValuePairs.forEach(function(pair) {
+            values.push(pair.key, JSON.stringify(pair.value));
+        });
+
+        client.hmset(values, function(err) {
+            if (err) {
+                console.log("Error setting cache using hmset", key, keyValuePairs);
+                console.log(err);
+            } else {
+                if (expiration > 0) {
+                    client.expire(key, expiration);
+                }
+            }
+
+            client.end();
+
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+        });
+    });
+};
+
+/**
+ * Returns the keys that match the input.
+ * @param {string} key The key to search for.
+ * @param {function} callback The callback function.
+ */
+module.exports.keys = function(key, callback) {
+    "use strict";
+
+    login(function(err, client) {
+        if (err) {
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+            return;
+        }
+
+        client.on("error", function(err) {
+            console.log("Error getting cache using keys", key);
+            console.log();
+            client.end();
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+        });
+
+        client.keys(key, function(err, keys) {
+            client.end();
+
+            if (err) {
+                console.log("Error getting cache using keys", key);
+                console.log(err);
+                callback();
+                return;
+            }
+
+            if (typeof callback === "function") {
+                callback(keys);
+                callback = null;
+            }
+        });
+    });
+};
+
+/**
  * Sets an item in the cache.
  * @param {string} key The key to set in the cache.
  * @param {object} value The value to set in the cache.
@@ -82,54 +281,6 @@ module.exports.set = function(key, value, expiration, callback) {
 
             if (typeof callback === "function") {
                 callback();
-                callback = null;
-            }
-        });
-    });
-};
-
-/**
- * Gets an item from the cache.
- * @param {string} key The key to get from the cache.
- * @param {function} callback The callback function.
- */
-module.exports.get = function(key, callback) {
-    "use strict";
-
-    login(function(err, client) {
-        if (err) {
-            if (typeof callback === "function") {
-                callback();
-                callback = null;
-            }
-            return;
-        }
-
-        client.on("error", function(err) {
-            console.log("Error retrieving cache using get", key);
-            console.log(err);
-            client.end();
-            if (typeof callback === "function") {
-                callback();
-                callback = null;
-            }
-        });
-
-        client.get(key, function(err, data) {
-            client.end();
-
-            if (err) {
-                console.log("Error retrieving cache using get", key);
-                console.log(err);
-                if (typeof callback === "function") {
-                    callback();
-                    callback = null;
-                }
-                return;
-            }
-
-            if (typeof callback === "function") {
-                callback(JSON.parse(data));
                 callback = null;
             }
         });
@@ -264,7 +415,7 @@ module.exports.zrevrange = function(key, start, end, callback) {
         }
 
         client.on("error", function(err) {
-            console.log("Error retrieving cache using set", key, start, end);
+            console.log("Error retrieving cache using zrevrange", key, start, end);
             console.log(err);
             client.end();
             if (typeof callback === "function") {
@@ -297,28 +448,25 @@ module.exports.zrevrange = function(key, start, end, callback) {
 };
 
 /**
- * Adds items to a hash in the cache.
- * @param {string} key The key to add to a hash in the cache.
- * @param {{key: string, value: object}[]} keyValuePairs An array of objects contaning a key and a value.
- * @param {number} expiration The expiration in seconds.
- * @param {function} callback= The optional callback function.
+ * Retrieves the reverse rank of an item from a sorted set.
+ * @param {string} key The key to get the sorted set from in the cache.
+ * @param {object} value The value to search.
+ * @param {function} callback The callback function.
  */
-module.exports.hmset = function(key, keyValuePairs, expiration, callback) {
+module.exports.zrevrank = function(key, value, callback) {
     "use strict";
 
     login(function(err, client) {
-        var values;
-
         if (err) {
             if (typeof callback === "function") {
                 callback();
-                callback = null;
+                callback();
             }
             return;
         }
 
         client.on("error", function(err) {
-            console.log("Error setting cache using hmset", key, keyValuePairs);
+            console.log("Error retrieving cache using zrevrank", key, value);
             console.log(err);
             client.end();
             if (typeof callback === "function") {
@@ -327,31 +475,25 @@ module.exports.hmset = function(key, keyValuePairs, expiration, callback) {
             }
         });
 
-        values = [key];
+        client.zrevrank(key, JSON.stringify(value), function(err, data) {
+            client.end();
 
-        keyValuePairs.forEach(function(pair) {
-            values.push(pair.key, JSON.stringify(pair.value));
-        });
-
-        client.hmset(values, function(err) {
             if (err) {
-                console.log("Error setting cache using hmset", key, keyValuePairs);
+                console.log("Error retrieving cache using zrevrank", key, value);
                 console.log(err);
-            } else {
-                if (expiration > 0) {
-                    client.expire(key, expiration);
+                if (typeof callback === "function") {
+                    callback();
+                    callback = null;
                 }
             }
 
-            client.end();
-
             if (typeof callback === "function") {
-                callback();
+                callback(data);
                 callback = null;
             }
         });
     });
-};
+}
 
 /**
  * Stores the union of two sorted sets into a new sorted set.
@@ -404,47 +546,3 @@ module.exports.zunionstore = function(key, keys, expiration, callback) {
     });
 };
 
-/**
- * Returns the keys that match the input.
- * @param {string} key The key to search for.
- * @param {function} callback The callback function.
- */
-module.exports.keys = function(key, callback) {
-    "use strict";
-
-    login(function(err, client) {
-        if (err) {
-            if (typeof callback === "function") {
-                callback();
-                callback = null;
-            }
-            return;
-        }
-
-        client.on("error", function(err) {
-            console.log("Error getting cache using keys", key);
-            console.log();
-            client.end();
-            if (typeof callback === "function") {
-                callback();
-                callback = null;
-            }
-        });
-
-        client.keys(key, function(err, keys) {
-            client.end();
-
-            if (err) {
-                console.log("Error getting cache using keys", key);
-                console.log(err);
-                callback();
-                return;
-            }
-
-            if (typeof callback === "function") {
-                callback(keys);
-                callback = null;
-            }
-        });
-    });
-};
