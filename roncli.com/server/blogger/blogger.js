@@ -294,7 +294,7 @@ module.exports.post = function(id, callback) {
                 console.log("Bad response from Blogger.");
                 console.log(err);
                 callback({
-                    error: "Bad resposne from Blogger.",
+                    error: "Bad response from Blogger.",
                     status: 502
                 });
                 return;

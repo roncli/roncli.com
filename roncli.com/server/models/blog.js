@@ -33,9 +33,67 @@ var cache = require("../cache/cache.js"),
 
         all(bloggerDeferred.promise, tumblrDeferred.promise).then(
             function() {
-                cache.zunionstore("roncli.com:blog:posts", ["roncli.com:blogger:posts", "roncli.com:tumblr:posts"], 86400, function() {
-                    callback();
-                });
+                all(
+                    (function() {
+                        var deferred = new Deferred();
+
+                        cache.zunionstore("roncli.com:blog:posts", ["roncli.com:blogger:posts", "roncli.com:tumblr:posts"], 86400, function() {
+                            deferred.resolve(true);
+                        });
+
+                        return deferred.promise;
+                    }()),
+                    (function() {
+                        var unionDeferred = new Deferred();
+
+                        cache.zunionstore("roncli.com:blog:categories", ["roncli.com:blogger:categories", "roncli.com:tumblr:categories"], 86400, function() {
+                            var promises = [],
+
+                                /**
+                                 * Caches a category.
+                                 * @param {string} category The category to cache.
+                                 * @returns {*} A promise object.
+                                 */
+                                cacheCategory = function(category) {
+                                    var deferred = new Deferred();
+
+                                    cache.zunionstore("roncli.com:blog:category:" + category, ["roncli.com:blogger:category:" + category, "roncli.com:tumblr:category:" + category], 86400, function() {
+                                        deferred.resolve(true);
+                                    });
+
+                                    return deferred.promise;
+                                };
+
+                            cache.zrange("roncli.com:blog:categories", 0, -1, function(categories) {
+                                categories.forEach(function(category) {
+                                    promises.push(cacheCategory(category));
+                                });
+                            });
+                            all(promises).then(
+
+                                function() {
+                                    unionDeferred.resolve(true);
+                                },
+
+                                // If any of the functions error out, it will be handled here.
+                                function(err) {
+                                    unionDeferred.reject(err);
+                                }
+                            );
+                        });
+
+                        return unionDeferred.promise;
+                    }())
+                ).then(
+                    function() {
+                        callback();
+                    },
+
+                    // If any of the functions error out, it will be handled here.
+                    function(err) {
+                        callback(err);
+                    }
+                );
             },
 
             // If any of the functions error out, it will be handled here.
@@ -149,7 +207,7 @@ module.exports.getPostByUrl = function(url, callback) {
 
                             getIndex(post, function() {
                                 callback({
-                                    error: "Page not found 1.",
+                                    error: "Page not found.",
                                     status: 404
                                 });
                             });
@@ -172,7 +230,7 @@ module.exports.getPostByUrl = function(url, callback) {
 
             getPost(function() {
                 callback({
-                    error: "Page not found 2.",
+                    error: "Page not found.",
                     status: 404
                 });
             });
@@ -196,4 +254,35 @@ module.exports.getPost = function(post, callback) {
             tumblr.post(post.id, callback);
             break;
     }
+};
+
+module.exports.getCategories = function(callback) {
+    "use strict";
+
+    var getCategories = function(failureCallback) {
+        cache.zrange("roncli.com:blog:categories", 0, -1, function(categories) {
+            if (categories) {
+                callback(null, categories);
+                return;
+            }
+
+            failureCallback();
+        });
+    };
+
+    getCategories(function() {
+        cachePosts(function(err) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            getCategories(function() {
+                callback({
+                    error: "Blog categories do not exist.",
+                    status: 400
+                });
+            });
+        });
+    });
 };
