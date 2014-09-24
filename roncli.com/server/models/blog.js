@@ -166,52 +166,19 @@ module.exports.getPostByUrl = function(url, callback) {
     var Blog = this,
 
         /**
-         * Retrieves the index of the post in the cache.
-         * @param {object} post The post object.
-         * @param {function} failureCallback The callback function to perform if the post is not in the cache.
-         */
-        getIndex = function(post, failureCallback) {
-            cache.zrevrank("roncli.com:blog:posts", post, function(index) {
-                if (index !== null) {
-                    Blog.getPost(post, function(err, post) {
-                        if (err) {
-                            callback(err);
-                            return;
-                        }
-
-                        callback(null, {
-                            post: post,
-                            index: index
-                        });
-                    });
-                    return;
-                }
-
-                failureCallback();
-            });
-        },
-
-        /**
          * Retrieves the post from the cache.
          * @param {function} failureCallback The callback function to perform if the post is not in the cache.
          */
         getPost = function(failureCallback) {
             cache.hget("roncli.com:blog:urls", url, function(post) {
                 if (post) {
-                    getIndex(post, function() {
-                        cachePosts(function(err) {
-                            if (err) {
-                                callback(err);
-                                return;
-                            }
+                    Blog.getPost(post, function(err, post) {
+                        if (err) {
+                            callback(err);
+                            return;
+                        }
 
-                            getIndex(post, function() {
-                                callback({
-                                    error: "Page not found.",
-                                    status: 404
-                                });
-                            });
-                        });
+                        callback(null, post);
                     });
 
                     return;
@@ -246,19 +213,118 @@ module.exports.getPostByUrl = function(url, callback) {
 module.exports.getPost = function(post, callback) {
     "use strict";
 
+    var Blog = this,
+        postDeferred = new Deferred(),
+        rankDeferred = new Deferred(),
+
+        /**
+         * Get the index of the post from a key.
+         * @param {string} key The key to lookup the index against.
+         * @param {object} deferred The deferred object to resolve.
+         * @param {function} failureCallback The callback function to perform if the index is not in the cache.
+         */
+        getIndex = function(key, deferred, failureCallback) {
+            cache.zrevrank(key, post, function(index) {
+                if (index || index === 0) {
+                    deferred.resolve(index);
+                    return;
+                }
+
+                failureCallback();
+            });
+        };
+
     switch (post.type) {
         case "blogger":
-            blogger.post(post.id, callback);
+            blogger.post(post.id, function(err, post) {
+                if (err) {
+                    postDeferred.reject(err);
+                } else {
+                    postDeferred.resolve(post);
+                }
+            });
             break;
         case "tumblr":
-            tumblr.post(post.id, callback);
+            tumblr.post(post.id, function(err, post) {
+                if (err) {
+                    postDeferred.reject(err);
+                } else {
+                    postDeferred.resolve(post);
+                }
+            });
             break;
     }
+
+    getIndex("roncli.com:blog:posts", rankDeferred, function() {
+        cachePosts(function(err) {
+            if (err) {
+                rankDeferred.reject(err);
+                return;
+            }
+
+            getIndex("roncli.com:blog:posts", rankDeferred, function() {
+                rankDeferred.reject({
+                    error: "Blog posts do not exist.",
+                    status: 400
+                });
+            });
+        });
+    });
+
+    all(postDeferred.promise, rankDeferred.promise).then(
+        function(content) {
+            var promises = [];
+
+            post.categories.forEach(function(category) {
+                var deferred = new Deferred();
+
+                getIndex("roncli.com:blog:category:" + category, deferred, function() {
+                    deferred.resolve(null);
+                });
+
+                promises.push(deferred.promise);
+            });
+
+            all(promises).then(
+                function(categoryRanks) {
+                    var postData = {
+                        post: content[0],
+                        index: content[1],
+                        categories: {}
+                    };
+
+                    post.categories.forEach(function(category, index) {
+                        postData.categories[category] = categoryRanks[index];
+                    });
+
+                    callback(null, postData);
+                },
+
+                // If any of the functions error out, it will be handled here.
+                function(err) {
+                    callback(err);
+                }
+            );
+        },
+
+        // If any of the functions error out, it will be handled here.
+        function(err) {
+            callback(err);
+        }
+    );
 };
 
+/**
+ * Gets the available categories.
+ * @param {function} callback The callback function.
+ */
 module.exports.getCategories = function(callback) {
     "use strict";
 
+    /**
+     * Retrieves categories from the cache.
+     * @param {function} failureCallback The callback function to perform if the categories are not in the cache.
+     */
     var getCategories = function(failureCallback) {
         cache.zrange("roncli.com:blog:categories", 0, -1, function(categories) {
             if (categories) {
