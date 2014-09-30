@@ -226,7 +226,44 @@ module.exports.getPost = function(post, callback) {
         getIndex = function(key, deferred, failureCallback) {
             cache.zrevrank(key, post, function(index) {
                 if (index || index === 0) {
-                    deferred.resolve(index);
+                    all(
+                        (function() {
+                            var deferred = new Deferred();
+
+                            if (index === 0) {
+                                deferred.resolve(null);
+                            } else {
+                                cache.zrevrange(key, index - 1, index - 1, function(post) {
+                                    deferred.resolve(post);
+                                });
+                            }
+
+                            return deferred.promise;
+                        }()),
+                        (function() {
+                            var deferred = new Deferred();
+
+                            cache.zrevrange(key, index + 1, index + 1, function(post) {
+                                deferred.resolve(post);
+                            });
+
+                            return deferred.promise;
+                        }())
+                    ).then(
+                        function(posts) {
+                            deferred.resolve({
+                                index: index,
+                                next: posts[0],
+                                previous: posts[1]
+                            });
+                        },
+
+                        // If any of the functions error out, it will be handled here.
+                        function(err) {
+                            callback(err);
+                        }
+                    );
+
                     return;
                 }
 

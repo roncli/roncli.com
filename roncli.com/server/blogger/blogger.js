@@ -300,6 +300,8 @@ module.exports.post = function(id, callback) {
                 return;
             }
 
+            post.published = new Date(post.published).getTime() / 1000;
+
             cache.set("roncli.com:blogger:post:" + id, post, 86400);
 
             callback(null, post);
