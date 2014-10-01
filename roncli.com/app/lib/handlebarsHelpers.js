@@ -1,4 +1,5 @@
-var $ = require("jquery");
+var $ = require("jquery"),
+    moment = require("moment");
 
 /**
  * Helpers for handlebars rendering.
@@ -9,6 +10,35 @@ module.exports = function(Handlebars) {
     "use strict";
 
     return {
+        jsonEscaped: function(object, spacing) {
+            return new Handlebars.SafeString(JSON.stringify(object, null, spacing).replace("/script", "\\/script") || 'null');
+        },
+
+        ifCond: function(a, operator, b, options) {
+            switch (operator) {
+                case "===":
+                    return (a === b) ? options.fn(this) : options.inverse(this);
+                case "<":
+                    return (a < b) ? options.fn(this) : options.inverse(this);
+                case "<=":
+                    return (a <= b) ? options.fn(this) : options.inverse(this);
+                case ">":
+                    return (a > b) ? options.fn(this) : options.inverse(this);
+                case ">=":
+                    return (a >= b) ? options.fn(this) : options.inverse(this);
+                case "&&":
+                    return (a && b) ? options.fn(this) : options.inverse(this);
+                case "||":
+                    return (a || b) ? options.fn(this) : options.inverse(this);
+                default:
+                    return options.inverse(this);
+            }
+        },
+
+        timestampToDate: function(timestamp) {
+            return moment(timestamp * 1000).format("dddd, MMMM Do, YYYY h:mm:ss a");
+        },
+
         /**
          * Returns the current year.
          * @returns {number} The current year.
