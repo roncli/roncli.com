@@ -8,7 +8,8 @@ module.exports = {
         "use strict";
 
         var data = {
-            time: {model: "Time", params: {}}
+            time: {model: "Time", params: {}},
+            blog: {model: "Blog_GetLatest", params: {}}
         };
 
         this.app.fetch(data, function(err, result) {

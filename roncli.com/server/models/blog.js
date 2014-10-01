@@ -271,12 +271,13 @@ module.exports.getPost = function(post, callback) {
             });
         };
 
-    switch (post.type) {
+    switch (post.source) {
         case "blogger":
             blogger.post(post.id, function(err, post) {
                 if (err) {
                     postDeferred.reject(err);
                 } else {
+                    post.source = "blogger";
                     postDeferred.resolve(post);
                 }
             });
@@ -286,6 +287,7 @@ module.exports.getPost = function(post, callback) {
                 if (err) {
                     postDeferred.reject(err);
                 } else {
+                    post.source = "tumblr";
                     postDeferred.resolve(post);
                 }
             });
@@ -311,6 +313,8 @@ module.exports.getPost = function(post, callback) {
     all(postDeferred.promise, rankDeferred.promise).then(
         function(content) {
             var promises = [];
+
+            content[0].blogUrl = post.url;
 
             post.categories.forEach(function(category) {
                 var deferred = new Deferred();

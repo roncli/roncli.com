@@ -39,12 +39,12 @@ var config = require("../privateConfig").google,
                 return {
                     score: timestamp,
                     value: {
-                        type: "blogger",
+                        source: "blogger",
                         id: post.id,
                         categories: post.labels,
                         published: timestamp,
                         title: post.title,
-                        url: "blogger/" + post.id + (urlParsed ? "/" + urlParsed[1] : "")
+                        url: "/blogger/" + post.id + (urlParsed ? "/" + urlParsed[1] : "")
                     }
                 };
             });

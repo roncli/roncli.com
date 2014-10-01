@@ -258,8 +258,12 @@ input[type="radio"], input[type="checkbox"] {
     padding: 2px;
 }
 
-/* Breadcrumbs */
+.panel-heading.panel-secondary {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
 
+/* Breadcrumbs */
 .breadcrumb {
     padding: 2px;
     margin: 0;

@@ -1,8 +1,11 @@
 <div class="col-xs-8">
-    <div class="panel">
-        <div class="panel-body">
-            Welcome to the website.
-        </div>
+    <div class="panel panel-primary btn-group-vertical">
+        <a class="btn btn-info" href="/blog">
+            <div class="panel-heading panel-title text-center">
+                <h1>Blog</h1>
+            </div>
+        </a>
+        {{partial "blog/post" blog.attributes}}
     </div>
 </div>
 <div class="col-sm-2 hidden-xs">

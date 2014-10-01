@@ -46,12 +46,12 @@ var config = require("../privateConfig").tumblr,
                             return {
                                 score: post.timestamp,
                                 value: {
-                                    type: "tumblr",
+                                    source: "tumblr",
                                     id: post.id,
                                     categories: post.tags,
                                     published: post.timestamp,
                                     title: post.title,
-                                    url: "tumblr/" + post.id + "/" + post.slug
+                                    url: "/tumblr/" + post.id + "/" + post.slug
                                 }
                             };
                         });

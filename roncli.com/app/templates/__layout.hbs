@@ -16,6 +16,7 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.2.0/bootbox.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script>
     <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.12.0/jquery.validate.min.js"></script>
+    <script>window.twttr=function(e,t,n){var r,i,s=e.getElementsByTagName(t)[0];if(e.getElementById(n))return;i=e.createElement(t);i.id=n;i.src="//platform.twitter.com/widgets.js";s.parentNode.insertBefore(i,s);return window.twttr||(r={_e:[],ready:function(e){r._e.push(e)}})}(document,"script","twitter-wjs")</script>
 </head>
 <body>
 <div class="site-wrapper">
@@ -113,7 +114,7 @@
     </div>
 </div>
 <!-- The following is pre-minified, since the inclusion of Handlebars tags makes minifying difficult -->
-<script>!function(){var a=window.App=new(require("app/app"))({{json appData}})
-a.bootstrapData({{json bootstrappedData}}),a.start()}()</script>
+<script>!function(){var a=window.App=new(require("app/app"))({{jsonEscaped appData}})
+a.bootstrapData({{jsonEscaped bootstrappedData}}),a.start()}()</script>
 </body>
 </html>
