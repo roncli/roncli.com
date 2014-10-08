@@ -196,3 +196,16 @@ div.body {
     padding: 2px;
     font-size: 13px;
 }
+
+img.constrain-width {
+    max-width: 100%;
+}
+
+img.thumb {
+    cursor: pointer;
+}
+
+div.blog.constrain-height div.body {
+    max-height: 400px;
+    overflow-y: auto;
+}

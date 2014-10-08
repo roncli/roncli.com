@@ -110,7 +110,7 @@ var cache = require("../cache/cache.js"),
 module.exports.getLatestPost = function(callback) {
     "use strict";
 
-    this.getPostByIndex(0, callback);
+    this.getPostByIndex(3, callback);
 };
 
 /**
@@ -213,8 +213,7 @@ module.exports.getPostByUrl = function(url, callback) {
 module.exports.getPost = function(post, callback) {
     "use strict";
 
-    var Blog = this,
-        postDeferred = new Deferred(),
+    var postDeferred = new Deferred(),
         rankDeferred = new Deferred(),
 
         /**
