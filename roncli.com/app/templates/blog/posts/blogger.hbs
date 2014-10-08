@@ -1,7 +1,9 @@
-<div class="panel-heading panel-secondary panel-title text-center">
-    <h3>{{blog.attributes.post.title}}</h3>
-    Posted {{timestampToDate blog.attributes.post.published}}
-</div>
-<div class="panel-padding">
+<a class="btn btn-info" href="{{{blog.attributes.post.blogUrl}}}">
+    <div class="panel-heading panel-title text-center">
+        <h3>{{blog.attributes.post.title}}</h3>
+        Posted {{timestampToDate blog.attributes.post.published}}
+    </div>
+</a>
+<div class="body">
     {{{blog.attributes.post.content}}}
 </div>

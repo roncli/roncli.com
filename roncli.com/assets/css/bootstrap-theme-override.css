@@ -281,3 +281,10 @@ input[type="radio"], input[type="checkbox"] {
 .breadcrumb * {
     font-size: 13px;
 }
+
+/* Blockquote */
+
+blockquote {
+    padding: 0 10px;
+    margin: 0;
+}
