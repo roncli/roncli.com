@@ -5,7 +5,7 @@
                 <h1>Blog</h1>
             </div>
         </a>
-        {{partial "blog/post" blog.attributes}}
+        {{partial "blog/post" post=blog.attributes.post index=blog.attributes.index categories=blog.attributes.categories header="default"}}
     </div>
 </div>
 <div class="col-sm-2 hidden-xs">

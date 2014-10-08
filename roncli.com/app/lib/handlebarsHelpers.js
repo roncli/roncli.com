@@ -1,5 +1,4 @@
-var $ = require("jquery"),
-    moment = require("moment");
+var moment = require("moment");
 
 /**
  * Helpers for handlebars rendering.
@@ -10,10 +9,24 @@ module.exports = function(Handlebars) {
     "use strict";
 
     return {
+        /**
+         * Returns the JSON object stringified.
+         * @param {object} object The JSON object.
+         * @param {string|number} spacing The spacing to use to stringify the JSON.
+         * @returns {base.HandlebarsEnvironment.SafeString} The stringified JSON object.
+         */
         jsonEscaped: function(object, spacing) {
             return new Handlebars.SafeString(JSON.stringify(object, null, spacing).replace("/script", "\\/script") || 'null');
         },
 
+        /**
+         * Determines whether to render the enclosed block.
+         * @param {object} a The first object to compare.
+         * @param {string} operator The operator to use.
+         * @param {object} b The second object to compare.
+         * @param {object} options The Handlebars helpers object.
+         * @returns {function} The Handlebars rendering function.
+         */
         ifCond: function(a, operator, b, options) {
             switch (operator) {
                 case "===":
@@ -35,6 +48,11 @@ module.exports = function(Handlebars) {
             }
         },
 
+        /**
+         * Turns a Unix timestamp into a formatted date.
+         * @param {number} timestamp The Unix timestamp to use.
+         * @returns {string} The formatted date.
+         */
         timestampToDate: function(timestamp) {
             return moment(timestamp * 1000).format("dddd, MMMM Do, YYYY h:mm:ss a");
         },
@@ -47,29 +65,60 @@ module.exports = function(Handlebars) {
             return new Date().getFullYear();
         },
 
+        /**
+         * Returns the Twitter profile of the user.
+         * @param {string} user The Twitter user.
+         * @returns {string} The Twitter profile of the user.
+         */
         toTwitterProfileUrl: function(user) {
             return "http://twitter.com/" + user;
         },
 
+        /**
+         * Returns the permanent URL of a tweet.
+         * @param {string} user The Twitter user.
+         * @param {number} id The ID of the tweet.
+         * @returns {string} The permanent URL of the tweet.
+         */
         toTwitterPermanentUrl: function(user, id) {
             return "http://twitter.com/" + user + "/status/" + id;
         },
 
+        /**
+         * Returns the URL to use to reply to a tweet.
+         * @param {number} id The ID of the tweet.
+         * @returns {string} The URL to use to reply to a tweet.
+         */
         toTwitterReplyUrl: function(id) {
             return "http://twitter.com/intent/tweet?in_reply_to=" + id;
         },
 
+        /**
+         * Returns the URL to use to retweet a tweet.
+         * @param {number} id The ID of the tweet.
+         * @returns {string} The URL to use to retweet a tweet.
+         */
         toTwitterRetweetUrl: function(id) {
             return "http://twitter.com/intent/retweet?tweet_id=" + id;
         },
 
+        /**
+         * Returns the URL to use to favorite a tweet.
+         * @param {number} id The ID of the tweet.
+         * @returns {string} The URL to use to favorite a tweet.
+         */
         toTwitterFavoriteUrl: function(id) {
             return "http://twitter.com/intent/favorite?tweet_id=" + id;
         },
 
+        /**
+         * Converts an ISO timestamp into an ABBR element to use with timeago.
+         * @param {string} timestamp The ISO timestamp.
+         * @returns {string} The ABBR element to use with timeago.
+         */
         toTimeAgo: function(timestamp) {
             var date = new Date(timestamp);
-            return $("<abbr></abbr>").addClass("setTime").attr({title: timestamp}).text((date.getMonth() + 1) + '/' + date.getDate() + '/' + date.getFullYear())[0].outerHTML;
+            return "<abbr class=\"setTime\" title=\"" + timestamp.toString() + "\">" + (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear() + "</abbr>";
         }
     };
 };

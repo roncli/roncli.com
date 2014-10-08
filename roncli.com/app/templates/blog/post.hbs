@@ -1,3 +1,8 @@
-{{#ifCond blog.attributes.post.source "===" "blogger"}}
+{{#ifCond post.source "===" "blogger"}}
     {{partial "blog/posts/blogger"}}
+{{/ifCond}}
+{{#ifCond post.source "===" "tumblr"}}
+    {{#ifCond post.type "===" "photo"}}
+        {{partial "blog/posts/tumblrPhoto"}}
+    {{/ifCond}}
 {{/ifCond}}

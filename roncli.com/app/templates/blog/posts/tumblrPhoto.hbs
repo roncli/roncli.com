@@ -1,0 +1,11 @@
+<a class="btn btn-{{{header}}}" href="{{{post.blogUrl}}}">
+    <div class="panel-heading panel-title text-center">
+        Posted {{timestampToDate post.timestamp}}
+    </div>
+</a>
+<div class="body">
+    {{#each post.photos}}
+        <img class="constrain-width" src="{{{original_size.url}}}" />
+    {{/each}}
+    {{{post.caption}}}
+</div>

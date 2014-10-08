@@ -1,9 +1,15 @@
-var BaseClientRouter = require('rendr/client/router'),
-    Router = module.exports = function Router(options) {
-        "use strict";
+/*global _gaq*/
+var BaseClientRouter = require("rendr/client/router"),
+    $ = require("jquery"),
+    Router;
 
-        BaseClientRouter.call(this, options);
-    };
+module.exports = function (options) {
+    "use strict";
+
+    BaseClientRouter.call(this, options);
+};
+
+Router = module.exports;
 
 // Set up inheritance on the router.
 Router.prototype = Object.create(BaseClientRouter.prototype);
@@ -15,16 +21,20 @@ Router.prototype.constructor = BaseClientRouter;
 Router.prototype.postInitialize = function() {
     "use strict";
 
-    this.on('action:start', this.trackImpression, this);
+    this.on("action:start", this.actionStart, this);
 };
 
 /**
- * Tracks a page view with Google Analytics.
+ * Performs actions on start of a page.
  */
-Router.prototype.trackImpression = function() {
+Router.prototype.actionStart = function() {
     "use strict";
 
+    // Update abbreviations.
+    $("abbr.setTime").timeago().removeClass("setTime");
+
+    // Tracks a page view with Google Analytics.
     if (window._gaq) {
-        _gaq.push(['_trackPageview']);
+        _gaq.push(["_trackPageview"]);
     }
 };
