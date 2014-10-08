@@ -110,7 +110,7 @@ var cache = require("../cache/cache.js"),
 module.exports.getLatestPost = function(callback) {
     "use strict";
 
-    this.getPostByIndex(3, callback);
+    this.getPostByIndex(4, callback);
 };
 
 /**

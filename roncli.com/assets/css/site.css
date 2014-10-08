@@ -209,3 +209,8 @@ div.blog.constrain-height div.body {
     max-height: 400px;
     overflow-y: auto;
 }
+
+div.blog iframe.soundcloud_audio_player {
+    width: 100%;
+    height: 200px;
+}

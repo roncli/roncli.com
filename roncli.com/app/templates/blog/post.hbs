@@ -5,4 +5,9 @@
     {{#ifCond post.type "===" "photo"}}
         {{partial "blog/posts/tumblrPhoto"}}
     {{/ifCond}}
+    {{#ifCond post.type "===" "audio"}}
+        {{#ifCond post.audio_type "===" "soundcloud"}}
+            {{partial "blog/posts/tumblrSoundcloud"}}
+        {{/ifCond}}
+    {{/ifCond}}
 {{/ifCond}}
