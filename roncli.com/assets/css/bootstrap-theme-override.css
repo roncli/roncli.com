@@ -16,6 +16,8 @@ h6,
 .h5,
 .h6 {
     font-family: "Archivo Narrow", Verdana, Arial, sans-serif;
+    margin-top: 0;
+    margin-bottom: 0;
 }
 
 .col-lg-1,

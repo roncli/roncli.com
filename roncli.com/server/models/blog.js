@@ -111,7 +111,7 @@ module.exports.getLatestPost = function(callback) {
     "use strict";
 
     //this.getPostByIndex(0, callback);
-    this.getPostByUrl("/tumblr/83394573127/craziest-rift-ever", callback);
+    this.getPostByUrl("/tumblr/76612517466/six-gaming-ep-xi", callback);
 };
 
 /**

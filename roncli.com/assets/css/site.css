@@ -219,3 +219,7 @@ div.blog div.body.youtube iframe {
     width: 100%;
     height: 200px;
 }
+
+div.blog div.body h3.link {
+    margin-bottom: 20px;
+}
