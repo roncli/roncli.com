@@ -37,7 +37,7 @@ ApiDataAdapter.prototype.request = function(req, api, options, callback) {
     }
 
     // Default the response to return JSON with a 200.
-    req.res.set("content-type", "application/json").status(200);
+    req.res.set("content-type", "application/json; charset=utf-8").status(200);
 
     // Check to ensure the API being requested exists.
     fs.exists(filename.replace(".", __dirname), function(exists) {
