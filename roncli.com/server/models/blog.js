@@ -110,7 +110,8 @@ var cache = require("../cache/cache.js"),
 module.exports.getLatestPost = function(callback) {
     "use strict";
 
-    this.getPostByIndex(4, callback);
+    //this.getPostByIndex(0, callback);
+    this.getPostByUrl("/tumblr/83394573127/craziest-rift-ever", callback);
 };
 
 /**

@@ -7,7 +7,12 @@
     {{/ifCond}}
     {{#ifCond post.type "===" "audio"}}
         {{#ifCond post.audio_type "===" "soundcloud"}}
-            {{partial "blog/posts/tumblrSoundcloud"}}
+            {{partial "blog/posts/tumblrSoundCloud"}}
+        {{/ifCond}}
+    {{/ifCond}}
+    {{#ifCond post.type "===" "video"}}
+        {{#ifCond post.video_type "===" "youtube"}}
+            {{partial "blog/posts/tumblrYouTube"}}
         {{/ifCond}}
     {{/ifCond}}
 {{/ifCond}}

@@ -1,0 +1,13 @@
+<a class="btn btn-{{{header}}}" href="{{{post.blogUrl}}}">
+    <div class="panel-heading panel-title text-center">
+        Posted {{timestampToDate post.timestamp}}
+    </div>
+</a>
+<div class="body youtube">
+    {{#each post.player}}
+        {{#if @last}}
+            {{{embed_code}}}
+        {{/if}}
+    {{/each}}
+    {{{post.caption}}}
+</div>
