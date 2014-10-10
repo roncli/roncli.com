@@ -18,6 +18,42 @@ var config = require("../privateConfig").tumblr,
             totalPosts = [],
 
             /**
+             * Gets the title from a post.
+             * @param {object} post The post.
+             * @returns {string} The title to use for the post.
+             */
+            getTitle = function(post) {
+                // If it already has a title, just return it.
+                if (post.title) {
+                    return post.title;
+                }
+
+                // If it has a track name, return it.
+                if (post.track_name) {
+                    return post.track_name;
+                }
+
+                switch (post.type) {
+                    case "answer":
+                        return "(Q&A)";
+                    case "audio":
+                        return "(Audio)";
+                    case "link":
+                        return "(Link)";
+                    case "photo":
+                        return "(Image)";
+                    case "quote":
+                        return "(Quote)";
+                    case "text":
+                        return "(Text)";
+                    case "video":
+                        return "(Video)";
+                    default:
+                        return "(Post)";
+                }
+            },
+
+            /**
              * Gets 20 posts from Tumblr.
              * @param {number} offset The post number to start retrieving posts from.
              */
@@ -29,7 +65,7 @@ var config = require("../privateConfig").tumblr,
                         console.log("Bad response from Tumblr.");
                         console.log(err);
                         callback({
-                            error: "Bad resposne from Tumblr.",
+                            error: "Bad response from Tumblr.",
                             status: 502
                         });
                         return;
@@ -50,7 +86,7 @@ var config = require("../privateConfig").tumblr,
                                     id: post.id,
                                     categories: post.tags,
                                     published: post.timestamp,
-                                    title: post.title,
+                                    title: getTitle(post),
                                     url: "/tumblr/" + post.id + "/" + post.slug
                                 }
                             };
@@ -317,7 +353,7 @@ module.exports.post = function(id, callback) {
                 console.log("Bad response from Tumblr.");
                 console.log(err);
                 callback({
-                    error: "Bad resposne from Tumblr.",
+                    error: "Bad response from Tumblr.",
                     status: 502
                 });
                 return;

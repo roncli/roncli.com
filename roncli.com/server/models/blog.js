@@ -110,8 +110,7 @@ var cache = require("../cache/cache.js"),
 module.exports.getLatestPost = function(callback) {
     "use strict";
 
-    //this.getPostByIndex(0, callback);
-    this.getPostByUrl("/tumblr/67132454458/what-am-i-doing-here", callback);
+    this.getPostByIndex(0, callback);
 };
 
 /**
@@ -312,9 +311,16 @@ module.exports.getPost = function(post, callback) {
 
     all(postDeferred.promise, rankDeferred.promise).then(
         function(content) {
-            var promises = [];
+            var promises = [],
+                sourceDeferred = new Deferred();
 
             content[0].blogUrl = post.url;
+
+            getIndex("roncli.com:" + post.blogSource + ":posts", sourceDeferred, function() {
+                sourceDeferred.resolve(null);
+            });
+
+            promises.push(sourceDeferred.promise);
 
             post.categories.forEach(function(category) {
                 var deferred = new Deferred();
@@ -335,7 +341,11 @@ module.exports.getPost = function(post, callback) {
                     };
 
                     post.categories.forEach(function(category, index) {
-                        postData.categories[category] = categoryRanks[index];
+                        if (index === 0) {
+                            postData.source = categoryRanks[index];
+                        } else {
+                            postData.categories[category] = categoryRanks[index];
+                        }
                     });
 
                     callback(null, postData);

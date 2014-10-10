@@ -19,6 +19,12 @@ module.exports = function(match) {
     // The account page.
     match(/^\/?account$/, "account#index");
 
+    // The blog page.
+    match(/^\/?blog$/, "blog#index");
+
+    // Specific blog pages.
+    match(/^\/?((?:blogger|tumblr)\/[0-9]+\/.*)$/, "blog#url");
+
     // The default route if none of the above match.
     match(/(?:.*)/, "default#index");
 };
