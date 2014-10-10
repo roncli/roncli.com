@@ -1,10 +1,16 @@
-{{#ifCond post.source "===" "blogger"}}
+{{#ifCond post.blogSource "===" "blogger"}}
     {{partial "blog/posts/blogger"}}
 {{/ifCond}}
-{{#ifCond post.source "===" "tumblr"}}
+{{#ifCond post.blogSource "===" "tumblr"}}
+    {{#ifCond post.type "===" "answer"}}
+        {{partial "blog/posts/tumblrAnswer"}}
+    {{/ifCond}}
     {{#ifCond post.type "===" "audio"}}
         {{#ifCond post.audio_type "===" "soundcloud"}}
             {{partial "blog/posts/tumblrSoundCloud"}}
+        {{/ifCond}}
+        {{#ifCond post.audio_type "===" "tumblr"}}
+            {{partial "blog/posts/tumblrAudio"}}
         {{/ifCond}}
     {{/ifCond}}
     {{#ifCond post.type "===" "link"}}
@@ -12,6 +18,9 @@
     {{/ifCond}}
     {{#ifCond post.type "===" "photo"}}
         {{partial "blog/posts/tumblrPhoto"}}
+    {{/ifCond}}
+    {{#ifCond post.type "===" "quote"}}
+        {{partial "blog/posts/tumblrQuote"}}
     {{/ifCond}}
     {{#ifCond post.type "===" "text"}}
         {{partial "blog/posts/tumblrText"}}

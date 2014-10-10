@@ -39,7 +39,7 @@ var config = require("../privateConfig").google,
                 return {
                     score: timestamp,
                     value: {
-                        source: "blogger",
+                        blogSource: "blogger",
                         id: post.id,
                         categories: post.labels,
                         published: timestamp,

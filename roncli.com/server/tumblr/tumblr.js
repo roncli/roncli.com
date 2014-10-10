@@ -46,7 +46,7 @@ var config = require("../privateConfig").tumblr,
                             return {
                                 score: post.timestamp,
                                 value: {
-                                    source: "tumblr",
+                                    blogSource: "tumblr",
                                     id: post.id,
                                     categories: post.tags,
                                     published: post.timestamp,

@@ -111,7 +111,7 @@ module.exports.getLatestPost = function(callback) {
     "use strict";
 
     //this.getPostByIndex(0, callback);
-    this.getPostByUrl("/tumblr/76612257601/tashabatata-im-not-happy-with-most-of-my", callback);
+    this.getPostByUrl("/tumblr/67132454458/what-am-i-doing-here", callback);
 };
 
 /**
@@ -271,13 +271,13 @@ module.exports.getPost = function(post, callback) {
             });
         };
 
-    switch (post.source) {
+    switch (post.blogSource) {
         case "blogger":
             blogger.post(post.id, function(err, post) {
                 if (err) {
                     postDeferred.reject(err);
                 } else {
-                    post.source = "blogger";
+                    post.blogSource = "blogger";
                     postDeferred.resolve(post);
                 }
             });
@@ -287,7 +287,7 @@ module.exports.getPost = function(post, callback) {
                 if (err) {
                     postDeferred.reject(err);
                 } else {
-                    post.source = "tumblr";
+                    post.blogSource = "tumblr";
                     postDeferred.resolve(post);
                 }
             });
