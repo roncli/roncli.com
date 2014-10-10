@@ -13,6 +13,9 @@
     {{#ifCond post.type "===" "photo"}}
         {{partial "blog/posts/tumblrPhoto"}}
     {{/ifCond}}
+    {{#ifCond post.type "===" "text"}}
+        {{partial "blog/posts/tumblrText"}}
+    {{/ifCond}}
     {{#ifCond post.type "===" "video"}}
         {{#ifCond post.video_type "===" "youtube"}}
             {{partial "blog/posts/tumblrYouTube"}}

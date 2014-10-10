@@ -111,7 +111,7 @@ module.exports.getLatestPost = function(callback) {
     "use strict";
 
     //this.getPostByIndex(0, callback);
-    this.getPostByUrl("/tumblr/76612517466/six-gaming-ep-xi", callback);
+    this.getPostByUrl("/tumblr/76612257601/tashabatata-im-not-happy-with-most-of-my", callback);
 };
 
 /**
