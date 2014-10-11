@@ -3,6 +3,7 @@
         Posted {{timestampToDate post.timestamp}}
     </div>
 </a>
+{{partial "blog/posts/blogNav"}}
 <div class="body youtube">
     {{#each post.player}}
         {{#if @last}}

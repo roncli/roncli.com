@@ -252,8 +252,8 @@ module.exports.getPost = function(post, callback) {
                         function(posts) {
                             deferred.resolve({
                                 index: index,
-                                next: posts[0],
-                                previous: posts[1]
+                                next: posts[0] ? posts[0][0] : null,
+                                previous: posts[1] ? posts[1][0]: null
                             });
                         },
 
@@ -316,12 +316,6 @@ module.exports.getPost = function(post, callback) {
 
             content[0].blogUrl = post.url;
 
-            getIndex("roncli.com:" + post.blogSource + ":posts", sourceDeferred, function() {
-                sourceDeferred.resolve(null);
-            });
-
-            promises.push(sourceDeferred.promise);
-
             post.categories.forEach(function(category) {
                 var deferred = new Deferred();
 
@@ -332,20 +326,24 @@ module.exports.getPost = function(post, callback) {
                 promises.push(deferred.promise);
             });
 
+            getIndex("roncli.com:" + post.blogSource + ":posts", sourceDeferred, function() {
+                sourceDeferred.resolve(null);
+            });
+            promises.push(sourceDeferred.promise);
+
             all(promises).then(
                 function(categoryRanks) {
                     var postData = {
                         post: content[0],
                         index: content[1],
-                        categories: {}
+                        categories: []
                     };
 
+                    postData.source = categoryRanks[categoryRanks.length - 1];
+
                     post.categories.forEach(function(category, index) {
-                        if (index === 0) {
-                            postData.source = categoryRanks[index];
-                        } else {
-                            postData.categories[category] = categoryRanks[index];
-                        }
+                        categoryRanks[index].category = category;
+                        postData.categories.push(categoryRanks[index]);
                     });
 
                     callback(null, postData);

@@ -3,6 +3,7 @@
         Posted {{timestampToDate post.timestamp}}
     </div>
 </a>
+{{partial "blog/posts/blogNav"}}
 <div class="body">
     {{#each post.photos}}
         <img class="constrain-width" src="{{{original_size.url}}}" />

@@ -228,3 +228,55 @@ div.blog div.body.youtube iframe {
 div.blog div.body h3.link {
     margin-bottom: 20px;
 }
+
+div.blog div.blog-nav {
+    width: 100%;
+    margin: 0;
+}
+
+div.blog div.blog-nav.blog-nav-bottom {
+    border: solid #2c2c45;
+    border-width: 1px 0 0 0;
+}
+
+div.blog div.blog-nav > a.btn {
+    height: 48px;
+    border-radius: 0;
+    position: relative;
+    white-space: nowrap;
+}
+
+div.blog div.blog-nav > a.btn > div {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 22px;
+}
+
+div.blog div.blog-nav > div {
+    height: 48px;
+    position: relative;
+    white-space: nowrap;
+}
+
+div.blog div.blog-nav > div > div {
+    position: absolute;
+    margin: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 42px;
+    text-align: center;
+}
+
+div.blog div.blog-nav:last-child > :first-child {
+    border-bottom-left-radius: 4px;
+}
+
+div.blog div.blog-nav:last-child > :last-child {
+    border-bottom-right-radius: 4px;
+}
