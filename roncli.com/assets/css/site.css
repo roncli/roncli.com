@@ -234,6 +234,11 @@ div.blog div.blog-nav {
     margin: 0;
 }
 
+div.blog div.blog-nav.blog-nav-top {
+    border: solid #2c2c45;
+    border-width: 0 0 1px 0;
+}
+
 div.blog div.blog-nav.blog-nav-bottom {
     border: solid #2c2c45;
     border-width: 1px 0 0 0;
@@ -281,15 +286,15 @@ div.blog div.blog-nav > div > div {
     text-align: center;
 }
 
-div.blog div.blog-nav:last-child {
+div.blog div.blog-nav-bottom:last-child {
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
 }
 
-div.blog div.blog-nav:last-child > :first-child {
+div.blog div.blog-nav-bottom:last-child > :first-child {
     border-bottom-left-radius: 4px;
 }
 
-div.blog div.blog-nav:last-child > :last-child {
+div.blog div.blog-nav-bottom:last-child > :last-child {
     border-bottom-right-radius: 4px;
 }

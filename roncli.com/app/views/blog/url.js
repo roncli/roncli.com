@@ -6,7 +6,8 @@ module.exports = BaseView.extend({
     className: "blog_url_view",
 
     events: {
-        "click img.thumb": "thumbClick"
+        "click img.thumb": "thumbClick",
+        "click a.blog-nav": "blogNav"
     },
 
     postRender: function() {
@@ -23,12 +24,26 @@ module.exports = BaseView.extend({
                 });
             });
         });
+
+        if (!this.app.lastBlogNav) {
+            this.app.lastBlogNav = "all";
+        }
+
+        $("#blog-top-nav").html($("div.blog-nav-bottom[data-blog-nav=\"" + this.app.lastBlogNav + "\"]").html()).data("blog-nav", this.app.lastBlogNav);
+
+        this.app.lastBlogNav = undefined;
     },
 
     thumbClick: function(ev) {
         "use strict";
 
         window.open($(ev.target).attr("src"), "fullImage", "menubar=0,status=0,titlebar=0,toolbar=0");
+    },
+
+    blogNav: function(ev) {
+        "use strict";
+
+        this.app.lastBlogNav = $(ev.target).closest("div.blog-nav").data("blog-nav");
     }
 });
 

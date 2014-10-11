@@ -33,9 +33,9 @@
 {{/ifCond}}
 {{#ifCond nav "===" "true"}}
     <div>
-        <div class="blog-nav blog-nav-bottom btn-group row bg-info">
+        <div data-blog-nav="all" class="blog-nav blog-nav-bottom btn-group row bg-info">
             {{#if index.previous}}
-                <a class="btn btn-info col-xs-2 col-sm-4" href="{{{index.previous.url}}}">
+                <a class="blog-nav btn btn-success col-xs-2 col-sm-4" href="{{{index.previous.url}}}">
                     <div>
                         <span class="glyphicon glyphicon-chevron-left"></span>
                         <span class="hidden-xs">&nbsp;Older<br />{{index.previous.title}}</span>
@@ -48,7 +48,7 @@
                 <div>roncli.com Blog<br /><b>All Posts</b></div>
             </div>
             {{#if index.next}}
-                <a class="btn btn-info col-xs-2 col-sm-4" href="{{{index.next.url}}}">
+                <a class="blog-nav btn btn-success col-xs-2 col-sm-4" href="{{{index.next.url}}}">
                     <div>
                         <span class="hidden-xs">Newer&nbsp;</span>
                         <span class="glyphicon glyphicon-chevron-right"></span>
@@ -59,9 +59,9 @@
                 <div class="col-xs-2 col-sm-4 bg-info"></div>
             {{/if}}
         </div>
-        <div class="blog-nav blog-nav-bottom btn-group row bg-info">
+        <div data-blog-nav="blogsource" class="blog-nav blog-nav-bottom btn-group row bg-info">
             {{#if source.previous}}
-                <a class="btn btn-info col-xs-2 col-sm-4" href="{{{source.previous.url}}}">
+                <a class="blog-nav btn btn-success col-xs-2 col-sm-4" href="{{{source.previous.url}}}">
                     <div>
                         <span class="glyphicon glyphicon-chevron-left"></span>
                         <span class="hidden-xs">&nbsp;Older<br/>{{source.previous.title}}</span>
@@ -74,7 +74,7 @@
                 <div>Source<br/><b>{{#ifCond post.blogSource "===" "blogger"}}Blogger{{/ifCond}}{{#ifCond post.blogSource "===" "tumblr"}}Tumblr{{/ifCond}}</b></div>
             </div>
             {{#if source.next}}
-                <a class="btn btn-info col-xs-2 col-sm-4" href="{{{source.next.url}}}">
+                <a class="blog-nav btn btn-success col-xs-2 col-sm-4" href="{{{source.next.url}}}">
                     <div>
                         <span class="hidden-xs">Newer&nbsp;</span>
                         <span class="glyphicon glyphicon-chevron-right"></span>
@@ -86,9 +86,9 @@
             {{/if}}
         </div>
         {{#each categories}}
-            <div class="blog-nav blog-nav-bottom btn-group row bg-info">
+            <div data-blog-nav="{{category}}" class="blog-nav blog-nav-bottom btn-group row bg-info">
                 {{#if previous}}
-                    <a class="btn btn-info col-xs-2 col-sm-4" href="{{{previous.url}}}">
+                    <a class="blog-nav btn btn-success col-xs-2 col-sm-4" href="{{{previous.url}}}">
                         <div>
                             <span class="glyphicon glyphicon-chevron-left"></span>
                             <span class="hidden-xs">&nbsp;Older<br/>{{previous.title}}</span>
@@ -101,7 +101,7 @@
                     <div>Category<br/><b>{{category}}</b></div>
                 </div>
                 {{#if next}}
-                    <a class="btn btn-info col-xs-2 col-sm-4" href="{{{next.url}}}">
+                    <a class="blog-nav btn btn-success col-xs-2 col-sm-4" href="{{{next.url}}}">
                         <div>
                             <span class="hidden-xs">Newer&nbsp;</span>
                             <span class="glyphicon glyphicon-chevron-right"></span>
