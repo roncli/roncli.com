@@ -244,6 +244,7 @@ div.blog div.blog-nav > a.btn {
     border-radius: 0;
     position: relative;
     white-space: nowrap;
+    overflow: hidden;
 }
 
 div.blog div.blog-nav > a.btn > div {
@@ -256,10 +257,17 @@ div.blog div.blog-nav > a.btn > div {
     height: 22px;
 }
 
+@media (min-width: 768px) {
+    div.blog div.blog-nav > a.btn > div {
+        height: 42px;
+    }
+}
+
 div.blog div.blog-nav > div {
     height: 48px;
     position: relative;
     white-space: nowrap;
+    overflow: hidden;
 }
 
 div.blog div.blog-nav > div > div {
@@ -271,6 +279,11 @@ div.blog div.blog-nav > div > div {
     right: 0;
     height: 42px;
     text-align: center;
+}
+
+div.blog div.blog-nav:last-child {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
 }
 
 div.blog div.blog-nav:last-child > :first-child {
