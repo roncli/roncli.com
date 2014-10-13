@@ -298,3 +298,22 @@ div.blog div.blog-nav-bottom:last-child > :first-child {
 div.blog div.blog-nav-bottom:last-child > :last-child {
     border-bottom-right-radius: 4px;
 }
+
+div.right-side div.panel-body {
+    font-size: 12px;
+    padding: 2px;
+}
+
+div.right-side div.panel-body img.icon {
+    width: 64px;
+    height: 64px;
+    float: left;
+    padding: 0 3px 3px 0;
+}
+
+@media (max-width: 991px) {
+    div.right-side div.panel-body img.icon {
+        width: 32px;
+        height: 32px;
+    }
+}
