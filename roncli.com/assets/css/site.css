@@ -334,3 +334,20 @@ div.right-side div.panel-body.sharing img {
         height: 32px;
     }
 }
+
+div.right-side div.blog-categories {
+    line-height: 1;
+    height: 200px;
+}
+
+div.right-side div.blog-categories div.wrapper {
+    position: absolute;
+    overflow: hidden;
+    height: 200px;
+    width: 100%;
+}
+
+div.right-side div.blog-categories div.wrapper .btn-group-vertical > .btn:first-child {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}

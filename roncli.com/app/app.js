@@ -53,7 +53,7 @@ module.exports = BaseApp.extend({
                         if (scroller) {
                             scroller.destroy();
                         }
-                        scroller = new IScroll(".wrapper", {mouseWheel: true, scrollbars: true, snap: "div.tweet"});
+                        scroller = new IScroll("#tweets-wrapper", {mouseWheel: true, scrollbars: true, snap: "div.tweet"});
                     }, 0);
                 });
             };

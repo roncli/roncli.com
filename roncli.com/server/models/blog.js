@@ -123,6 +123,10 @@ module.exports.getLatestPostByCategory = function(category, callback) {
 
     var Blog = this,
 
+        /**
+         * Retrieves the post from the cache.
+         * @param {function} failureCallback The callback function to perform if the post is not in the cache.
+         */
         getPost = function(failureCallback) {
             cache.zrevrange("roncli.com:blog:category:" + category, 0, 0, function(post) {
                 if (post && post.length > 0) {

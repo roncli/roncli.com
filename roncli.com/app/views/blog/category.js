@@ -3,7 +3,7 @@ var BaseView = require("rendr/shared/base/view"),
 
 // Sets up the blog view.
 module.exports = BaseView.extend({
-    className: "blog_url_view",
+    className: "blog_category_view",
 
     events: {
         "click img.thumb": "thumbClick",
@@ -12,6 +12,9 @@ module.exports = BaseView.extend({
 
     postRender: function() {
         "use strict";
+
+        var IScroll = require("iscroll"),
+            blogTopNav = $("#blog-top-nav");
 
         $("div.blog img").each(function() {
             var image = $(this);
@@ -24,10 +27,17 @@ module.exports = BaseView.extend({
                 });
             });
         });
-console.log(this.app);
-        $("#blog-top-nav").html($("div.blog-nav-bottom[data-blog-nav=\"all\"]").html()).data("blog-nav", "all");
+
+        blogTopNav.html($("div.blog-nav-bottom[data-blog-nav=\"" + blogTopNav.data("load-category") + "\"]").html()).data("blog-nav", blogTopNav.data("load-category"));
 
         this.app.lastBlogNav = undefined;
+
+        // TODO: Better handle app.blogScroller
+        if (this.app.blogScroller) {
+            this.app.blogScroller.destroy();
+            this.app.blogScroller = null;
+        }
+        this.app.blogScroller = new IScroll("#blog-categories-wrapper", {mouseWheel: true, scrollbars: true});
     },
 
     thumbClick: function(ev) {
@@ -43,4 +53,4 @@ console.log(this.app);
     }
 });
 
-module.exports.id = "blog/url";
+module.exports.id = "blog/category";

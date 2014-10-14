@@ -1,6 +1,6 @@
 <div class="col-xs-8 blog">
     <div class="btn-group-vertical">
-        {{partial "blog/post" post=blog.attributes.post index=blog.attributes.index source=blog.attributes.source categories=blog.attributes.categories header="info" nav="true"}}
+        {{partial "blog/post" post=blog.attributes.post index=blog.attributes.index source=blog.attributes.source categories=blog.attributes.categories category=blog.id header="info" nav="true"}}
     </div>
 </div>
 <div class="col-sm-2 hidden-xs right-side">
@@ -14,10 +14,18 @@
         </div>
     </div>
     {{partial "site/share"}}
-    <div class="btn-group-vertical btn-group-xs" style="width: 100%;">
+    <div class="btn-group-vertical btn-group-xs">
         <div class="btn inactive btn-info">Categories</div>
-        {{#each categories.models}}
-            <a class="btn btn-default" href="/blog/category/{{{urlEncode this.attributes.category}}}">{{this.attributes.category}}</a>
-        {{/each}}
+        <div class="blog-categories">
+            <div class="wrapper" id="blog-categories-wrapper">
+                <div class="scroller">
+                    <div class="categories btn-group-vertical btn-group-xs">
+                        {{#each categories.models}}
+                            <a class="btn btn-default" href="/blog/category/{{{urlEncode this.attributes.category}}}">{{this.attributes.category}}</a>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

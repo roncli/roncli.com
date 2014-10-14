@@ -13,6 +13,8 @@ module.exports = BaseView.extend({
     postRender: function() {
         "use strict";
 
+        var IScroll = require("iscroll");
+
         $("div.blog img").each(function() {
             var image = $(this);
             image.load(function() {
@@ -28,6 +30,13 @@ module.exports = BaseView.extend({
         $("#blog-top-nav").html($("div.blog-nav-bottom[data-blog-nav=\"all\"]").html()).data("blog-nav", "all");
 
         this.app.lastBlogNav = undefined;
+
+        // TODO: Better handle app.blogScroller
+        if (this.app.blogScroller) {
+            this.app.blogScroller.destroy();
+            this.app.blogScroller = null;
+        }
+        this.app.blogScroller = new IScroll("#blog-categories-wrapper", {mouseWheel: true, scrollbars: true});
     },
 
     thumbClick: function(ev) {
