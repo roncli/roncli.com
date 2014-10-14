@@ -10,6 +10,26 @@ module.exports = function(Handlebars) {
 
     return {
         /**
+         * Returns meta tags.
+         * @param {string} key The key of the meta tag.
+         * @param {string|array} values If an array, returns one meta tag whose value is each element of the array.  Otherwise, the value of the sole meta tag.
+         * @returns {string} The meta tags.
+         */
+        metaTags: function(key, values) {
+            var tags;
+
+            if (typeof values === "object") {
+                tags = [];
+                values.forEach(function(value) {
+                    tags.push("<meta name=\"" + key + "\" content=\"" + value + "\"/>");
+                });
+                return tags.join("");
+            }
+
+            return "<meta name=\"" + key + "\" content=\"" + values + "\"/>";
+        },
+
+        /**
          * Returns the JSON object stringified.
          * @param {object} object The JSON object.
          * @param {string|number} spacing The spacing to use to stringify the JSON.

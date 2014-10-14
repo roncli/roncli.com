@@ -4,7 +4,7 @@
     <title>roncli.com</title>
     <meta charset="utf-8"/>
     {{#each locals.meta}}
-        <meta name="{{@key}}" content="{{this}}"/>
+        {{{metaTags @key this}}}
     {{/each}}
     <link rel="stylesheet" href="/css/mergedAssets.min.css"/>
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/css/datepicker.min.css" />
