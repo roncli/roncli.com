@@ -209,9 +209,15 @@ div.right-side div.panel-body img.icon {
     padding: 0 3px 3px 0;
 }
 
-div.right-side div.panel-body.sharing {
+div.right-side div.panel-body div.title {
     text-align: center;
     font-size: 14px;
+    font-weight: bold;
+    padding-bottom: 3px;
+}
+
+div.right-side div.panel-body.sharing {
+    text-align: center;
 }
 
 div.right-side div.panel-body.sharing img {
