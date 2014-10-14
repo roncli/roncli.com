@@ -18,6 +18,20 @@ module.exports.get = function(req, callback) {
                     return;
             }
             break;
+        case 2:
+            switch (req.parsedPath[0]) {
+                case "getLatestByCategory":
+                    blog.getLatestPostByCategory(decodeURIComponent(req.parsedPath[1]), function(err, post) {
+                        if (err) {
+                            req.res.status(err.status);
+                            callback(err);
+                            return;
+                        }
+                        callback(post);
+                    });
+                    return;
+            }
+            break;
         case 4:
             switch (req.parsedPath[0]) {
                 case "getFromUrl":

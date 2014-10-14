@@ -11,7 +11,8 @@ module.exports = {
 
         var app = this.app,
             data = {
-                blog: {model: "Blog_GetLatest", params: {}}
+                blog: {model: "Blog_GetLatest", params: {}},
+                categories: {collection: "BlogCategories", params: {}}
             };
 
         app.fetch(data, function(err, result) {
@@ -36,6 +37,41 @@ module.exports = {
     },
 
     /**
+     * The page view for a blog category.
+     * @param {object} params The parameters to use in the controller.
+     * @param {function((null | object), object=)} callback The callback to run upon completion of the controller running.
+     */
+    category: function(params, callback) {
+        "use strict";
+
+        var app = this.app,
+            data = {
+                blog: {model: "Blog_GetLatestByCategory", params: {category: params[0]}},
+                categories: {collection: "BlogCategories", params: {}}
+            };
+
+        app.fetch(data, function(err, result) {
+            if (app.req) {
+                result.meta = {
+                    "og:description": "This is the " + decodeURIComponent(params[0]) + " category of the roncli.com Blog.",
+                    "og:image": "http://" + app.req.headers.host + "/images/favicon.png",
+                    "og:site_name": "roncli.com",
+                    "og:title": "The roncli.com Blog - " + decodeURIComponent(params[0]),
+                    "og:type": "website",
+                    "og:url": "http://" + app.req.headers.host + "/blog/category/" + params[0],
+                    "twitter:card": "summary",
+                    "twitter:description": "This is the " + decodeURIComponent(params[0]) + " category of the roncli.com Blog.",
+                    "twitter:image": "http://" + app.req.headers.host + "/images/favicon.png",
+                    "twitter:site": "@roncli",
+                    "twitter:title": "The roncli.com Blog - " + decodeURIComponent(params[0]),
+                    "twitter:url": "http://" + app.req.headers.host + "/blog/category/" + params[0]
+                };
+            }
+            callback(err, result);
+        });
+    },
+
+    /**
      * The page view for specific blog posts.
      * @param {object} params The parameters to use in the controller.
      * @param {function((null | object), object=)} callback The callback to run upon completion of the controller running.
@@ -45,7 +81,8 @@ module.exports = {
 
         var app = this.app,
             data = {
-                blog: {model: "Blog_GetFromUrl", params: {url: params[0]}}
+                blog: {model: "Blog_GetFromUrl", params: {url: params[0]}},
+                categories: {collection: "BlogCategories", params: {}}
             };
 
         app.fetch(data, function(err, result) {

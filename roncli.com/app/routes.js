@@ -22,8 +22,11 @@ module.exports = function(match) {
     // The blog page.
     match(/^\/?blog$/, "blog#index");
 
+    // Blog categories.
+    match(/^\/?blog\/category\/([^\/]+)$/, "blog#category");
+
     // Specific blog pages.
-    match(/^\/?((?:blogger|tumblr)\/[0-9]+\/.*)$/, "blog#url");
+    match(/^\/?((?:blogger|tumblr)\/[0-9]+\/[^\/]+)$/, "blog#url");
 
     // The default route if none of the above match.
     match(/(?:.*)/, "default#index");

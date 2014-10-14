@@ -114,6 +114,44 @@ module.exports.getLatestPost = function(callback) {
 };
 
 /**
+ * Gets the latest post for a category.
+ * @param {string} category The category to get the latest post for.
+ * @param {function} callback The callback function.
+ */
+module.exports.getLatestPostByCategory = function(category, callback) {
+    "use strict";
+
+    var Blog = this,
+
+        getPost = function(failureCallback) {
+            cache.zrevrange("roncli.com:blog:category:" + category, 0, 0, function(post) {
+                if (post && post.length > 0) {
+                    Blog.getPost(post[0], callback);
+                    return;
+                }
+
+                failureCallback();
+            });
+        };
+
+    getPost(function() {
+        cachePosts(function(err) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            getPost(function() {
+                callback({
+                    error: "Blog posts do not exist for this category.",
+                    status: 400
+                });
+            });
+        });
+    });
+};
+
+/**
  * Gets the blog post by index.
  * @param {number} index The index of the post.
  * @param {function} callback The callback function.
@@ -381,7 +419,9 @@ module.exports.getCategories = function(callback) {
     var getCategories = function(failureCallback) {
         cache.zrange("roncli.com:blog:categories", 0, -1, function(categories) {
             if (categories) {
-                callback(null, categories);
+                callback(null, categories.map(function(category, index) {
+                    return {id: index, category: category};
+                }));
                 return;
             }
 

@@ -6,8 +6,18 @@
 <div class="col-sm-2 hidden-xs right-side">
     <div class="panel">
         <div class="panel-body">
-            TBD
+            <div class="title">roncli.com Blog</div>
+            This is my blog where I give my thoughts and opinions on various topics and share my creative endeavors with the world.  I run two personal blogs, but combine them here for ease of access.<br /><br />
+            <b>Blogger</b> - My oldest blog using the Blogger platform contains posts full of opinions, gaming, and code.<br /><br />
+            <b>Tumblr</b> - Tumblr posts are all about my creative side, containing music, videos, writings, and updates on my web creations.<br /><br />
+            You can select a category below to view the latest post, or browse thorugh the posts using the navigation found at the top and bottom of each post.
         </div>
     </div>
     {{partial "site/share"}}
+    <div class="btn-group-vertical btn-group-xs" style="width: 100%;">
+        <div class="btn inactive btn-info">Categories</div>
+        {{#each categories.models}}
+            <a class="btn btn-default" href="/blog/category/{{{urlEncode this.attributes.category}}}">{{this.attributes.category}}</a>
+        {{/each}}
+    </div>
 </div>

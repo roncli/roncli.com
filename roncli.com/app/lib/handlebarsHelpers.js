@@ -69,6 +69,15 @@ module.exports = function(Handlebars) {
         },
 
         /**
+         * URL-encodes a string.
+         * @param {string} string The string to encode.
+         * @returns {string} The encoded string.
+         */
+        urlEncode: function(string) {
+            return encodeURIComponent(string);
+        },
+
+        /**
          * Turns a Unix timestamp into a formatted date.
          * @param {number} timestamp The Unix timestamp to use.
          * @returns {string} The formatted date.
