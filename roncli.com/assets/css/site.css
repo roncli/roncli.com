@@ -311,6 +311,17 @@ div.right-side div.panel-body img.icon {
     padding: 0 3px 3px 0;
 }
 
+div.right-side div.panel-body.sharing {
+    text-align: center;
+    font-size: 14px;
+}
+
+div.right-side div.panel-body.sharing img {
+    margin-top: 5px;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
 @media (max-width: 991px) {
     div.right-side div.panel-body img.icon {
         width: 32px;

@@ -21,17 +21,25 @@ Router.prototype.constructor = BaseClientRouter;
 Router.prototype.postInitialize = function() {
     "use strict";
 
-    this.on("action:start", this.actionStart, this);
+    this.on("action:end", this.actionEnd, this);
 };
 
 /**
- * Performs actions on start of a page.
+ * Performs actions on end of a page.
  */
-Router.prototype.actionStart = function() {
+Router.prototype.actionEnd = function() {
     "use strict";
+
+    var sharing = $("div.panel-body.sharing");
 
     // Update abbreviations.
     $("abbr.setTime").timeago().removeClass("setTime");
+
+    // Update sharing URLs.
+    sharing.find("a.facebook-share").attr("href", "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href));
+    sharing.find("a.twitter-share").attr("href", "https://twitter.com/home?status=" + encodeURIComponent(window.location.href));
+    sharing.find("a.gplus-share").attr("href", "https://plus.google.com/share?url=" + encodeURIComponent(window.location.href));
+    sharing.find("a.tumblr-share").attr("href", "http://www.tumblr.com/share/link?url=" + encodeURIComponent(window.location.href));
 
     // Tracks a page view with Google Analytics.
     if (window._gaq) {
