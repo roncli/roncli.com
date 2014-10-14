@@ -339,6 +339,10 @@ module.exports.getPost = function(post, callback) {
                         categories: []
                     };
 
+                    postData.post.categories = post.categories;
+                    postData.post.published = post.published;
+                    postData.post.blogTitle = post.title;
+
                     postData.source = categoryRanks[categoryRanks.length - 1];
 
                     post.categories.forEach(function(category, index) {
