@@ -196,3 +196,33 @@ div.body {
     padding: 2px;
     font-size: 13px;
 }
+
+div.right-side div.panel-body {
+    font-size: 12px;
+    padding: 2px;
+}
+
+div.right-side div.panel-body img.icon {
+    width: 64px;
+    height: 64px;
+    float: left;
+    padding: 0 3px 3px 0;
+}
+
+div.right-side div.panel-body.sharing {
+    text-align: center;
+    font-size: 14px;
+}
+
+div.right-side div.panel-body.sharing img {
+    margin-top: 5px;
+    margin-left: 3px;
+    margin-right: 3px;
+}
+
+@media (max-width: 991px) {
+    div.right-side div.panel-body img.icon {
+        width: 32px;
+        height: 32px;
+    }
+}
