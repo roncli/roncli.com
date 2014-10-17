@@ -50,13 +50,31 @@ module.exports = BaseApp.extend({
                     $("div.tweets").html(app.templateAdapter.getTemplate("site/tweet")(results.tweets));
                     $("abbr.setTime").removeClass("setTime").timeago();
                     setTimeout(function() {
-                        if (scroller) {
-                            scroller.destroy();
+                        var setScroller = function() {
+                            if (scroller) {
+                                scroller.destroy();
+                            }
+                            scroller = new IScroll("#tweets-wrapper", {mouseWheel: true, scrollbars: true, snap: "div.tweet"});
+                        };
+                        if ($("html").is(".wf-active,.wf-inactive")) {
+                            setScroller();
+                        } else {
+                            app.fontsCompleteFxs.push(setScroller);
                         }
-                        scroller = new IScroll("#tweets-wrapper", {mouseWheel: true, scrollbars: true, snap: "div.tweet"});
                     }, 0);
                 });
             };
+
+        app.fontsCompleteFxs = [];
+
+        /**
+         * Function to perform when fonts complete loading one way or another.
+         */
+        app.fontsComplete = function() {
+            app.fontsCompleteFxs.forEach(function(fx) {
+                fx();
+            });
+        };
 
         /**
          * Sets the user to logged in.
