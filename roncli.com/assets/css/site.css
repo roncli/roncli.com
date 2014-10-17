@@ -73,6 +73,10 @@ div.twitter-logo {
     }
 }
 
+div.wrapper .btn-group-vertical {
+    margin-bottom: 0;
+}
+
 div.twitter {
     background-color: #ffffff;
     font-size: 12px;

@@ -21,7 +21,21 @@ Router.prototype.constructor = BaseClientRouter;
 Router.prototype.postInitialize = function() {
     "use strict";
 
+    this.on("action:start", this.actionStart, this);
     this.on("action:end", this.actionEnd, this);
+};
+
+Router.prototype.actionStart = function() {
+    "use strict";
+
+    var scroller;
+
+    // Destroy page scrollers.
+    while (this.app.pageScrollers.length > 0) {
+        scroller = this.app.pageScrollers.pop();
+        scroller.destroy();
+        scroller = null;
+    }
 };
 
 /**

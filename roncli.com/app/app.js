@@ -76,6 +76,27 @@ module.exports = BaseApp.extend({
             });
         };
 
+        app.pageScrollers = [];
+
+        /**
+         * Adds a scroller.
+         * @param {string} selector The selector representing the object to scroll.
+         * @param {object} options The IScroll options to use.
+         */
+        app.addPageScroller = function(selector, options) {
+            var setScroller = function() {
+                app.pageScrollers.push(
+                    new IScroll(selector, options)
+                );
+            };
+
+            if ($("html").is(".wf-active,.wf-inactive")) {
+                setScroller();
+            } else {
+                app.fontsCompleteFxs.push(setScroller);
+            }
+        };
+
         /**
          * Sets the user to logged in.
          */
