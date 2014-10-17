@@ -35,12 +35,7 @@ module.exports = BaseView.extend({
 
         this.app.lastBlogNav = undefined;
 
-        // TODO: Better handle app.blogScroller
-        if (this.app.blogScroller) {
-            this.app.blogScroller.destroy();
-            this.app.blogScroller = null;
-        }
-        this.app.blogScroller = new IScroll("#blog-categories-wrapper", {mouseWheel: true, scrollbars: true});
+        this.app.addPageScroller("#blog-categories-wrapper", {mouseWheel: true, scrollbars: true});
     },
 
     thumbClick: function(ev) {
