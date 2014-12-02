@@ -314,12 +314,12 @@ module.exports.getPost = function(post, callback) {
 
     switch (post.blogSource) {
         case "blogger":
-            blogger.post(post.id, function(err, post) {
+            blogger.post(post.id, function(err, data) {
                 if (err) {
                     postDeferred.reject(err);
                 } else {
-                    post.blogSource = "blogger";
-                    postDeferred.resolve(post);
+                    data.post.blogSource = "blogger";
+                    postDeferred.resolve(data.post);
                 }
             });
             break;

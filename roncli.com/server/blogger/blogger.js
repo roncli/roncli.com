@@ -278,33 +278,102 @@ module.exports.categoryPosts = function(category, callback) {
 module.exports.post = function(id, callback) {
     "use strict";
 
-    cache.get("roncli.com:blogger:post:" + id, function(post) {
-        if (post) {
-            callback(null, post);
-            return;
-        }
+    all(
+        (function() {
+            var deferred = new Deferred();
 
-        blogger.posts.get({
-            blogId: config.blog_id,
-            postId: id,
-            fields: "id,published,title,content",
-            key: config.api_key
-        }, function(err, post) {
-            if (err || !post) {
-                console.log("Bad response from Blogger.");
-                console.log(err);
-                callback({
-                    error: "Bad response from Blogger.",
-                    status: 502
+            cache.get("roncli.com:blogger:post:" + id, function(post) {
+                if (post) {
+                    deferred.resolve(post);
+                    return;
+                }
+
+                blogger.posts.get({
+                    blogId: config.blog_id,
+                    postId: id,
+                    fields: "id,published,title,content",
+                    key: config.api_key
+                }, function(err, post) {
+                    if (err || !post) {
+                        console.log("Bad response from Blogger.");
+                        console.log(err);
+                        deferred.reject({
+                            error: "Bad response from Blogger.",
+                            status: 502
+                        });
+                        return;
+                    }
+
+                    post.published = new Date(post.published).getTime() / 1000;
+
+                    cache.set("roncli.com:blogger:post:" + id, post, 86400);
+
+                    deferred.resolve(post);
                 });
-                return;
-            }
+            });
 
-            post.published = new Date(post.published).getTime() / 1000;
+            return deferred;
+        }()),
+        (function() {
+            var deferred = new Deferred(),
+                postComments = [],
+                getComments = function(params) {
+                    blogger.comments.list(
+                        params, function(err, comments) {
+                            if (err) {
+                                console.log("Bad response from Blogger.");
+                                console.log(err);
+                                deferred.reject({
+                                    error: "Bad response from Blogger.",
+                                    status: 502
+                                });
+                                return;
+                            }
 
-            cache.set("roncli.com:blogger:post:" + id, post, 86400);
+                            if (!comments.items) {
+                                cache.set("roncli.com:blogger:post:comments:" + id, postComments, 86400);
+                                deferred.resolve(postComments);
+                                return;
+                            }
 
-            callback(null, post);
-        });
-    });
+                            comments.items.forEach(function(comment) {
+                                comment.published = new Date(comment.published).getTime() / 1000;
+                            });
+
+                            postComments = postComments.concat(comments.items);
+
+                            if (!comments.nextPageToken) {
+                                cache.set("roncli.com:blogger:post:comments:" + id, postComments, 86400);
+                                deferred.resolve(postComments);
+                                return;
+                            }
+
+                            params.pageToken = comments.nextPageToken;
+                            getComments(params);
+                        }
+                    );
+                };
+
+            cache.get("roncli.com:blogger:post:comments:" + id, function(comments) {
+                if (comments) {
+                    deferred.resolve(comments);
+                    return;
+                }
+
+                getComments({
+                    blogId: config.blog_id,
+                    postId: id,
+                    maxResults: 500,
+                    fields: "items(author/displayName,content,id,published),nextPageToken",
+                    key: config.api_key
+                });
+            });
+
+            return deferred;
+        }()).then(function(results) {
+            callback(null, {post: results[0], comments: results[1]});
+        }, function(err) {
+            callback(err);
+        })
+    );
 };
