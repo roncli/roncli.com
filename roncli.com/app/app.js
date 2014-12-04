@@ -512,6 +512,18 @@ module.exports = BaseApp.extend({
             return false;
         });
 
+        // Pass scrolling events to the view.
+        $(document).ready(function() {
+            $(window).on("scroll", function() {
+                if (typeof app.router.currentView.onScroll === "function") {
+                    app.router.currentView.onScroll();
+                }
+            });
+            if (typeof app.router.currentView.onScroll === "function") {
+                app.router.currentView.onScroll();
+            }
+        });
+
         // Setup jQuery validation extensions.
         require("./lib/validationExtensions")();
 
