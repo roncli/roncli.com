@@ -28,6 +28,7 @@ module.exports = BaseApp.extend({
         var app = this,
             twitterShown = false,
             IScroll = require("iscroll"),
+            _ = require("underscore"),
             querystring = $.getParam(),
             scroller, logInUser, doLogout, logOutUser, attemptLogin, user,
 
@@ -514,14 +515,13 @@ module.exports = BaseApp.extend({
 
         // Pass scrolling events to the view.
         $(document).ready(function() {
-            $(window).on("scroll", function() {
+            var onScroll = _.debounce(function() {
                 if (typeof app.router.currentView.onScroll === "function") {
                     app.router.currentView.onScroll();
                 }
-            });
-            if (typeof app.router.currentView.onScroll === "function") {
-                app.router.currentView.onScroll();
-            }
+            }, 250);
+            $(window).on("scroll", onScroll);
+            onScroll();
         });
 
         // Setup jQuery validation extensions.
@@ -552,6 +552,7 @@ module.exports = BaseApp.extend({
             }
         });
 
+        // Dialog boxes to show upon loading the site.
         switch (querystring.go) {
             case "validation":
                 if (querystring.u && +querystring.u !== 0 && querystring.v) {
