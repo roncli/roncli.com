@@ -260,6 +260,11 @@ input[type="radio"], input[type="checkbox"] {
     padding: 2px;
 }
 
+.btn-group-vertical .panel-heading.btn {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
 .panel-heading.panel-secondary {
     border-top-left-radius: 0;
     border-top-right-radius: 0;

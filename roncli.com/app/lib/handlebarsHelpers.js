@@ -51,6 +51,8 @@ module.exports = function(Handlebars) {
             switch (operator) {
                 case "===":
                     return (a === b) ? options.fn(this) : options.inverse(this);
+                case "!==":
+                    return (a !== b) ? options.fn(this) : options.inverse(this);
                 case "<":
                     return (a < b) ? options.fn(this) : options.inverse(this);
                 case "<=":

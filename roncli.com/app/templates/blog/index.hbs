@@ -2,6 +2,20 @@
     <div class="btn-group-vertical">
         {{partial "blog/post" post=blog.attributes.post index=blog.attributes.index source=blog.attributes.source categories=blog.attributes.categories category=blog.id header="info" nav="true"}}
     </div>
+    <div class="btn-group-vertical">
+        <div class="panel-heading text-center btn inactive btn-info">
+            <h4>Comments</h4>
+        </div>
+        {{#ifCond blog.attributes.post.blogSource "===" "tumblr"}}
+            {{#ifCond blog.attributes.post.note_count ">" 0}}
+                <a class="blog-nav btn btn-success" href="{{{blog.attributes.post.post_url}}}" target="_blank">
+                    <div>
+                        View {{blog.attributes.post.note_count}} note{{#ifCond blog.attributes.post.note_count "!==" 1}}s{{/ifCond}} on Tumblr
+                    </div>
+                </a>
+            {{/ifCond}}
+        {{/ifCond}}
+    </div>
 </div>
 <div class="col-sm-2 hidden-xs right-side">
     <div class="panel">
