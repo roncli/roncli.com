@@ -66,7 +66,13 @@ module.exports = BaseApp.extend({
                 });
             };
 
-        app.fontsCompleteFxs = [];
+        app.fontsCompleteFxs = [
+            function() {
+                // Start loading tweets.
+                loadTweets();
+                setInterval(loadTweets, 900000);
+            }
+        ];
 
         /**
          * Function to perform when fonts complete loading one way or another.
@@ -535,10 +541,6 @@ module.exports = BaseApp.extend({
         $.timeago.settings.strings.day = "a day";
         $.timeago.settings.strings.month = "a month";
         $.timeago.settings.strings.year = "a year";
-
-        // Start loading tweets.
-        loadTweets();
-        setInterval(loadTweets, 900000);
 
         // Determine if the user is logged in.
         app.fetch({user: {model: "User"}}, {readFromCache: false, writeToCache: false}, function(err, results) {
