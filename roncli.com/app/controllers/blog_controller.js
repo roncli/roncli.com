@@ -87,7 +87,7 @@ module.exports = {
 
         app.fetch(data, function(err, result) {
             if (app.req) {
-                // TODO: Descriptions should be first 200 chars of the article.
+                // TODO: Descriptions should be first 200 chars of the article, text only.
                 result.meta = {
                     "article:author": "http://www.facebook.com/roncli",
                     "article:published_time": moment(result.blog.get("post").published * 1000).format(),

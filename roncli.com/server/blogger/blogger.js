@@ -338,6 +338,7 @@ module.exports.post = function(id, callback) {
 
                             comments.items.forEach(function(comment) {
                                 comment.published = new Date(comment.published).getTime() / 1000;
+                                comment.blogSource = "blogger";
                             });
 
                             postComments = postComments.concat(comments.items);

@@ -1,5 +1,7 @@
 var cache = require("../cache/cache.js"),
+    db = require("../database/database.js"),
     blogger = require("../blogger/blogger.js"),
+    googleConfig = require("../privateConfig").google,
     tumblr = require("../tumblr/tumblr.js"),
     promise = require("promised-io/promise"),
     Deferred = promise.Deferred,
@@ -101,6 +103,25 @@ var cache = require("../cache/cache.js"),
                 callback(err);
             }
         );
+    },
+
+    /**
+     * Gets post data for a URL from the cache.
+     * @param {string} url The URL to get post data for.
+     * @param {function} callback The success callback when the post is found.
+     * @param {function} failureCallback The failure callback when there are no posts.
+     */
+    getPostFromUrl = function(url, callback, failureCallback) {
+        "use strict";
+
+        cache.hget("roncli.com:blog:urls", url, function(post) {
+            if (post) {
+                callback(post);
+                return;
+            }
+
+            failureCallback();
+        });
     };
 
 /**
@@ -209,35 +230,27 @@ module.exports.getPostByUrl = function(url, callback) {
 
         /**
          * Retrieves the post from the cache.
-         * @param {function} failureCallback The callback function to perform if the post is not in the cache.
+         * @param {object} post The post to retrieve.
          */
-        getPost = function(failureCallback) {
-            cache.hget("roncli.com:blog:urls", url, function(post) {
-                if (post) {
-                    Blog.getPost(post, function(err, post) {
-                        if (err) {
-                            callback(err);
-                            return;
-                        }
-
-                        callback(null, post);
-                    });
-
+        getPost = function(post) {
+            Blog.getPost(post, function(err, post) {
+                if (err) {
+                    callback(err);
                     return;
                 }
 
-                failureCallback();
+                callback(null, post);
             });
         };
 
-    getPost(function() {
+    getPostFromUrl(url, getPost, function() {
         cachePosts(function(err) {
             if (err) {
                 callback(err);
                 return;
             }
 
-            getPost(function() {
+            getPostFromUrl(url, getPost, function() {
                 callback({
                     error: "Page not found.",
                     status: 404
@@ -444,6 +457,109 @@ module.exports.getCategories = function(callback) {
                 callback({
                     error: "Blog categories do not exist.",
                     status: 400
+                });
+            });
+        });
+    });
+};
+
+/**
+ * Gets comments for a post via the post URL.
+ * @param {string} url The URL of the post.
+ * @param {function} callback The callback function.
+ */
+module.exports.getCommentsByUrl = function(url, callback) {
+    "use strict";
+
+    /**
+     * Gets the comments for a post.
+     * @param {object} post The post object from the URL.
+     */
+    var getComments = function(post) {
+        var dbDeferred = new Deferred(),
+            promises = [dbDeferred],
+            comments = [],
+            bloggerDeferred;
+
+        db.query(
+            "SELECT bc.CommentID, bc.Comment, bc.CrDate, u.Alias FROM tblBlogComment bc INNER JOIN tblUser u ON bc.CrUserID = u.UserID WHERE bc.BlogURL = @url AND bc.ModeratedDate IS NOT NULL",
+            {url: {type: db.VARCHAR(1024), value: url}},
+            function(err, data) {
+                if (err) {
+                    console.log("Database error in blog.getCommentsByUrl.");
+                    console.log(err);
+                    dbDeferred.reject({
+                        error: "There was a database error retrieving blog post comments.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                if (data[0]) {
+                    comments = comments.concat(data[0].map(function(comment) {
+                        return {
+                            id: comment.CommentID,
+                            published: comment.CrDate.getTime() / 1000,
+                            content: comment.Comment,
+                            author: comment.Alias,
+                            replyAddress: "https://www.blogger.com/comment.g?blogID=" + googleConfig.blog_id + "&postID=" + post.id,
+                            blogSource: "db"
+                        };
+                    }));
+                }
+
+                dbDeferred.resolve(true);
+            }
+        );
+
+        switch (post.blogSource) {
+            case "blogger":
+                bloggerDeferred = new Deferred();
+
+                blogger.post(post.id, function(err, data) {
+                    if (err) {
+                        bloggerDeferred.reject(err);
+                        return;
+                    }
+
+                    comments = comments.concat(
+                        data.comments.map(function(comment) {
+                            comment.replyAddress = "https://www.blogger.com/comment.g?blogID=" + googleConfig.blog_id + "&postID=" + post.id;
+                            return comment;
+                        })
+                    );
+                    bloggerDeferred.resolve(true);
+                });
+
+                promises.push(bloggerDeferred);
+                break;
+        }
+
+        all(promises).then(
+            function() {
+                callback(null, comments.sort(function(a, b) {
+                    return a.published - b.published;
+                }));
+            },
+
+            // If any of the functions error out, it will be handled here.
+            function(err) {
+                callback(err);
+            }
+        );
+    };
+
+    getPostFromUrl(url, getComments, function() {
+        cachePosts(function(err) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            getPostFromUrl(url, getComments, function() {
+                callback({
+                    error: "Page not found.",
+                    status: 404
                 });
             });
         });

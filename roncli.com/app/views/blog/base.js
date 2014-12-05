@@ -1,5 +1,6 @@
 var BaseView = require("rendr/shared/base/view"),
-    $ = require("jquery");
+    $ = require("jquery"),
+    BlogComment = require("../../models/blog_comment");
 
 // Sets up the blog view.
 module.exports = BaseView.extend({
@@ -70,8 +71,6 @@ module.exports = BaseView.extend({
             divBottom = divTop + commentsUnloaded.height();
 
         if (windowTop <= divBottom && windowBottom >= divTop) {
-            this.onScroll = null;
-            commentsUnloaded.removeClass("comments-unloaded").addClass("comments");
             this.loadComments();
         }
     },
@@ -79,7 +78,31 @@ module.exports = BaseView.extend({
     loadComments: function() {
         "use strict";
 
-        console.log("Loaded!");
+        var comments;
+
+        if (this.options.blog && this.options.blog.attributes && this.options.blog.attributes.blogUrl) {
+            this.onScroll = null;
+            $("div.comments-unloaded").removeClass("comments-unloaded").addClass("comments");
+
+            comments = new BlogComment();
+            comments.set({url: this.options.blog.get("blogUrl")});
+            comments.fetch({
+                success: function() {
+                    console.log("Success!");
+                    console.log(comments);
+                },
+                error: function(xhr, error) {
+                    console.log("Error!");
+                    var message;
+                    if (error && error.body && error.body.error) {
+                        message = error.body.error;
+                    } else {
+                        message = "There was a server error while requesting your email change.  Plesae try again later.";
+                    }
+                    console.log(xhr, error, message);
+                }
+            });
+        }
     }
 });
 
