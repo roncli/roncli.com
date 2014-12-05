@@ -24,6 +24,20 @@
     <Content Include="app\templates\account\changePassword.hbs" />
     <Content Include="app\templates\account\index.hbs" />
     <Content Include="app\templates\account\passwordChanged.hbs" />
+    <Content Include="app\templates\blog\category.hbs" />
+    <Content Include="app\templates\blog\index.hbs" />
+    <Content Include="app\templates\blog\post.hbs" />
+    <Content Include="app\templates\blog\posts\blogger.hbs" />
+    <Content Include="app\templates\blog\posts\blogNav.hbs" />
+    <Content Include="app\templates\blog\posts\tumblrAnswer.hbs" />
+    <Content Include="app\templates\blog\posts\tumblrAudio.hbs" />
+    <Content Include="app\templates\blog\posts\tumblrLink.hbs" />
+    <Content Include="app\templates\blog\posts\tumblrPhoto.hbs" />
+    <Content Include="app\templates\blog\posts\tumblrQuote.hbs" />
+    <Content Include="app\templates\blog\posts\tumblrSoundCloud.hbs" />
+    <Content Include="app\templates\blog\posts\tumblrText.hbs" />
+    <Content Include="app\templates\blog\posts\tumblrYouTube.hbs" />
+    <Content Include="app\templates\blog\url.hbs" />
     <Content Include="app\templates\default\index.hbs" />
     <Content Include="app\templates\home\index.hbs" />
     <Content Include="app\templates\site\emailChange.hbs" />
@@ -35,6 +49,7 @@
     <Content Include="app\templates\site\passwordReset.hbs" />
     <Content Include="app\templates\site\passwordResetRequest.hbs" />
     <Content Include="app\templates\site\passwordResetRequestError.hbs" />
+    <Content Include="app\templates\site\share.hbs" />
     <Content Include="app\templates\site\tweet.hbs" />
     <Content Include="app\templates\site\validationError.hbs" />
     <Content Include="app\templates\site\validationSent.hbs" />
@@ -49,12 +64,18 @@
     <Content Include="public\images\browsers\firefox.png" />
     <Content Include="public\images\browsers\ie.png" />
     <Content Include="public\images\browsers\safari.png" />
+    <Content Include="public\images\facebook.png" />
     <Content Include="public\images\favicon.ico" />
+    <Content Include="public\images\favicon.png" />
+    <Content Include="public\images\gplus.png" />
     <Content Include="public\images\loading.gif" />
     <Content Include="public\images\loadingSmall.gif" />
     <Content Include="public\images\roncliLogo%402x.png" />
     <Content Include="public\images\roncliLogo%404x.png" />
     <Content Include="public\images\roncliLogo.png" />
+    <Content Include="public\images\roncliSmall.png" />
+    <Content Include="public\images\tumblr.png" />
+    <Content Include="public\images\twitter.png" />
     <Content Include="public\images\twitter\favorite%402x.png" />
     <Content Include="public\images\twitter\favorite.png" />
     <Content Include="public\images\twitter\favorite_hover%402x.png" />
@@ -84,13 +105,21 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="app\app.js" />
+    <Compile Include="app\collections\blog_categories.js" />
     <Compile Include="app\collections\tweets.js" />
     <Compile Include="app\controllers\account_controller.js" />
+    <Compile Include="app\controllers\blog_controller.js" />
     <Compile Include="app\controllers\default_controller.js" />
     <Compile Include="app\controllers\home_controller.js" />
     <Compile Include="app\lib\handlebarsHelpers.js" />
     <Compile Include="app\lib\validationExtensions.js" />
     <Compile Include="app\models\base.js" />
+    <Compile Include="app\models\blog.js" />
+    <Compile Include="app\models\blog_category.js" />
+    <Compile Include="app\models\blog_comment.js" />
+    <Compile Include="app\models\blog__get_from_url.js" />
+    <Compile Include="app\models\blog__get_latest.js" />
+    <Compile Include="app\models\blog__get_latest_by_category.js" />
     <Compile Include="app\models\captcha.js" />
     <Compile Include="app\models\time.js" />
     <Compile Include="app\models\tweet.js" />
@@ -98,6 +127,10 @@
     <Compile Include="app\router.js" />
     <Compile Include="app\routes.js" />
     <Compile Include="app\views\account\index.js" />
+    <Compile Include="app\views\blog\base.js" />
+    <Compile Include="app\views\blog\category.js" />
+    <Compile Include="app\views\blog\index.js" />
+    <Compile Include="app\views\blog\url.js" />
     <Compile Include="app\views\default\index.js" />
     <Compile Include="app\views\home\index.js" />
     <Compile Include="assets\js\jquery-defaultButton-1.2.0.min.js" />
@@ -106,20 +139,27 @@
     <Compile Include="gruntfile.js" />
     <Compile Include="index.js" />
     <Compile Include="server\ApiDataAdapter.js" />
+    <Compile Include="server\api\blog-category.js" />
+    <Compile Include="server\api\blog-comment.js" />
+    <Compile Include="server\api\blog.js" />
     <Compile Include="server\api\captcha.js" />
     <Compile Include="server\api\time.js" />
     <Compile Include="server\api\tweet.js" />
     <Compile Include="server\api\user.js" />
+    <Compile Include="server\blogger\blogger.js" />
     <Compile Include="server\cache\cache.js" />
     <Compile Include="server\captcha\captchagen.js" />
     <Compile Include="server\database\database.js" />
     <Compile Include="server\guid\guid.js" />
     <Compile Include="server\handleError.js" />
     <Compile Include="server\mail\mail.js" />
+    <Compile Include="server\models\blog.js" />
     <Compile Include="server\models\captcha.js" />
     <Compile Include="server\models\tweet.js" />
     <Compile Include="server\models\user.js" />
+    <Compile Include="server\privateConfig.js" />
     <Compile Include="server\templates\template.js" />
+    <Compile Include="server\tumblr\tumblr.js" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="app\" />
@@ -129,11 +169,14 @@
     <Folder Include="app\models\" />
     <Folder Include="app\templates\" />
     <Folder Include="app\templates\account\" />
+    <Folder Include="app\templates\blog\" />
+    <Folder Include="app\templates\blog\posts\" />
     <Folder Include="app\templates\default\" />
     <Folder Include="app\templates\home\" />
     <Folder Include="app\templates\site\" />
     <Folder Include="app\views\" />
     <Folder Include="app\views\account\" />
+    <Folder Include="app\views\blog\" />
     <Folder Include="app\views\default\" />
     <Folder Include="app\views\home\" />
     <Folder Include="assets\" />
@@ -148,6 +191,7 @@
     <Folder Include="public\js\" />
     <Folder Include="server\" />
     <Folder Include="server\api\" />
+    <Folder Include="server\blogger\" />
     <Folder Include="server\cache\" />
     <Folder Include="server\captcha\" />
     <Folder Include="server\database\" />
@@ -159,6 +203,7 @@
     <Folder Include="server\templates\email\changeEmail\" />
     <Folder Include="server\templates\email\resetPassword\" />
     <Folder Include="server\templates\email\validation\" />
+    <Folder Include="server\tumblr\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
