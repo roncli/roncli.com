@@ -1,6 +1,6 @@
 var BaseView = require("rendr/shared/base/view"),
     $ = require("jquery"),
-    BlogComment = require("../../models/blog_comment");
+    BlogComments = require("../../collections/blog_comments");
 
 // Sets up the blog view.
 module.exports = BaseView.extend({
@@ -80,12 +80,12 @@ module.exports = BaseView.extend({
 
         var comments;
 
-        if (this.options.blog && this.options.blog.attributes && this.options.blog.attributes.blogUrl) {
+        if (this.options.blog && this.options.blog.attributes && this.options.blog.attributes.post && this.options.blog.attributes.post.blogUrl) {
             this.onScroll = null;
             $("div.comments-unloaded").removeClass("comments-unloaded").addClass("comments");
 
-            comments = new BlogComment();
-            comments.set({url: this.options.blog.get("blogUrl")});
+            comments = new BlogComments();
+            comments.blogUrl = this.options.blog.get("post").blogUrl;
             comments.fetch({
                 success: function() {
                     console.log("Success!");

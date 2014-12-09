@@ -1,5 +1,5 @@
 var Tweet = require("../models/tweet"),
-    Collection = require("rendr/shared/base/collection");
+    Collection = require("./base");
 
 module.exports = Collection.extend({
     model: Tweet,

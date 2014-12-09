@@ -1,5 +1,5 @@
 var Category = require("../models/blog_category"),
-    Collection = require("rendr/shared/base/collection");
+    Collection = require("./base");
 
 module.exports = Collection.extend({
     model: Category,
