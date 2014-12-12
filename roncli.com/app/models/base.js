@@ -17,7 +17,7 @@ if (typeof window === "object") {
         if (!this.app && window.App) {
             this.app = window.App;
         }
-        fetch.apply(this, arguments);
+        return fetch.apply(this, arguments);
     };
 
     set_ = BaseModel.prototype.set;
@@ -28,6 +28,6 @@ if (typeof window === "object") {
         if (!this.app && window.App) {
             this.app = window.App;
         }
-        set_.apply(this, arguments);
+        return set_.apply(this, arguments);
     };
 }

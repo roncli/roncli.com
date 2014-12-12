@@ -97,7 +97,7 @@ module.exports = BaseView.extend({
                     if (error && error.body && error.body.error) {
                         message = error.body.error;
                     } else {
-                        message = "There was a server error while requesting your email change.  Plesae try again later.";
+                        message = "There was a server error loading this post's comments.  Plesae try again later.";
                     }
                     console.log(xhr, error, message);
                 }

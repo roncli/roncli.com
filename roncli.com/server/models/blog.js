@@ -435,7 +435,7 @@ module.exports.getCategories = function(callback) {
      */
     var getCategories = function(failureCallback) {
         cache.zrange("roncli.com:blog:categories", 0, -1, function(categories) {
-            if (categories) {
+            if (categories && categories.length > 0) {
                 callback(null, categories.map(function(category, index) {
                     return {id: index, category: category};
                 }));

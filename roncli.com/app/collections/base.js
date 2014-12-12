@@ -17,6 +17,6 @@ if (typeof window === "object") {
         if (!this.app && window.App) {
             this.app = window.App;
         }
-        fetch.apply(this, arguments);
+        return fetch.apply(this, arguments);
     };
 }
