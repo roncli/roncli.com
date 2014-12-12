@@ -503,7 +503,7 @@ module.exports.getCommentsByUrl = function(url, callback) {
                             content: comment.Comment,
                             author: comment.Alias,
                             replyAddress: "https://www.blogger.com/comment.g?blogID=" + googleConfig.blog_id + "&postID=" + post.id,
-                            blogSource: "db"
+                            blogSource: "site"
                         };
                     }));
                 }

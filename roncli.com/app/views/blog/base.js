@@ -78,7 +78,8 @@ module.exports = BaseView.extend({
     loadComments: function() {
         "use strict";
 
-        var comments;
+        var app = this.app,
+            comments;
 
         if (this.options.blog && this.options.blog.attributes && this.options.blog.attributes.post && this.options.blog.attributes.post.blogUrl) {
             this.onScroll = null;
@@ -88,8 +89,9 @@ module.exports = BaseView.extend({
             comments.blogUrl = this.options.blog.get("post").blogUrl;
             comments.fetch({
                 success: function() {
-                    console.log("Success!");
-                    console.log(comments);
+                    var commentsDiv = $("div.comments");
+                    commentsDiv.find("div.loader").remove();
+                    commentsDiv.append(app.templateAdapter.getTemplate("blog/comment")({comments: comments.models}));
                 },
                 error: function(xhr, error) {
                     console.log("Error!");

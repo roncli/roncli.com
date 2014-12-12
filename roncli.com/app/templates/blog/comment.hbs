@@ -1,0 +1,11 @@
+{{#each comments}}
+    {{#ifCond attributes.blogSource "===" "blogger"}}
+        {{partial "blog/comments/blogger"}}
+    {{/ifCond}}
+    {{#ifCond attributes.blogSource "===" "site"}}
+        {{partial "blog/comments/site"}}
+    {{/ifCond}}
+{{/each}}
+<div class="panel-body body">
+    
+</div>
