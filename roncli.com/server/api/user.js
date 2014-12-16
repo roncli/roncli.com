@@ -225,7 +225,7 @@ module.exports.post = function(req, callback) {
 
                     return;
                 case "change-password":
-                    user.changePassword(req.session.user.id, req.body.oldPassword, req.body.newPassword, req.session.captcha, req.body.captcha, function(err) {
+                    user.changePassword(userId, req.body.oldPassword, req.body.newPassword, req.session.captcha, req.body.captcha, function(err) {
                         if (err) {
                             handleError(err, req);
                             callback(err);

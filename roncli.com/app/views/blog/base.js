@@ -1,6 +1,7 @@
 /*global tinyMCE*/
 var BaseView = require("rendr/shared/base/view"),
     $ = require("jquery"),
+    BlogComment = require("../../models/blog_comment"),
     BlogComments = require("../../collections/blog_comments"),
     sanitizeHtml = require("sanitize-html");
 
@@ -81,60 +82,119 @@ module.exports = BaseView.extend({
     loadComments: function() {
         "use strict";
 
-        var app = this.app,
-            comments;
+        var view = this;
 
         if (this.options.blog && this.options.blog.attributes && this.options.blog.attributes.post && this.options.blog.attributes.post.blogUrl) {
             this.onScroll = null;
-            $("div.comments-unloaded").removeClass("comments-unloaded").addClass("comments");
 
-            comments = new BlogComments();
-            comments.blogUrl = this.options.blog.get("post").blogUrl;
-            comments.fetch({
-                success: function() {
-                    var commentsDiv = $("div.comments");
-                    commentsDiv.find("div.loader").remove();
-                    commentsDiv.append(app.templateAdapter.getTemplate("blog/comment")({comments: comments.models}));
+            // Delay 1s in case the user is rapidly moving through the pages.
+            setTimeout(function() {
+                var app = view.app,
+                    comments;
 
-                    tinyMCE.init({
-                        selector: "textarea.tinymce",
-                        toolbar: [
-                            "formatselect | fontsizeselect | removeformat | bold italic underline | strikethrough subscript superscript",
-                            "undo redo | alignleft aligncenter alignright | alignjustify blockquote | bullist numlist | outdent indent "
-                        ],
-                        menubar: false,
-                        statusbar: false,
-                        content_css: "/css/tinymce.css",
-                        fontsize_formats: "12px 15px 18px 24px 36px 48px 72px"
-                    });
-                },
-                error: function(xhr, error) {
-                    console.log("Error!");
-                    var message;
-                    if (error && error.body && error.body.error) {
-                        message = error.body.error;
-                    } else {
-                        message = "There was a server error loading this post's comments.  Plesae try again later.";
-                    }
-                    console.log(xhr, error, message);
+                if (view !== app.router.currentView) {
+                    return;
                 }
-            });
+
+                $("div.comments-unloaded").removeClass("comments-unloaded").addClass("comments");
+
+                comments = new BlogComments();
+                comments.blogUrl = view.options.blog.get("post").blogUrl;
+                comments.fetch({
+                    success: function() {
+                        if (view !== app.router.currentView) {
+                            return;
+                        }
+
+                        var commentsDiv = $("div.comments");
+                        commentsDiv.find("div.loader").remove();
+                        commentsDiv.append(app.templateAdapter.getTemplate("blog/comment")({comments: comments.models}));
+
+                        tinyMCE.init({
+                            selector: "textarea.tinymce",
+                            toolbar: [
+                                "formatselect | fontsizeselect | removeformat | bold italic underline | strikethrough subscript superscript",
+                                "undo redo | alignleft aligncenter alignright | alignjustify blockquote | bullist numlist | outdent indent "
+                            ],
+                            menubar: false,
+                            statusbar: false,
+                            content_css: "/css/tinymce.css",
+                            fontsize_formats: "12px 15px 18px 24px 36px 48px 72px"
+                        });
+                    },
+                    error: function(xhr, error) {
+                        var message;
+                        if (error && error.body && error.body.error) {
+                            message = error.body.error;
+                        } else {
+                            message = "There was a server error loading this post's comments.  Plesae try again later.";
+                        }
+                        // TODO: Do something with this error.
+                    }
+                });
+            }, 1000);
         }
     },
 
     addBlogComment: function() {
         "use strict";
 
-        var attributes = sanitizeHtml.defaults.allowedAttributes;
+        var view = this,
+            attributes = sanitizeHtml.defaults.allowedAttributes,
+            addBlogCommentButton = $("#add-blog-comment"),
+            comment = new BlogComment(),
+            content;
+
+        if (view !== view.app.router.currentView) {
+            return;
+        }
+
+        addBlogCommentButton.attr("disabled", "");
+        tinyMCE.activeEditor.getBody().setAttribute("contenteditable", false);
+
+        if (!this.app.user) {
+            this.onLogin = this.addBlogComment;
+            $("#login").click();
+            return;
+        }
+        this.onLogin = null;
+
         attributes.p = ["style"];
         attributes.span = ["style"];
 
-        console.log(
-            sanitizeHtml(tinyMCE.activeEditor.getContent(), {
-                allowedTags: sanitizeHtml.defaults.allowedTags.concat(["h1", "h2", "u", "sup", "sub", "strike", "address", "span"]),
-                allowedAttributes: attributes
-            })
-        );
+        content = sanitizeHtml(tinyMCE.activeEditor.getContent(), {
+            allowedTags: sanitizeHtml.defaults.allowedTags.concat(["h1", "h2", "u", "sup", "sub", "strike", "address", "span"]),
+            allowedAttributes: attributes
+        });
+
+        comment.fetch({
+            url: "/blog-comment",
+            data: JSON.stringify({
+                url: this.options.blog.get("post").blogUrl,
+                content: content
+            }),
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            success: function() {
+                if (view !== view.app.router.currentView) {
+                    return;
+                }
+                // TODO: On success indicate that the post was submitted and that it is pending approval.
+            },
+            error: function(xhr, error) {
+                var message;
+                if (error && error.body && error.body.error) {
+                    message = error.body.error;
+                } else {
+                    message = "There was a server error posting your comment.  Please try again later.";
+                }
+                $("#blogCommentServerErrors").html(message);
+                $("#blogCommentServerErrorList").show();
+                addBlogCommentButton.removeAttr("disabled");
+                tinyMCE.activeEditor.getBody().setAttribute("contenteditable", true);
+            }
+        });
     }
 });
 

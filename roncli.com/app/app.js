@@ -109,6 +109,9 @@ module.exports = BaseApp.extend({
          */
         logInUser = function() {
             $("div#site-nav").html(app.templateAdapter.getTemplate("site/loggedIn")(app.user));
+            if (typeof app.router.currentView.onLogin === "function") {
+                app.router.currentView.onLogin();
+            }
 
             // Setup logout button.
             $("#logout").on("click", function() {

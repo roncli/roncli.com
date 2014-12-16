@@ -565,3 +565,15 @@ module.exports.getCommentsByUrl = function(url, callback) {
         });
     });
 };
+
+/**
+ * Posts a comment to a blog page.
+ * @param {int} userId The User ID posting the comment.
+ * @param {string} url The URL of the page.
+ * @param {string} content The content of the post.
+ * @param {function} callback The callback function.
+ */
+module.exports.postComment = function(userId, url, content, callback) {
+    "use strict";
+    // TODO
+};
