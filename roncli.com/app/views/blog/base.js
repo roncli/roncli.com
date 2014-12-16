@@ -1,6 +1,8 @@
+/*global tinyMCE*/
 var BaseView = require("rendr/shared/base/view"),
     $ = require("jquery"),
-    BlogComments = require("../../collections/blog_comments");
+    BlogComments = require("../../collections/blog_comments"),
+    sanitizeHtml = require("sanitize-html");
 
 // Sets up the blog view.
 module.exports = BaseView.extend({
@@ -8,7 +10,8 @@ module.exports = BaseView.extend({
 
     events: {
         "click img.thumb": "thumbClick",
-        "click a.blog-nav": "blogNav"
+        "click a.blog-nav": "blogNav",
+        "click #add-blog-comment": "addBlogComment"
     },
 
     postRender: function() {
@@ -92,6 +95,18 @@ module.exports = BaseView.extend({
                     var commentsDiv = $("div.comments");
                     commentsDiv.find("div.loader").remove();
                     commentsDiv.append(app.templateAdapter.getTemplate("blog/comment")({comments: comments.models}));
+
+                    tinyMCE.init({
+                        selector: "textarea.tinymce",
+                        toolbar: [
+                            "formatselect | fontsizeselect | removeformat | bold italic underline | strikethrough subscript superscript",
+                            "undo redo | alignleft aligncenter alignright | alignjustify blockquote | bullist numlist | outdent indent "
+                        ],
+                        menubar: false,
+                        statusbar: false,
+                        content_css: "/css/tinymce.css",
+                        fontsize_formats: "12px 15px 18px 24px 36px 48px 72px"
+                    });
                 },
                 error: function(xhr, error) {
                     console.log("Error!");
@@ -105,6 +120,21 @@ module.exports = BaseView.extend({
                 }
             });
         }
+    },
+
+    addBlogComment: function() {
+        "use strict";
+
+        var attributes = sanitizeHtml.defaults.allowedAttributes;
+        attributes.p = ["style"];
+        attributes.span = ["style"];
+
+        console.log(
+            sanitizeHtml(tinyMCE.activeEditor.getContent(), {
+                allowedTags: sanitizeHtml.defaults.allowedTags.concat(["h1", "h2", "u", "sup", "sub", "strike", "address", "span"]),
+                allowedAttributes: attributes
+            })
+        );
     }
 });
 

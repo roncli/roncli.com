@@ -1,4 +1,5 @@
-var moment = require("moment");
+var moment = require("moment"),
+    sanitizeHtml = require("sanitize-html");
 
 /**
  * Helpers for handlebars rendering.
@@ -37,6 +38,24 @@ module.exports = function(Handlebars) {
          */
         jsonEscaped: function(object, spacing) {
             return new Handlebars.SafeString(JSON.stringify(object, null, spacing).replace("/script", "\\/script") || 'null');
+        },
+
+        /**
+         * Sanitizes HTML by only allowing a subset of elements and attributes.
+         * @param {string} string The string to sanitize.
+         * @returns {base.HandlebarsEnvironment.SafeString} The stringified JSON object.
+         */
+        sanitize: function(string) {
+            var attributes = sanitizeHtml.defaults.allowedAttributes;
+            attributes.p = ["style"];
+            attributes.span = ["style"];
+
+            return new Handlebars.SafeString(
+                sanitizeHtml(string, {
+                    allowedTags: sanitizeHtml.defaults.allowedTags.concat(["h1", "h2", "u", "sup", "sub", "strike", "address", "span"]),
+                    allowedAttributes: attributes
+                })
+            );
         },
 
         /**
