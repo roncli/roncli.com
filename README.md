@@ -59,16 +59,16 @@ To run the website on Windows, make sure you perform the following steps.
                 access_token_secret: "(Your Twitter access token secret)"
             },
             database: {
-				server: "(Your SQL Server hostname)",
-				port: (Your SQL Server port),
-				user: "(Your SQL Server login name)",
-				password: "(Your SQL Server login password)",
-				database: "(Your SQL Server database name)",
-				pool: {
-					min: 0,
-					max: 50,
-					idleTimeoutMillis: 30000
-				}
+                server: "(Your SQL Server hostname)",
+                port: (Your SQL Server port),
+                user: "(Your SQL Server login name)",
+                password: "(Your SQL Server login password)",
+                database: "(Your SQL Server database name)",
+                pool: {
+                    min: 0,
+                    max: 50,
+                    idleTimeoutMillis: 30000
+                }
             },
             smtp: {
                 host: "(Your SMTP server hostname)"
@@ -77,6 +77,16 @@ To run the website on Windows, make sure you perform the following steps.
                 host: "(Your redis server hostname)",
                 port: (Your redis server hostname),
                 password: "(Your redis server password)"
+            },
+            google: {
+                blog_id: "(Your Google Blogger blog ID)",
+                api_key: "(Your Google Blogger API key)"
+            },
+            tumblr: {
+                consumer_key: "(Your Tumblr consumer key)",
+                consumer_secret: "(Your Tumblr consumer secret)",
+                token: "(Your Tumblr token)",
+                token_secret: "(Your Tumblr token secret)"
             }
         };
 
