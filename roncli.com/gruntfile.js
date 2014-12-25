@@ -65,9 +65,9 @@ module.exports = function(grunt) {
                     preBundleCB: function(b) {
                         b.plugin(remapify,
                             {
+                                cwd: "./app",
                                 src: "**/*.js",
-                                expose: "app",
-                                cwd: "./app"
+                                expose: "app"
                             }
                         );
                         b.on("remapify:files", function(file, expandedAliases) {
