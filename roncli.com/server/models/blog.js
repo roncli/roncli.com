@@ -391,7 +391,8 @@ module.exports.getPost = function(post, callback) {
                     var postData = {
                         post: content[0],
                         index: content[1],
-                        categories: []
+                        categories: [],
+                        blogUrl: post.url
                     };
 
                     postData.post.categories = post.categories;
