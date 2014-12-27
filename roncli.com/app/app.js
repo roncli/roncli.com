@@ -10,6 +10,13 @@ var BaseApp = require("rendr/shared/app"),
 module.exports = BaseApp.extend({
 
     /**
+     * Empty function in case fonts load prior to App start.
+     */
+    fontsComplete: function() {
+        "use strict";
+    },
+
+    /**
      * Client and server initialization function.
      */
     initialize: function() {
