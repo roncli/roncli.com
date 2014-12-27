@@ -115,7 +115,7 @@ module.exports.login = function(email, password, callback) {
             var user, salt;
 
             if (err) {
-                console.log("Database error in user.login.");
+                console.log("Database error in user.login while checking for valid credentials.");
                 console.log(err);
                 callback({
                     error: "There was a database error logging in.  Please reload the page and try again.",
@@ -153,7 +153,7 @@ module.exports.login = function(email, password, callback) {
                     {userId: {type: db.INT, value: user.UserID}},
                     function(err, data) {
                         if (err) {
-                            console.log("Database error in user.login.");
+                            console.log("Database error in user.login while looking up the user's role.");
                             console.log(err);
                             callback({
                                 error: "There was a database error logging in.  Please reload the page and try again.",
@@ -409,7 +409,7 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
                             },
                             function(err, data) {
                                 if (err) {
-                                    console.log("Database error in user.aliasExists.");
+                                    console.log("Database error in user.register.");
                                     console.log(err);
                                     callback({
                                         error: "There was a database error registering your account.  If you need help registering, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",

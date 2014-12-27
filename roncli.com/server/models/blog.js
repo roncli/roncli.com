@@ -1,4 +1,5 @@
-var cache = require("../cache/cache.js"),
+var Moment = require("moment"),
+    cache = require("../cache/cache.js"),
     db = require("../database/database.js"),
     blogger = require("../blogger/blogger.js"),
     googleConfig = require("../privateConfig").google,
@@ -576,5 +577,101 @@ module.exports.getCommentsByUrl = function(url, callback) {
  */
 module.exports.postComment = function(userId, url, content, callback) {
     "use strict";
-    // TODO
+
+    all(
+        /**
+         * Check to see if the user has posted a comment within the last 60 seconds to prevent spam.
+         */
+        (function() {
+            var deferred = new Deferred();
+
+            db.query(
+                "SELECT MAX(CrDate) LastComment FROM tblBlogComment WHERE CrUserID = @userId",
+                {userId: {type: db.INT, value: userId}},
+                function(err, data) {
+                    if (err) {
+                        console.log("Database error in blog.postComment while checking the user's last comment time.");
+                        console.log(err);
+                        deferred.reject({
+                            error: "There was a database error retrieving blog post comments.  Please reload the page and try again.",
+                            status: 500
+                        });
+                        return;
+                    }
+
+                    if (data[0] && data[0][0] && data[0][0].LastComment > new Moment().add(-1, "minute")) {
+                        deferred.reject({
+                            error: "You must wait a minute after posting a comment to post a new comment.",
+                            status: 400
+                        });
+                        return;
+                    }
+
+                    deferred.resolve(true);
+                }
+            );
+
+            return deferred.promise;
+        }()),
+
+        /**
+         * Ensure the URL the user is posting to exists.
+         */
+        (function() {
+            var deferred = new Deferred(),
+                resolve = function() {
+                    deferred.resolve(true);
+                };
+
+            getPostFromUrl(url, resolve, function() {
+                cachePosts(function(err) {
+                    if (err) {
+                        callback(err);
+                        return;
+                    }
+
+                    getPostFromUrl(url, resolve, function() {
+                        callback({
+                            error: "Page not found.",
+                            status: 404
+                        });
+                    });
+                });
+            });
+
+            return deferred.promise;
+        }())
+    ).then(
+        /**
+         * Add the post to the database.
+         */
+        function() {
+            db.query(
+                "INSERT INTO tblBlogComment (BlogURL, Comment, CrDate, CrUserID) VALUES (@url, @content, GETUTCDATE(), @userId)",
+                {
+                    url: {type: db.VARCHAR(1024), value: url},
+                    content: {type: db.TEXT, value: content},
+                    userId: {type: db.INT, value: userId}
+                },
+                function(err) {
+                    if (err) {
+                        console.log("Database error in blog.postComment while posting a comment.");
+                        console.log(err);
+                        callback({
+                            error: "There was a database error retrieving blog post comments.  Please reload the page and try again.",
+                            status: 500
+                        });
+                        return;
+                    }
+
+                    callback();
+                }
+            );
+        },
+
+        // If any of the functions error out, it will be handled here.
+        function(err) {
+            callback(err);
+        }
+    );
 };
