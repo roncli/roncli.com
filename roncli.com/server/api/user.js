@@ -180,13 +180,13 @@ module.exports.post = function(req, callback) {
 
                     return;
                 case "change-email":
-                    if (!req.session.user || !req.session.user.id) {
+                    if (!userId) {
                         req.res.status(401);
                         callback({error: "You are not logged in."});
                         return;
                     }
 
-                    user.changeEmail(req.session.user.id, req.body.password, req.session.captcha, req.body.captcha, function(err) {
+                    user.changeEmail(userId, req.body.password, req.session.captcha, req.body.captcha, function(err) {
                         if (err) {
                             handleError(err, req);
                             callback(err);
@@ -238,7 +238,7 @@ module.exports.post = function(req, callback) {
 
                     return;
                 case "change-alias":
-                    user.changeAlias(req.session.user.id, req.body.alias, function(err) {
+                    user.changeAlias(userId, req.body.alias, function(err) {
                         if (err) {
                             handleError(err, req);
                             callback(err);

@@ -27,7 +27,8 @@ module.exports = BaseApp.extend({
 
         window.WebFontConfig = {
             google: {
-                families: ["Archivo+Narrow:400,700,400italic,700italic:latin,latin-ext"]},
+                families: ["Archivo+Narrow:400,700,400italic,700italic:latin,latin-ext"]
+            },
             active: function() {
                 app.fontsComplete();
             },
