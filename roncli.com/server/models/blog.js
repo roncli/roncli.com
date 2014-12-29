@@ -1,4 +1,5 @@
 var Moment = require("moment"),
+    sanitizeHtml = require("sanitize-html"),
     cache = require("../cache/cache.js"),
     db = require("../database/database.js"),
     blogger = require("../blogger/blogger.js"),
@@ -646,6 +647,15 @@ module.exports.postComment = function(userId, url, content, callback) {
          * Add the post to the database.
          */
         function() {
+            var attributes = sanitizeHtml.defaults.allowedAttributes;
+            attributes.p = ["style"];
+            attributes.span = ["style"];
+
+            content = sanitizeHtml(content, {
+                allowedTags: sanitizeHtml.defaults.allowedTags.concat(["h1", "h2", "u", "sup", "sub", "strike", "address", "span"]),
+                allowedAttributes: attributes
+            });
+
             db.query(
                 "INSERT INTO tblBlogComment (BlogURL, Comment, CrDate, CrUserID) VALUES (@url, @content, GETUTCDATE(), @userId)",
                 {

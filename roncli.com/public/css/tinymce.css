@@ -1,9 +1,4 @@
-body {
-    font-family: "Archivo Narrow", Verdana, Arial, sans-serif;
-    font-size: 15px;
-}
-
-td, th {
+* {
     font-family: "Archivo Narrow", Verdana, Arial, sans-serif;
     font-size: 15px;
 }

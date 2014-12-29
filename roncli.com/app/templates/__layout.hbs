@@ -13,7 +13,6 @@
     <link rel="shortcut icon" href="/images/favicon.ico" />
     <script src="/js/mergedAssets.min.js"></script>
     <script>window.twttr=function(e,t,n){var r,i,s=e.getElementsByTagName(t)[0];if(e.getElementById(n))return;i=e.createElement(t);i.id=n;i.src="//platform.twitter.com/widgets.js";s.parentNode.insertBefore(i,s);return window.twttr||(r={_e:[],ready:function(e){r._e.push(e)}})}(document,"script","twitter-wjs")</script>
-    <script>WebFontConfig={google:{families:["Archivo+Narrow:400,700,400italic,700italic:latin,latin-ext"]},active:function(){window.App.fontsComplete()},inactive:function(){window.App.fontsComplete()}};(function(){var e=document.createElement("script");e.src=("https:"==document.location.protocol?"https":"http")+"://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js";e.type="text/javascript";e.async="true";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)})()</script>
     <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.4.0/jquery.timeago.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.2.0/bootbox.min.js"></script>
@@ -118,5 +117,6 @@
 </div>
 <script>!function(){var a=window.App=new(require("app/app"))({{jsonEscaped appData}})
 a.bootstrapData({{jsonEscaped bootstrappedData}}),a.start()}()</script>
+<script>window.App.loadFonts(window, document);</script>
 </body>
 </html>

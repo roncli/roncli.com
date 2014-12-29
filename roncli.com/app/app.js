@@ -17,6 +17,34 @@ module.exports = BaseApp.extend({
     },
 
     /**
+     * Script to load fonts from Google.
+     */
+    loadFonts: function(window) {
+        "use strict";
+
+        var app = this,
+            document = window.document;
+
+        window.WebFontConfig = {
+            google: {
+                families: ["Archivo+Narrow:400,700,400italic,700italic:latin,latin-ext"]},
+            active: function() {
+                app.fontsComplete();
+            },
+            inactive: function() {
+                app.fontsComplete();
+            }
+        };
+        (function() {
+            var e = document.createElement("script");
+            e.src = ("https:" === document.location.protocol ? "https" : "http") + "://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js";
+            e.type = "text/javascript";
+            e.async = "true";
+            document.head.appendChild(e);
+        }());
+    },
+
+    /**
      * Client and server initialization function.
      */
     initialize: function() {
