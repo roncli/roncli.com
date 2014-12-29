@@ -10,6 +10,42 @@ var BaseApp = require("rendr/shared/app"),
 module.exports = BaseApp.extend({
 
     /**
+     * Empty function in case fonts load prior to App start.
+     */
+    fontsComplete: function() {
+        "use strict";
+    },
+
+    /**
+     * Script to load fonts from Google.
+     */
+    loadFonts: function(window) {
+        "use strict";
+
+        var app = this,
+            document = window.document;
+
+        window.WebFontConfig = {
+            google: {
+                families: ["Archivo+Narrow:400,700,400italic,700italic:latin,latin-ext"]
+            },
+            active: function() {
+                app.fontsComplete();
+            },
+            inactive: function() {
+                app.fontsComplete();
+            }
+        };
+        (function() {
+            var e = document.createElement("script");
+            e.src = ("https:" === document.location.protocol ? "https" : "http") + "://ajax.googleapis.com/ajax/libs/webfont/1/webfont.js";
+            e.type = "text/javascript";
+            e.async = "true";
+            document.head.appendChild(e);
+        }());
+    },
+
+    /**
      * Client and server initialization function.
      */
     initialize: function() {
@@ -28,6 +64,7 @@ module.exports = BaseApp.extend({
         var app = this,
             twitterShown = false,
             IScroll = require("iscroll"),
+            _ = require("underscore"),
             querystring = $.getParam(),
             scroller, logInUser, doLogout, logOutUser, attemptLogin, user,
 
@@ -65,7 +102,13 @@ module.exports = BaseApp.extend({
                 });
             };
 
-        app.fontsCompleteFxs = [];
+        app.fontsCompleteFxs = [
+            function() {
+                // Start loading tweets.
+                loadTweets();
+                setInterval(loadTweets, 900000);
+            }
+        ];
 
         /**
          * Function to perform when fonts complete loading one way or another.
@@ -102,6 +145,9 @@ module.exports = BaseApp.extend({
          */
         logInUser = function() {
             $("div#site-nav").html(app.templateAdapter.getTemplate("site/loggedIn")(app.user));
+            if (typeof app.router.currentView.onLogin === "function") {
+                app.router.currentView.onLogin();
+            }
 
             // Setup logout button.
             $("#logout").on("click", function() {
@@ -175,8 +221,8 @@ module.exports = BaseApp.extend({
                 // Setup the DOB date picker.
                 $("#registerDOBButton").datepicker({
                     format: "MM d, yyyy",
-                    startDate: today.clone().subtract("years", 150).toDate(),
-                    endDate: today.clone().subtract("years", 13).toDate(),
+                    startDate: today.clone().subtract(150, "years").toDate(),
+                    endDate: today.clone().subtract(13, "years").toDate(),
                     startView: "decade",
                     autoclose: true
                 }).on("changeDate", function(e) {
@@ -512,6 +558,17 @@ module.exports = BaseApp.extend({
             return false;
         });
 
+        // Pass scrolling events to the view.
+        $(document).ready(function() {
+            var onScroll = _.debounce(function() {
+                if (typeof app.router.currentView.onScroll === "function") {
+                    app.router.currentView.onScroll();
+                }
+            }, 250);
+            $(window).on("scroll", onScroll);
+            onScroll();
+        });
+
         // Setup jQuery validation extensions.
         require("./lib/validationExtensions")();
 
@@ -523,10 +580,6 @@ module.exports = BaseApp.extend({
         $.timeago.settings.strings.day = "a day";
         $.timeago.settings.strings.month = "a month";
         $.timeago.settings.strings.year = "a year";
-
-        // Start loading tweets.
-        loadTweets();
-        setInterval(loadTweets, 900000);
 
         // Determine if the user is logged in.
         app.fetch({user: {model: "User"}}, {readFromCache: false, writeToCache: false}, function(err, results) {

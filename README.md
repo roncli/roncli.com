@@ -59,16 +59,16 @@ To run the website on Windows, make sure you perform the following steps.
                 access_token_secret: "(Your Twitter access token secret)"
             },
             database: {
-				server: "(Your SQL Server hostname)",
-				port: (Your SQL Server port),
-				user: "(Your SQL Server login name)",
-				password: "(Your SQL Server login password)",
-				database: "(Your SQL Server database name)",
-				pool: {
-					min: 0,
-					max: 50,
-					idleTimeoutMillis: 30000
-				}
+                server: "(Your SQL Server hostname)",
+                port: (Your SQL Server port),
+                user: "(Your SQL Server login name)",
+                password: "(Your SQL Server login password)",
+                database: "(Your SQL Server database name)",
+                pool: {
+                    min: 0,
+                    max: 50,
+                    idleTimeoutMillis: 30000
+                }
             },
             smtp: {
                 host: "(Your SMTP server hostname)"
@@ -113,16 +113,16 @@ Other Installations
                 access_token_secret: "(Your Twitter access token secret)"
             },
             database: {
-				server: "(Your SQL Server hostname)",
-				port: (Your SQL Server port),
-				user: "(Your SQL Server login name)",
-				password: "(Your SQL Server login password)",
-				database: "(Your SQL Server database name)",
-				pool: {
-					min: 0,
-					max: 50,
-					idleTimeoutMillis: 30000
-				}
+                server: "(Your SQL Server hostname)",
+                port: (Your SQL Server port),
+                user: "(Your SQL Server login name)",
+                password: "(Your SQL Server login password)",
+                database: "(Your SQL Server database name)",
+                pool: {
+                    min: 0,
+                    max: 50,
+                    idleTimeoutMillis: 30000
+                }
             },
             smtp: {
                 host: "(Your SMTP server hostname)"

@@ -25,6 +25,9 @@ Router.prototype.postInitialize = function() {
     this.on("action:end", this.actionEnd, this);
 };
 
+/**
+ * Performs actions on start of a page.
+ */
 Router.prototype.actionStart = function() {
     "use strict";
 
@@ -48,6 +51,11 @@ Router.prototype.actionEnd = function() {
 
     // Update abbreviations.
     $("abbr.setTime").timeago().removeClass("setTime");
+
+    // Trigger scrolling event if available.
+    if (typeof this.app.router.currentView.onScroll === "function") {
+        this.app.router.currentView.onScroll();
+    }
 
     // Update sharing URLs.
     sharing.find("a.facebook-share").attr("href", "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href));

@@ -1,5 +1,5 @@
 var Model = require("rendr/shared/base/model"),
-    BaseModel, fetch;
+    BaseModel, fetch, set_;
 
 module.exports = Model.extend();
 
@@ -7,13 +7,27 @@ BaseModel = module.exports;
 
 BaseModel.prototype.contentType = "application/json; charset=utf-8";
 
-fetch = BaseModel.prototype.fetch;
+// Function hooks to fix issue with the app not being populated on the client.
+if (typeof window === "object") {
+    fetch = BaseModel.prototype.fetch;
 
-BaseModel.prototype.fetch = function(){
-    "use strict";
+    BaseModel.prototype.fetch = function() {
+        "use strict";
 
-    if (!this.app && typeof window === "object" && window.App) {
-        this.app = window.App;
-    }
-    fetch.apply(this, arguments);
-};
+        if (!this.app && window.App) {
+            this.app = window.App;
+        }
+        return fetch.apply(this, arguments);
+    };
+
+    set_ = BaseModel.prototype.set;
+
+    BaseModel.prototype.set = function() {
+        "use strict";
+
+        if (!this.app && window.App) {
+            this.app = window.App;
+        }
+        return set_.apply(this, arguments);
+    };
+}

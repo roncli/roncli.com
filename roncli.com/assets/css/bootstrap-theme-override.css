@@ -260,6 +260,16 @@ input[type="radio"], input[type="checkbox"] {
     padding: 2px;
 }
 
+.btn-group-vertical .panel-heading.btn {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.panel-heading.panel-secondary {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
 /* Breadcrumbs */
 
 .breadcrumb {
@@ -284,4 +294,5 @@ input[type="radio"], input[type="checkbox"] {
 blockquote {
     padding: 0 10px;
     margin: 0;
+    font-size: inherit;
 }
