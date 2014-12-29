@@ -1,4 +1,4 @@
-/*global tinyMCE*/
+/*global tinyMCE, bootbox*/
 var BaseView = require("rendr/shared/base/view"),
     BlogComment = require("../../models/blog_comment"),
     BlogComments = require("../../collections/blog_comments"),
@@ -154,6 +154,15 @@ module.exports = BaseView.extend({
             return;
         }
 
+        content = sanitizeHtml(tinyMCE.activeEditor.getContent(), {
+            allowedTags: sanitizeHtml.defaults.allowedTags.concat(["h1", "h2", "u", "sup", "sub", "strike", "address", "span"]),
+            allowedAttributes: attributes
+        });
+
+        if (content.length === 0) {
+            return;
+        }
+
         addBlogCommentButton.attr("disabled", "");
         tinyMCE.activeEditor.getBody().setAttribute("contenteditable", false);
 
@@ -166,11 +175,6 @@ module.exports = BaseView.extend({
 
         attributes.p = ["style"];
         attributes.span = ["style"];
-
-        content = sanitizeHtml(tinyMCE.activeEditor.getContent(), {
-            allowedTags: sanitizeHtml.defaults.allowedTags.concat(["h1", "h2", "u", "sup", "sub", "strike", "address", "span"]),
-            allowedAttributes: attributes
-        });
 
         comment.fetch({
             url: "/blog-comment",
@@ -185,19 +189,37 @@ module.exports = BaseView.extend({
                 if (view !== view.app.router.currentView) {
                     return;
                 }
-                // TODO: On success indicate that the post was submitted and that it is pending approval.
+
+                $("#blogCommentServerErrors").html("");
+                $("#blogCommentServerErrorList").hide();
+
+                tinyMCE.activeEditor.setContent("");
+                addBlogCommentButton.removeAttr("disabled");
+                tinyMCE.activeEditor.getBody().setAttribute("contenteditable", true);
+
+                // Display the dialog box.
+                bootbox.dialog({
+                    title: "Comment Awaiting Moderation",
+                    message: view.app.templateAdapter.getTemplate("blog/commentAwaitingModeration")(),
+                    buttons: {ok: {label: "OK"}},
+                    show: false
+                }).off("shown.bs.modal").modal("show");
             },
             error: function(xhr, error) {
-                var message;
+                var list = $("#blogCommentServerErrorList"),
+                    message;
+
+                console.log(xhr, error);
                 if (error && error.body && error.body.error) {
                     message = error.body.error;
                 } else {
                     message = "There was a server error posting your comment.  Please try again later.";
                 }
                 $("#blogCommentServerErrors").html(message);
-                $("#blogCommentServerErrorList").show();
+                list.show();
                 addBlogCommentButton.removeAttr("disabled");
                 tinyMCE.activeEditor.getBody().setAttribute("contenteditable", true);
+                $(window).scrollTop(list.offset().top);
             }
         });
     },

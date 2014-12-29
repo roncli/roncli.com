@@ -40,6 +40,7 @@ module.exports.post = function(req, callback) {
                     callback(err);
                     return;
                 }
+                req.res.status(204);
                 callback();
             });
             return;
