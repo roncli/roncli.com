@@ -815,7 +815,7 @@ module.exports = BaseApp.extend({
                                 errorLabelContainer: "#emailChangeErrors"
                             });
 
-                            // Setup reset password button.
+                            // Setup email change button.
                             $("#emailChangeButton").on("click", function() {
                                 var user;
 
