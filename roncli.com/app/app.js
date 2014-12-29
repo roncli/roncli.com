@@ -220,8 +220,8 @@ module.exports = BaseApp.extend({
                 // Setup the DOB date picker.
                 $("#registerDOBButton").datepicker({
                     format: "MM d, yyyy",
-                    startDate: today.clone().subtract("years", 150).toDate(),
-                    endDate: today.clone().subtract("years", 13).toDate(),
+                    startDate: today.clone().subtract(150, "years").toDate(),
+                    endDate: today.clone().subtract(13, "years").toDate(),
                     startView: "decade",
                     autoclose: true
                 }).on("changeDate", function(e) {

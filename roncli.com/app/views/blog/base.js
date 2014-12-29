@@ -1,8 +1,9 @@
 /*global tinyMCE*/
 var BaseView = require("rendr/shared/base/view"),
-    $ = require("jquery"),
     BlogComment = require("../../models/blog_comment"),
     BlogComments = require("../../collections/blog_comments"),
+    $ = require("jquery"),
+    moment = require("moment"),
     sanitizeHtml = require("sanitize-html");
 
 // Sets up the blog view.
@@ -12,7 +13,8 @@ module.exports = BaseView.extend({
     events: {
         "click img.thumb": "thumbClick",
         "click a.blog-nav": "blogNav",
-        "click #add-blog-comment": "addBlogComment"
+        "click #add-blog-comment": "addBlogComment",
+        "click button.comment-reply": "commentReply"
     },
 
     postRender: function() {
@@ -198,6 +200,19 @@ module.exports = BaseView.extend({
                 tinyMCE.activeEditor.getBody().setAttribute("contenteditable", true);
             }
         });
+    },
+
+    commentReply: function(ev) {
+        "use strict";
+
+        var commentPost = $(ev.target).closest(".comment-post"),
+            content = commentPost.find(".comment-body").html().trim(),
+            author = commentPost.find(".comment-author").text(),
+            date = moment(new Date(commentPost.find(".comment-date").data("published") * 1000));
+
+        tinyMCE.activeEditor.setContent("");
+        tinyMCE.activeEditor.execCommand("mceInsertContent", false, "<p><span style=\"font-size: 12px;\">On " + date.format("M/D/YYYY") + " at " + date.format("h:mm:ss a (Z)") + ", <strong>" + author + "</strong> wrote:</span></p><blockquote>" + content + "</blockquote><br /><p>{$caret}</p>");
+        tinyMCE.activeEditor.focus();
     }
 });
 

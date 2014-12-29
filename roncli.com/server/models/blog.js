@@ -505,7 +505,6 @@ module.exports.getCommentsByUrl = function(url, callback) {
                             published: comment.CrDate.getTime() / 1000,
                             content: comment.Comment,
                             author: comment.Alias,
-                            replyAddress: "https://www.blogger.com/comment.g?blogID=" + googleConfig.blog_id + "&postID=" + post.id,
                             blogSource: "site"
                         };
                     }));
