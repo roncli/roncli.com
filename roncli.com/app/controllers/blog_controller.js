@@ -86,25 +86,61 @@ module.exports = {
             };
 
         app.fetch(data, function(err, result) {
+            var post, content;
+
             if (app.req) {
-                // TODO: Descriptions should be first 200 chars of the article, text only.
+                post = result.blog.get("post");
+
+                switch (post.blogSource) {
+                    case "blogger":
+                        content = post.content;
+                        break;
+                    case "tumblr":
+                        switch (post.type) {
+                            case "answer":
+                                content = post.question + " " + post.answer;
+                                break;
+                            case "audio":
+                            case "photo":
+                            case "video":
+                                content = post.caption;
+                                break;
+                            case "link":
+                                content = post.description;
+                                break;
+                            case "quote":
+                                content = post.text + " " + post.source;
+                                break;
+                            case "text":
+                                content = post.body;
+                                break;
+                        }
+                        break;
+                }
+
+                content = content.replace("\n", " ").replace("\r", " ").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+                if (content.length === 0) {
+                    content = "This is the roncli.com Blog.";
+                } else if (content.length > 200) {
+                    content = content.substr(0, 197).trim() + "...";
+                }
                 result.meta = {
                     "article:author": "http://www.facebook.com/roncli",
-                    "article:published_time": moment(result.blog.get("post").published * 1000).format(),
+                    "article:published_time": moment(post.published * 1000).format(),
                     "article:publisher": "http://www.facebook.com/roncli",
                     "article:section": "Blog",
-                    "article:tag": result.blog.get("post").categories,
-                    "og:description": "This is the roncli.com Blog.",
+                    "article:tag": post.categories,
+                    "og:description": content,
                     "og:image": "http://" + app.req.headers.host + "/images/favicon.png",
                     "og:site_name": "roncli.com",
-                    "og:title": result.blog.get("post").blogTitle || "The roncli.com Blog",
+                    "og:title": post.blogTitle || "The roncli.com Blog",
                     "og:type": "article",
                     "og:url": "http://" + app.req.headers.host + "/" + params[0],
                     "twitter:card": "summary",
-                    "twitter:description": "This is the roncli.com Blog.",
+                    "twitter:description": content,
                     "twitter:image": "http://" + app.req.headers.host + "/images/favicon.png",
                     "twitter:site": "@roncli",
-                    "twitter:title": result.blog.get("post").blogTitle || "The roncli.com Blog",
+                    "twitter:title": post.blogTitle || "The roncli.com Blog",
                     "twitter:url": "http://" + app.req.headers.host + "/" + params[0]
                 };
             }
