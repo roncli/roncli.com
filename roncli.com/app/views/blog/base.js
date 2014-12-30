@@ -128,13 +128,17 @@ module.exports = BaseView.extend({
                         });
                     },
                     error: function(xhr, error) {
-                        var message;
+                        var commentsDiv = $("div.comments"),
+                            message;
+
                         if (error && error.body && error.body.error) {
                             message = error.body.error;
                         } else {
-                            message = "There was a server error loading this post's comments.  Plesae try again later.";
+                            message = "A server error occurred while loading this post's comments.  Please try again later.";
                         }
-                        // TODO: Do something with this error.
+
+                        commentsDiv.find("div.loader").remove();
+                        commentsDiv.append(app.templateAdapter.getTemplate("blog/commentLoadingError")({error: message}));
                     }
                 });
             }, 1000);
