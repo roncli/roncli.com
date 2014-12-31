@@ -46,11 +46,8 @@ To run the website on Windows, make sure you perform the following steps.
 
         npm install -msvs_version=2013
 
-8. Apply the following patches.  This is temporary until these projects accept these pull requests.
-    - [joeybaker/remapify Pull Request 7](https://github.com/joeybaker/remapify/pull/7) - Required to allow browserify to find rendr's client and shared modules.
-    - [rendrjs/rendr Pull Request 379](https://github.com/rendrjs/rendr/pull/379) - Required to allow rendr to work with express.
-9. Add /roncli.com/server/privateConfig.js.  See below for file contents.
-10. If using [iisnode](https://github.com/tjanczuk/iisnode):
+8. Add /roncli.com/server/privateConfig.js.  See below for file contents.
+9. If using [iisnode](https://github.com/tjanczuk/iisnode):
     - Point an IIS application to the inner /roncli.com directory
     - Run ```grunt``` from the same directory when installing and after every time you change code.
     - Be sure to create the directory "logs" in the root of the application and give your application pool write permission.  For instance, if your application pool is ```roncli.com```, you'll give permissions to the account ```IIS AppPool\roncli.com```.
@@ -70,11 +67,8 @@ Other Installations
 
         npm install
 
-4. Apply the following patches.  This is temporary until these projects accept these pull requests and release a new version.
-    - [joeybaker/remapify Pull Request 7](https://github.com/joeybaker/remapify/pull/7) - Required to allow browserify to find rendr's client and shared modules. (This has yet to be accepted by remapify.)
-    - [rendrjs/rendr Pull Request 379](https://github.com/rendrjs/rendr/pull/379) - Required to allow rendr to work with express. (This has been accepted by rendr, but a new version with the update hasn't been released yet.)
-5. Add /roncli.com/server/privateConfig.js.  See below for file contents.
-6. Run /roncli.com/run.bat to start the web server.  Alternatively, you can run the following commands instead:
+4. Add /roncli.com/server/privateConfig.js.  See below for file contents.
+5. Run /roncli.com/run.bat to start the web server.  Alternatively, you can run the following commands instead:
 
         grunt
         node index.js

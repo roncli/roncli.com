@@ -26,7 +26,7 @@
         "nodemailer": "1.2.1",
         "promised-io": "0.3.4",
         "redis": "0.12.1",
-        "rendr": "0.5.0",
+        "rendr": "0.5.1",
         "rendr-handlebars": "0.2.0",
         "sanitize-html": "1.4.3",
         "tumblr": "0.4.1",
@@ -41,7 +41,7 @@
         "grunt-contrib-handlebars": "0.8.0",
         "grunt-contrib-uglify": "0.5.1",
         "html-minifier": "0.6.6",
-        "remapify": "1.0.0"
+        "remapify": "1.3.0"
     },
     "license": "None",
     "engines": {
