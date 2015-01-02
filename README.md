@@ -116,7 +116,6 @@ The following should be the contents of privateConfig.js:
             }
         };
 
-        
 Version History
 ===============
 

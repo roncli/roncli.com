@@ -169,6 +169,7 @@ module.exports.login = function(email, password, callback) {
 
                         if (data[0]) {
                             _(data[0]).each(function(row) {
+                                // Add additional links in the navbar based on the user's roles.
                                 switch (row.Role) {
                                     case "SiteAdmin":
                                         accountLinks.push({
