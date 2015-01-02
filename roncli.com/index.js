@@ -21,7 +21,7 @@ app.use(compression());
 app.use(morgan("[:date] :remote-addr :method :url HTTP/:http-version :status :res[content-length] \":user-agent\" :response-time \":referrer\""));
 app.use(cookieParser("tmp"));
 app.use(session({
-    secret: "tmp",
+    secret: "tmp", //TODO: Read this from config.
     resave: true,
     saveUninitialized: true
 }));

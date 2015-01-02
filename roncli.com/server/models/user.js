@@ -173,7 +173,16 @@ module.exports.login = function(email, password, callback) {
                                     case "SiteAdmin":
                                         accountLinks.push({
                                             url: "/admin",
-                                            text: "Admin"
+                                            text: "Admin",
+                                            script: "/js/admin.min.js",
+                                            templates: {
+                                                pattern: "^admin\\/.+",
+                                                src: "app/templates/adminTemplates"
+                                            },
+                                            route: {
+                                                pattern: "^\\/?admin$",
+                                                route: "admin#index"
+                                            }
                                         });
                                         break;
                                 }

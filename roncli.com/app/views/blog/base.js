@@ -120,7 +120,7 @@ module.exports = BaseView.extend({
                             ],
                             menubar: false,
                             statusbar: false,
-                            content_css: "/css/tinymce.css",
+                            content_css: "/css/tinymce.min.css",
                             fontsize_formats: "12px 15px 18px 24px 36px 48px 72px",
                             init_instance_callback: function(editor) {
                                 view.app.loadFonts(editor.iframeElement.contentWindow);
