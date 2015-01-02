@@ -252,7 +252,10 @@ FakesAssemblies/
 
 ### Grunt ###
 compiledTemplates.js
-mergedAssets.*
+site.min.js
+*/assets/js/site.js
+app.min.css
+*/assets/css/app.css
 
 ### Private Files ###
 privateConfig.js

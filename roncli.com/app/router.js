@@ -39,6 +39,10 @@ Router.prototype.actionStart = function() {
         scroller.destroy();
         scroller = null;
     }
+
+    // Blur and move to the top.
+    document.activeElement.blur();
+    $(window).scrollTop(0);
 };
 
 /**

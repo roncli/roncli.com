@@ -17,7 +17,7 @@ module.exports = function(grunt) {
 
         // Setup handlebars.
         handlebars: {
-            compile_rendr_templates: {
+            compile_main_templates: {
                 options: {
                     namespace: false,
                     commonjs: true,
@@ -59,7 +59,7 @@ module.exports = function(grunt) {
 
         // Setup browserify to send node assets to the client.
         browserify: {
-            combine_rendr_assets: {
+            combine_main_js_files: {
                 options: {
                     require: Object.keys(pjson.browser),
                     preBundleCB: function(b) {
@@ -72,7 +72,7 @@ module.exports = function(grunt) {
                         );
                         b.on("remapify:files", function(file, expandedAliases) {
                             Object.keys(expandedAliases).forEach(function(key) {
-                                if (key.indexOf(".js") === -1) {
+                                if (key.indexOf(".js") === -1 && key.indexOf("\\") === -1) {
                                     b.require(expandedAliases[key], {expose: key});
                                 }
                             });
@@ -80,22 +80,22 @@ module.exports = function(grunt) {
                     }
                 },
                 files: {
-                    "assets/js/mergedAssets.js": ["app/**/*.js"]
+                    "assets/js/site.js": ["app/**/*.js"]
                 }
             }
         },
 
         // Setup cssmin to send CSS assets to the client.
         cssmin: {
-            combine_css_files: {
+            combine_main_css_files: {
                 files: {
-                    "assets/css/mergedAssets.css": ["assets/css/bootstrap-theme.css", "assets/css/*.css", "!assets/css/mergedAssets.css"]
+                    "assets/css/app.css": ["assets/css/bootstrap-theme.css", "assets/css/*.css", "!assets/css/app.css", "!assets/css/tinymce.css"]
                 }
             },
-            minify_css_files: {
+            minify_main_css_files: {
                 expand: true,
                 cwd: "assets/css/",
-                src: ["mergedAssets.css"],
+                src: ["app.css"],
                 dest: "public/css/",
                 ext: ".min.css"
             }
@@ -103,12 +103,12 @@ module.exports = function(grunt) {
 
         // Setup uglify to send JS assets to the client.
         uglify: {
-            minify_js_files: {
+            minify_main_js_files: {
                 options: {
                     preserveComments: false
                 },
                 files: {
-                    "public/js/mergedAssets.min.js": ["assets/js/mergedAssets.js", "assets/js/loadJQuery.js", "assets/js/*.js"]
+                    "public/js/site.min.js": ["assets/js/site.js", "assets/js/loadJQuery.js", "assets/js/jquery-defaultButton-1.2.0.min.js", "assets/js/jquery-getParam.min.js"],
                 }
             }
         }

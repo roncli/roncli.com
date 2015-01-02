@@ -63,6 +63,7 @@ module.exports = BaseApp.extend({
 
         var app = this,
             twitterShown = false,
+            scriptsRun = {},
             IScroll = require("iscroll"),
             _ = require("underscore"),
             querystring = $.getParam(),
@@ -144,6 +145,33 @@ module.exports = BaseApp.extend({
          * Sets the user to logged in.
          */
         logInUser = function() {
+            // Run any scripts if needed.
+            app.user.get("accountLinks").forEach(function(link) {
+                var onScriptLoad;
+
+                if (scriptsRun[link.text]) {
+                    return;
+                }
+
+                onScriptLoad = function() {
+                    if (link.templates) {
+                        app.templateAdapter.templatePatterns.unshift({pattern: new RegExp(link.templates.pattern), src: link.templates.src});
+                    }
+                    if (link.route) {
+                        app.router.route(new RegExp(link.route.pattern), link.route.route);
+                    }
+                };
+
+                if (link.script) {
+                    $.getScript(link.script, onScriptLoad);
+                } else {
+                    onScriptLoad();
+                }
+
+                scriptsRun[link.text] = true;
+            });
+
+            // Setup the nav bar.
             $("div#site-nav").html(app.templateAdapter.getTemplate("site/loggedIn")(app.user));
             if (typeof app.router.currentView.onLogin === "function") {
                 app.router.currentView.onLogin();

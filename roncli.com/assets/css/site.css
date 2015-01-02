@@ -239,6 +239,10 @@ div.tweets div.hr {
     margin-bottom: 0;
 }
 
+.no-margin {
+    margin: 0;
+}
+
 div.body {
     background-color: #ffffff;
     padding: 20px;
@@ -254,13 +258,8 @@ div.body {
     border-bottom-left-radius: 4px;
 }
 
-.right-side-nav {
-    padding: 2px;
-    font-size: 13px;
-}
-
 div.right-side div.panel-body {
-    font-size: 12px;
+    font-size: 13px;
     padding: 2px;
 }
 
