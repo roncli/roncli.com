@@ -258,11 +258,6 @@ div.body {
     border-bottom-left-radius: 4px;
 }
 
-.right-side-nav {
-    padding: 2px;
-    font-size: 13px;
-}
-
 img.constrain-width {
     max-width: 100%;
 }
@@ -366,7 +361,7 @@ div.blog div.blog-nav-bottom:last-child > :last-child {
 }
 
 div.right-side div.panel-body {
-    font-size: 12px;
+    font-size: 13px;
     padding: 2px;
 }
 
