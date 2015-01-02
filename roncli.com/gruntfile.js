@@ -1,7 +1,22 @@
 var path = require("path"),
     remapify = require("remapify"),
     pjson = require("./package.json"),
-    minifier = require("html-minifier");
+    minifier = require("html-minifier"),
+
+    /**
+     * Minify HTML content
+     */
+    minifyHtml = function(content, file) {
+        "use strict";
+
+        return minifier.minify(content, {
+            removeComments: true,
+            collapseWhitespace: true,
+            conservativeCollapse: true,
+            minifyJS: true,
+            minifyCSS: true
+        });
+    };
 
 /**
  * Setup project configuration.
@@ -21,6 +36,7 @@ module.exports = function(grunt) {
                 options: {
                     namespace: false,
                     commonjs: true,
+                    processContent: minifyHtml,
 
                     /**
                      * Returns the require path for the file.
@@ -28,19 +44,6 @@ module.exports = function(grunt) {
                      */
                     processName: function(filename) {
                         return filename.replace("app/templates/", "").replace(".hbs", "");
-                    },
-
-                    /**
-                     * Minify HTML content
-                     */
-                    processContent: function(content, file) {
-                        return minifier.minify(content, {
-                            removeComments: true,
-                            collapseWhitespace: true,
-                            conservativeCollapse: true,
-                            minifyJS: true,
-                            minifyCSS: true
-                        });
                     }
                 },
                 files: {
