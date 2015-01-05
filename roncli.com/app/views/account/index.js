@@ -289,7 +289,7 @@ module.exports = BaseView.extend({
                         inverse: true,
                         data: function() {
                             return {
-                                aliasExists: $("#registerAlias").val()
+                                aliasExists: $("#changeAliasAlias").val()
                             };
                         },
                         settings: {
