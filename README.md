@@ -47,7 +47,9 @@ To run the website on Windows, make sure you perform the following steps.
         npm install -msvs_version=2013
 
 8. Add /roncli.com/server/privateConfig.js.  See below for file contents.
-9. If using [iisnode](https://github.com/tjanczuk/iisnode):
+9. Apply the following patches:
+    - https://github.com/desmondmorris/node-twitter/pull/59 - This fixes a bug with the ```twitter``` module when used in strict mode.
+10. If using [iisnode](https://github.com/tjanczuk/iisnode):
     - Point an IIS application to the inner /roncli.com directory
     - Run ```grunt``` from the same directory when installing and after every time you change code.
     - Be sure to create the directory "logs" in the root of the application and give your application pool write permission.  For instance, if your application pool is ```roncli.com```, you'll give permissions to the account ```IIS AppPool\roncli.com```.
@@ -68,7 +70,9 @@ Other Installations
         npm install
 
 4. Add /roncli.com/server/privateConfig.js.  See below for file contents.
-5. Run /roncli.com/run.bat to start the web server.  Alternatively, you can run the following commands instead:
+5. Apply the following patches:
+    - https://github.com/desmondmorris/node-twitter/pull/59 - This fixes a bug with the ```twitter``` module when used in strict mode.
+6. Run /roncli.com/run.bat to start the web server.  Alternatively, you can run the following commands instead:
 
         grunt
         node index.js

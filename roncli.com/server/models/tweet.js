@@ -23,12 +23,12 @@ module.exports.getTweets = function(callback) {
         /**
          * @param {Tweet[]} data
          */
-        twitter.get("/statuses/user_timeline.json", {count: 200}, function(data) {
+        twitter.get("statuses/user_timeline.json", {count: 200}, function(err, data) {
             var tweets;
 
-            if (data instanceof Error) {
+            if (err) {
                 console.log("Bad response from Twitter.");
-                console.log(data);
+                console.log(err);
                 callback({
                     error: "Bad response from Twitter.",
                     status: 502
