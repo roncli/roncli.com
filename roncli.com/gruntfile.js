@@ -73,13 +73,11 @@ module.exports = function(grunt) {
                                 }
                             });
                         });
-                        b.plugin(remapify,
-                            {
-                                cwd: "./app",
-                                src: "**/*.js",
-                                expose: "app"
-                            }
-                        );
+                        b.plugin(remapify, {
+                            cwd: "./app",
+                            src: "**/*.js",
+                            expose: "app"
+                        });
                     }
                 },
                 files: {
