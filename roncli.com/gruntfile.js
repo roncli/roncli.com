@@ -66,13 +66,6 @@ module.exports = function(grunt) {
                 options: {
                     require: Object.keys(pjson.browser),
                     preBundleCB: function(b) {
-                        b.plugin(remapify,
-                            {
-                                cwd: "./app",
-                                src: "**/*.js",
-                                expose: "app"
-                            }
-                        );
                         b.on("remapify:files", function(file, expandedAliases) {
                             Object.keys(expandedAliases).forEach(function(key) {
                                 if (key.indexOf(".js") === -1 && key.indexOf("\\") === -1) {
@@ -80,6 +73,13 @@ module.exports = function(grunt) {
                                 }
                             });
                         });
+                        b.plugin(remapify,
+                            {
+                                cwd: "./app",
+                                src: "**/*.js",
+                                expose: "app"
+                            }
+                        );
                     }
                 },
                 files: {

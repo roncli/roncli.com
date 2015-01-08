@@ -12,13 +12,13 @@ module.exports = function(Handlebars) {
         /**
          * Returns meta tags.
          * @param {string} key The key of the meta tag.
-         * @param {string|array} values If an array, returns one meta tag whose value is each element of the array.  Otherwise, the value of the sole meta tag.
+         * @param {string|Array} values If an array, returns one meta tag whose value is each element of the array.  Otherwise, the value of the sole meta tag.
          * @returns {string} The meta tags.
          */
         metaTags: function(key, values) {
             var tags;
 
-            if (typeof values === "object") {
+            if (values instanceof Array) {
                 tags = [];
                 values.forEach(function(value) {
                     tags.push("<meta name=\"" + key + "\" content=\"" + value + "\"/>");

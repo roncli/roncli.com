@@ -49,6 +49,7 @@ To run the website on Windows, make sure you perform the following steps.
 8. Add /roncli.com/server/privateConfig.js.  See below for file contents.
 9. Apply the following patches:
     - https://github.com/desmondmorris/node-twitter/pull/59 - This fixes a bug with the ```twitter``` module when used in strict mode.
+    - https://github.com/joeybaker/remapify/pull/26 - This fixes a bug with the ```remapify``` module in order to use it with the ```grunt-browserify``` module.
 10. If using [iisnode](https://github.com/tjanczuk/iisnode):
     - Point an IIS application to the inner /roncli.com directory
     - Run ```grunt``` from the same directory when installing and after every time you change code.
@@ -72,6 +73,7 @@ Other Installations
 4. Add /roncli.com/server/privateConfig.js.  See below for file contents.
 5. Apply the following patches:
     - https://github.com/desmondmorris/node-twitter/pull/59 - This fixes a bug with the ```twitter``` module when used in strict mode.
+    - https://github.com/joeybaker/remapify/pull/26 - This fixes a bug with the ```remapify``` module in order to use it with the ```grunt-browserify``` module.
 6. Run /roncli.com/run.bat to start the web server.  Alternatively, you can run the following commands instead:
 
         grunt

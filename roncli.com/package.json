@@ -14,7 +14,7 @@
         "cookie-parser": "1.3.3",
         "errorhandler": "1.3.2",
         "express": "4.10.7",
-        "express-session": "1.9.3",
+        "express-session": "1.10.0",
         "handlebars": "1.3.0",
         "iscroll": "5.1.3",
         "jquery": "2.1.3",
@@ -31,14 +31,13 @@
         "underscore": "1.7.0"
     },
     "devDependencies": {
-        "browserify": "5.10.1",
         "grunt": "0.4.5",
         "grunt-browserify": "2.1.4",
         "grunt-contrib-cssmin": "0.10.0",
         "grunt-contrib-handlebars": "0.8.0",
         "grunt-contrib-uglify": "0.5.1",
-        "html-minifier": "0.6.6",
-        "remapify": "1.3.0"
+        "html-minifier": "0.6.9",
+        "remapify": "1.4.3"
     },
     "license": "None",
     "engines": {
