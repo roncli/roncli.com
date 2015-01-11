@@ -48,7 +48,6 @@ To run the website on Windows, make sure you perform the following steps.
 
 8. Add /roncli.com/server/privateConfig.js.  See below for file contents.
 9. Apply the following patches:
-    - https://github.com/desmondmorris/node-twitter/pull/59 - This fixes a bug with the ```twitter``` module when used in strict mode.
     - https://github.com/joeybaker/remapify/pull/26 - This fixes a bug with the ```remapify``` module in order to use it with the ```grunt-browserify``` module.
 10. If using [iisnode](https://github.com/tjanczuk/iisnode):
     - Point an IIS application to the inner /roncli.com directory
@@ -56,7 +55,9 @@ To run the website on Windows, make sure you perform the following steps.
     - Be sure to create the directory "logs" in the root of the application and give your application pool write permission.  For instance, if your application pool is ```roncli.com```, you'll give permissions to the account ```IIS AppPool\roncli.com```.
     - Don't forget to restart the application from within IIS after you run ```grunt```.
 
-    Otherwise, run using a standalone installation from the command line by running /roncli.com/run.bat.
+    Otherwise, run using a standalone installation by running the following command to compile and run the web server:
+    
+        grunt all
 
 Other Installations
 ===================
@@ -72,12 +73,10 @@ Other Installations
 
 4. Add /roncli.com/server/privateConfig.js.  See below for file contents.
 5. Apply the following patches:
-    - https://github.com/desmondmorris/node-twitter/pull/59 - This fixes a bug with the ```twitter``` module when used in strict mode.
     - https://github.com/joeybaker/remapify/pull/26 - This fixes a bug with the ```remapify``` module in order to use it with the ```grunt-browserify``` module.
-6. Run /roncli.com/run.bat to start the web server.  Alternatively, you can run the following commands instead:
+6. Run the following command to compile and run the web server:
 
-        grunt
-        node index.js
+        grunt all
 
 privateConfig.js
 ================

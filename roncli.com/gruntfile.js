@@ -112,21 +112,27 @@ module.exports = function(grunt) {
                     "public/js/site.min.js": ["assets/js/site.js", "assets/js/loadJQuery.js", "assets/js/jquery-defaultButton-1.2.0.min.js", "assets/js/jquery-getParam.min.js"],
                 }
             }
+        },
+
+        // Setup grunt-execute to run the application.
+        execute: {
+            target: {
+                src: ["index.js"]
+            }
         }
     });
 
-    // Load handlebars, browserify, cssmin, and uglify.
+    // Load NPM tasks.
     grunt.loadNpmTasks("grunt-contrib-handlebars");
     grunt.loadNpmTasks("grunt-browserify");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
     grunt.loadNpmTasks("grunt-contrib-uglify");
+    grunt.loadNpmTasks("grunt-execute");
 
-    // Compile handlebars, browserify, and cssmin.
+    // Register tasks.
     grunt.registerTask("compile", ["handlebars", "browserify", "cssmin", "uglify"]);
-
-    // Noop task.
+    grunt.registerTask("run", ["execute"]);
+    grunt.registerTask("all", ["compile", "run"]);
     grunt.registerTask("noop", []);
-
-    // Default tasks.
     grunt.registerTask("default", ["compile"]);
 };
