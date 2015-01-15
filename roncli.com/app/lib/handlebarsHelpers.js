@@ -31,6 +31,7 @@ module.exports = function(Handlebars) {
 
         /**
          * Returns the JSON object stringified.
+         * This is a workaround for https://github.com/rendrjs/rendr-handlebars/pull/14.
          * @param {object} object The JSON object.
          * @param {string|number} spacing The spacing to use to stringify the JSON.
          * @returns {base.HandlebarsEnvironment.SafeString} The stringified JSON object.
@@ -81,6 +82,7 @@ module.exports = function(Handlebars) {
 
         /**
          * Turns a Unix timestamp into a formatted date.
+         * TODO: Stop using Unix timestamps.
          * @param {number} timestamp The Unix timestamp to use.
          * @returns {string} The formatted date.
          */

@@ -69,7 +69,7 @@ module.exports = function(grunt) {
                         b.on("remapify:files", function(file, expandedAliases) {
                             Object.keys(expandedAliases).forEach(function(key) {
                                 if (key.indexOf(".js") === -1 && key.indexOf("\\") === -1) {
-                                    b.require(expandedAliases[key], {expose: key});
+                                    b.require(path.resolve(expandedAliases[key]), {expose: key});
                                 }
                             });
                         });
