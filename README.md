@@ -85,6 +85,9 @@ privateConfig.js
 The following should be the contents of privateConfig.js:
 
         module.exports = {
+            server: {
+                secret: "(A random secret key that you create)",
+            },
             twitter: {
                 consumer_key: "(Your Twitter API key)",
                 consumer_secret: "(Your Twitter API secret)",

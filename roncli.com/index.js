@@ -1,9 +1,10 @@
-var express = require("express"),
+var config = require("./server/privateConfig").server,
+    express = require("express"),
     domain = require("domain"),
     path = require("path"),
     moment = require("moment"),
     rendr = require("rendr"),
-    captchagen = require("./server/captcha/captchagen.js"),
+    captchagen = require("./server/captcha/captchagen"),
     compression = require("compression"),
     morgan = require("morgan"),
     cookieParser = require("cookie-parser"),
@@ -19,9 +20,9 @@ var express = require("express"),
 // Initialize middleware stack.
 app.use(compression());
 app.use(morgan("[:date] :remote-addr :method :url HTTP/:http-version :status :res[content-length] \":user-agent\" :response-time \":referrer\""));
-app.use(cookieParser("tmp"));
+app.use(cookieParser(config.secret));
 app.use(session({
-    secret: "tmp", //TODO: Read this from config.
+    secret: config.secret,
     resave: true,
     saveUninitialized: true
 }));
