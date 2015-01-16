@@ -108,7 +108,7 @@ module.exports.post = function(req, callback) {
                         req.session.user = data;
 
                         if (req.body.saveLogin && data.validated) {
-                            req.res.cookie("login", {email: req.body.email, password: req.body.password}, {expires: moment().add("years", 1).toDate()});
+                            req.res.cookie("login", {email: req.body.email, password: req.body.password}, {expires: moment().add(1, "years").toDate()});
                         }
 
                         callback(data);
