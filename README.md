@@ -48,7 +48,8 @@ To run the website on Windows, make sure you perform the following steps.
 
 8. Add /roncli.com/server/privateConfig.js.  See below for file contents.
 9. Apply the following patches:
-    - https://github.com/joeybaker/remapify/pull/26 - This fixes a bug with the ```remapify``` module in order to use it with the ```grunt-browserify``` module.
+    - https://github.com/roncli/remapify/compare/roncli:master...issue-24-from-1.4.4 - This fixes a bug with the ```remapify``` module in order to use it with the latest versions of the ```grunt-browserify``` module.
+    - https://github.com/rendrjs/rendr-handlebars/pull/36 - This updates rendr-handlebars to use the latest version of handlebars.
 10. If using [iisnode](https://github.com/tjanczuk/iisnode):
     - Point an IIS application to the inner /roncli.com directory
     - Run ```grunt``` from the same directory when installing and after every time you change code.
@@ -73,7 +74,8 @@ Other Installations
 
 4. Add /roncli.com/server/privateConfig.js.  See below for file contents.
 5. Apply the following patches:
-    - https://github.com/joeybaker/remapify/pull/26 - This fixes a bug with the ```remapify``` module in order to use it with the ```grunt-browserify``` module.
+    - https://github.com/roncli/remapify/compare/roncli:master...issue-24-from-1.4.4 - This fixes a bug with the ```remapify``` module in order to use it with the latest versions of the ```grunt-browserify``` module.
+    - https://github.com/rendrjs/rendr-handlebars/pull/36 - This updates rendr-handlebars to use the latest version of handlebars.
 6. Run the following command to compile and run the web server:
 
         grunt all

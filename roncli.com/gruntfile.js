@@ -89,11 +89,17 @@ module.exports = function(grunt) {
         // Setup cssmin to send CSS assets to the client.
         cssmin: {
             combine_main_css_files: {
+                options: {
+                    report: "gzip"
+                },
                 files: {
                     "assets/css/app.css": ["assets/css/bootstrap-theme.css", "assets/css/*.css", "!assets/css/app.css", "!assets/css/tinymce.css"]
                 }
             },
             minify_main_css_files: {
+                options: {
+                    report: "gzip"
+                },
                 expand: true,
                 cwd: "assets/css/",
                 src: ["app.css"],
@@ -106,7 +112,8 @@ module.exports = function(grunt) {
         uglify: {
             minify_main_js_files: {
                 options: {
-                    preserveComments: false
+                    preserveComments: false,
+                    report: "gzip"
                 },
                 files: {
                     "public/js/site.min.js": ["assets/js/site.js", "assets/js/loadJQuery.js", "assets/js/jquery-defaultButton-1.2.0.min.js", "assets/js/jquery-getParam.min.js"],
