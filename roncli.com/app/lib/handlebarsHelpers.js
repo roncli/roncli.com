@@ -81,13 +81,12 @@ module.exports = function(Handlebars) {
         },
 
         /**
-         * Turns a Unix timestamp into a formatted date.
-         * TODO: Stop using Unix timestamps.
-         * @param {number} timestamp The Unix timestamp to use.
+         * Turns a timestamp in milliseconds from Unix epoch into a formatted date.
+         * @param {number} timestamp The number of milliseconds from Unix epoch.
          * @returns {string} The formatted date.
          */
         timestampToDate: function(timestamp) {
-            return moment(timestamp * 1000).format("dddd, MMMM Do, YYYY h:mm:ss a");
+            return moment(timestamp).format("dddd, MMMM Do, YYYY h:mm:ss a");
         },
 
         /**
