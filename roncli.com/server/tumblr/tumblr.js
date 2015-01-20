@@ -80,12 +80,12 @@ var config = require("../privateConfig").tumblr,
                         // There are no more posts, cache what was received.
                         posts = totalPosts.map(function(post) {
                             return {
-                                score: post.timestamp,
+                                score: post.timestamp * 1000,
                                 value: {
                                     blogSource: "tumblr",
                                     id: post.id,
                                     categories: post.tags,
-                                    published: post.timestamp,
+                                    published: post.timestamp * 1000,
                                     title: getTitle(post),
                                     url: "/tumblr/" + post.id + "/" + post.slug
                                 }
@@ -167,6 +167,7 @@ var config = require("../privateConfig").tumblr,
 
                         fxs = [];
                         totalPosts.forEach(function(post) {
+                            post.timestamp *= 1000;
                             fxs.push(function() {
                                 var deferred = new Deferred();
 

@@ -502,7 +502,7 @@ module.exports.getCommentsByUrl = function(url, callback) {
                     comments = comments.concat(data[0].map(function(comment) {
                         return {
                             id: comment.CommentID,
-                            published: comment.CrDate.getTime() / 1000,
+                            published: comment.CrDate.getTime(),
                             content: comment.Comment,
                             author: comment.Alias,
                             blogSource: "site"

@@ -34,7 +34,7 @@ var config = require("../privateConfig").google,
 
             posts = data.items.map(function(post) {
                 var urlParsed = urlPattern.exec(post.url),
-                    timestamp = new Date(post.published).getTime() / 1000;
+                    timestamp = new Date(post.published).getTime();
 
                 return {
                     score: timestamp,
@@ -304,7 +304,7 @@ module.exports.post = function(id, callback) {
                         return;
                     }
 
-                    post.published = new Date(post.published).getTime() / 1000;
+                    post.published = new Date(post.published).getTime();
 
                     cache.set("roncli.com:blogger:post:" + id, post, 86400);
 
@@ -337,7 +337,7 @@ module.exports.post = function(id, callback) {
                             }
 
                             comments.items.forEach(function(comment) {
-                                comment.published = new Date(comment.published).getTime() / 1000;
+                                comment.published = new Date(comment.published).getTime();
                                 comment.blogSource = "blogger";
                             });
 
