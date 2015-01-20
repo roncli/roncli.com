@@ -47,13 +47,18 @@ To run the website on Windows, make sure you perform the following steps.
         npm install -msvs_version=2013
 
 8. Add /roncli.com/server/privateConfig.js.  See below for file contents.
-9. If using [iisnode](https://github.com/tjanczuk/iisnode):
+9. Apply the following patches:
+    - https://github.com/roncli/remapify/compare/roncli:master...issue-24-from-1.4.4 - This fixes a bug with the ```remapify``` module in order to use it with the latest versions of the ```grunt-browserify``` module.
+    - https://github.com/rendrjs/rendr-handlebars/pull/36 - This updates rendr-handlebars to use the latest version of handlebars.
+10. If using [iisnode](https://github.com/tjanczuk/iisnode):
     - Point an IIS application to the inner /roncli.com directory
     - Run ```grunt``` from the same directory when installing and after every time you change code.
     - Be sure to create the directory "logs" in the root of the application and give your application pool write permission.  For instance, if your application pool is ```roncli.com```, you'll give permissions to the account ```IIS AppPool\roncli.com```.
     - Don't forget to restart the application from within IIS after you run ```grunt```.
 
-    Otherwise, run using a standalone installation from the command line by running /roncli.com/run.bat.
+    Otherwise, run using a standalone installation by running the following command to compile and run the web server:
+    
+        grunt all
 
 Other Installations
 ===================
@@ -68,16 +73,21 @@ Other Installations
         npm install
 
 4. Add /roncli.com/server/privateConfig.js.  See below for file contents.
-5. Run /roncli.com/run.bat to start the web server.  Alternatively, you can run the following commands instead:
+5. Apply the following patches:
+    - https://github.com/roncli/remapify/compare/roncli:master...issue-24-from-1.4.4 - This fixes a bug with the ```remapify``` module in order to use it with the latest versions of the ```grunt-browserify``` module.
+    - https://github.com/rendrjs/rendr-handlebars/pull/36 - This updates rendr-handlebars to use the latest version of handlebars.
+6. Run the following command to compile and run the web server:
 
-        grunt
-        node index.js
+        grunt all
 
 privateConfig.js
 ================
 The following should be the contents of privateConfig.js:
 
         module.exports = {
+            server: {
+                secret: "(A random secret key that you create)",
+            },
             twitter: {
                 consumer_key: "(Your Twitter API key)",
                 consumer_secret: "(Your Twitter API secret)",

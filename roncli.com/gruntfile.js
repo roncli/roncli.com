@@ -85,19 +85,17 @@ module.exports = function(grunt) {
                 options: {
                     require: Object.keys(pjson.browser),
                     preBundleCB: function(b) {
-                        b.plugin(remapify,
-                            {
-                                cwd: "./app",
-                                src: "**/*.js",
-                                expose: "app"
-                            }
-                        );
                         b.on("remapify:files", function(file, expandedAliases) {
                             Object.keys(expandedAliases).forEach(function(key) {
                                 if (key.indexOf(".js") === -1 && key.indexOf("\\") === -1) {
-                                    b.require(expandedAliases[key], {expose: key});
+                                    b.require(path.resolve(expandedAliases[key]), {expose: key});
                                 }
                             });
+                        });
+                        b.plugin(remapify, {
+                            cwd: "./app",
+                            src: "**/*.js",
+                            expose: "app"
                         });
                     }
                 },
@@ -134,11 +132,17 @@ module.exports = function(grunt) {
         // Setup cssmin to send CSS assets to the client.
         cssmin: {
             combine_main_css_files: {
+                options: {
+                    report: "gzip"
+                },
                 files: {
                     "assets/css/app.css": ["assets/css/bootstrap-theme.css", "assets/css/*.css", "!assets/css/app.css", "!assets/css/tinymce.css"]
                 }
             },
             minify_main_css_files: {
+                options: {
+                    report: "gzip"
+                },
                 expand: true,
                 cwd: "assets/css/",
                 src: ["app.css"],
@@ -158,28 +162,35 @@ module.exports = function(grunt) {
         uglify: {
             minify_main_js_files: {
                 options: {
-                    preserveComments: false
+                    preserveComments: false,
+                    report: "gzip"
                 },
                 files: {
                     "public/js/site.min.js": ["assets/js/site.js", "assets/js/loadJQuery.js", "assets/js/jquery-defaultButton-1.2.0.min.js", "assets/js/jquery-getParam.min.js"],
                     "public/js/admin.min.js": ["assets/js/admin.js"]
                 }
             }
+        },
+
+        // Setup grunt-execute to run the application.
+        execute: {
+            target: {
+                src: ["index.js"]
+            }
         }
     });
 
-    // Load handlebars, browserify, cssmin, and uglify.
+    // Load NPM tasks.
     grunt.loadNpmTasks("grunt-contrib-handlebars");
     grunt.loadNpmTasks("grunt-browserify");
     grunt.loadNpmTasks("grunt-contrib-cssmin");
     grunt.loadNpmTasks("grunt-contrib-uglify");
+    grunt.loadNpmTasks("grunt-execute");
 
-    // Compile handlebars, browserify, and cssmin.
+    // Register tasks.
     grunt.registerTask("compile", ["handlebars", "browserify", "cssmin", "uglify"]);
-
-    // Noop task.
+    grunt.registerTask("run", ["execute"]);
+    grunt.registerTask("all", ["compile", "run"]);
     grunt.registerTask("noop", []);
-
-    // Default tasks.
     grunt.registerTask("default", ["compile"]);
 };

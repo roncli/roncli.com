@@ -13,13 +13,13 @@ module.exports = function(Handlebars) {
         /**
          * Returns meta tags.
          * @param {string} key The key of the meta tag.
-         * @param {string|array} values If an array, returns one meta tag whose value is each element of the array.  Otherwise, the value of the sole meta tag.
+         * @param {string|Array} values If an array, returns one meta tag whose value is each element of the array.  Otherwise, the value of the sole meta tag.
          * @returns {string} The meta tags.
          */
         metaTags: function(key, values) {
             var tags;
 
-            if (typeof values === "object") {
+            if (values instanceof Array) {
                 tags = [];
                 values.forEach(function(value) {
                     tags.push("<meta name=\"" + key + "\" content=\"" + value + "\"/>");
@@ -32,6 +32,7 @@ module.exports = function(Handlebars) {
 
         /**
          * Returns the JSON object stringified.
+         * This is a workaround for https://github.com/rendrjs/rendr-handlebars/pull/14.
          * @param {object} object The JSON object.
          * @param {string|number} spacing The spacing to use to stringify the JSON.
          * @returns {base.HandlebarsEnvironment.SafeString} The stringified JSON object.
@@ -99,12 +100,12 @@ module.exports = function(Handlebars) {
         },
 
         /**
-         * Turns a Unix timestamp into a formatted date.
-         * @param {number} timestamp The Unix timestamp to use.
+         * Turns a timestamp in milliseconds from Unix epoch into a formatted date.
+         * @param {number} timestamp The number of milliseconds from Unix epoch.
          * @returns {string} The formatted date.
          */
         timestampToDate: function(timestamp) {
-            return moment(timestamp * 1000).format("dddd, MMMM Do, YYYY h:mm:ss a");
+            return moment(timestamp).format("dddd, MMMM Do, YYYY h:mm:ss a");
         },
 
         /**
