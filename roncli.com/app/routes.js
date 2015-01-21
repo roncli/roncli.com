@@ -7,8 +7,7 @@
 
 /**
  * The routes in use by the website.
-// * @param {routes.Callback} match The function to add a route with.
- * @param {function(string|RegExp, string)} match The function to add a route with.
+ * @param {routes.Callback} match The function to add a route with.
  */
 module.exports = function(match) {
     "use strict";

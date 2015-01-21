@@ -180,10 +180,7 @@ module.exports.login = function(email, password, callback) {
                                                 pattern: "^admin\\/.+",
                                                 src: "app/templates/adminTemplates"
                                             },
-                                            route: {
-                                                pattern: "^\\/?admin$",
-                                                route: "admin#index"
-                                            }
+                                            routes: "app/adminRoutes"
                                         });
                                         break;
                                 }

@@ -1,9 +1,9 @@
 var BaseView = require("rendr/shared/base/view"),
     $ = require("jquery");
 
-// Sets up the admin view.
+// Sets up the blog admin view.
 module.exports = BaseView.extend({
-    className: "admin_index_view",
+    className: "admin_blog_view",
 
     onLogout: function() {
         "use strict";
@@ -12,4 +12,4 @@ module.exports = BaseView.extend({
     }
 });
 
-module.exports.id = "admin/index";
+module.exports.id = "admin/blog";

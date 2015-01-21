@@ -149,19 +149,32 @@ abbr {
     padding: 0 5px;
 }
 
-.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
-    color: #ffffff;
+.nav-tabs > li {
+    margin-bottom: 0;
 }
 
-.nav-tabs > li > a:hover {
-    border-color: transparent;
+.nav-tabs > li > a {
+    background-color: #ffffff;
+    border: none !important;
+}
+
+.nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+    color: #ffffff;
 }
 
 .nav-tabs > li > a:hover, .nav > li > a:focus {
     color: #ffffff;
 }
 
+.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+    background-color: #9a9aaa;
+    color: #000000;
+}
+
 .nav-tabs + .panel {
+    padding: 5px;
+    box-shadow: none;
+    -webkit-box-shadow: none;
     background-color: #9a9aaa;
 }
 
@@ -179,17 +192,6 @@ abbr {
 .bootbox .bootbox-close-button {
     color: #ffffff;
     text-shadow: 0 1px 0 #000000;
-}
-
-.bootbox-body > .panel {
-    padding: 5px;
-    box-shadow: none;
-    -webkit-box-shadow: none;
-}
-
-.bootbox .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
-    background-color: #9a9aaa;
-    color: #000000;
 }
 
 /* Input group addon */
@@ -237,6 +239,10 @@ input[type="radio"], input[type="checkbox"] {
 /* Panel */
 .panel {
     line-height: 1;
+}
+
+.panel:last-child {
+    margin-bottom: 0;
 }
 
 .panel-title {

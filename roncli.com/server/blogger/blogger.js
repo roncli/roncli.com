@@ -16,6 +16,7 @@ var config = require("../privateConfig").google,
         blogger.posts.list({
             blogId: config.blog_id,
             maxResults: 100000,
+            status: "live",
             fields: "items(id,labels,published,title,url)",
             key: config.api_key
         }, function(err, data) {
@@ -365,6 +366,7 @@ module.exports.post = function(id, callback) {
                     blogId: config.blog_id,
                     postId: id,
                     maxResults: 500,
+                    status: "live",
                     fields: "items(author/displayName,content,id,published),nextPageToken",
                     key: config.api_key
                 });
