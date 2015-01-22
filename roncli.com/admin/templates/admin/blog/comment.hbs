@@ -1,0 +1,16 @@
+<div data-comment-id="{{{attributes.id}}}" class="comment-post panel-body">
+    <div class="row">
+        <div class="comment-header col-xs-12">
+            <div class="comment-author text-success">{{attributes.author}}</div>
+            <div class="comment-date text-muted">Posted {{timestampToDate attributes.published}}</div>
+        </div>
+    </div>
+    <div class="comment-body">
+        {{{sanitize attributes.content}}}
+    </div>
+    <div class="pull-right">
+        <a href="{{{attributes.url}}}" target="_blank" class="btn btn-primary">{{attributes.url}}</a>
+        <button class="btn btn-success approve-comment" style="margin-left: 20px; margin-right: 20px;">Approve</button>
+        <button class="btn btn-danger reject-comment">Reject</button>
+    </div>
+</div>

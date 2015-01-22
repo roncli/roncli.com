@@ -9,13 +9,13 @@ module.exports = {
     index: function(params, callback) {
         "use strict";
 
-        var app = this.app,
-            data = {
+        var app = this.app;
+
+        app.fetch(
+            {
                 blog: {model: "Blog_GetLatest", params: {}},
                 categories: {collection: "BlogCategories", params: {}}
-            };
-
-        app.fetch(data, function(err, result) {
+            }, function(err, result) {
             if (app.req) {
                 result.meta = {
                     "og:description": "This is the roncli.com Blog.",
@@ -44,13 +44,13 @@ module.exports = {
     category: function(params, callback) {
         "use strict";
 
-        var app = this.app,
-            data = {
+        var app = this.app;
+
+        app.fetch(
+            {
                 blog: {model: "Blog_GetLatestByCategory", params: {category: params[0]}},
                 categories: {collection: "BlogCategories", params: {}}
-            };
-
-        app.fetch(data, function(err, result) {
+            }, function(err, result) {
             if (app.req) {
                 result.meta = {
                     "og:description": "This is the " + decodeURIComponent(params[0]) + " category of the roncli.com Blog.",
@@ -79,13 +79,13 @@ module.exports = {
     url: function(params, callback) {
         "use strict";
 
-        var app = this.app,
-            data = {
+        var app = this.app;
+
+        app.fetch(
+            {
                 blog: {model: "Blog_GetFromUrl", params: {url: params[0]}},
                 categories: {collection: "BlogCategories", params: {}}
-            };
-
-        app.fetch(data, function(err, result) {
+            }, function(err, result) {
             var post, content;
 
             if (app.req) {

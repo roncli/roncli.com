@@ -7,7 +7,9 @@ module.exports = {
     index: function(params, callback) {
         "use strict";
 
-        callback(null);
+        this.app.fetch({
+            notifications: {model: "User_GetNotifications", params: {}}
+        }, callback);
     },
 
     /**
@@ -18,6 +20,8 @@ module.exports = {
     blog: function(params, callback) {
         "use strict";
 
-        callback(null);
+        this.app.fetch({
+            comments: {collection: "Admin_BlogComments", params: {}}
+        }, {readFromCache: false, writeToCache: false}, callback);
     }
 };

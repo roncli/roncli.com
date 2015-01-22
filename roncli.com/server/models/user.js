@@ -11,6 +11,12 @@ var moment = require("moment"),
     Deferred = promise.Deferred,
     all = promise.all,
 
+    /**
+     * Hashes a password with the specified salt.
+     * @param {string} password The password to hash.
+     * @param {string} salt The salt to hash with.
+     * @param {function(string)} callback The callback function.
+     */
     getHashedPassword = function(password, salt, callback) {
         "use strict";
 
@@ -21,6 +27,121 @@ var moment = require("moment"),
         });
     };
 
+/**
+ * Gets the user's role from the database.
+ * @param {number} userId The user ID.
+ * @param {function(null, object)|function(object)} callback The callback function.
+ */
+module.exports.getUserRoles = function(userId, callback) {
+    "use strict";
+
+    db.query(
+        "SELECT r.Role from tblRole r INNER JOIN tblUserRole ur ON r.RoleID = ur.RoleID WHERE ur.UserID = @userId",
+        {userId: {type: db.INT, value: userId}},
+        function(err, data) {
+            if (err) {
+                console.log("Database error in user.getUserRole.");
+                console.log(err);
+            }
+
+            if (!data[0]) {
+                callback(null, {});
+            }
+
+            callback(null, data[0].map(function(role) {
+                return role.Role;
+            }));
+        }
+    );
+};
+
+/**
+ * Gets notifications for the user.
+ * @param {number} userId The user ID to get notifications for.
+ * @param {function(null, object)|function(object)} callback The callback function.
+ */
+module.exports.getNotifications = function(userId, callback) {
+    "use strict";
+
+    // Get user group.
+    this.getUserRoles(userId, function(err, roles) {
+        var promises = [];
+
+        if (err) {
+            callback({
+                error: "There was a database error logging in.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        // Get blog comments to moderate.
+        if (roles.indexOf("SiteAdmin") !== -1) {
+            promises.push((function() {
+                var deferred = new Deferred();
+
+                db.query(
+                    "SELECT COUNT(CommentID) Comments FROM tblBlogComment WHERE ModeratedDate IS NULL",
+                    {},
+                    function(err, data) {
+                        if (err) {
+                            console.log("Database error in user.getNotifications while getting count of comments needing moderation.");
+                            console.log(err);
+                            deferred.reject({
+                                error: "There was a database error getting user notifications.  Please relaod the page and try again.",
+                                status: 500
+                            });
+                            return;
+                        }
+
+                        deferred.resolve({blog: data[0][0].Comments, admin: true});
+                    }
+                );
+
+                return deferred.promise;
+            }()));
+        }
+
+        if (promises.length === 0) {
+            callback(null, {});
+            return;
+        }
+
+        all(promises).then(
+            // Merge the results.
+            function(results) {
+                var result = {admin: 0};
+
+                results.forEach(function(arg) {
+                    var admin = arg.admin === true,
+                        key;
+
+                    for (key in arg) {
+                        if (arg.hasOwnProperty(key) && key !== "admin" && arg[key] !== 0) {
+                            result[key] = arg[key];
+                            if (admin) {
+                                result.admin += arg[key];
+                            }
+                        }
+                    }
+                });
+
+                callback(null, result);
+            },
+
+            // If any of the functions error out, it will be handled here.
+            function(err) {
+                callback(err);
+            }
+        );
+    });
+};
+
+/**
+ * Determines whether the user's DOB is valid.
+ * @param {string} dob The date of birth.
+ * @param {function(null, object)|function(object)} callback The callback function.
+ */
 module.exports.isDobValid = function(dob, callback) {
     "use strict";
 
@@ -108,11 +229,13 @@ module.exports.emailExists = function(email, userId, callback) {
 module.exports.login = function(email, password, callback) {
     "use strict";
 
+    var User = this;
+
     db.query(
         "SELECT UserID, PasswordHash, Salt, Alias, DOB, Validated FROM tblUser WHERE Email = @email",
         {email: {type: db.VARCHAR(256), value: email}},
         function(err, data) {
-            var user, salt;
+            var user;
 
             if (err) {
                 console.log("Database error in user.login while checking for valid credentials.");
@@ -148,55 +271,47 @@ module.exports.login = function(email, password, callback) {
                     return;
                 }
 
-                db.query(
-                    "SELECT r.Role from tblRole r INNER JOIN tblUserRole ur ON r.RoleID = ur.RoleID WHERE ur.UserID = @userId",
-                    {userId: {type: db.INT, value: user.UserID}},
-                    function(err, data) {
-                        if (err) {
-                            console.log("Database error in user.login while looking up the user's role.");
-                            console.log(err);
-                            callback({
-                                error: "There was a database error logging in.  Please reload the page and try again.",
-                                status: 500
-                            });
-                            return;
-                        }
-
-                        var accountLinks = [{
-                            url: "/account",
-                            text: "Account"
-                        }];
-
-                        if (data[0]) {
-                            _(data[0]).each(function(row) {
-                                // Add additional links in the navbar based on the user's roles.
-                                switch (row.Role) {
-                                    case "SiteAdmin":
-                                        accountLinks.push({
-                                            url: "/admin",
-                                            text: "Admin",
-                                            script: "/js/admin.min.js",
-                                            templates: {
-                                                pattern: "^admin\\/.+",
-                                                src: "app/templates/adminTemplates"
-                                            },
-                                            routes: "app/adminRoutes"
-                                        });
-                                        break;
-                                }
-                            });
-                        }
-
-                        callback(null, {
-                            id: user.UserID,
-                            alias: user.Alias,
-                            email: email,
-                            dob: new Date(user.DOB).toISOString(),
-                            validated: user.Validated,
-                            accountLinks: accountLinks
+                User.getUserRoles(user.UserID, function(err, roles) {
+                    if (err) {
+                        callback({
+                            error: "There was a database error logging in.  Please reload the page and try again.",
+                            status: 500
                         });
+                        return;
                     }
-                );
+
+                    var accountLinks = [{
+                        url: "/account",
+                        text: "Account"
+                    }];
+
+                    roles.forEach(function(row) {
+                        // Add additional links in the navbar based on the user's roles.
+                        switch (row) {
+                            case "SiteAdmin":
+                                accountLinks.push({
+                                    url: "/admin",
+                                    text: "Admin",
+                                    script: "/js/admin.min.js",
+                                    templates: {
+                                        pattern: "^admin\\/.+",
+                                        src: "app/templates/adminTemplates"
+                                    },
+                                    routes: "app/adminRoutes"
+                                });
+                                break;
+                        }
+                    });
+
+                    callback(null, {
+                        id: user.UserID,
+                        alias: user.Alias,
+                        email: email,
+                        dob: new Date(user.DOB).toISOString(),
+                        validated: user.Validated,
+                        accountLinks: accountLinks
+                    });
+                });
             });
         }
     );
@@ -919,8 +1034,6 @@ module.exports.changeEmail = function(userId, password, captchaData, captchaResp
                 }
 
                 getHashedPassword(password, user.Salt, function(hashedPassword) {
-                    var authorizationCode;
-
                     if (hashedPassword !== user.PasswordHash) {
                         callback({
                             error: "The password is incorrect.",

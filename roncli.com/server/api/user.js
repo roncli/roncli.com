@@ -5,6 +5,8 @@ var moment = require("moment"),
 module.exports.get = function(req, callback) {
     "use strict";
 
+    var userId = req.session.user ? req.session.user.id : 0;
+
     switch (req.parsedPath.length) {
         case 0:
             // Attempt to get data for the currently logged in user.
@@ -32,6 +34,27 @@ module.exports.get = function(req, callback) {
             req.res.status(401);
             callback({error: "You are not logged in."});
             return;
+        case 1:
+            switch (req.parsedPath[0]) {
+                case "getNotifications":
+                    if (userId === 0) {
+                        req.res.status(401);
+                        callback({error: "You are not logged in."});
+                        return;
+                    }
+
+                    user.getNotifications(userId, function(err, data) {
+                        if (err) {
+                            handleError(err, req);
+                            callback(err);
+                            return;
+                        }
+
+                        callback(data);
+                    });
+                    return;
+            }
+            break;
     }
 
     req.res.status(404);

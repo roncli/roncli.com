@@ -485,7 +485,7 @@ module.exports.getCommentsByUrl = function(url, callback) {
             bloggerDeferred;
 
         db.query(
-            "SELECT bc.CommentID, bc.Comment, bc.CrDate, u.Alias FROM tblBlogComment bc INNER JOIN tblUser u ON bc.CrUserID = u.UserID WHERE bc.BlogURL = @url AND bc.ModeratedDate IS NOT NULL",
+            "SELECT bc.CommentID, bc.Comment, bc.CrDate, u.Alias FROM tblBlogComment bc INNER JOIN tblUser u ON bc.CrUserID = u.UserID WHERE bc.BlogURL = @url AND bc.ModeratedDate IS NOT NULL ORDER BY bc.CrDate",
             {url: {type: db.VARCHAR(1024), value: url}},
             function(err, data) {
                 if (err) {

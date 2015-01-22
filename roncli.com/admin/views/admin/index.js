@@ -1,5 +1,4 @@
-var BaseView = require("rendr/shared/base/view"),
-    $ = require("jquery");
+var BaseView = require("rendr/shared/base/view");
 
 // Sets up the admin view.
 module.exports = BaseView.extend({

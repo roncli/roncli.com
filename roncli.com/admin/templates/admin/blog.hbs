@@ -8,9 +8,12 @@
     </div>
     <div class="panel panel-primary">
         <div class="panel-heading text-center"><h3>Comments to Moderate</h3></div>
-        <div class="panel-body">
-
-        </div>
+        {{#each comments.models}}
+            {{partial "admin/blog/comment"}}
+        {{/each}}
+        {{#ifCond comments.models.length "===" 0}}
+            <div class="panel-body">There are no comments pending moderation.</div>
+        {{/ifCond}}
     </div>
 </div>
 <div class="col-sm-2 hidden-xs right-side">
