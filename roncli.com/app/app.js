@@ -157,8 +157,8 @@ module.exports = BaseApp.extend({
                     if (link.templates) {
                         app.templateAdapter.templatePatterns.unshift({pattern: new RegExp(link.templates.pattern), src: link.templates.src});
                     }
-                    if (link.route) {
-                        app.router.route(new RegExp(link.route.pattern), link.route.route);
+                    if (link.routes) {
+                        require(link.routes)(app);
                     }
                 };
 

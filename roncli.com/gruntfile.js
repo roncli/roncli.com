@@ -64,6 +64,7 @@ module.exports = function(grunt) {
         browserify: {
             combine_main_js_files: {
                 options: {
+                    alias: ["rendr/shared/base/view"],
                     require: Object.keys(pjson.browser),
                     preBundleCB: function(b) {
                         b.on("remapify:files", function(file, expandedAliases) {
