@@ -8,9 +8,13 @@
     <div class="comment-body">
         {{{sanitize attributes.content}}}
     </div>
-    <div class="pull-right">
-        <a href="{{{attributes.url}}}" class="btn btn-primary">{{attributes.url}}</a>
-        <button class="btn btn-success approve-comment" style="margin-left: 20px; margin-right: 20px;">Approve</button>
-        <button class="btn btn-danger reject-comment">Reject</button>
+    <div class="comment-actions row">
+        <div class="col-xs-12">
+            <div class="pull-right">
+                <a href="{{{attributes.url}}}" class="btn btn-primary post-link">{{attributes.url}}</a>
+                <button class="btn btn-success approve-comment" style="margin-left: 20px; margin-right: 20px;">Approve</button>
+                <button class="btn btn-danger reject-comment">Reject</button>
+            </div>
+        </div>
     </div>
 </div>
