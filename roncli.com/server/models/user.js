@@ -56,6 +56,7 @@ module.exports.getUserRoles = function(userId, callback) {
 };
 
 /**
+<<<<<<< HEAD
  * Gets notifications for the user.
  * @param {number} userId The user ID to get notifications for.
  * @param {function(null, object)|function(object)} callback The callback function.
