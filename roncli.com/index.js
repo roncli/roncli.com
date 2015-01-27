@@ -10,6 +10,7 @@ var config = require("./server/privateConfig").server,
     cookieParser = require("cookie-parser"),
     session = require("express-session"),
     bodyParser = require("body-parser"),
+    rss = require("./server/rss/rss"),
     app = express(),
     ApiDataAdapter = require("./server/ApiDataAdapter"),
     server = rendr.createServer({
@@ -57,6 +58,12 @@ app.use(function(req, res, next) {
     });
 
     d.run(next);
+});
+
+app.get("*.rss", function(req, res) {
+    "use strict";
+
+    rss(req, res);
 });
 
 // Set up Captcha route.

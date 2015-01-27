@@ -29,6 +29,7 @@
         "redis": "0.12.1",
         "rendr": "0.5.2",
         "rendr-handlebars": "0.2.2",
+        "rss": "1.1.1",
         "sanitize-html": "1.5.1",
         "tumblr": "0.4.1",
         "twitter": "1.0.3",
