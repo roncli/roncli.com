@@ -284,26 +284,26 @@ module.exports.getPost = function(post, callback) {
                 if (index || index === 0) {
                     all(
                         (function() {
-                            var deferred = new Deferred();
+                            var nextDeferred = new Deferred();
 
                             if (index === 0) {
-                                deferred.resolve(null);
+                                nextDeferred.resolve(null);
                             } else {
                                 cache.zrevrange(key, index - 1, index - 1, function(post) {
-                                    deferred.resolve(post);
+                                    nextDeferred.resolve(post);
                                 });
                             }
 
-                            return deferred.promise;
+                            return nextDeferred.promise;
                         }()),
                         (function() {
-                            var deferred = new Deferred();
+                            var prevDeferred = new Deferred();
 
                             cache.zrevrange(key, index + 1, index + 1, function(post) {
-                                deferred.resolve(post);
+                                prevDeferred.resolve(post);
                             });
 
-                            return deferred.promise;
+                            return prevDeferred.promise;
                         }())
                     ).then(
                         function(posts) {

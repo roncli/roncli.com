@@ -1,6 +1,9 @@
 var cache = require("../cache/cache"),
     Rss = require("rss"),
-    blog = require("../models/blog");
+    blog = require("../models/blog"),
+    promise = require("promised-io/promise"),
+    Deferred = promise.Deferred,
+    all = promise.all;
 
 /**
  * Get the RSS feed for the blog.
@@ -12,7 +15,7 @@ module.exports.rss = function(req, res, callback) {
     "use strict";
 
     var startIndex = req.query["start-index"] || 1,
-        category = req.query["category"],
+        category = req.query.category,
         cacheKey = "roncli.com:rss:blog:" + startIndex + (category ? ":" + category : ""),
         feed = new Rss();
 
@@ -32,13 +35,87 @@ module.exports.rss = function(req, res, callback) {
         feed.webMaster = "roncli@roncli.com (Ronald M. Clifford)";
         feed.copyright = (new Date()).getFullYear().toString() + " Ronald M. Clifford";
         feed.language = "en-us";
-        // feed.categories
         feed.ttl = 60;
         feed.custom_namespaces.openSearch = "http://a9.com/-/spec/opensearchrss/1.0/";
-        feed.custom_namespaces.thr = "http://purl.org/syndication/thread/1.0";
         // feed.custom_elements.push({"openSearch:totalResults": ""});
         feed.custom_elements.push({"openSearch:startIndex": startIndex.toString()});
         feed.custom_elements.push({"openSearch:itemsPerPage": "25"});
+
+        // Get the list of blog categories.  This will ensure that all the posts are there.
+        blog.getCategories(function(err, categories) {
+            if (err) {
+                res.status(err.status);
+                callback({error: err.error});
+                return;
+            }
+
+            feed.categories = [];
+            categories.forEach(function(category) {
+                feed.categories.push(category.category);
+            });
+
+            all(
+                (function () {
+                    var deferred = new Deferred(),
+                        key;
+
+                    if (category) {
+                        key = "roncli.com:blog:category:" + category;
+                    } else {
+                        key = "roncli.com:blog:posts";
+                    }
+
+                    cache.zrevrange(key, startIndex - 1, startIndex + 23, function(posts) {
+                        var promises = [];
+
+                        posts.forEach(function(post) {
+                            promises.push((function() {
+                                var postDeferred = new Deferred();
+
+                                blog.getPost(post, function(err, postData) {
+                                    if (err) {
+                                        postDeferred.reject(err);
+                                        return;
+                                    }
+
+                                    postDeferred.resolve(postData);
+                                });
+
+                                return postDeferred.promise;
+                            }()));
+                        });
+
+                        all(promises).then(
+                            function(posts) {
+                                posts.forEach(function(post) {
+                                    feed.item({ //TODO: Complete this
+                                        guid: "",
+                                        pubDate: "",
+                                        "atom:updated": "",
+                                        categories: [],
+                                        title: "",
+                                        description: "",
+                                        link: "",
+                                        author: "roncli@roncli.com (roncli)"
+                                    });
+                                });
+
+                                deferred.resolve();
+                            },
+
+                            // If any of the functions error out, it will be handled here.
+                            function(err) {
+                                res.status(err.status);
+                                callback({error: err.error});
+                                return;
+                            }
+                        )
+                    });
+
+                    return deferred.promise;
+                }())
+            );
+        });
     });
 
 
