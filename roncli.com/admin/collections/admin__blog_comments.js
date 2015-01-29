@@ -3,7 +3,7 @@ var Category = require("../models/admin__blog_comment"),
 
 module.exports = Collection.extend({
     model: Category,
-    url: "/admin/blog-comments"
+    url: "/admin/blog/comments"
 });
 
 module.exports.id = "Admin_BlogComments";

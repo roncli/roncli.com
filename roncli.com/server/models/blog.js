@@ -127,6 +127,16 @@ var Moment = require("moment"),
     };
 
 /**
+ * Forces the blog to cache the posts, even if they are already cached.
+ * @param {function} callback The callback function.
+ */
+module.exports.forceCachePosts = function(callback) {
+    "use strict";
+
+    cachePosts(callback);
+};
+
+/**
  * Gets the latest blog post.
  * @param {function} callback The callback function.
  */

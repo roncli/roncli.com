@@ -1,5 +1,7 @@
 var User = require("./user"),
-    db = require("../database/database.js");
+    db = require("../database/database"),
+    blog = require("../models/blog"),
+    cache = require("../cache/cache");
 
 /**
  * Reeturn list of blog comments to moderate.
@@ -56,6 +58,45 @@ module.exports.getBlogCommentsToModerate = function(userId, callback) {
                 }));
             }
         );
+    });
+};
+
+/**
+ * Clears the blog's caches.
+ * @param {number} userId The user ID of the moderator.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.clearBlogCaches = function(userId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while approving a blog comment.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        cache.keys("roncli.com:[bt][lu][om][gb][:gl]*", function(keys) {
+            var cachePosts = function() {
+                blog.forceCachePosts(callback);
+            };
+
+            if (keys.length > 0) {
+                cache.del(keys, cachePosts);
+            } else {
+                cachePosts();
+            }
+        });
     });
 };
 

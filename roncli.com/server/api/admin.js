@@ -10,21 +10,25 @@ module.exports.get = function(req, callback) {
         callback({error: "You are not logged in."});
         return;
     }
-
+console.log(req.parsedPath);
     switch (req.parsedPath.length) {
-        case 1:
+        case 2:
             switch (req.parsedPath[0]) {
-                case "blog-comments":
-                    admin.getBlogCommentsToModerate(userId, function(err, comments) {
-                        if (err) {
-                            req.res.status(err.status);
-                            callback(err);
-                            return;
-                        }
+                case "blog":
+                    switch (req.parsedPath[1]) {
+                        case "comments":
+                            admin.getBlogCommentsToModerate(userId, function(err, comments) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
 
-                        callback(comments);
-                    });
-                    return;
+                                callback(comments);
+                            });
+                            return;
+                    }
+                    break;
             }
             break;
     }
@@ -45,32 +49,48 @@ module.exports.post = function(req, callback) {
     }
 
     switch (req.parsedPath.length) {
-        case 1:
+        case 2:
             switch (req.parsedPath[0]) {
-                case "approve-blog-comment":
-                    admin.approveBlogComment(userId, req.body.commentId, function(err) {
-                        if (err) {
-                            req.res.status(err.status);
-                            callback(err);
-                            return;
-                        }
+                case "blog":
+                    switch (req.parsedPath[1]) {
+                        case "clear-caches":
+                            admin.clearBlogCaches(userId, function(err) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
 
-                        req.res.status(204);
-                        callback();
-                    });
-                    return;
-                case "reject-blog-comment":
-                    admin.rejectBlogComment(userId, req.body.commentId, function(err) {
-                        if (err) {
-                            req.res.status(err.status);
-                            callback(err);
+                                req.res.status(204);
+                                callback();
+                            });
                             return;
-                        }
+                        case "approve-comment":
+                            admin.approveBlogComment(userId, req.body.commentId, function(err) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
 
-                        req.res.status(204);
-                        callback();
-                    });
-                    return;
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                        case "reject-comment":
+                            admin.rejectBlogComment(userId, req.body.commentId, function(err) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                    }
+                    break;
             }
             break;
     }

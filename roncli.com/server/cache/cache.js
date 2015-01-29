@@ -37,6 +37,49 @@ var config = require("../privateConfig").redis,
     };
 
 /**
+ * Deletes keys from the cache.
+ * @param {string[]} keys An array of keys.
+ * @param {function} callback The callback function.
+ */
+module.exports.del = function(keys, callback) {
+    "use strict";
+
+    login(function(err, client) {
+        if (err) {
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+            return;
+        }
+
+        client.on("error", function(err) {
+            console.log("Error deleting cache using del", keys);
+            console.log(err);
+            client.end();
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+        });
+
+        client.del(keys, function(err) {
+            if (err) {
+                console.log("Error deleting cache using del", keys);
+                console.log(err);
+            }
+
+            client.end();
+
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+        });
+    });
+};
+
+/**
  * Gets an item from the cache.
  * @param {string} key The key to get from the cache.
  * @param {function} callback The callback function.
