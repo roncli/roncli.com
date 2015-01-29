@@ -113,7 +113,6 @@
     <Content Include="public\images\twitter\retweet_hover%402x.png" />
     <Content Include="public\images\twitter\retweet_hover.png" />
     <Content Include="README.md" />
-    <Content Include="run.bat" />
     <Content Include="server\templates\email\changeEmail\html.hbs" />
     <Content Include="server\templates\email\changeEmail\text.hbs" />
     <Content Include="server\templates\email\htmlTemplate.hbs" />
