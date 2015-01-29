@@ -307,3 +307,8 @@ blockquote {
     margin: 0;
     font-size: inherit;
 }
+
+/* Alert */
+.alert:last-child {
+    margin-bottom: 0;
+}
