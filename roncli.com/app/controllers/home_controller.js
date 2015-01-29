@@ -9,10 +9,9 @@ module.exports = {
 
         var app = this.app;
 
-        app.fetch(
-            {
-                blog: {model: "Blog_GetLatest", params: {}}
-            }, function(err, result) {
+        app.fetch({
+            blog: {model: "Blog_GetLatest", params: {}}
+        }, function(err, result) {
             if (app.req) {
                 result.meta = {
                     "og:description": "This is the homepage of Ronald M. Clifford.",

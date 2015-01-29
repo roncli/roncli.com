@@ -11,11 +11,10 @@ module.exports = {
 
         var app = this.app;
 
-        app.fetch(
-            {
-                blog: {model: "Blog_GetLatest", params: {}},
-                categories: {collection: "BlogCategories", params: {}}
-            }, function(err, result) {
+        app.fetch({
+            blog: {model: "Blog_GetLatest", params: {}},
+            categories: {collection: "BlogCategories", params: {}}
+        }, function(err, result) {
             if (app.req) {
                 result.meta = {
                     "og:description": "This is the roncli.com Blog.",
@@ -46,11 +45,10 @@ module.exports = {
 
         var app = this.app;
 
-        app.fetch(
-            {
-                blog: {model: "Blog_GetLatestByCategory", params: {category: params[0]}},
-                categories: {collection: "BlogCategories", params: {}}
-            }, function(err, result) {
+        app.fetch({
+            blog: {model: "Blog_GetLatestByCategory", params: {category: params[0]}},
+            categories: {collection: "BlogCategories", params: {}}
+        }, function(err, result) {
             if (app.req) {
                 result.meta = {
                     "og:description": "This is the " + decodeURIComponent(params[0]) + " category of the roncli.com Blog.",
@@ -81,11 +79,10 @@ module.exports = {
 
         var app = this.app;
 
-        app.fetch(
-            {
-                blog: {model: "Blog_GetFromUrl", params: {url: params[0]}},
-                categories: {collection: "BlogCategories", params: {}}
-            }, function(err, result) {
+        app.fetch({
+            blog: {model: "Blog_GetFromUrl", params: {url: params[0]}},
+            categories: {collection: "BlogCategories", params: {}}
+        }, function(err, result) {
             var post, content;
 
             if (app.req) {

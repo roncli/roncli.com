@@ -28,5 +28,5 @@ module.exports = function(match) {
     match(/^\/?((?:blogger|tumblr)\/[0-9]+\/[^\/]+)$/, "blog#url");
 
     // The default route if none of the above match.
-    match(/(?:.*)/, "default#index");
+    match(/\/?(.*)/, "default#index");
 };
