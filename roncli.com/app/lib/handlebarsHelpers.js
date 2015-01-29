@@ -1,4 +1,5 @@
-var moment = require("moment");
+var moment = require("moment"),
+    pjson = require("../../package.json");
 
 /**
  * Helpers for handlebars rendering.
@@ -95,6 +96,10 @@ module.exports = function(Handlebars) {
          */
         year: function() {
             return new Date().getFullYear();
+        },
+
+        version: function() {
+            return pjson.version;
         },
 
         /**

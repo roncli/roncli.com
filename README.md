@@ -15,7 +15,7 @@ The second is the Node project itself, which is developed via PhpStorm.  I do ha
 Requirements
 ============
 
-Be sure to have Visual Studio 2013, and node.js 0.10.31 or later installed with npm.
+Be sure to have [Visual Studio 2013](http://www.visualstudio.com) with [Node.js Tools for Visual Studio](http://nodejstools.codeplex.com). and node.js 0.10.36 or later installed with npm.
 
 Database Setup
 ==============
@@ -23,7 +23,7 @@ Database Setup
 To setup the database, make sure you have Microsoft SQL Server installed.  I use 2014, but I imagine any version will work.
 
 1. Create an empty database.
-2. Open the Visual Studio solution and do a schema comparison against the database using your admin account.
+2. Open the Visual Studio solution.
 3. Right click on the database project and do a Schema Comparison.
 4. Press the Compare button to start the comparison.
 5. Press the Update button to update the database with the schema from the database.
@@ -33,24 +33,23 @@ Windows Installation
 
 To run the website on Windows, make sure you perform the following steps.
 
-1. Install [Visual Studio 2013 Express](http://download.microsoft.com/download/7/2/E/72E0F986-D247-4289-B9DC-C4FB07374894/wdexpress_full.exe) if you do not already have Visual Studio 2013 installed.
-2. Install [Python 2.7.x](https://www.python.org/downloads/).
-3. Download the all-in-one bundle for [GTK+ 2.x x86](http://www.gtk.org/download/win32.php) or [GTK+ 2.x x64](http://www.gtk.org/download/win64.php).
-4. Unzip the GTK+ 2.x directory to c:\GTK.  It is important that the files are in this directory, as that is where the canvas npm package will be looking for it.
-5. Add the c:\GTK\bin\ directory to your system PATH.  (This may require a restart.)
-6. From an admin command prompt, install node-gyp and grunt-cli globally:
+1. Install [Python 2.7.x](https://www.python.org/downloads/).
+2. Download the all-in-one bundle for [GTK+ 2.x x86](http://www.gtk.org/download/win32.php) or [GTK+ 2.x x64](http://www.gtk.org/download/win64.php).
+3. Unzip the GTK+ 2.x directory to c:\GTK.  It is important that the files are in this directory, as that is where the canvas npm package will be looking for it.
+4. Add the c:\GTK\bin\ directory to your system PATH.  (This may require a restart.)
+5. From an admin command prompt, install node-gyp and grunt-cli globally:
 
         npm install -g node-gyp grunt-cli
 
-7. Install the node modules from the /roncli.com directory:
+6. Install the node modules from the /roncli.com directory:
 
         npm install -msvs_version=2013
 
-8. Add /roncli.com/server/privateConfig.js.  See below for file contents.
-9. Apply the following patches:
+7. Add /roncli.com/server/privateConfig.js.  See below for file contents.
+8. Apply the following patches:
     - https://github.com/roncli/remapify/compare/roncli:master...issue-24-from-1.4.4 - This fixes a bug with the ```remapify``` module in order to use it with the latest versions of the ```grunt-browserify``` module.
     - https://github.com/rendrjs/rendr-handlebars/pull/36 - This updates rendr-handlebars to use the latest version of handlebars.
-10. If using [iisnode](https://github.com/tjanczuk/iisnode):
+9. If using [iisnode](https://github.com/tjanczuk/iisnode):
     - Point an IIS application to the inner /roncli.com directory
     - Run ```grunt``` from the same directory when installing and after every time you change code.
     - Be sure to create the directory "logs" in the root of the application and give your application pool write permission.  For instance, if your application pool is ```roncli.com```, you'll give permissions to the account ```IIS AppPool\roncli.com```.
@@ -129,6 +128,11 @@ The following should be the contents of privateConfig.js:
 Version History
 ===============
 
+0.2
+---
+
+This version implements the blog, which links to Blogger and Tumblr.  Included are comments, RSS feeds for the blog and each individual category, and an administration section.
+
 0.1.1
 -----
 
@@ -141,11 +145,6 @@ This version introduces the bare bones of the website, including the layout, Twi
 
 Planned Versions
 ================
-
-0.2
----
-
-* Implement Blogger integration.
 
 0.3
 ---
@@ -180,7 +179,7 @@ Planned Versions
 1.0
 ---
 
-* Website launch.
+* Cleanup and website launch.
 
 License Details
 ===============
@@ -189,4 +188,4 @@ All original code is released without license.  This means that you may not dist
 
 Because the code resides on GitHub, you are permitted via GitHub's [Terms of Service](http://help.github.com/articles/github-terms-of-service) to view and fork this repository.
 
-©2014 Ronald M. Clifford
+©2014-2015 Ronald M. Clifford

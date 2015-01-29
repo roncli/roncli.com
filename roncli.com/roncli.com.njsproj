@@ -27,6 +27,7 @@
     <Content Include="app\templates\default\index.hbs" />
     <Content Include="app\templates\home\index.hbs" />
     <Content Include="app\templates\site\emailChange.hbs" />
+    <Content Include="app\templates\site\emailChangeRequestError.hbs" />
     <Content Include="app\templates\site\emailChangeValidationSent.hbs" />
     <Content Include="app\templates\site\loggedIn.hbs" />
     <Content Include="app\templates\site\loggedOut.hbs" />
@@ -35,6 +36,7 @@
     <Content Include="app\templates\site\passwordReset.hbs" />
     <Content Include="app\templates\site\passwordResetRequest.hbs" />
     <Content Include="app\templates\site\passwordResetRequestError.hbs" />
+    <Content Include="app\templates\site\share.hbs" />
     <Content Include="app\templates\site\tweet.hbs" />
     <Content Include="app\templates\site\validationError.hbs" />
     <Content Include="app\templates\site\validationSent.hbs" />
@@ -45,16 +47,30 @@
     <Content Include="assets\css\site.css" />
     <Content Include="assets\tools\bootstrap-magic.less" />
     <Content Include="package.json" />
+    <Content Include="public\images\blogger%402x.png" />
+    <Content Include="public\images\blogger.png" />
     <Content Include="public\images\browsers\chrome.png" />
     <Content Include="public\images\browsers\firefox.png" />
     <Content Include="public\images\browsers\ie.png" />
     <Content Include="public\images\browsers\safari.png" />
+    <Content Include="public\images\facebook%402x.png" />
+    <Content Include="public\images\facebook.png" />
     <Content Include="public\images\favicon.ico" />
+    <Content Include="public\images\favicon.png" />
+    <Content Include="public\images\gplus%402x.png" />
+    <Content Include="public\images\gplus.png" />
     <Content Include="public\images\loading.gif" />
     <Content Include="public\images\loadingSmall.gif" />
     <Content Include="public\images\roncliLogo%402x.png" />
     <Content Include="public\images\roncliLogo%404x.png" />
     <Content Include="public\images\roncliLogo.png" />
+    <Content Include="public\images\roncliSmall.png" />
+    <Content Include="public\images\rss%402x.png" />
+    <Content Include="public\images\rss.png" />
+    <Content Include="public\images\tumblr%402x.png" />
+    <Content Include="public\images\tumblr.png" />
+    <Content Include="public\images\twitter%402x.png" />
+    <Content Include="public\images\twitter.png" />
     <Content Include="public\images\twitter\favorite%402x.png" />
     <Content Include="public\images\twitter\favorite.png" />
     <Content Include="public\images\twitter\favorite_hover%402x.png" />
@@ -84,6 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="app\app.js" />
+    <Compile Include="app\collections\base.js" />
     <Compile Include="app\collections\tweets.js" />
     <Compile Include="app\controllers\account_controller.js" />
     <Compile Include="app\controllers\default_controller.js" />
