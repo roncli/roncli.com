@@ -8,7 +8,7 @@ module.exports = {
         "use strict";
         
         var app = this.app;
-console.log(params);
+
         app.fetch({
             page: {model: "Page", params: {url: "/" + params[0]}}
         }, function(err, result) {
