@@ -18,6 +18,10 @@ ol {
     height: 51px;
 }
 
+.site-footer {
+    margin-top: 15px;
+}
+
 .site-footer .row {
     margin: 0;
     border: none;

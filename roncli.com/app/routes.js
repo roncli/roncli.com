@@ -19,5 +19,5 @@ module.exports = function(match) {
     match(/^\/?account$/, "account#index");
 
     // The default route if none of the above match.
-    match(/(?:.*)/, "default#index");
+    match(/\/?(.*)/, "default#index");
 };

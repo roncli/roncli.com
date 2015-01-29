@@ -9,7 +9,7 @@
 
 var config = require("../privateConfig").twitter,
     twitter = new (require("twitter"))(config),
-    cache = require("../cache/cache.js");
+    cache = require("../cache/cache");
 
 module.exports.getTweets = function(callback) {
     "use strict";
