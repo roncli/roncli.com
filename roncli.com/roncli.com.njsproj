@@ -16,6 +16,13 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
   <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
   <ItemGroup>
+    <Content Include="admin\templates\admin\blog.hbs" />
+    <Content Include="admin\templates\admin\blog\approve.hbs" />
+    <Content Include="admin\templates\admin\blog\cachesCleared.hbs" />
+    <Content Include="admin\templates\admin\blog\comment.hbs" />
+    <Content Include="admin\templates\admin\blog\reject.hbs" />
+    <Content Include="admin\templates\admin\error.hbs" />
+    <Content Include="admin\templates\admin\index.hbs" />
     <Content Include="app\templates\account\account.hbs" />
     <Content Include="app\templates\account\aliasChanged.hbs" />
     <Content Include="app\templates\account\changeAlias.hbs" />
@@ -25,6 +32,11 @@
     <Content Include="app\templates\account\index.hbs" />
     <Content Include="app\templates\account\passwordChanged.hbs" />
     <Content Include="app\templates\blog\category.hbs" />
+    <Content Include="app\templates\blog\comment.hbs" />
+    <Content Include="app\templates\blog\commentAwaitingModeration.hbs" />
+    <Content Include="app\templates\blog\commentLoadingError.hbs" />
+    <Content Include="app\templates\blog\comments\blogger.hbs" />
+    <Content Include="app\templates\blog\comments\site.hbs" />
     <Content Include="app\templates\blog\index.hbs" />
     <Content Include="app\templates\blog\post.hbs" />
     <Content Include="app\templates\blog\posts\blogger.hbs" />
@@ -41,6 +53,7 @@
     <Content Include="app\templates\default\index.hbs" />
     <Content Include="app\templates\home\index.hbs" />
     <Content Include="app\templates\site\emailChange.hbs" />
+    <Content Include="app\templates\site\emailChangeRequestError.hbs" />
     <Content Include="app\templates\site\emailChangeValidationSent.hbs" />
     <Content Include="app\templates\site\loggedIn.hbs" />
     <Content Include="app\templates\site\loggedOut.hbs" />
@@ -58,15 +71,20 @@
     <Content Include="assets\css\bootstrap-theme-override.css" />
     <Content Include="assets\css\bootstrap-theme.css" />
     <Content Include="assets\css\site.css" />
+    <Content Include="assets\css\tinymce.css" />
     <Content Include="assets\tools\bootstrap-magic.less" />
     <Content Include="package.json" />
+    <Content Include="public\images\blogger%402x.png" />
+    <Content Include="public\images\blogger.png" />
     <Content Include="public\images\browsers\chrome.png" />
     <Content Include="public\images\browsers\firefox.png" />
     <Content Include="public\images\browsers\ie.png" />
     <Content Include="public\images\browsers\safari.png" />
+    <Content Include="public\images\facebook%402x.png" />
     <Content Include="public\images\facebook.png" />
     <Content Include="public\images\favicon.ico" />
     <Content Include="public\images\favicon.png" />
+    <Content Include="public\images\gplus%402x.png" />
     <Content Include="public\images\gplus.png" />
     <Content Include="public\images\loading.gif" />
     <Content Include="public\images\loadingSmall.gif" />
@@ -74,7 +92,11 @@
     <Content Include="public\images\roncliLogo%404x.png" />
     <Content Include="public\images\roncliLogo.png" />
     <Content Include="public\images\roncliSmall.png" />
+    <Content Include="public\images\rss%402x.png" />
+    <Content Include="public\images\rss.png" />
+    <Content Include="public\images\tumblr%402x.png" />
     <Content Include="public\images\tumblr.png" />
+    <Content Include="public\images\twitter%402x.png" />
     <Content Include="public\images\twitter.png" />
     <Content Include="public\images\twitter\favorite%402x.png" />
     <Content Include="public\images\twitter\favorite.png" />
@@ -104,8 +126,18 @@
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="admin\adminRoutes.js" />
+    <Compile Include="admin\collections\admin__blog_comments.js" />
+    <Compile Include="admin\controllers\admin_controller.js" />
+    <Compile Include="admin\models\admin.js" />
+    <Compile Include="admin\models\admin__blog_comment.js" />
+    <Compile Include="admin\models\user__get_notifications.js" />
+    <Compile Include="admin\views\admin\blog.js" />
+    <Compile Include="admin\views\admin\index.js" />
     <Compile Include="app\app.js" />
+    <Compile Include="app\collections\base.js" />
     <Compile Include="app\collections\blog_categories.js" />
+    <Compile Include="app\collections\blog_comments.js" />
     <Compile Include="app\collections\tweets.js" />
     <Compile Include="app\controllers\account_controller.js" />
     <Compile Include="app\controllers\blog_controller.js" />
@@ -114,7 +146,6 @@
     <Compile Include="app\lib\handlebarsHelpers.js" />
     <Compile Include="app\lib\validationExtensions.js" />
     <Compile Include="app\models\base.js" />
-    <Compile Include="app\models\blog.js" />
     <Compile Include="app\models\blog_category.js" />
     <Compile Include="app\models\blog_comment.js" />
     <Compile Include="app\models\blog__get_from_url.js" />
@@ -139,6 +170,7 @@
     <Compile Include="gruntfile.js" />
     <Compile Include="index.js" />
     <Compile Include="server\ApiDataAdapter.js" />
+    <Compile Include="server\api\admin.js" />
     <Compile Include="server\api\blog-category.js" />
     <Compile Include="server\api\blog-comment.js" />
     <Compile Include="server\api\blog.js" />
@@ -153,15 +185,27 @@
     <Compile Include="server\guid\guid.js" />
     <Compile Include="server\handleError.js" />
     <Compile Include="server\mail\mail.js" />
+    <Compile Include="server\models\admin.js" />
     <Compile Include="server\models\blog.js" />
     <Compile Include="server\models\captcha.js" />
     <Compile Include="server\models\tweet.js" />
     <Compile Include="server\models\user.js" />
     <Compile Include="server\privateConfig.js" />
+    <Compile Include="server\rss\blog.js" />
+    <Compile Include="server\rss\rss.js" />
     <Compile Include="server\templates\template.js" />
     <Compile Include="server\tumblr\tumblr.js" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="admin\" />
+    <Folder Include="admin\collections\" />
+    <Folder Include="admin\controllers\" />
+    <Folder Include="admin\models\" />
+    <Folder Include="admin\templates\" />
+    <Folder Include="admin\templates\admin\" />
+    <Folder Include="admin\templates\admin\blog\" />
+    <Folder Include="admin\views\" />
+    <Folder Include="admin\views\admin\" />
     <Folder Include="app\" />
     <Folder Include="app\collections\" />
     <Folder Include="app\controllers\" />
@@ -170,6 +214,7 @@
     <Folder Include="app\templates\" />
     <Folder Include="app\templates\account\" />
     <Folder Include="app\templates\blog\" />
+    <Folder Include="app\templates\blog\comments\" />
     <Folder Include="app\templates\blog\posts\" />
     <Folder Include="app\templates\default\" />
     <Folder Include="app\templates\home\" />
@@ -198,6 +243,7 @@
     <Folder Include="server\guid\" />
     <Folder Include="server\mail\" />
     <Folder Include="server\models\" />
+    <Folder Include="server\rss\" />
     <Folder Include="server\templates\" />
     <Folder Include="server\templates\email\" />
     <Folder Include="server\templates\email\changeEmail\" />

@@ -1,5 +1,6 @@
 var moment = require("moment"),
-    sanitizeHtml = require("sanitize-html");
+    sanitizeHtml = require("sanitize-html"),
+    pjson = require("../../package.json");
 
 /**
  * Helpers for handlebars rendering.
@@ -114,6 +115,10 @@ module.exports = function(Handlebars) {
          */
         year: function() {
             return new Date().getFullYear();
+        },
+
+        version: function() {
+            return pjson.version;
         },
 
         /**
