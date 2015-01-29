@@ -20,7 +20,9 @@ module.exports = BaseView.extend({
     postRender: function() {
         "use strict";
 
-        var blogTopNav = $("#blog-top-nav");
+        var blogTopNav = $("#blog-top-nav"),
+            rssText = $("div.rss-text"),
+            rssLink = $("a.rss-link");
 
         $("div.blog img").each(function() {
             var image = $(this);
@@ -40,12 +42,19 @@ module.exports = BaseView.extend({
                     this.app.lastBlogNav = "all";
                 }
 
+                if (["all", "blogsource"].indexOf(this.app.lastBlogNav) === -1) {
+                    rssText.html("Subscribe to this category:");
+                    rssLink.attr("href", rssLink.attr("href") + "?category=" + this.app.lastBlogNav);
+                }
+
                 blogTopNav.html($("div.blog-nav-bottom[data-blog-nav=\"" + this.app.lastBlogNav + "\"]").html()).data("blog-nav", this.app.lastBlogNav);
                 break;
             case "blog/index":
                 blogTopNav.html($("div.blog-nav-bottom[data-blog-nav=\"all\"]").html()).data("blog-nav", "all");
                 break;
             case "blog/category":
+                rssText.html("Subscribe to this category:");
+                rssLink.attr("href", rssLink.attr("href") + "?category=" + blogTopNav.data("load-category"));
                 blogTopNav.html($("div.blog-nav-bottom[data-blog-nav=\"" + blogTopNav.data("load-category") + "\"]").html()).data("blog-nav", blogTopNav.data("load-category"));
                 break;
         }

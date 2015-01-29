@@ -400,6 +400,7 @@ module.exports.getPost = function(post, callback) {
                     postData.post.categories = post.categories;
                     postData.post.published = post.published;
                     postData.post.blogTitle = post.title;
+                    postData.post.id = post.id;
 
                     postData.source = categoryRanks[categoryRanks.length - 1];
 

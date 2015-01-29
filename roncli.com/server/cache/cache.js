@@ -138,7 +138,7 @@ module.exports.hget = function(key, field, callback) {
  * @param {string} key The key to add to a hash in the cache.
  * @param {{key: string, value: object}[]} keyValuePairs An array of objects contaning a key and a value.
  * @param {number} expiration The expiration in seconds.
- * @param {function} callback= The optional callback function.
+ * @param {function} [callback] The optional callback function.
  */
 module.exports.hmset = function(key, keyValuePairs, expiration, callback) {
     "use strict";
@@ -209,7 +209,7 @@ module.exports.keys = function(key, callback) {
 
         client.on("error", function(err) {
             console.log("Error getting cache using keys", key);
-            console.log();
+            console.log(err);
             client.end();
             if (typeof callback === "function") {
                 callback();
@@ -240,7 +240,7 @@ module.exports.keys = function(key, callback) {
  * @param {string} key The key to set in the cache.
  * @param {object} value The value to set in the cache.
  * @param {number} expiration The expiration in seconds.
- * @param {function} callback= The optional callback function.
+ * @param {function} [callback] The optional callback function.
  */
 module.exports.set = function(key, value, expiration, callback) {
     "use strict";
@@ -292,7 +292,7 @@ module.exports.set = function(key, value, expiration, callback) {
  * @param {string} key The key to add to a sorted set in the cache.
  * @param {{value: object, score: number}[]} valueScorePairs An array of objects contaning a value and a score.
  * @param {number} expiration The expiration in seconds.
- * @param {function} callback= The optional callback function.
+ * @param {function} [callback] The optional callback function.
  */
 module.exports.zadd = function(key, valueScorePairs, expiration, callback) {
     "use strict";
@@ -344,6 +344,54 @@ module.exports.zadd = function(key, valueScorePairs, expiration, callback) {
 };
 
 /**
+ * Retrieves the count of items from a sorted set in the cache.
+ * @param {string} key The key to get the sorted set from in the cache.
+ * @param {function} callback The callback function.
+ */
+module.exports.zcard = function(key, callback) {
+    "use strict";
+
+    login(function(err, client) {
+        if (err) {
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+            return;
+        }
+
+        client.on("error", function(err) {
+            console.log("Error retrieving cache using zcard", key);
+            console.log(err);
+            client.end();
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+        });
+
+        client.zcard(key, function(err, data) {
+            client.end();
+
+            if (err) {
+                console.log("Error retrieving cache using zcard", key);
+                console.log(err);
+                if (typeof callback === "function") {
+                    callback();
+                    callback = null;
+                }
+                return;
+            }
+
+            if (typeof callback === "function") {
+                callback(data);
+                callback = null;
+            }
+        });
+    });
+};
+
+/**
  * Retrieves items from a sorted set in the cache.
  * @param {string} key The key to get the sorted set from in the cache.
  * @param {number} start The start of the range.
@@ -363,7 +411,7 @@ module.exports.zrange = function(key, start, end, callback) {
         }
 
         client.on("error", function(err) {
-            console.log("Error retrieving cache using set", key, start, end);
+            console.log("Error retrieving cache using zrange", key, start, end);
             console.log(err);
             client.end();
             if (typeof callback === "function") {
@@ -493,12 +541,13 @@ module.exports.zrevrank = function(key, value, callback) {
             }
         });
     });
-}
+};
 
 /**
  * Stores the union of two sorted sets into a new sorted set.
  * @param {string} key The key to store the resulting set in.
  * @param {string[]} keys An array of keys to use.
+ * @param {number} expiration The expiration in seconds.
  * @param {function} callback The callback function.
  */
 module.exports.zunionstore = function(key, keys, expiration, callback) {
@@ -545,4 +594,3 @@ module.exports.zunionstore = function(key, keys, expiration, callback) {
         });
     });
 };
-
