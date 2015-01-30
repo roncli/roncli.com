@@ -10,7 +10,23 @@ module.exports.get = function(req, callback) {
         callback({error: "You are not logged in."});
         return;
     }
-console.log(req.parsedPath);
+
+    if (req.parsedPath.length > 0) {
+        if (req.parsedPath[0] === "page") {
+            // TODO: This is a workaround until we can get the querystring parameters from Rendr's server sync.  See https://github.com/rendrjs/rendr/pull/392 for the upcoming fix.
+            admin.getPageByUrl(userId, req.parsedPath.slice(1).join("/"), function(err, data) {
+                if (err) {
+                    req.res.status(err.status);
+                    callback(err);
+                    return;
+                }
+
+                callback(data);
+            });
+            return;
+        }
+    }
+
     switch (req.parsedPath.length) {
         case 1:
             switch (req.parsedPath[0]) {

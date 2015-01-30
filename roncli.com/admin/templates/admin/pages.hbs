@@ -4,7 +4,7 @@
         <div class="panel-body">
             <div id="page-list">
                 {{#each pages.models}}
-                    {{partial "admin/pages/page"}}
+                    {{partial "admin/pages/page" page=attributes}}
                 {{/each}}
             </div>
             <div class="panel-body text-center">

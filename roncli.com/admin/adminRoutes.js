@@ -13,4 +13,7 @@ module.exports = function(app) {
 
     // The pages admin page.
     app.router.route(/^\/?admin\/pages$/, "admin#pages");
+
+    // The page admin page.
+    app.router.route(/^\/?admin\/page(\/.*)$/, "admin#page");
 };
