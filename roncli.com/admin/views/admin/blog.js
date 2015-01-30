@@ -1,5 +1,5 @@
 /*global bootbox*/
-var BaseView = require("rendr/shared/base/view"),
+var BaseView = require("./base"),
     $ = require("jquery"),
     Admin = require("../../models/admin");
 
@@ -12,12 +12,6 @@ module.exports = BaseView.extend({
         "click a.post-link": "openPost",
         "click button.approve-comment": "approveComment",
         "click button.reject-comment": "rejectComment"
-    },
-
-    onLogout: function() {
-        "use strict";
-
-        this.app.router.navigate("/", true);
     },
 
     clearCaches: function() {

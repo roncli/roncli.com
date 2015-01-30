@@ -41,6 +41,7 @@
         "rendr-handlebars": "0.2.2",
         "rss": "1.1.1",
         "sanitize-html": "1.5.1",
+        "sortablejs": "1.0.1",
         "tumblr": "0.4.1",
         "twitter": "1.0.3",
         "underscore": "1.7.0"
@@ -64,6 +65,7 @@
         "rendr-handlebars": "./node_modules/rendr-handlebars/index.js",
         "iscroll": "./node_modules/iscroll/build/iscroll.js",
         "moment": "./node_modules/moment/min/moment.min.js",
-        "sanitize-html": "./node_modules/sanitize-html/index.js"
+        "sanitize-html": "./node_modules/sanitize-html/index.js",
+        "sortablejs": "./node_modules/sortablejs/Sortable.min.js"
     }
 }

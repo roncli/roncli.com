@@ -189,3 +189,68 @@ module.exports.rejectBlogComment = function(userId, commentId, callback) {
         );
     });
 };
+
+/**
+ * Gets the child pages of a parent by URL.
+ * @param {number} userId The user ID of the moderator.
+ * @param {string} url The URL of the pages to get.
+ * @param {function} callback The callback function.
+ */
+module.exports.getPagesByParentUrl = function(userId, url, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        var sql;
+
+        if (err) {
+            callback({
+                error: "There was a database error while approving a blog comment.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        if (url === null) {
+            sql = "SELECT PageID, PageURL, Title FROM tblPage WHERE ParentPageID IS NULL";
+        } else {
+            sql = "SELECT PageID, PageURL, Title FROM tblPage WHERE ParentPageID IN (SELECT PageID FROM tblPage WHERE PageURL = @url)";
+        }
+
+        db.query(
+            sql, {url: {type: db.VARCHAR(1024), value: url}}, function(err, data) {
+                if (err) {
+                    console.log("Database error in page.getPagesByParentUrl.");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error retrieving the pages.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                if (!data || !data[0] || data[0].length === 0) {
+                    callback(null, []);
+                    return;
+                }
+
+                callback(null,
+                    data[0].map(function(page) {
+                        return {
+                            id: page.PageID,
+                            url: page.PageURL,
+                            title: page.Title
+                        };
+                    })
+                );
+            }
+        );
+    });
+};

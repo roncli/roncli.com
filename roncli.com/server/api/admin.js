@@ -12,6 +12,21 @@ module.exports.get = function(req, callback) {
     }
 console.log(req.parsedPath);
     switch (req.parsedPath.length) {
+        case 1:
+            switch (req.parsedPath[0]) {
+                case "pages":
+                    admin.getPagesByParentUrl(userId, null, function(err, pages) {
+                        if (err) {
+                            req.res.status(err.status);
+                            callback(err);
+                            return;
+                        }
+
+                        callback(pages);
+                    });
+                    return;
+            }
+            break;
         case 2:
             switch (req.parsedPath[0]) {
                 case "blog":

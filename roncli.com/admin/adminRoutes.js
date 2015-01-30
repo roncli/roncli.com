@@ -10,4 +10,7 @@ module.exports = function(app) {
 
     // The blog admin page.
     app.router.route(/^\/?admin\/blog$/, "admin#blog");
+
+    // The pages admin page.
+    app.router.route(/^\/?admin\/pages$/, "admin#pages");
 };
