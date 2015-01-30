@@ -7,8 +7,23 @@
                     {{partial "admin/pages/page" page=attributes}}
                 {{/each}}
             </div>
-            <div class="panel-body text-center">
-                <button class="btn btn-lg btn-primary" id="add-page"><span class="glyphicon glyphicon-plus"></span> Add Page</button>
+            <div class="form-inline">
+                <select class="form-control" id="move-page">
+                    <option value="">-- Select a page to move to the top level --</option>
+                    {{#each pageList.models}}
+                        {{partial "site/option" key=attributes.id value=attributes.title}}
+                    {{/each}}
+                </select>
+                <button class="btn btn-primary" id="move-page"><span class="glyphicon glyphicon-share-alt"></span> Move Page to Root</button>
+            </div>
+        </div>
+        <div class="panel-body">
+            <div id="add-new-page" class="input-group">
+                <span class="input-group-addon">URL:</span>
+                <input id="addPageUrl" type="text" maxlength="1024" class="form-control" placeholder="/your/url/here" value="{{url}}"/>
+                <span class="input-group-btn">
+                    <button class="btn btn-primary" id="add-page"><span class="glyphicon glyphicon-plus"></span> Add Root Page</button>
+                </span>
             </div>
         </div>
     </div>

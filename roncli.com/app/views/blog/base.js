@@ -93,15 +93,15 @@ module.exports = BaseView.extend({
     loadComments: function() {
         "use strict";
 
-        var view = this;
+        var view = this,
+            app = this.app;
 
         if (this.options.blog && this.options.blog.attributes && this.options.blog.attributes.post && this.options.blog.attributes.post.blogUrl) {
             this.onScroll = null;
 
             // Delay 1s in case the user is rapidly moving through the pages.
             setTimeout(function() {
-                var app = view.app,
-                    comments;
+                var comments;
 
                 if (view !== app.router.currentView) {
                     return;

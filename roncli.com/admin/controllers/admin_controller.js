@@ -48,6 +48,11 @@ module.exports = {
 
         this.app.fetch({
             page: {model: "Admin_Page", params: {url: params[0]}}
-        }, {readFromCache: false, writeToCache: false}, callback);
+        }, {readFromCache: false, writeToCache: false}, function(err, result) {
+            if (result) {
+                result.url = params[0];
+            }
+            callback(err, result);
+        });
     }
 };

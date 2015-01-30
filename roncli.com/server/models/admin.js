@@ -300,7 +300,6 @@ module.exports.getPageByUrl = function(userId, url, callback) {
                         return;
                     }
 
-                    console.log("RESOLVED 1");
                     deferred.resolve(pages);
                 });
 
@@ -328,7 +327,6 @@ module.exports.getPageByUrl = function(userId, url, callback) {
                             return;
                         }
 
-                        console.log("RESOLVED 2");
                         deferred.resolve({
                             id: data[0][0].PageID,
                             title: data[0][0].Title,
@@ -342,7 +340,9 @@ module.exports.getPageByUrl = function(userId, url, callback) {
             }())
         ).then(
             function(results) {
-                results[1].pages = results[0];
+                if (results[1]) {
+                    results[1].pages = results[0];
+                }
                 callback(null, results[1]);
             },
 
