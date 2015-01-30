@@ -342,7 +342,6 @@ module.exports.getPageByUrl = function(userId, url, callback) {
             }())
         ).then(
             function(results) {
-                console.log(results);
                 results[1].pages = results[0];
                 callback(null, results[1]);
             },
