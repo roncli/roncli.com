@@ -1,7 +1,17 @@
-<div data-page-id="{{page.id}}" class="page well well-sm" style="min-height: 54px;">
-    <span style="font-size: 20px;">{{page.title}}</span>
-    <div class="pull-right">
-        <a class="btn btn-small btn-primary edit-page" style="margin-left: 20px; margin-right: 20px;" href="/admin/page{{{page.url}}}"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
-        <button class="btn btn-small btn-danger remove-page"><span class="glyphicon glyphicon-trash"></span> Delete</button>
+<div data-page-id="{{page.id}}" class="navbar navbar-default" style="background-color: #eeeeee; border: solid 1px #cccccc;">
+    <div class="container-fluid">
+        <div class="navbar-left" style="margin-right: 20px;">
+            <ul class="nav navbar-nav">
+                <li class="navbar-text" style="font-size: 20px; padding: 10px; color: #000000;">{{page.title}}</li>
+            </ul>
+        </div>
+        <div class="navbar-right">
+            <ul class="nav">
+                <li>
+                    <button class="btn btn-primary link navbar-btn edit-page" style="margin-right: 20px;" data-href="/admin/page{{{page.url}}}"><span class="glyphicon glyphicon-pencil"></span> Edit</button>
+                    <button class="btn btn-danger navbar-btn remove-page"><span class="glyphicon glyphicon-trash"></span> Delete</button>
+                </li>
+            </ul>
+        </div>
     </div>
 </div>

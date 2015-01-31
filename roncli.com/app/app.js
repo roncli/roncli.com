@@ -67,6 +67,7 @@ module.exports = BaseApp.extend({
             IScroll = require("iscroll"),
             _ = require("underscore"),
             querystring = $.getParam(),
+            body = $("body"),
             scroller, logInUser, doLogout, logOutUser, attemptLogin, user,
 
             /**
@@ -582,8 +583,13 @@ module.exports = BaseApp.extend({
         };
 
         // Don't submit any forms.
-        $("body").on("submit", "form", function() {
+        body.on("submit", "form", function() {
             return false;
+        });
+
+        // Handle link buttons.
+        body.on("click", "button.link", function() {
+            app.router.navigate($(this).data("href"), {trigger: true});
         });
 
         // Pass scrolling events to the view.
