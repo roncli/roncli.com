@@ -2,7 +2,7 @@
     [PageID]       INT           IDENTITY (1, 1) NOT NULL,
     [PageURL]      VARCHAR (255) NOT NULL,
     [ParentPageID] INT           NULL,
-    [Order]        INT           NOT NULL,
+    [Order]        INT           NULL,
     [Title]        VARCHAR (255) NOT NULL,
     [ShortTitle]   VARCHAR (255) NULL,
     [PageData]     TEXT          NOT NULL,

@@ -122,6 +122,46 @@ module.exports.post = function(req, callback) {
                             return;
                     }
                     break;
+                case "pages":
+                    switch (req.parsedPath[1]) {
+                        case "add-page":
+                            admin.addPage(userId, req.body.parentPageId, req.body.url, req.body.title, req.body.shortTitle, req.body.content, function(err) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                        case "update-page":
+                            admin.updatePage(userId, req.body.pageId, req.body.url, req.body.title, req.body.shortTitle, req.body.content, function(err) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                        case "delete-page":
+                            admin.deletePage(userId, req.body.pageId, function(err) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                    }
+                    break;
             }
             break;
     }

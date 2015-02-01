@@ -23,6 +23,10 @@
     <Content Include="admin\templates\admin\blog\reject.hbs" />
     <Content Include="admin\templates\admin\error.hbs" />
     <Content Include="admin\templates\admin\index.hbs" />
+    <Content Include="admin\templates\admin\page.hbs" />
+    <Content Include="admin\templates\admin\pages.hbs" />
+    <Content Include="admin\templates\admin\pages\comment.hbs" />
+    <Content Include="admin\templates\admin\pages\page.hbs" />
     <Content Include="app\templates\account\account.hbs" />
     <Content Include="app\templates\account\aliasChanged.hbs" />
     <Content Include="app\templates\account\changeAlias.hbs" />
@@ -51,13 +55,17 @@
     <Content Include="app\templates\blog\posts\tumblrYouTube.hbs" />
     <Content Include="app\templates\blog\url.hbs" />
     <Content Include="app\templates\default\index.hbs" />
+    <Content Include="app\templates\error\404.hbs" />
+    <Content Include="app\templates\error\other.hbs" />
     <Content Include="app\templates\home\index.hbs" />
+    <Content Include="app\templates\page\index.hbs" />
     <Content Include="app\templates\site\emailChange.hbs" />
     <Content Include="app\templates\site\emailChangeRequestError.hbs" />
     <Content Include="app\templates\site\emailChangeValidationSent.hbs" />
     <Content Include="app\templates\site\loggedIn.hbs" />
     <Content Include="app\templates\site\loggedOut.hbs" />
     <Content Include="app\templates\site\login.hbs" />
+    <Content Include="app\templates\site\option.hbs" />
     <Content Include="app\templates\site\passwordRequestSent.hbs" />
     <Content Include="app\templates\site\passwordReset.hbs" />
     <Content Include="app\templates\site\passwordResetRequest.hbs" />
@@ -127,12 +135,18 @@
   <ItemGroup>
     <Compile Include="admin\adminRoutes.js" />
     <Compile Include="admin\collections\admin__blog_comments.js" />
+    <Compile Include="admin\collections\admin__pages.js" />
     <Compile Include="admin\controllers\admin_controller.js" />
     <Compile Include="admin\models\admin.js" />
     <Compile Include="admin\models\admin__blog_comment.js" />
+    <Compile Include="admin\models\admin__page.js" />
     <Compile Include="admin\models\user__get_notifications.js" />
+    <Compile Include="admin\templates\adminTemplates.js" />
+    <Compile Include="admin\views\admin\base.js" />
     <Compile Include="admin\views\admin\blog.js" />
     <Compile Include="admin\views\admin\index.js" />
+    <Compile Include="admin\views\admin\page.js" />
+    <Compile Include="admin\views\admin\pages.js" />
     <Compile Include="app\app.js" />
     <Compile Include="app\collections\base.js" />
     <Compile Include="app\collections\blog_categories.js" />
@@ -151,11 +165,13 @@
     <Compile Include="app\models\blog__get_latest.js" />
     <Compile Include="app\models\blog__get_latest_by_category.js" />
     <Compile Include="app\models\captcha.js" />
+    <Compile Include="app\models\page.js" />
     <Compile Include="app\models\time.js" />
     <Compile Include="app\models\tweet.js" />
     <Compile Include="app\models\user.js" />
     <Compile Include="app\router.js" />
     <Compile Include="app\routes.js" />
+    <Compile Include="app\templates\compiledTemplates.js" />
     <Compile Include="app\views\account\index.js" />
     <Compile Include="app\views\blog\base.js" />
     <Compile Include="app\views\blog\category.js" />
@@ -174,6 +190,7 @@
     <Compile Include="server\api\blog-comment.js" />
     <Compile Include="server\api\blog.js" />
     <Compile Include="server\api\captcha.js" />
+    <Compile Include="server\api\page.js" />
     <Compile Include="server\api\time.js" />
     <Compile Include="server\api\tweet.js" />
     <Compile Include="server\api\user.js" />
@@ -187,6 +204,7 @@
     <Compile Include="server\models\admin.js" />
     <Compile Include="server\models\blog.js" />
     <Compile Include="server\models\captcha.js" />
+    <Compile Include="server\models\page.js" />
     <Compile Include="server\models\tweet.js" />
     <Compile Include="server\models\user.js" />
     <Compile Include="server\privateConfig.js" />
@@ -203,6 +221,7 @@
     <Folder Include="admin\templates\" />
     <Folder Include="admin\templates\admin\" />
     <Folder Include="admin\templates\admin\blog\" />
+    <Folder Include="admin\templates\admin\pages\" />
     <Folder Include="admin\views\" />
     <Folder Include="admin\views\admin\" />
     <Folder Include="app\" />
@@ -216,7 +235,9 @@
     <Folder Include="app\templates\blog\comments\" />
     <Folder Include="app\templates\blog\posts\" />
     <Folder Include="app\templates\default\" />
+    <Folder Include="app\templates\error\" />
     <Folder Include="app\templates\home\" />
+    <Folder Include="app\templates\page\" />
     <Folder Include="app\templates\site\" />
     <Folder Include="app\views\" />
     <Folder Include="app\views\account\" />

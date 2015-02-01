@@ -34,8 +34,8 @@ module.exports = {
         "use strict";
 
         this.app.fetch({
-            pages: {collection: "Admin_Pages", params: {}}
-        }, {readFromCache: false, writeToCache: false}, callback);
+            pages: {model: "Admin_Pages", params: {}}
+        }, callback);
     },
 
     /**
@@ -48,7 +48,7 @@ module.exports = {
 
         this.app.fetch({
             page: {model: "Admin_Page", params: {url: params[0]}}
-        }, {readFromCache: false, writeToCache: false}, function(err, result) {
+        }, function(err, result) {
             if (result) {
                 result.url = params[0];
             }

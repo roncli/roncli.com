@@ -83,7 +83,7 @@ module.exports = function(grunt) {
         browserify: {
             combine_main_js_files: {
                 options: {
-                    alias: ["rendr/shared/base/view"],
+                    alias: ["rendr/shared/base/view", "rendr/node_modules/backbone"],
                     require: Object.keys(pjson.browser),
                     preBundleCB: function(b) {
                         b.on("remapify:files", function(file, expandedAliases) {
@@ -107,7 +107,7 @@ module.exports = function(grunt) {
 
             combine_admin_js_files: {
                 options: {
-                    external: ["jquery", "rendr/shared/base/view", "app/collections/base", "app/models/base"],
+                    external: ["jquery", "rendr/shared/base/view", "app/collections/base", "app/models/base", "rendr/node_modules/backbone"],
                     preBundleCB: function(b) {
                         b.on("remapify:files", function(file, expandedAliases) {
                             Object.keys(expandedAliases).forEach(function(key) {

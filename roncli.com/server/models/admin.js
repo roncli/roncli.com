@@ -6,26 +6,28 @@ var User = require("./user"),
     Deferred = promise.Deferred,
     all = promise.all,
 
-    getPagesByUrl = function(url, callback) {
+    /**
+     * Gets the list of child pages for a URL.
+     * @param {string} url The URL to get child pages for.
+     * @param {function(null, object)|function(object)} callback The callback function.
+     */
+    getChildPagesByUrl = function(url, callback) {
         "use strict";
 
         var sql;
 
         if (url === null) {
-            sql = "SELECT PageID, PageURL, Title FROM tblPage WHERE ParentPageID IS NULL";
+            sql = "SELECT PageID, PageURL, Title FROM tblPage WHERE ParentPageID IS NULL ORDER BY [Order], Title";
         } else {
-            sql = "SELECT PageID, PageURL, Title FROM tblPage WHERE ParentPageID IN (SELECT PageID FROM tblPage WHERE PageURL = @url)";
+            sql = "SELECT PageID, PageURL, Title FROM tblPage WHERE ParentPageID IN (SELECT PageID FROM tblPage WHERE PageURL = @url) ORDER BY [Order], Title";
         }
 
         db.query(
             sql, {url: {type: db.VARCHAR(1024), value: url}}, function(err, data) {
                 if (err) {
-                    console.log("Database error in getPagesByUrl.");
+                    console.log("Database error in getChildPagesByUrl.");
                     console.log(err);
-                    callback({
-                        error: "There was a database error retrieving the pages.  Please reload the page and try again.",
-                        status: 500
-                    });
+                    callback(err);
                     return;
                 }
 
@@ -43,6 +45,34 @@ var User = require("./user"),
                         };
                     })
                 );
+            }
+        );
+    },
+
+    /**
+     * Checks to see if the page URL exists.
+     * @param {number} pageId The page ID to exclude from the search.
+     * @param {string} url The URL to check to see if it exists.
+     * @param {function(null, object)|function(object)} callback The callback function.
+     */
+    pageExistsByUrl = function(pageId, url, callback) {
+        "use strict";
+
+        db.query(
+            "SELECT COUNT(PageID) Pages FROM tblPage WHERE PageURL = @url AND PageID <> @pageId",
+            {
+                url: {type: db.VARCHAR(1024), value: url},
+                pageId: {type: db.INT, value: pageId}
+            },
+            function(err, data) {
+                if (err) {
+                    console.log("Database error in pageExistsByUrl.");
+                    console.log(err);
+                    callback(err);
+                    return;
+                }
+
+                callback(null, data && data[0] && data[0][0] && data[0][0].Pages && data[0][0].Pages > 0);
             }
         );
     };
@@ -238,39 +268,9 @@ module.exports.rejectBlogComment = function(userId, commentId, callback) {
  * Gets the child pages of a parent by URL.
  * @param {number} userId The user ID of the moderator.
  * @param {string} url The URL of the pages to get.
- * @param {function} callback The callback function.
+ * @param {function(null, object)|function(object)} callback The callback function.
  */
 module.exports.getPagesByParentUrl = function(userId, url, callback) {
-    "use strict";
-
-    User.getUserRoles(userId, function(err, roles) {
-        if (err) {
-            callback({
-                error: "There was a database error while approving a blog comment.  Please reload the page and try again.",
-                status: 500
-            });
-            return;
-        }
-
-        if (roles.indexOf("SiteAdmin") === -1) {
-            callback({
-                error: "You do not have access to this resource.",
-                status: 403
-            });
-            return;
-        }
-
-        getPagesByUrl(url, callback);
-    });
-};
-
-/**
- * Gets page data for a URL.
- * @param {number} userId The user ID of the moderator.
- * @param {string} url The URL of the page to get.
- * @param {function} callback The callback function.
- */
-module.exports.getPageByUrl = function(userId, url, callback) {
     "use strict";
 
     User.getUserRoles(userId, function(err, roles) {
@@ -294,9 +294,97 @@ module.exports.getPageByUrl = function(userId, url, callback) {
             (function() {
                 var deferred = new Deferred();
 
-                getPagesByUrl(url, function(err, pages) {
+                getChildPagesByUrl(url, function(err, pages) {
                     if (err) {
-                        deferred.reject(err);
+                        deferred.reject({
+                            error: "There was a database error while approving a blog comment.  Please reload the page and try again.",
+                            status: 500
+                        });
+                        return;
+                    }
+
+                    deferred.resolve(pages);
+                });
+
+                return deferred.promise;
+            }()),
+            (function() {
+                var deferred = new Deferred();
+
+                db.query(
+                    "SELECT PageID, Title FROM tblPage WHERE ParentPageID IS NOT NULL ORDER BY Title",
+                    {},
+                    function(err, data) {
+                        if (err) {
+                            console.log("Database error in admin.getPagesByParentUrl.");
+                            console.log(err);
+                            deferred.reject(err);
+                            return;
+                        }
+
+                        deferred.resolve(data[0].map(function(page) {
+                            return {
+                                id: page.PageID,
+                                title: page.Title
+                            };
+                        }));
+                    }
+                );
+
+                return deferred.promise;
+            }())
+        ).then(
+            function(results) {
+                callback(null, {
+                    pages: results[0],
+                    pageList: results[1]
+                });
+            },
+
+            // If any of the functions error out, it will be handled here.
+            function(err) {
+                callback(err);
+            }
+        );
+    });
+};
+
+/**
+ * Gets page data for a URL.
+ * @param {number} userId The user ID of the moderator.
+ * @param {string} url The URL of the page to get.
+ * @param {function(null, object)|function(object)} callback The callback function.
+ */
+module.exports.getPageByUrl = function(userId, url, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error retrieving the page.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        all(
+            (function() {
+                var deferred = new Deferred();
+
+                getChildPagesByUrl(url, function(err, pages) {
+                    if (err) {
+                        deferred.reject({
+                            error: "There was a database error retrieving the page.  Please reload the page and try again.",
+                            status: 500
+                        });
                         return;
                     }
 
@@ -313,10 +401,10 @@ module.exports.getPageByUrl = function(userId, url, callback) {
                     {url: {type: db.VARCHAR(1024), value: url}},
                     function(err, data) {
                         if (err) {
-                            console.log("Database error in getPagesByUrl.");
+                            console.log("Database error in admin.getPageByUrl.");
                             console.log(err);
                             deferred.reject({
-                                error: "There was a database error retrieving the pages.  Please reload the page and try again.",
+                                error: "There was a database error retrieving the page.  Please reload the page and try again.",
                                 status: 500
                             });
                             return;
@@ -349,6 +437,230 @@ module.exports.getPageByUrl = function(userId, url, callback) {
             // If any of the functions error out, it will be handled here.
             function(err) {
                 callback(err);
+            }
+        );
+    });
+};
+
+/**
+ * Adds a page.
+ * @param {number} userId The user ID of the moderator.
+ * @param {number} parentPageId The parent page ID.
+ * @param {string} url The URL.
+ * @param {string} title The page title.
+ * @param {string} shortTitle The short title of the page.
+ * @param {string} content The content of the page.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.addPage = function(userId, parentPageId, url, title, shortTitle, content, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while adding a page.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        // Check to make sure the page hasn't already been added.
+        pageExistsByUrl(0, url, function(err, exists) {
+            var data = {},
+                sql;
+
+            if (err) {
+                callback({
+                    error: "There was a database error while adding a page.  Please reload the page and try again.",
+                    status: 500
+                });
+            }
+
+            if (exists) {
+                callback({
+                    error: "The page already exists.",
+                    status: 400
+                });
+                return;
+            }
+
+            data.url = {type: db.VARCHAR(1024), value: url};
+            data.title = {type: db.VARCHAR(255), value: title};
+            data.shortTitle = {type: db.VARCHAR(255), value: shortTitle};
+            data.content = {type: db.TEXT, value: content};
+            if (parentPageId) {
+                sql = "INSERT INTO tblPage (PageURL, ParentPageID, [Order], Title, ShortTitle, PageData, CrDate, UpdDate) SELECT @url, @parentPageId, COUNT(PageID) + 1, @title, @shortTitle, @content, GETUTCDATE(), GETUTCDATE() FROM tblPage WHERE ParentPageID = @parentPageId";
+                data.parentPageId = {type: db.INT, value: parentPageId};
+            } else {
+                sql = "INSERT INTO tblPage (PageURL, ParentPageID, [Order], Title, ShortTitle, PageData, CrDate, UpdDate) VALUES (@url, NULL, NULL, @title, @shortTitle, @content, GETUTCDATE(), GETUTCDATE())";
+            }
+            db.query(
+                sql, data, function(err) {
+                    if (err) {
+                        console.log("Database error in admin.addPage.");
+                        console.log(err);
+                        callback({
+                            error: "There was a database error while adding a page.  Please reload the page and try again.",
+                            status: 500
+                        });
+                        return;
+                    }
+
+                    callback();
+                }
+            );
+        });
+    });
+};
+
+/**
+ * Updates a page.
+ * @param {number} userId The user ID of the moderator.
+ * @param {number} pageId The page ID.
+ * @param {string} url The URL.
+ * @param {string} title The page title.
+ * @param {string} shortTitle The short title of the page.
+ * @param {string} content The content of the page.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.updatePage = function(userId, pageId, url, title, shortTitle, content, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while updating a page.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        // Check to ensure the page being updated exists.
+        db.query(
+            "SELECT COUNT(PageID) Pages FROM tblPage WHERE PageID = @pageID",
+            {pageId: {type: db.INT, value: pageId}},
+            function(err, data) {
+                if (err) {
+                    console.log("Database error checking to ensure the page exists in admin.updatePage.");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while updating a page.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                if (!data || !data[0] || !data[0][0] || !data[0][0].Pages || data[0][0].Pages === 0) {
+                    callback({
+                        error: "Page ID does not exist.",
+                        status: 400
+                    });
+                    return;
+                }
+
+                // Check to make sure the page hasn't already been added.
+                pageExistsByUrl(pageId, url, function(err, exists) {
+                    if (err) {
+                        callback({
+                            error: "There was a database error while updating a page.  Please reload the page and try again.",
+                            status: 500
+                        });
+                    }
+
+                    if (exists) {
+                        callback({
+                            error: "A page with this URL already exists.",
+                            status: 400
+                        });
+                        return;
+                    }
+
+                    db.query(
+                        "UPDATE tblPage SET PageURL = @url, Title = @title, ShortTitle = @shortTitle, PageData = @content, UpdDate = GETUTCDATE() WHERE PageID = @pageId",
+                        {
+                            url: {type: db.VARCHAR(1024), value: url},
+                            title: {type: db.VARCHAR(255), value: title},
+                            shortTitle: {type: db.VARCHAR(255), value: shortTitle},
+                            content: {type: db.TEXT, value: content},
+                            pageId: {type: db.INT, value: pageId}
+                        },
+                        function(err) {
+                            if (err) {
+                                console.log("Database error updating a page in admin.updatePage.");
+                                console.log(err);
+                                callback({
+                                    error: "There was a database error while adding a page.  Please reload the page and try again.",
+                                    status: 500
+                                });
+                                return;
+                            }
+
+                            callback();
+                        }
+                    );
+                });
+            }
+        );
+    });
+};
+
+/**
+ * Deletes a page.
+ * @param {number} userId The user ID of the moderator.
+ * @param {number} pageId The page ID.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.deletePage = function(userId, pageId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while deleting a page.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        db.query(
+            "UPDATE tblPage SET ParentPageID = NULL, [Order] = NULL WHERE ParentPageID = @pageId; DELETE FROM tblPage WHERE PageId = @pageId",
+            {pageId: {type: db.INT, value: pageId}},
+            function(err) {
+                if (err) {
+                    console.log("Database error in admin.updatePage.");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while deleting a page.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                callback();
             }
         );
     });

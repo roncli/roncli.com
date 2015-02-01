@@ -311,3 +311,8 @@ blockquote {
 .alert:last-child {
     margin-bottom: 0;
 }
+
+/* Well */
+.well:last-child {
+    margin-bottom: 0;
+}
