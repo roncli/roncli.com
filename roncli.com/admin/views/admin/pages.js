@@ -11,6 +11,7 @@ module.exports = BaseView.extend({
 
     events: {
         "click button.delete-page": "deletePage",
+        "click button#move-page": "movePage",
         "click button#add-page": "addPage"
     },
 
@@ -52,7 +53,7 @@ module.exports = BaseView.extend({
                                 if (error && error.body && error.body.error) {
                                     message = error.body.error;
                                 } else {
-                                    message = "There was a server error processing your registration.  Please try again later.";
+                                    message = "There was a server error deleting the page.  Please try again later.";
                                 }
 
                                 bootbox.dialog({
@@ -71,6 +72,52 @@ module.exports = BaseView.extend({
             },
             show: false
         }).off("shown.bs.modal").modal("show");
+    },
+
+    movePage: function() {
+        "use strict";
+
+        var app = this.app,
+            movePage = $("#move-page"),
+            pageId = $("#move-page-list").val(),
+            admin = new Admin();
+
+        if (!pageId) {
+            return;
+        }
+
+        movePage.prop("disabled", true);
+
+        admin.fetch({
+            url: "/admin/pages/move-page",
+            data: JSON.stringify({
+                pageId: pageId,
+                parentPageId: null
+            }),
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            success: function() {
+                backbone.history.loadUrl(window.location.pathname);
+            },
+            error: function(xhr, error) {
+                var message;
+                if (error && error.body && error.body.error) {
+                    message = error.body.error;
+                } else {
+                    message = "There was a server error moving the page.  Please try again later.";
+                }
+
+                bootbox.dialog({
+                    title: "Error",
+                    message: app.templateAdapter.getTemplate("admin/error")({message: message}),
+                    buttons: {ok: {label: "OK"}},
+                    show: false
+                }).off("shown.bs.modal").modal("show");
+
+                movePage.prop("disabled", false);
+            }
+        });
     },
 
     addPage: function() {

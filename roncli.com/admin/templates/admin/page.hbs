@@ -9,7 +9,7 @@
                     {{/each}}
                 </div>
                 <div class="form-inline">
-                    <select class="form-control" id="move-page">
+                    <select class="form-control" id="move-page-list">
                         <option value="">-- Select a page to move to a child of this page --</option>
                         {{#each page.attributes.pageList}}
                             {{partial "site/option" value=id text=title}}
@@ -62,13 +62,17 @@
             <li><a href="/">Home</a></li>
             <li><a href="/admin">Admin</a></li>
             <li><a href="/admin/pages">Pages</a></li>
-            {{#each page.attributes.parents}}
-                {{#if @last}}
-                    <li class="active">{{shortTitle}}</li>
-                {{else}}
-                    <li><a href="/admin/page{{{url}}}">{{shortTitle}}</a></li>
-                {{/if}}
-            {{/each}}
+            {{#if page.attributes.id}}
+                {{#each page.attributes.parents}}
+                    {{#if @last}}
+                        <li class="active">{{shortTitle}}</li>
+                    {{else}}
+                        <li><a href="/admin/page{{{url}}}">{{shortTitle}}</a></li>
+                    {{/if}}
+                {{/each}}
+            {{else}}
+                <li class="active">New page</li>
+            {{/if}}
         </ol>
         <div class="panel-body">
             Add or update the pages on the website, and moderate comments made on each page.<br/><br/>

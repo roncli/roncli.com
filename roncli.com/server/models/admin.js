@@ -433,11 +433,15 @@ module.exports.getPageByUrl = function(userId, url, callback) {
             }())
         ).then(
             function(results) {
-                var pageId = results[1].id;
+                var pageId;
 
-                if (results[1]) {
-                    results[1].pages = results[0];
+                if (!results[1]) {
+                    callback(null, {});
+                    return;
                 }
+
+                pageId = results[1].id;
+                results[1].pages = results[0];
 
                 // Get the parents of the page.
                 page.getParents(pageId, function(err, parents) {
@@ -462,7 +466,7 @@ module.exports.getPageByUrl = function(userId, url, callback) {
 
                     // Get the pages that can be moved to have this page as the parent.
                     db.query(
-                        "SELECT PageID, Title FROM tblPage WHERE PageID NOT IN (" + variableNames.join(", ") + ") AND ParentPageID <> @parentPageId ORDER BY Title",
+                        "SELECT PageID, Title FROM tblPage WHERE PageID NOT IN (" + variableNames.join(", ") + ") AND (ParentPageID IS NULL OR ParentPageID <> @parentPageId) ORDER BY Title",
                         variables,
                         function(err, data) {
                             if (err) {
@@ -719,6 +723,149 @@ module.exports.deletePage = function(userId, pageId, callback) {
                 }
 
                 callback();
+            }
+        );
+    });
+};
+
+/**
+ * Moves a page.
+ * @param {number} userId The user ID of the moderator.
+ * @param {number} pageId The page ID to move.
+ * @param {number} newParentPageId The parent page ID to move the page to.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.movePage = function(userId, pageId, newParentPageId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while deleting a page.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        // Ensure both pages exist and are separate pages.
+        db.query(
+            "SELECT COUNT(PageID) Pages FROM tblPage WHERE pageId IN (@pageId, @parentPageId)",
+            {
+                pageId: {type: db.INT, value: pageId},
+                parentPageId: {type: db.INT, value: newParentPageId}
+            },
+            function(err, data) {
+                var deferred;
+
+                if (err) {
+                    console.log("Database error checking pages in admin.movePage.");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while moving a page.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                if (!data || !data[0] || !data[0][0] || data[0][0].Pages !== 1 + (newParentPageId ? 1 : 0)) {
+                    callback({
+                        error: "Invalid page to move.  Please reload the page and try again.",
+                        status: 400
+                    });
+                    return;
+                }
+
+                // Ensure the parent page ID is valid.
+                deferred = new Deferred();
+
+                if (newParentPageId) {
+                    page.getParents(newParentPageId, function(err, pages) {
+                        if (err) {
+                            deferred.reject({
+                                error: "There was a database error while moving a page.  Please reload the page and try again.",
+                                status: 500
+                            });
+                            return;
+                        }
+
+                        pages = pages.map(function(page) {
+                            return page.id;
+                        });
+
+                        if (pages.indexOf(pageId) !== -1) {
+                            deferred.reject({
+                                error: "Invalid page to move.  Please reload the page and try again.",
+                                status: 400
+                            });
+                            return;
+                        }
+
+                        deferred.resolve();
+                    });
+                } else {
+                    deferred.resolve();
+                }
+
+                deferred.promise.then(
+                    function() {
+                        // Reorder the page's sibilings.
+                        db.query(
+                            "UPDATE tblPage SET [Order] = [Order] - 1 WHERE ParentPageID IS NOT NULL AND ParentPageID = (SELECT p.ParentPageID FROM tblPage p WHERE p.PageID = @pageId) AND [Order] > (SELECT p.[Order] FROM tblPage p WHERE p.PageID = @pageId)",
+                            {pageId: {type: db.INT, value: pageId}},
+                            function(err) {
+                                var sql, variables;
+
+                                if (err) {
+                                    console.log("Database error reordering sibling pages in admin.movePage.");
+                                    console.log(err);
+                                    callback({
+                                        error: "There was a database error while moving a page.  Please reload the page and try again.",
+                                        status: 500
+                                    });
+                                    return;
+                                }
+
+                                // Move the page to the end of the new parent page.
+                                variables = {pageId: {type: db.INT, value: pageId}};
+                                if (newParentPageId) {
+                                    sql = "UPDATE tblPage SET ParentPageID = @parentPageId, [Order] = p.Pages + 1 FROM (SELECT COUNT(PageID) Pages FROM tblPage WHERE ParentPageID = @parentPageId) p WHERE PageID = @pageId";
+                                    variables.parentPageId = {type: db.INT, value: newParentPageId};
+                                } else {
+                                    sql = "UPDATE tblPage SET ParentPageID = NULL, [Order] = NULL WHERE PageId = @pageId";
+                                }
+
+                                db.query(
+                                    sql, variables, function(err) {
+                                        if (err) {
+                                            console.log("Database error reordering sibling pages in admin.movePage.");
+                                            console.log(err);
+                                            callback({
+                                                error: "There was a database error while moving a page.  Please reload the page and try again.",
+                                                status: 500
+                                            });
+                                            return;
+                                        }
+
+                                        callback();
+                                    }
+                                );
+                            }
+                        );
+                    },
+
+                    // If the function errors out, it will be handled here.
+                    function(err) {
+                        callback(err);
+                    }
+                );
             }
         );
     });
