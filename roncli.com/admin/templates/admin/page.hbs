@@ -11,8 +11,8 @@
                 <div class="form-inline">
                     <select class="form-control" id="move-page">
                         <option value="">-- Select a page to move to a child of this page --</option>
-                        {{#each pageList.models}}
-                            {{partial "site/option" key=attributes.id value=attributes.title}}
+                        {{#each page.attributes.pageList}}
+                            {{partial "site/option" value=id text=title}}
                         {{/each}}
                     </select>
                     <button class="btn btn-primary" id="move-page"><span class="glyphicon glyphicon-share-alt"></span> Move Page to Child</button>
@@ -62,8 +62,13 @@
             <li><a href="/">Home</a></li>
             <li><a href="/admin">Admin</a></li>
             <li><a href="/admin/pages">Pages</a></li>
-            <!-- TODO: List individual pages -->
-            <li class="active">Page</li>
+            {{#each page.attributes.parents}}
+                {{#if @last}}
+                    <li class="active">{{shortTitle}}</li>
+                {{else}}
+                    <li><a href="/admin/page{{{url}}}">{{shortTitle}}</a></li>
+                {{/if}}
+            {{/each}}
         </ol>
         <div class="panel-body">
             Add or update the pages on the website, and moderate comments made on each page.<br/><br/>

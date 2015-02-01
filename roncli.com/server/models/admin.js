@@ -1,6 +1,7 @@
 var User = require("./user"),
     db = require("../database/database"),
     blog = require("../models/blog"),
+    page = require("../models/page"),
     cache = require("../cache/cache"),
     promise = require("promised-io/promise"),
     Deferred = promise.Deferred,
@@ -376,6 +377,7 @@ module.exports.getPageByUrl = function(userId, url, callback) {
         }
 
         all(
+            // Get the children of the page.
             (function() {
                 var deferred = new Deferred();
 
@@ -393,15 +395,17 @@ module.exports.getPageByUrl = function(userId, url, callback) {
 
                 return deferred.promise;
             }()),
+
+            // Get the page data.
             (function() {
                 var deferred = new Deferred();
 
                 db.query(
-                    "SELECT PageID, Title, ShortTitle, PageData FROM tblPage WHERE PageURL = @url",
+                    "SELECT PageID, ParentPageID, Title, ShortTitle, PageData FROM tblPage WHERE PageURL = @url",
                     {url: {type: db.VARCHAR(1024), value: url}},
                     function(err, data) {
                         if (err) {
-                            console.log("Database error in admin.getPageByUrl.");
+                            console.log("Database error getting page in admin.getPageByUrl.");
                             console.log(err);
                             deferred.reject({
                                 error: "There was a database error retrieving the page.  Please reload the page and try again.",
@@ -417,6 +421,7 @@ module.exports.getPageByUrl = function(userId, url, callback) {
 
                         deferred.resolve({
                             id: data[0][0].PageID,
+                            parentPageId: data[0][0].ParentPageID,
                             title: data[0][0].Title,
                             shortTitle: data[0][0].ShortTitle,
                             content: data[0][0].PageData
@@ -428,10 +433,63 @@ module.exports.getPageByUrl = function(userId, url, callback) {
             }())
         ).then(
             function(results) {
+                var pageId = results[1].id;
+
                 if (results[1]) {
                     results[1].pages = results[0];
                 }
-                callback(null, results[1]);
+
+                // Get the parents of the page.
+                page.getParents(pageId, function(err, parents) {
+                    var variableNames = [],
+                        variables = {};
+
+                    if (err) {
+                        callback({
+                            error: "There was a database error retrieving the page.  Please reload the page and try again.",
+                            status: 500
+                        });
+                        return;
+                    }
+
+                    results[1].parents = parents;
+
+                    parents.forEach(function(parent) {
+                        variableNames.push("@page" + parent.id);
+                        variables["page" + parent.id] = {type: db.INT, value: parent.id};
+                    });
+                    variables.parentPageId = {type: db.INT, value: pageId};
+
+                    // Get the pages that can be moved to have this page as the parent.
+                    db.query(
+                        "SELECT PageID, Title FROM tblPage WHERE PageID NOT IN (" + variableNames.join(", ") + ") AND ParentPageID <> @parentPageId ORDER BY Title",
+                        variables,
+                        function(err, data) {
+                            if (err) {
+                                console.log("Database error getting list of pages to move in admin.getPageByUrl.");
+                                console.log(err);
+                                callback({
+                                    error: "There was a database error retrieving the page.  Please reload the page and try again.",
+                                    status: 500
+                                });
+                                return;
+                            }
+
+                            if (!data || !data[0] || data[0].length === 0) {
+                                data = [[]];
+                            }
+
+                            results[1].pageList = data[0].map(function(page) {
+                                return {
+                                    id: page.PageID,
+                                    title: page.Title
+                                };
+                            });
+
+                            callback(null, results[1]);
+                        }
+                    );
+                });
             },
 
             // If any of the functions error out, it will be handled here.

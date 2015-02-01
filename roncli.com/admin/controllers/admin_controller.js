@@ -9,7 +9,7 @@ module.exports = {
 
         this.app.fetch({
             notifications: {model: "User_GetNotifications", params: {}}
-        }, callback);
+        }, {readFromCache: false, writeToCache: false}, callback);
     },
 
     /**
@@ -35,7 +35,7 @@ module.exports = {
 
         this.app.fetch({
             pages: {model: "Admin_Pages", params: {}}
-        }, callback);
+        }, {readFromCache: false, writeToCache: false}, callback);
     },
 
     /**
@@ -48,7 +48,7 @@ module.exports = {
 
         this.app.fetch({
             page: {model: "Admin_Page", params: {url: params[0]}}
-        }, function(err, result) {
+        }, {readFromCache: false, writeToCache: false}, function(err, result) {
             if (result) {
                 result.url = params[0];
             }
