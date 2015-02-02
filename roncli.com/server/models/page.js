@@ -1,4 +1,6 @@
 var db = require("../database/database"),
+    Moment = require("moment"),
+    sanitizeHtml = require("sanitize-html"),
     promise = require("promised-io/promise"),
     Deferred = promise.Deferred,
     all = promise.all;
@@ -214,4 +216,196 @@ module.exports.getParents = function(pageId, callback) {
         };
 
     getParent(pageId);
+};
+
+/**
+ * Gets comments for a post via the Page ID.
+ * @param {number} pageId The Page ID of the post.
+ * @param {function} callback The callback function.
+ */
+module.exports.getCommentsByPageId = function(pageId, callback) {
+    "use strict";
+
+    var comments = [];
+
+    // Ensure the page exists.
+    db.query(
+        "SELECT COUNT(PageID) Pages FROM tblPage WHERE PageID = @pageId",
+        {pageId: {type: db.INT, value: pageId}},
+        function(err, data) {
+            if (err) {
+                console.log("Database error checking page in page.getCommentsByPageId.");
+                console.log(err);
+                callback({
+                    error: "There was a database error retrieving page post comments.  Please reload the page and try again.",
+                    status: 500
+                });
+                return;
+            }
+
+            if (!data || !data[0] || !data[0][0] || data[0][0] === 0) {
+                callback({
+                    error: "Page not found.",
+                    status: 404
+                });
+                return;
+            }
+
+            // Get the comments.
+            db.query(
+                "SELECT pc.CommentID, pc.Comment, pc.CrDate, u.Alias FROM tblPageComment pc INNER JOIN tblUser u ON pc.CrUserID = u.UserID WHERE pc.PageID = @pageId AND pc.ModeratedDate IS NOT NULL ORDER BY pc.CrDate",
+                {pageId: {type: db.INT, value: pageId}},
+                function(err, data) {
+                    if (err) {
+                        console.log("Database error getting comments in page.getCommentsByPageId.");
+                        console.log(err);
+                        callback({
+                            error: "There was a database error retrieving page post comments.  Please reload the page and try again.",
+                            status: 500
+                        });
+                        return;
+                    }
+
+                    if (data[0]) {
+                        comments = comments.concat(data[0].map(function(comment) {
+                            return {
+                                id: comment.CommentID,
+                                published: comment.CrDate.getTime(),
+                                content: comment.Comment,
+                                author: comment.Alias
+                            };
+                        }));
+                    }
+
+                    callback(null, comments.sort(function(a, b) {
+                        return a.published - b.published;
+                    }));
+                }
+            );
+        }
+    );
+};
+
+/**
+ * Posts a comment to a page.
+ * @param {int} userId The User ID posting the comment.
+ * @param {string} pageId The Page ID.
+ * @param {string} content The content of the post.
+ * @param {function} callback The callback function.
+ */
+module.exports.postComment = function(userId, pageId, content, callback) {
+    "use strict";
+
+    all(
+        /**
+         * Check to see if the user has posted a comment within the last 60 seconds to prevent spam.
+         */
+        (function() {
+            var deferred = new Deferred();
+
+            db.query(
+                "SELECT MAX(CrDate) LastComment FROM tblPageComment WHERE CrUserID = @userId",
+                {userId: {type: db.INT, value: userId}},
+                function(err, data) {
+                    if (err) {
+                        console.log("Database error in page.postComment while checking the user's last comment time.");
+                        console.log(err);
+                        deferred.reject({
+                            error: "There was a database error posting a page comment.  Please reload the page and try again.",
+                            status: 500
+                        });
+                        return;
+                    }
+
+                    if (data[0] && data[0][0] && data[0][0].LastComment > new Moment().add(-1, "minute")) {
+                        deferred.reject({
+                            error: "You must wait a minute after posting a comment to post a new comment.",
+                            status: 400
+                        });
+                        return;
+                    }
+
+                    deferred.resolve();
+                }
+            );
+
+            return deferred.promise;
+        }()),
+
+        /**
+         * Ensure the page the user is posting to exists.
+         */
+        (function() {
+            var deferred = new Deferred();
+
+            db.query(
+                "SELECT COUNT(PageID) Pages FROM tblPage WHERE PageID = @pageId",
+                {pageId: {type: db.INT, value: pageId}},
+                function(err, data) {
+                    if (err) {
+                        console.log("Database error checking page in page.getCommentsByPageId.");
+                        console.log(err);
+                        deferred.reject({
+                            error: "There was a database error retrieving page post comments.  Please reload the page and try again.",
+                            status: 500
+                        });
+                        return;
+                    }
+
+                    if (!data || !data[0] || !data[0][0] || data[0][0] === 0) {
+                        deferred.reject({
+                            error: "Page not found.",
+                            status: 404
+                        });
+                        return;
+                    }
+
+                    deferred.resolve();
+                }
+            );
+
+            return deferred.promise;
+        }())
+    ).then(
+        /**
+         * Add the post to the database.
+         */
+        function() {
+            var attributes = sanitizeHtml.defaults.allowedAttributes;
+            attributes.p = ["style"];
+            attributes.span = ["style"];
+
+            content = sanitizeHtml(content, {
+                allowedTags: sanitizeHtml.defaults.allowedTags.concat(["h1", "h2", "u", "sup", "sub", "strike", "address", "span"]),
+                allowedAttributes: attributes
+            });
+
+            db.query(
+                "INSERT INTO tblPageComment (PageID, Comment, CrDate, CrUserID) VALUES (@pageId, @content, GETUTCDATE(), @userId)",
+                {
+                    pageId: {type: db.INT, value: pageId},
+                    content: {type: db.TEXT, value: content},
+                    userId: {type: db.INT, value: userId}
+                },
+                function(err) {
+                    if (err) {
+                        console.log("Database error in page.postComment while posting a comment.");
+                        console.log(err);
+                        callback({
+                            error: "There was a database error posting a page comment.  Please reload the page and try again.",
+                            status: 500
+                        });
+                        return;
+                    }
+
+                    callback();
+                }
+            );
+        },
+
+        // If any of the functions error out, it will be handled here.
+        function(err) {
+            callback(err);
+        }
+    );
 };

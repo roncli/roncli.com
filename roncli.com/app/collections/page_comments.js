@@ -1,4 +1,4 @@
-var Comment = require("../models/blog_comment"),
+var Comment = require("../models/page_comment"),
     Collection = require("./base");
 
 module.exports = Collection.extend({
@@ -6,8 +6,8 @@ module.exports = Collection.extend({
     url: function() {
         "use strict";
 
-        return "/blog-comment/" + this.pageId;
+        return "/page-comment" + this.url;
     }
 });
 
-module.exports.id = "BlogComments";
+module.exports.id = "PageComments";

@@ -604,7 +604,7 @@ module.exports.postComment = function(userId, url, content, callback) {
                         console.log("Database error in blog.postComment while checking the user's last comment time.");
                         console.log(err);
                         deferred.reject({
-                            error: "There was a database error retrieving blog post comments.  Please reload the page and try again.",
+                            error: "There was a database error posting a blog comment.  Please reload the page and try again.",
                             status: 500
                         });
                         return;
@@ -678,7 +678,7 @@ module.exports.postComment = function(userId, url, content, callback) {
                         console.log("Database error in blog.postComment while posting a comment.");
                         console.log(err);
                         callback({
-                            error: "There was a database error retrieving blog post comments.  Please reload the page and try again.",
+                            error: "There was a database error posting a blog comment.  Please reload the page and try again.",
                             status: 500
                         });
                         return;
