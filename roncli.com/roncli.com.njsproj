@@ -26,6 +26,7 @@
     <Content Include="admin\templates\admin\page.hbs" />
     <Content Include="admin\templates\admin\pages.hbs" />
     <Content Include="admin\templates\admin\pages\comment.hbs" />
+    <Content Include="admin\templates\admin\pages\deleteConfirm.hbs" />
     <Content Include="admin\templates\admin\pages\page.hbs" />
     <Content Include="app\templates\account\account.hbs" />
     <Content Include="app\templates\account\aliasChanged.hbs" />
@@ -135,11 +136,11 @@
   <ItemGroup>
     <Compile Include="admin\adminRoutes.js" />
     <Compile Include="admin\collections\admin__blog_comments.js" />
-    <Compile Include="admin\collections\admin__pages.js" />
     <Compile Include="admin\controllers\admin_controller.js" />
     <Compile Include="admin\models\admin.js" />
     <Compile Include="admin\models\admin__blog_comment.js" />
     <Compile Include="admin\models\admin__page.js" />
+    <Compile Include="admin\models\admin__pages.js" />
     <Compile Include="admin\models\user__get_notifications.js" />
     <Compile Include="admin\templates\adminTemplates.js" />
     <Compile Include="admin\views\admin\base.js" />
