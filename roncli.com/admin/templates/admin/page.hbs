@@ -21,7 +21,7 @@
             <div class="panel-body">
                 <div id="add-new-page" class="input-group">
                     <span class="input-group-addon">URL:</span>
-                    <input id="addPageUrl" type="text" maxlength="1024" class="form-control" placeholder="/your/url/here"/>
+                    <input id="add-page-url" type="text" maxlength="1024" class="form-control" placeholder="/your/url/here"/>
                     <span class="input-group-btn">
                         <button class="btn btn-primary" id="add-page"><span class="glyphicon glyphicon-plus"></span> Add<span class="hidden-xs"> Child Page</span></button>
                     </span>
@@ -34,17 +34,17 @@
         <div class="panel-body">
             <div class="input-group">
                 <span class="input-group-addon">URL:</span>
-                <input id="pageUrl" type="text" maxlength="1024" class="form-control" placeholder="/your/url/here" value="{{url}}"/>
+                <input id="page-url" type="text" maxlength="1024" class="form-control" placeholder="/your/url/here" value="{{url}}"/>
             </div>
             <div class="input-group">
                 <span class="input-group-addon">Title:</span>
-                <input id="pageTitle" type="text" maxlength="255" class="form-control" placeholder="Full Page Title" value="{{page.attributes.title}}"/>
+                <input id="page-title" type="text" maxlength="255" class="form-control" placeholder="Full Page Title" value="{{page.attributes.title}}"/>
             </div>
             <div class="input-group">
                 <span class="input-group-addon">Short Title:</span>
-                <input id="pageShortTitle" type="text" maxlength="255" class="form-control" placeholder="Optional Short Title" value="{{page.attributes.shortTitle}}"/>
+                <input id="page-short-title" type="text" maxlength="255" class="form-control" placeholder="Optional Short Title" value="{{page.attributes.shortTitle}}"/>
             </div>
-            <div class="vertical-margin"><textarea style="width: 100%; height: 400px;" id="pageContent">{{page.attributes.content}}</textarea></div>
+            <div class="vertical-margin"><textarea style="width: 100%; height: 400px;" id="page-content">{{page.attributes.content}}</textarea></div>
             <div class="text-center">
                 <button type="button" id="page-save" class="btn btn-lg btn-primary"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
             </div>

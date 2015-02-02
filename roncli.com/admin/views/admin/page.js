@@ -14,8 +14,8 @@ module.exports = BaseView.extend({
         "click button.delete-page": "deletePage",
         "click button#move-page": "movePage",
         "click button#add-page": "addPage",
-        "keyup textarea#pageContent": "pageContentChanged",
-        "change textarea#pageContent": "pageContentChanged",
+        "keyup textarea#page-content": "pageContentChanged",
+        "change textarea#page-content": "pageContentChanged",
         "click button#page-save": "pageSave"
     },
 
@@ -166,7 +166,7 @@ module.exports = BaseView.extend({
     addPage: function() {
         "use strict";
 
-        var url = $("#addPageUrl").val(),
+        var url = $("#add-page-url").val(),
             path;
 
         if (url.length <= 1 || url.substring(0, 1) !== "/") {
@@ -209,7 +209,7 @@ module.exports = BaseView.extend({
             if (view !== app.router.currentView) {
                 return;
             }
-            $("#preview").html($("#pageContent").val());
+            $("#preview").html($("#page-content").val());
         }, 1000);
     },
 
@@ -219,10 +219,10 @@ module.exports = BaseView.extend({
         var app = this.app,
             pageId = +$("div.page").data("page-id"),
             pageSave = $("#page-save"),
-            url = $("#pageUrl").val(),
-            title = $("#pageTitle").val(),
-            shortTitle = $("#pageShortTitle").val(),
-            content = $("#pageContent").val(),
+            url = $("#page-url").val(),
+            title = $("#page-title").val(),
+            shortTitle = $("#page-short-title").val(),
+            content = $("#page-content").val(),
             admin = new Admin(),
             adminUrl, data;
 

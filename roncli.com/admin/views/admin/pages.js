@@ -124,7 +124,7 @@ module.exports = BaseView.extend({
     addPage: function() {
         "use strict";
 
-        var url = $("#addPageUrl").val();
+        var url = $("#add-page-url").val();
 
         if (url.length <= 1 || url.substring(0, 1) !== "/") {
             bootbox.dialog({

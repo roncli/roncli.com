@@ -203,8 +203,8 @@ module.exports = BaseView.extend({
                     return;
                 }
 
-                $("#blogCommentServerErrors").html("");
-                $("#blogCommentServerErrorList").hide();
+                $("#blog-comment-server-errors").html("");
+                $("#blog-comment-server-error-list").hide();
 
                 tinyMCE.activeEditor.setContent("");
                 addBlogCommentButton.removeAttr("disabled");
@@ -219,7 +219,7 @@ module.exports = BaseView.extend({
                 }).off("shown.bs.modal").modal("show");
             },
             error: function(xhr, error) {
-                var list = $("#blogCommentServerErrorList"),
+                var list = $("#blog-comment-server-error-list"),
                     message;
 
                 console.log(xhr, error);
@@ -228,7 +228,7 @@ module.exports = BaseView.extend({
                 } else {
                     message = "There was a server error posting your comment.  Please try again later.";
                 }
-                $("#blogCommentServerErrors").html(message);
+                $("#blog-comment-server-errors").html(message);
                 list.show();
                 addBlogCommentButton.removeAttr("disabled");
                 tinyMCE.activeEditor.getBody().setAttribute("contenteditable", true);
