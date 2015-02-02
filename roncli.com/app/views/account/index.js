@@ -9,9 +9,9 @@ module.exports = BaseView.extend({
     className: "account_index_view",
 
     events: {
-        "click button#accountChangeEmail": "changeEmail",
-        "click button#accountChangePassword": "changePassword",
-        "click button#accountChangeAlias": "changeAlias"
+        "click button#account-change-email": "changeEmail",
+        "click button#account-change-password": "changePassword",
+        "click button#account-change-alias": "changeAlias"
     },
 
     postRender: function() {
@@ -55,25 +55,25 @@ module.exports = BaseView.extend({
             message: this.app.templateAdapter.getTemplate("account/changeEmailRequest")(),
             show: false
         }).off("shown.bs.modal").on("shown.bs.modal",function() {
-            $("#emailChangeRequestCaptchaImage").attr("src", "/images/captcha.png?_=" + new Date().getTime());
-            $("#emailChangeRequestPassword").focus();
+            $("#email-change-request-captcha-image").attr("src", "/images/captcha.png?_=" + new Date().getTime());
+            $("#email-change-request-password").focus();
         }).modal("show");
 
         // Cache jQuery objects once the dialog box is shown.
-        emailChangeRequestForm = $("#emailChangeRequestForm");
+        emailChangeRequestForm = $("#email-change-request-form");
 
-        emailChangeRequestForm.defaultButton("#emailChangeRequestButton");
+        emailChangeRequestForm.defaultButton("#email-change-request-button");
 
         // Set up validation for the form.
         emailChangeRequestForm.validate({
             rules: {
-                emailChangeRequestCaptcha: {
+                "email-change-request-captcha": {
                     required: true,
                     backbone: {
                         model: Captcha,
                         data: function() {
                             return {
-                                response: $("#emailChangeRequestCaptcha").val()
+                                response: $("#email-change-request-captcha").val()
                             };
                         },
                         settings: {
@@ -83,27 +83,27 @@ module.exports = BaseView.extend({
                 }
             },
             messages: {
-                emailChangeRequestCaptcha: {
+                "email-change-request-captcha": {
                     required: "You must type in the characters as shown.",
                     backbone: "The characters you typed do not match the image."
                 }
             },
-            errorContainer: "#emailChangeRequestErrorList",
-            errorLabelContainer: "#emailChangeRequestErrors"
+            errorContainer: "#email-change-request-error-list",
+            errorLabelContainer: "#email-change-request-errors"
         });
 
         // Setup request email change button.
-        $("#emailChangeRequestButton").on("click", function() {
+        $("#email-change-request-button").on("click", function() {
             var user;
 
             if (emailChangeRequestForm.valid()) {
-                emailChangeRequestForm.find("input, button").attr("disabled", "");
+                emailChangeRequestForm.find("input, button").prop("disabled", true);
                 user = new User();
                 user.fetch({
                     url: "/user/change-email",
                     data: JSON.stringify({
-                        password: $("#emailChangeRequestPassword").val(),
-                        captcha: $("#emailChangeRequestCaptcha").val()
+                        password: $("#email-change-request-password").val(),
+                        captcha: $("#email-change-request-captcha").val()
                     }),
                     type: "POST",
                     contentType: "application/json",
@@ -126,14 +126,14 @@ module.exports = BaseView.extend({
                         } else {
                             message = "There was a server error while requesting your email change.  Plesae try again later.";
                         }
-                        $("#emailChangeRequestServerErrors").html(message);
-                        $("#emailChangeRequestServerErrorList").show();
-                        emailChangeRequestForm.find("input, button").removeAttr("disabled");
+                        $("#email-change-request-server-errors").html(message);
+                        $("#email-change-request-server-error-list").show();
+                        emailChangeRequestForm.find("input, button").prop("disabled", false);
 
                         // Reload the captcha image.
-                        $("#emailChangeRequestCaptchaImage").attr("src", "/images/captcha.png?_=" + new Date().getTime());
-                        $("#emailChangeRequestCaptcha").val("");
-                        emailChangeRequestForm.validate().element("#emailChangeRequestCaptcha");
+                        $("#email-change-request-captcha-image").attr("src", "/images/captcha.png?_=" + new Date().getTime());
+                        $("#email-change-request-captcha").val("");
+                        emailChangeRequestForm.validate().element("#email-change-request-captcha");
                     }
                 });
             }
@@ -152,35 +152,35 @@ module.exports = BaseView.extend({
             message: this.app.templateAdapter.getTemplate("account/changePassword")(),
             show: false
         }).off("shown.bs.modal").on("shown.bs.modal",function() {
-            $("#changePasswordCaptchaImage").attr("src", "/images/captcha.png?_=" + new Date().getTime());
-            $("#changePasswordOldPassword").focus();
+            $("#change-password-captcha-image").attr("src", "/images/captcha.png?_=" + new Date().getTime());
+            $("#change-password-old-password").focus();
         }).modal("show");
 
         // Cache jQuery objects once the dialog box is shown.
-        changePasswordForm = $("#changePasswordForm");
+        changePasswordForm = $("#change-password-form");
 
-        changePasswordForm.defaultButton("#changePasswordButton");
+        changePasswordForm.defaultButton("#change-password-button");
 
         // Set up validation for the form.
         changePasswordForm.validate({
             rules: {
-                changePasswordOldPassword: {
+                "change-password-old-password": {
                     required: true
                 },
-                changePasswordNewPassword: {
+                "change-password-new-password": {
                     required: true,
                     minlength: 6
                 },
-                changePasswordRetypePassword: {
-                    equalTo: "#changePasswordNewPassword"
+                "change-password-retype-password": {
+                    equalTo: "#change-password-new-password"
                 },
-                changePasswordCaptcha: {
+                "change-password-captcha": {
                     required: true,
                     backbone: {
                         model: Captcha,
                         data: function() {
                             return {
-                                response: $("#changePasswordCaptcha").val()
+                                response: $("#change-password-captcha").val()
                             };
                         },
                         settings: {
@@ -190,38 +190,38 @@ module.exports = BaseView.extend({
                 }
             },
             messages: {
-                changePasswordOldPassword: {
+                "change-password-old-password": {
                     required: "You must enter your current password."
                 },
-                changePasswordNewPassword: {
+                "change-password-new-password": {
                     required: "You must enter a new password.",
                     minlength: "Your new password must be at least 6 characters."
                 },
-                changePasswordRetypePassword: {
+                "change-password-retype-password": {
                     equalTo: "The passwords you entered don't match."
                 },
-                changePasswordCaptcha: {
+                "change-password-captcha": {
                     required: "You must type in the characters as shown.",
                     backbone: "The characters you typed do not match the image."
                 }
             },
-            errorContainer: "#changePasswordErrorList",
-            errorLabelContainer: "#changePasswordErrors"
+            errorContainer: "#change-password-error-list",
+            errorLabelContainer: "#change-password-errors"
         });
 
         // Setup change password button.
-        $("#changePasswordButton").on("click", function() {
+        $("#change-password-button").on("click", function() {
             var user;
 
             if (changePasswordForm.valid()) {
-                changePasswordForm.find("input, button").attr("disabled", "");
+                changePasswordForm.find("input, button").prop("disabled", true);
                 user = new User();
                 user.fetch({
                     url: "/user/change-password",
                     data: JSON.stringify({
-                        oldPassword: $("#changePasswordOldPassword").val(),
-                        newPassword: $("#changePasswordNewPassword").val(),
-                        captcha: $("#changePasswordCaptcha").val()
+                        oldPassword: $("#change-password-old-password").val(),
+                        newPassword: $("#change-password-new-password").val(),
+                        captcha: $("#change-password-captcha").val()
                     }),
                     type: "POST",
                     contentType: "application/json",
@@ -244,14 +244,14 @@ module.exports = BaseView.extend({
                         } else {
                             message = "There was a server error while changing your password.  Plesae try again later.";
                         }
-                        $("#changePasswordServerErrors").html(message);
-                        $("#changePasswordServerErrorList").show();
-                        changePasswordForm.find("input, button").removeAttr("disabled");
+                        $("#change-password-server-errors").html(message);
+                        $("#change-password-server-error-list").show();
+                        changePasswordForm.find("input, button").prop("disabled", false);
 
                         // Reload the captcha image.
-                        $("#changePasswordCaptchaImage").attr("src", "/images/captcha.png?_=" + new Date().getTime());
-                        $("#changePasswordCaptcha").val("");
-                        changePasswordForm.validate().element("#changePasswordCaptcha");
+                        $("#change-password-captcha-image").attr("src", "/images/captcha.png?_=" + new Date().getTime());
+                        $("#change-password-captcha").val("");
+                        changePasswordForm.validate().element("#change-password-captcha");
                     }
                 });
             }
@@ -270,18 +270,18 @@ module.exports = BaseView.extend({
             message: this.app.templateAdapter.getTemplate("account/changeAlias")(),
             show: false
         }).off("shown.bs.modal").on("shown.bs.modal",function() {
-            $("#changeAliasAlias").focus();
+            $("#change-alias-alias").focus();
         }).modal("show");
 
         // Cache jQuery objects once the dialog box is shown.
-        changeAliasForm = $("#changeAliasForm");
+        changeAliasForm = $("#change-alias-form");
 
-        changeAliasForm.defaultButton("#changeAliasButton");
+        changeAliasForm.defaultButton("#change-alias-button");
 
         // Set up validation for the form.
         changeAliasForm.validate({
             rules: {
-                changeAliasAlias: {
+                "change-alias-alias": {
                     required: true,
                     minlength: 3,
                     backbone: {
@@ -289,7 +289,7 @@ module.exports = BaseView.extend({
                         inverse: true,
                         data: function() {
                             return {
-                                aliasExists: $("#changeAliasAlias").val()
+                                aliasExists: $("#change-alias-alias").val()
                             };
                         },
                         settings: {
@@ -299,23 +299,23 @@ module.exports = BaseView.extend({
                 }
             },
             messages: {
-                changeAliasAlias: {
+                "change-alias-alias": {
                     required: "You must enter an alias.",
                     minlength: "Your alias must be at least 3 characters.",
                     backbone: "The alias you entered is already in use."
                 }
             },
-            errorContainer: "#changeAliasErrorList",
-            errorLabelContainer: "#changeAliasErrors"
+            errorContainer: "#change-alias-error-list",
+            errorLabelContainer: "#change-alias-errors"
         });
 
         // Setup change alias button.
-        $("#changeAliasButton").on("click", function() {
-            var alias = $("#changeAliasAlias").val(),
+        $("#change-alias-button").on("click", function() {
+            var alias = $("#change-alias-alias").val(),
                 user;
 
             if (changeAliasForm.valid()) {
-                changeAliasForm.find("input, button").attr("disabled", "");
+                changeAliasForm.find("input, button").prop("disabled", true);
                 user = new User();
                 user.fetch({
                     url: "/user/change-alias",
@@ -326,8 +326,8 @@ module.exports = BaseView.extend({
                     success: function() {
                         bootbox.hideAll();
 
-                        $("#loggedInUserAlias").text(alias);
-                        $("#accountAlias").text(alias);
+                        $("#logged-in-user-alias").text(alias);
+                        $("#account-alias").text(alias);
 
                         // Display the dialog box.
                         bootbox.dialog({
@@ -344,9 +344,9 @@ module.exports = BaseView.extend({
                         } else {
                             message = "There was a server error while changing your alias.  Plesae try again later.";
                         }
-                        $("#changeAliasServerErrors").html(message);
-                        $("#changeAliasServerErrorList").show();
-                        changeAliasForm.find("input, button").removeAttr("disabled");
+                        $("#change-alias-server-errors").html(message);
+                        $("#change-alias-server-error-list").show();
+                        changeAliasForm.find("input, button").prop("disabled", false);
                     }
                 });
             }
