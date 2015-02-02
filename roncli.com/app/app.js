@@ -67,6 +67,7 @@ module.exports = BaseApp.extend({
             IScroll = require("iscroll"),
             _ = require("underscore"),
             querystring = $.getParam(),
+            body = $("body"),
             scroller, logInUser, doLogout, logOutUser, attemptLogin, user,
 
             /**
@@ -129,9 +130,11 @@ module.exports = BaseApp.extend({
          */
         app.addPageScroller = function(selector, options) {
             var setScroller = function() {
-                app.pageScrollers.push(
-                    new IScroll(selector, options)
-                );
+                var scroll = new IScroll(selector, options);
+
+                app.pageScrollers.push(scroll);
+
+                scroll.scrollToElement(".selected", null, null, true);
             };
 
             if ($("html").is(".wf-active,.wf-inactive")) {
@@ -582,8 +585,13 @@ module.exports = BaseApp.extend({
         };
 
         // Don't submit any forms.
-        $("body").on("submit", "form", function() {
+        body.on("submit", "form", function() {
             return false;
+        });
+
+        // Handle link buttons.
+        body.on("click", "button.link", function() {
+            app.router.navigate($(this).data("href"), {trigger: true});
         });
 
         // Pass scrolling events to the view.
