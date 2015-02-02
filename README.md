@@ -128,6 +128,11 @@ The following should be the contents of privateConfig.js:
 Version History
 ===============
 
+0.3
+---
+
+This version implements HTML pages.  Included are page hierarchy with simple navigation, and an administration section.
+
 0.2
 ---
 
@@ -145,11 +150,6 @@ This version introduces the bare bones of the website, including the layout, Twi
 
 Planned Versions
 ================
-
-0.3
----
-
-* Implement HTML pages.
 
 0.3.1
 -----
