@@ -965,3 +965,151 @@ module.exports.changeOrder = function(userId, parentPageId, order, callback) {
         );
     });
 };
+
+/**
+ * Reeturn list of page comments to moderate.
+ * @param {number} userId The user ID of the moderator.
+ * @param {function(null, object)|function(object)} callback The callback function.
+ */
+module.exports.getPageCommentsToModerate = function(userId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while getting page comments to moderate.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        db.query(
+            "SELECT pc.CommentID, pc.Comment, pc.CrDate, u.Alias, p.PageURL FROM tblPageComment pc INNER JOIN tblPage p on pc.PageID = p.PageID INNER JOIN tblUser u ON pc.CrUserID = u.UserID WHERE pc.ModeratedDate IS NULL ORDER BY pc.CrDate",
+            {},
+            function(err, data) {
+                if (err) {
+                    console.log("Database error in admin.getPageCommentsToModerate");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while getting page comments to moderate.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                if (!data[0]) {
+                    callback(null, {});
+                    return;
+                }
+
+                callback(null, data[0].map(function(comment) {
+                    return {
+                        id: comment.CommentID,
+                        published: comment.CrDate.getTime(),
+                        content: comment.Comment,
+                        author: comment.Alias,
+                        url: comment.PageURL
+                    };
+                }));
+            }
+        );
+    });
+};
+
+/**
+ * Approves a page comment.
+ * @param {number} userId The user ID of the moderator.
+ * @param {number} commentId The comment ID to approve.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.approvePageComment = function(userId, commentId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while approving a page comment.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        db.query(
+            "UPDATE tblPageComment SET ModeratedDate = GETUTCDATE() WHERE CommentID = @id",
+            {id: {type: db.INT, value: commentId}},
+            function(err) {
+                if (err) {
+                    console.log("Database error in admin.approvePageComment.");
+                    callback({
+                        error: "There was a database error while approving a page comment.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                callback();
+            }
+        );
+    });
+};
+
+/**
+ * Rejects a page comment.
+ * @param {number} userId The user ID of the moderator.
+ * @param {number} commentId The comment ID to reject.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.rejectPageComment = function(userId, commentId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while rejecting a page comment.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        db.query(
+            "DELETE FROM tblPageComment WHERE CommentID = @id",
+            {id: {type: db.INT, value: commentId}},
+            function(err) {
+                if (err) {
+                    console.log("Database error in admin.approvePageComment.");
+                    callback({
+                        error: "There was a database error while rejecting a page comment.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                callback();
+            }
+        );
+    });
+};

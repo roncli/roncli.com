@@ -1,8 +1,8 @@
-var Category = require("../models/admin__blog_comment"),
+var Comment = require("../models/admin__blog_comment"),
     Collection = require("app/collections/base");
 
 module.exports = Collection.extend({
-    model: Category,
+    model: Comment,
     url: "/admin/blog/comments"
 });
 

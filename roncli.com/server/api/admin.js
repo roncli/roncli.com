@@ -60,6 +60,21 @@ module.exports.get = function(req, callback) {
                             return;
                     }
                     break;
+                case "pages":
+                    switch (req.parsedPath[1]) {
+                        case "comments":
+                            admin.getPageCommentsToModerate(userId, function(err, comments) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                callback(comments);
+                            });
+                            return;
+                    }
+                    break;
             }
             break;
     }
@@ -174,6 +189,30 @@ module.exports.post = function(req, callback) {
                             return;
                         case "change-order":
                             admin.changeOrder(userId, req.body.pageId, req.body.order, function(err) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                        case "approve-comment":
+                            admin.approvePageComment(userId, req.body.commentId, function(err) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                        case "reject-comment":
+                            admin.rejectPageComment(userId, req.body.commentId, function(err) {
                                 if (err) {
                                     req.res.status(err.status);
                                     callback(err);

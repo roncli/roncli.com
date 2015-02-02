@@ -34,7 +34,8 @@ module.exports = {
         "use strict";
 
         this.app.fetch({
-            pages: {model: "Admin_Pages", params: {}}
+            pages: {model: "Admin_Pages", params: {}},
+            comments: {collection: "Admin_PageComments", params: {}}
         }, {readFromCache: false, writeToCache: false}, callback);
     },
 
