@@ -219,90 +219,90 @@ module.exports = BaseApp.extend({
                     message: app.templateAdapter.getTemplate("site/login")(),
                     show: false
                 }).off("shown.bs.modal").on("shown.bs.modal", function() {
-                    $("#loginEmail").focus();
+                    $("#login-email").focus();
                 }).modal("show");
 
                 // Cache jQuery objects once the dialog box is shown.
-                loginForm = $("#loginForm");
-                loginTab = $("#loginTab");
-                registerForm = $("#registerForm");
-                registerTab = $("#registerTab");
-                forgotPasswordForm = $("#forgotPasswordForm");
-                forgotPasswordTab = $("#forgotPasswordTab");
+                loginForm = $("#login-form");
+                loginTab = $("#login-tab");
+                registerForm = $("#register-form");
+                registerTab = $("#register-tab");
+                forgotPasswordForm = $("#forgot-password-form");
+                forgotPasswordTab = $("#forgot-password-tab");
 
                 // Set focus when tabs are clicked.
-                $("#loginNav").on("shown.bs.tab", function() {
-                    $("#loginEmail").focus();
+                $("#login-nav").on("shown.bs.tab", function() {
+                    $("#login-email").focus();
                 });
 
-                $("#registerNav").on("shown.bs.tab", function() {
-                    $("#registerCaptchaImage").attr("src", "/images/captcha.png?_=" + new Date().getTime());
-                    $("#registerEmail").focus();
+                $("#register-nav").on("shown.bs.tab", function() {
+                    $("#register-captcha-image").attr("src", "/images/captcha.png?_=" + new Date().getTime());
+                    $("#register-email").focus();
                 });
 
-                $("#forgotPasswordNav").on("shown.bs.tab", function() {
-                    $("#forgotPasswordEmail").focus();
+                $("#forgot-password-nav").on("shown.bs.tab", function() {
+                    $("#forgot-password-email").focus();
                 });
 
                 // Set the default buttons for each tab.
-                loginTab.defaultButton("#loginButton");
-                registerTab.defaultButton("#registerButton");
-                forgotPasswordTab.defaultButton("#forgotPasswordButton");
+                loginTab.defaultButton("#login-button");
+                registerTab.defaultButton("#register-button");
+                forgotPasswordTab.defaultButton("#forgot-password-button");
 
                 // Setup the DOB date picker.
-                $("#registerDOBButton").datepicker({
+                $("#register-dob-button").datepicker({
                     format: "MM d, yyyy",
                     startDate: today.clone().subtract(150, "years").toDate(),
                     endDate: today.clone().subtract(13, "years").toDate(),
                     startView: "decade",
                     autoclose: true
                 }).on("changeDate", function(e) {
-                    var registerDOB = $("#registerDOB");
+                    var registerDOB = $("#register-dob");
                     if (e.date) {
                         registerDOB.val(moment(e.date).format("MMMM D, YYYY"));
                     } else {
                         $(this).datepicker("setDate", registerDOB.val());
                     }
-                    $("#registerCaptcha").focus();
-                    registerForm.validate().element("#registerDOB");
+                    $("#register-captcha").focus();
+                    registerForm.validate().element("#register-dob");
                 });
 
                 // Ensure the date picker appears when the date is selected.
-                $("#registerDOB").on("focus", function() {
-                    $("#registerDOBButton").click();
+                $("#register-dob").on("focus", function() {
+                    $("#register-dob-button").click();
                     $(this).blur();
                 });
 
                 // Set up validation for login tab.
                 loginForm.validate({
                     rules: {
-                        loginEmail: {
+                        "login-email": {
                             required: true,
                             email: true
                         },
-                        loginPassword: {
+                        "login-password": {
                             required: true,
                             minlength: 6
                         }
                     },
                     messages: {
-                        loginEmail: {
+                        "login-email": {
                             required: "You must enter your email address.",
                             email: "The email address you entered is not valid."
                         },
-                        loginPassword: {
+                        "login-password": {
                             required: "You must enter your password.",
                             minlength: "Your password must be at least 6 characters."
                         }
                     },
-                    errorContainer: "#loginErrorList",
-                    errorLabelContainer: "#loginErrors"
+                    errorContainer: "#login-error-list",
+                    errorLabelContainer: "#login-errors"
                 });
 
                 // Set up validation for the register tab.
                 registerForm.validate({
                     rules: {
-                        registerEmail: {
+                        "register-email": {
                             required: true,
                             email: true,
                             backbone: {
@@ -310,7 +310,7 @@ module.exports = BaseApp.extend({
                                 inverse: true,
                                 data: function() {
                                     return {
-                                        emailExists: $("#registerEmail").val()
+                                        emailExists: $("#register-email").val()
                                     };
                                 },
                                 settings: {
@@ -318,14 +318,14 @@ module.exports = BaseApp.extend({
                                 }
                             }
                         },
-                        registerPassword: {
+                        "register-password": {
                             required: true,
                             minlength: 6
                         },
-                        registerRetypePassword: {
-                            equalTo: "#registerPassword"
+                        "register-retype-password": {
+                            equalTo: "#register-password"
                         },
-                        registerAlias: {
+                        "register-alias": {
                             required: true,
                             minlength: 3,
                             backbone: {
@@ -333,7 +333,7 @@ module.exports = BaseApp.extend({
                                 inverse: true,
                                 data: function() {
                                     return {
-                                        aliasExists: $("#registerAlias").val()
+                                        aliasExists: $("#register-alias").val()
                                     };
                                 },
                                 settings: {
@@ -341,13 +341,13 @@ module.exports = BaseApp.extend({
                                 }
                             }
                         },
-                        registerDOB: {
+                        "register-dob": {
                             required: true,
                             backbone: {
                                 model: User,
                                 data: function() {
                                     return {
-                                        coppaDob: $("#registerDOB").val()
+                                        coppaDob: $("#register-dob").val()
                                     };
                                 },
                                 settings: {
@@ -355,13 +355,13 @@ module.exports = BaseApp.extend({
                                 }
                             }
                         },
-                        registerCaptcha: {
+                        "register-captcha": {
                             required: true,
                             backbone: {
                                 model: Captcha,
                                 data: function() {
                                     return {
-                                        response: $("#registerCaptcha").val()
+                                        response: $("#register-captcha").val()
                                     };
                                 },
                                 settings: {
@@ -371,47 +371,47 @@ module.exports = BaseApp.extend({
                         }
                     },
                     messages: {
-                        registerEmail: {
+                        "register-email": {
                             required: "You must enter an email address.",
                             email: "The email address you entered is not valid.",
                             backbone: "The email address you entered is already in use."
                         },
-                        registerPassword: {
+                        "register-password": {
                             required: "You must enter a password.",
                             minlength: "Your password must be at least 6 characters."
                         },
-                        registerRetypePassword: {
+                        "register-retype-password": {
                             equalTo: "The passwords you entered don't match."
                         },
-                        registerAlias: {
+                        "register-alias": {
                             required: "You must enter an alias.",
                             minlength: "Your alias must be at least 3 characters.",
                             backbone: "The alias you entered is already in use."
                         },
-                        registerDOB: {
+                        "register-dob": {
                             required: "You must enter a date of birth.",
                             backbone: "You must be 13 years of age or older to register."
                         },
-                        registerCaptcha: {
+                        "register-captcha": {
                             required: "You must type in the characters as shown.",
                             backbone: "The characters you typed do not match the image."
                         }
                     },
-                    errorContainer: "#registerErrorList",
-                    errorLabelContainer: "#registerErrors"
+                    errorContainer: "#register-error-list",
+                    errorLabelContainer: "#register-errors"
                 });
 
                 // Setup validation for the forgot password tab.
                 forgotPasswordForm.validate({
                     rules: {
-                        forgotPasswordEmail: {
+                        "forgot-password-email": {
                             required: true,
                             email: true,
                             backbone: {
                                 model: User,
                                 data: function() {
                                     return {
-                                        "emailExists": $("#forgotPasswordEmail").val()
+                                        "emailExists": $("#forgot-password-email").val()
                                     };
                                 },
                                 settings: {
@@ -421,29 +421,29 @@ module.exports = BaseApp.extend({
                         }
                     },
                     messages: {
-                        forgotPasswordEmail: {
+                        "forgot-password-email": {
                             required: "You must enter your email address.",
                             email: "You must enter a valid email address.",
                             backbone: "The email address you entered does not exist."
                         }
                     },
-                    errorContainer: "#forgotPasswordErrorList",
-                    errorLabelContainer: "#forgotPasswordErrors"
+                    errorContainer: "#forgot-password-error-list",
+                    errorLabelContainer: "#forgot-password-errors"
                 });
 
                 // Setup login button.
-                $("#loginButton").on("click", function() {
+                $("#login-button").on("click", function() {
                     if (loginForm.valid()) {
-                        loginForm.find("input, button").attr("disabled", "");
+                        loginForm.find("input, button").prop("disabled", true);
                         attemptLogin({
-                            email: $("#loginEmail").val(),
-                            password: $("#loginPassword").val(),
-                            saveLogin: $("#loginSaveLogin").is(":checked")
+                            email: $("#login-email").val(),
+                            password: $("#login-password").val(),
+                            saveLogin: $("#login-save-login").is(":checked")
                         }, function(err) {
                             if (err) {
-                                $("#loginServerErrors").html(err);
-                                $("#loginServerErrorList").show();
-                                loginForm.find("input, button").removeAttr("disabled");
+                                $("#login-server-errors").html(err);
+                                $("#login-server-error-list").show();
+                                loginForm.find("input, button").prop("disabled", false);
                             } else {
                                 bootbox.hideAll();
                             }
@@ -452,21 +452,21 @@ module.exports = BaseApp.extend({
                 });
 
                 // Setup register button.
-                $("#registerButton").on("click", function() {
+                $("#register-button").on("click", function() {
                     var user;
 
-                    registerForm.validate().element("#registerRetypePassword");
+                    registerForm.validate().element("#register-retype-password");
                     if (registerForm.valid()) {
-                        registerForm.find("input, button").attr("disabled", "");
+                        registerForm.find("input, button").prop("disabled", true);
                         user = new User();
                         user.fetch({
                             url: "/user/register",
                             data: JSON.stringify({
-                                email: $("#registerEmail").val(),
-                                password: $("#registerPassword").val(),
-                                alias: $("#registerAlias").val(),
-                                dob: $("#registerDOB").val(),
-                                captcha: $("#registerCaptcha").val()
+                                email: $("#register-email").val(),
+                                password: $("#register-password").val(),
+                                alias: $("#register-alias").val(),
+                                dob: $("#register-dob").val(),
+                                captcha: $("#register-captcha").val()
                             }),
                             type: "POST",
                             contentType: "application/json",
@@ -489,30 +489,30 @@ module.exports = BaseApp.extend({
                                 } else {
                                     message = "There was a server error processing your registration.  Please try again later.";
                                 }
-                                $("#registerServerErrors").html(message);
-                                $("#registerServerErrorList").show();
-                                registerForm.find("input, button").removeAttr("disabled");
+                                $("#register-server-errors").html(message);
+                                $("#register-server-error-list").show();
+                                registerForm.find("input, button").prop("disabled", false);
 
                                 // Reload the captcha image.
-                                $("#registerCaptchaImage").attr("src", "/images/captcha.png?_=" + new Date().getTime());
-                                $("#registerCaptcha").val("");
-                                registerForm.validate().element("#registerCaptcha");
+                                $("#register-captcha-image").attr("src", "/images/captcha.png?_=" + new Date().getTime());
+                                $("#register-captcha").val("");
+                                registerForm.validate().element("#register-captcha");
                             }
                         });
                     }
                 });
 
                 // Setup forgot password button.
-                $("#forgotPasswordButton").on("click", function() {
+                $("#forgot-password-button").on("click", function() {
                     var user;
 
                     if (forgotPasswordForm.valid()) {
-                        forgotPasswordForm.find("input, button").attr("disabled", "");
+                        forgotPasswordForm.find("input, button").prop("disabled", true);
                         user = new User();
                         user.fetch({
                             url: "/user/forgot-password",
                             data: JSON.stringify({
-                                email: $("#forgotPasswordEmail").val()
+                                email: $("#forgot-password-email").val()
                             }),
                             type: "POST",
                             contentType: "application/json",
@@ -545,9 +545,9 @@ module.exports = BaseApp.extend({
                                 } else {
                                     message = "There was a server error processing your password recovery request.  Please try again later.";
                                 }
-                                $("#forgotPasswordServerErrors").html(message);
-                                $("#forgotPasswordServerErrorList").show();
-                                forgotPasswordForm.find("input, button").removeAttr("disabled");
+                                $("#forgot-password-server-errors").html(message);
+                                $("#forgot-password-server-error-list").show();
+                                forgotPasswordForm.find("input, button").prop("disabled", false);
                             }
                         });
                     }
@@ -684,32 +684,32 @@ module.exports = BaseApp.extend({
                                 message: app.templateAdapter.getTemplate("site/passwordResetRequest")(),
                                 show: false
                             }).off("shown.bs.modal").on("shown.bs.modal", function() {
-                                $("#passwordResetCaptchaImage").attr("src", "/images/captcha.png?_=" + new Date().getTime());
-                                $("#passwordResetNewPassword").focus();
+                                $("#password-reset-captcha-image").attr("src", "/images/captcha.png?_=" + new Date().getTime());
+                                $("#password-reset-new-password").focus();
                             }).modal("show");
 
                             // Cache jQuery objects once the dialog box is shown.
-                            passwordResetForm = $("#passwordResetForm");
+                            passwordResetForm = $("#password-reset-form");
 
-                            passwordResetForm.defaultButton("#passwordResetButton");
+                            passwordResetForm.defaultButton("#password-reset-button");
 
                             // Set up validation for the form.
                             passwordResetForm.validate({
                                 rules: {
-                                    passwordResetNewPassword: {
+                                    "password-reset-new-password": {
                                         required: true,
                                         minlength: 6
                                     },
-                                    passwordResetRetypePassword: {
-                                        equalTo: "#passwordResetNewPassword"
+                                    "password-reset-retype-password": {
+                                        equalTo: "#password-reset-new-password"
                                     },
-                                    passwordResetCaptcha: {
+                                    "password-reset-captcha": {
                                         required: true,
                                         backbone: {
                                             model: Captcha,
                                             data: function() {
                                                 return {
-                                                    response: $("#passwordResetCaptcha").val()
+                                                    response: $("#password-reset-captcha").val()
                                                 };
                                             },
                                             settings: {
@@ -719,37 +719,37 @@ module.exports = BaseApp.extend({
                                     }
                                 },
                                 messages: {
-                                    passwordResetNewPassword: {
+                                    "password-reset-new-password": {
                                         required: "You must enter a new password.",
                                         minlength: "Your new password must be at least 6 characters."
                                     },
-                                    passwordResetRetypePassword: {
+                                    "password-reset-retype-password": {
                                         equalTo: "The passwords you entered don't match."
                                     },
-                                    passwordResetCaptcha: {
+                                    "password-reset-captcha": {
                                         required: "You must type in the characters as shown.",
                                         backbone: "The characters you typed do not match the image."
                                     }
                                 },
-                                errorContainer: "#passwordResetErrorList",
-                                errorLabelContainer: "#passwordResetErrors"
+                                errorContainer: "#password-reset-error-list",
+                                errorLabelContainer: "#password-reset-errors"
                             });
 
                             // Setup reset password button.
-                            $("#passwordResetButton").on("click", function() {
+                            $("#password-reset-button").on("click", function() {
                                 var user;
 
-                                passwordResetForm.validate().element("#passwordResetRetypePassword");
+                                passwordResetForm.validate().element("#password-reset-retype-password");
                                 if (passwordResetForm.valid()) {
-                                    passwordResetForm.find("input, button").attr("disabled", "");
+                                    passwordResetForm.find("input, button").prop("disabled", true);
                                     user = new User();
                                     user.fetch({
                                         url: "/user/password-reset",
                                         data: JSON.stringify({
                                             userId: +querystring.u,
                                             authorizationCode: querystring.a,
-                                            password: $("#passwordResetNewPassword").val(),
-                                            captcha: $("#passwordResetCaptcha").val()
+                                            password: $("#password-reset-new-password").val(),
+                                            captcha: $("#password-reset-captcha").val()
                                         }),
                                         type: "POST",
                                         contentType: "application/json",
@@ -772,14 +772,14 @@ module.exports = BaseApp.extend({
                                             } else {
                                                 message = "There was a server error while resetting your password.  Please try again later.";
                                             }
-                                            $("#passwordResetServerErrors").html(message);
-                                            $("#passwordResetServerErrorList").show();
-                                            passwordResetForm.find("input, button").removeAttr("disabled");
+                                            $("#password-reset-server-errors").html(message);
+                                            $("#password-reset-server-error-list").show();
+                                            passwordResetForm.find("input, button").prop("disabled", false);
 
                                             // Reload the captcha image.
-                                            $("#passwordResetCaptchaImage").attr("src", "/images/captcha.png?_=" + new Date().getTime());
-                                            $("#passwordResetCaptcha").val("");
-                                            passwordResetForm.validate().element("#passwordResetCaptcha");
+                                            $("#password-reset-captcha-image").attr("src", "/images/captcha.png?_=" + new Date().getTime());
+                                            $("#password-reset-captcha").val("");
+                                            passwordResetForm.validate().element("#password-reset-captcha");
                                         }
                                     });
                                 }
@@ -816,54 +816,54 @@ module.exports = BaseApp.extend({
                                 message: app.templateAdapter.getTemplate("site/emailChange")(),
                                 show: false
                             }).off("shown.bs.modal").on("shown.bs.modal", function() {
-                                $("#emailChangeNewEmail").focus();
+                                $("#email-change-new-email").focus();
                             }).modal("show");
 
                             // Cache jQuery objects once the dialog box is shown.
-                            emailChangeForm = $("#emailChangeForm");
+                            emailChangeForm = $("#email-change-form");
 
-                            emailChangeForm.defaultButton("#emailChangeButton");
+                            emailChangeForm.defaultButton("#email-change-button");
 
                             // Set up validation for the form.
                             emailChangeForm.validate({
                                 rules: {
-                                    emailChangeNewEmail: {
+                                    "email-change-new-email": {
                                         required: true,
                                         email: true
                                     },
-                                    emailChangePassword: {
+                                    "email-change-password": {
                                         required: true,
                                         minlength: 6
                                     }
                                 },
                                 messages: {
-                                    emailChangeNewEmail: {
+                                    "email-change-new-email": {
                                         required: "You must enter a new email address.",
                                         email: "The email address you entered is not valid."
                                     },
-                                    emailChangePassword: {
+                                    "email-change-password": {
                                         required: "You must enter your password.",
                                         minlength: "Your password must be at least 6 characters."
                                     }
                                 },
-                                errorContainer: "#emailChangeErrorList",
-                                errorLabelContainer: "#emailChangeErrors"
+                                errorContainer: "#email-change-error-list",
+                                errorLabelContainer: "#email-change-errors"
                             });
 
                             // Setup email change button.
-                            $("#emailChangeButton").on("click", function() {
+                            $("#email-change-button").on("click", function() {
                                 var user;
 
                                 if (emailChangeForm.valid()) {
-                                    emailChangeForm.find("input, button").attr("disabled", "");
+                                    emailChangeForm.find("input, button").prop("disabled", true);
                                     user = new User();
                                     user.fetch({
                                         url: "/user/email-change",
                                         data: JSON.stringify({
                                             userId: +querystring.u,
                                             authorizationCode: querystring.a,
-                                            email: $("#emailChangeNewEmail").val(),
-                                            password: $("#emailChangePassword").val()
+                                            email: $("#email-change-new-email").val(),
+                                            password: $("#email-change-password").val()
                                         }),
                                         type: "POST",
                                         contentType: "application/json",
@@ -888,9 +888,9 @@ module.exports = BaseApp.extend({
                                             } else {
                                                 message = "There was a server error while changing your email address.  Please try again later.";
                                             }
-                                            $("#emailChangeServerErrors").html(message);
-                                            $("#emailChangeServerErrorList").show();
-                                            emailChangeForm.find("input, button").removeAttr("disabled");
+                                            $("#email-change-server-errors").html(message);
+                                            $("#email-change-server-error-list").show();
+                                            emailChangeForm.find("input, button").prop("disabled", false);
                                         }
                                     });
                                 }
