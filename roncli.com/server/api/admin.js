@@ -172,6 +172,18 @@ module.exports.post = function(req, callback) {
                                 callback();
                             });
                             return;
+                        case "change-order":
+                            admin.changeOrder(userId, req.body.pageId, req.body.order, function(err) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
                     }
                     break;
             }

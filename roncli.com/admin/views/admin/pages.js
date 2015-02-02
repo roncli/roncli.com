@@ -3,7 +3,8 @@
 var BaseView = require("./base"),
     $ = require("jquery"),
     Admin = require("../../models/admin"),
-    backbone = require("rendr/node_modules/backbone");
+    backbone = require("rendr/node_modules/backbone"),
+    sortable = require("sortablejs");
 
 // Sets up the admin view.
 module.exports = BaseView.extend({
@@ -26,7 +27,7 @@ module.exports = BaseView.extend({
 
         var app = this.app,
             deleteButton = $(ev.target),
-            pageId = deleteButton.closest(".page-container").data("page-id"),
+            pageId = deleteButton.closest(".page-container").data("id"),
             admin = new Admin();
 
         bootbox.dialog({

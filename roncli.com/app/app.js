@@ -130,9 +130,11 @@ module.exports = BaseApp.extend({
          */
         app.addPageScroller = function(selector, options) {
             var setScroller = function() {
-                app.pageScrollers.push(
-                    new IScroll(selector, options)
-                );
+                var scroll = new IScroll(selector, options);
+
+                app.pageScrollers.push(scroll);
+
+                scroll.scrollToElement(".selected", null, null, true);
             };
 
             if ($("html").is(".wf-active,.wf-inactive")) {

@@ -870,3 +870,98 @@ module.exports.movePage = function(userId, pageId, newParentPageId, callback) {
         );
     });
 };
+
+/**
+ * Changes the order of a page's children.
+ * @param {number} userId The user ID of the moderator.
+ * @param {number} parentPageId The page ID to move.
+ * @param {int[]} order The order of pageIDs.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.changeOrder = function(userId, parentPageId, order, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        var variableNames = [],
+            variables = {};
+
+        if (err) {
+            callback({
+                error: "There was a database error while deleting a page.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        // Just bail if there are no pages in the list.
+        if (order.length === 0) {
+            callback();
+            return;
+        }
+
+        // Ensure all of the pages in the order list have a parent page of the same page ID.
+        order.forEach(function(pageId) {
+            variableNames.push("@page" + pageId);
+            variables["page" + pageId] = {type: db.INT, value: pageId};
+        });
+        variables.parentPageId = {type: db.INT, value: parentPageId};
+
+        db.query(
+            "SELECT COUNT(PageID) Pages FROM tblPage WHERE PageID IN (" + variableNames.join(", ") + ") AND ParentPageID IS NOT NULL AND ParentPageID = @parentPageId",
+            variables,
+            function(err, data) {
+                var sql = [],
+                    sqlVariables = {};
+
+                if (err) {
+                    console.log("Database error checking pages in admin.changeOrder.");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while ordering pages.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                if (!data || !data[0] || !data[0][0] || data[0][0].Pages !== order.length) {
+                    callback({
+                        error: "Invalid pages to reorder.  Please reload the page and try again.",
+                        status: 400
+                    });
+                    return;
+                }
+
+                // Update order of pages.
+                order.forEach(function(pageId, index) {
+                    sql.push("UPDATE tblPage SET [Order] = @order" + index + " WHERE PageID = @page" + pageId);
+                    sqlVariables["order" + index] = {type: db.INT, value: index + 1};
+                    sqlVariables["page" + pageId] = {type: db.INT, value: pageId};
+                });
+
+                db.query(
+                    sql.join(";"), sqlVariables, function(err) {
+                        if (err) {
+                            console.log("Database error updating page order in admin.changeOrder.");
+                            console.log(err);
+                            callback({
+                                error: "There was a database error while ordering pages.  Please reload the page and try again.",
+                                status: 500
+                            });
+                            return;
+                        }
+
+                        callback();
+                    }
+                );
+            }
+        );
+    });
+};

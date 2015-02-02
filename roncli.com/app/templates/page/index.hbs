@@ -4,5 +4,58 @@
 <div class="col-sm-2 hidden-xs right-side">
     <div class="panel panel-primary">
         <div class="panel-heading panel-heading-small text-center">{{#if page.attributes.page.shortTitle}}{{page.attributes.page.shortTitle}}{{else}}{{page.attributes.page.title}}{{/if}}</div>
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            {{#if page.attributes.parents}}
+                {{#each page.attributes.parents}}
+                    {{#if @last}}
+                        <li class="active">{{shortTitle}}</li>
+                    {{else}}
+                        <li><a href="{{{url}}}">{{shortTitle}}</a></li>
+                    {{/if}}
+                {{/each}}
+            {{/if}}
+        </ol>
+        <div class="panel-body">
+            You can add your comments at the bottom of the page.
+        </div>
     </div>
+    {{partial "site/share"}}
+    {{#if page.attributes.siblings}}
+        <div class="btn-group-vertical btn-group-xs">
+            <div class="btn inactive btn-info">{{page.attributes.parentTitle}}</div>
+            <div class="sibling-pages">
+                <div class="scroller-wrapper" id="sibling-pages-wrapper">
+                    <div class="scroller">
+                        <div class="siblings btn-group-vertical btn-group-xs">
+                            {{#each page.attributes.siblings}}
+                                {{#ifCond id "===" @root.page.attributes.page.id}}
+                                    <a class="btn btn-warning selected" href="{{{url}}}">{{shortTitle}}</a>
+                                {{/ifCond}}
+                                {{#ifCond id "!==" @root.page.attributes.page.id}}
+                                    <a class="btn btn-default" href="{{{url}}}">{{shortTitle}}</a>
+                                {{/ifCond}}
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/if}}
+    {{#if page.attributes.children}}
+        <div class="btn-group-vertical btn-group-xs">
+            <div class="btn inactive btn-info">{{#if page.attributes.page.shortTitle}}{{page.attributes.page.shortTitle}}{{else}}{{page.attributes.page.title}}{{/if}}</div>
+            <div class="children-pages">
+                <div class="scroller-wrapper" id="children-pages-wrapper">
+                    <div class="scroller">
+                        <div class="children btn-group-vertical btn-group-xs">
+                            {{#each page.attributes.children}}
+                                <a class="btn btn-default" href="{{{url}}}">{{shortTitle}}</a>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/if}}
 </div>

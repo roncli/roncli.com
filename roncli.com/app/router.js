@@ -40,6 +40,12 @@ Router.prototype.actionStart = function() {
         scroller = null;
     }
 
+    // Destroy sorables.
+    if (this.app.sortable) {
+        this.app.sortable.destroy();
+        this.app.sortable = null;
+    }
+
     // Blur and move to the top.
     document.activeElement.blur();
     $(window).scrollTop(0);

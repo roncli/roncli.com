@@ -3,7 +3,8 @@
 var BaseView = require("./base"),
     $ = require("jquery"),
     Admin = require("../../models/admin"),
-    backbone = require("rendr/node_modules/backbone");
+    backbone = require("rendr/node_modules/backbone"),
+    sortable = require("sortablejs");
 
 // Sets up the admin view.
 module.exports = BaseView.extend({
@@ -18,12 +19,57 @@ module.exports = BaseView.extend({
         "click button#page-save": "pageSave"
     },
 
+    postRender: function() {
+        "use strict";
+
+        var view = this;
+
+        $("#add-new-page").defaultButton("#add-page");
+
+        // Setup sortable.
+        this.app.sortable = sortable.create($("#page-list")[0], {
+            store: {
+                get: function() {return []},
+                set: function(sortable) {
+                    var admin = new Admin();
+
+                    admin.fetch({
+                        url: "/admin/pages/change-order",
+                        data: JSON.stringify({
+                            pageId: view.options.page.get("id"),
+                            order: sortable.toArray()
+                        }),
+                        type: "POST",
+                        contentType: "application/json",
+                        dataType: "json",
+                        error: function(xhr, error) {
+                            var message;
+                            if (error && error.body && error.body.error) {
+                                message = error.body.error;
+                            } else {
+                                message = "There was a server error ordering the pages.  Please try again later.";
+                            }
+
+                            bootbox.dialog({
+                                title: "Error",
+                                message: app.templateAdapter.getTemplate("admin/error")({message: message}),
+                                buttons: {ok: {label: "OK"}},
+                                show: false
+                            }).off("shown.bs.modal").modal("show");
+                        }
+                    });
+                }
+            },
+            filter: "button"
+        });
+    },
+
     deletePage: function(ev) {
         "use strict";
 
         var app = this.app,
             deleteButton = $(ev.target),
-            pageId = deleteButton.closest(".page-container").data("page-id"),
+            pageId = deleteButton.closest(".page-container").data("id"),
             admin = new Admin();
 
         bootbox.dialog({
@@ -147,12 +193,6 @@ module.exports = BaseView.extend({
 
         this.app.parentPageId = this.options.page.get("id");
         this.app.router.navigate("/admin/page" + url, {trigger: true});
-    },
-
-    postRender: function() {
-        "use strict";
-
-        $("#add-new-page").defaultButton("#add-page");
     },
 
     pageContentChanged: function() {
