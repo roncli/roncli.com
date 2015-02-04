@@ -128,6 +128,11 @@ The following should be the contents of privateConfig.js:
 Version History
 ===============
 
+0.3.1
+-----
+
+This version adds comments to the bottom of pages, and adds an administration section to moderate them.
+
 0.3
 ---
 
@@ -150,11 +155,6 @@ This version introduces the bare bones of the website, including the layout, Twi
 
 Planned Versions
 ================
-
-0.3.1
------
-
-* Implement comments system for HTML pages.
 
 0.4
 ---
