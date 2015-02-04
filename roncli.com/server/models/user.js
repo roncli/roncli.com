@@ -85,7 +85,7 @@ module.exports.getNotifications = function(userId, callback) {
                     {},
                     function(err, data) {
                         if (err) {
-                            console.log("Database error in user.getNotifications while getting count of comments needing moderation.");
+                            console.log("Database error in user.getNotifications while getting count of blog comments needing moderation.");
                             console.log(err);
                             deferred.reject({
                                 error: "There was a database error getting user notifications.  Please relaod the page and try again.",
@@ -95,6 +95,33 @@ module.exports.getNotifications = function(userId, callback) {
                         }
 
                         deferred.resolve({blog: data[0][0].Comments, admin: true});
+                    }
+                );
+
+                return deferred.promise;
+            }()));
+        }
+
+        // Get page comments to moderate.
+        if (roles.indexOf("SiteAdmin") !== -1) {
+            promises.push((function() {
+                var deferred = new Deferred();
+
+                db.query(
+                    "SELECT COUNT(CommentID) Comments FROM tblPageComment WHERE ModeratedDate IS NULL",
+                    {},
+                    function(err, data) {
+                        if (err) {
+                            console.log("Database error in user.getNotifications while getting count of page comments needing moderation.");
+                            console.log(err);
+                            deferred.reject({
+                                error: "There was a database error getting user notifications.  Please relaod the page and try again.",
+                                status: 500
+                            });
+                            return;
+                        }
+
+                        deferred.resolve({pages: data[0][0].Comments, admin: true});
                     }
                 );
 

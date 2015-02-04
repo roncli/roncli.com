@@ -14,7 +14,7 @@ module.exports = BaseView.extend({
         "click button.delete-page": "deletePage",
         "click button#move-page": "movePage",
         "click button#add-page": "addPage",
-        "click a.post-link": "openPost",
+        "click a.page-link": "openPage",
         "click button.approve-comment": "approveComment",
         "click button.reject-comment": "rejectComment"
     },
@@ -144,7 +144,7 @@ module.exports = BaseView.extend({
         this.app.router.navigate("/admin/page" + url, {trigger: true});
     },
 
-    openPost: function(ev) {
+    openPage: function(ev) {
         "use strict";
 
         // Open post in new window.

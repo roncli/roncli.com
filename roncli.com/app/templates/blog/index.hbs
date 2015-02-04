@@ -2,8 +2,8 @@
     <div class="btn-group-vertical">
         {{partial "blog/post" post=blog.attributes.post index=blog.attributes.index source=blog.attributes.source categories=blog.attributes.categories category=blog.attributes.category header="info" nav="true"}}
     </div>
-    <div class="btn-group-vertical comments-unloaded">
-        <div class="panel-heading text-center btn inactive btn-info">
+    <div class="panel panel-primary vertical-margin comments-unloaded">
+        <div class="panel-heading text-center">
             <h3>Comments</h3>
         </div>
         {{#ifCond blog.attributes.post.blogSource "===" "tumblr"}}

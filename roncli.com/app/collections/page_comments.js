@@ -6,7 +6,7 @@ module.exports = Collection.extend({
     url: function() {
         "use strict";
 
-        return "/page-comment" + this.url;
+        return "/page-comment/" + this.pageId;
     }
 });
 
