@@ -111,6 +111,16 @@ h6,
     background-color: transparent;
 }
 
+.navbar-collapse.in {
+    overflow-x: hidden;
+}
+
+@media (min-width: 768px) {
+    .container-fluid > .navbar-collapse, .container-fluid > .navbar-header, .container > .navbar-collapse, .container > .navbar-header {
+        margin-left: -15px;
+    }
+}
+
 /* Button groups */
 .btn-group-vertical {
     width: 100%;
@@ -128,12 +138,16 @@ h6,
     color: #ffffff;
     background-color: #576e3f;
     border-color: #4a5e36;
+    background-image: inherit;
+    text-shadow: none;
 }
 
 .btn-group-vertical .btn-default.active {
     color: #ffffff;
     background-color: #796c45;
     border-color: #695e3c;
+    background-image: inherit;
+    text-shadow: none;
     cursor: not-allowed;
     pointer-events: none;
 }

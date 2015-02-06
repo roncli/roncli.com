@@ -94,7 +94,7 @@ module.exports = function(grunt) {
                     report: "gzip"
                 },
                 files: {
-                    "assets/css/app.css": ["assets/css/bootstrap-theme.css", "assets/css/*.css", "!assets/css/app.css", "!assets/css/tinymce.css"]
+                    "assets/css/app.css": ["assets/css/bootstrap.css", "assets/css/bootstrap-theme.css", "assets/css/*.css", "!assets/css/app.css", "!assets/css/tinymce.css"]
                 }
             },
             minify_main_css_files: {
