@@ -13,7 +13,7 @@
     <link rel="shortcut icon" href="/images/favicon.ico" />
     <script src="/js/site.min.js"></script>
     <script>window.twttr=function(e,t,n){var r,i,s=e.getElementsByTagName(t)[0];if(e.getElementById(n))return;i=e.createElement(t);i.id=n;i.src="//platform.twitter.com/widgets.js";s.parentNode.insertBefore(i,s);return window.twttr||(r={_e:[],ready:function(e){r._e.push(e)}})}(document,"script","twitter-wjs")</script>
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-timeago/1.4.0/jquery.timeago.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.2.0/bootbox.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.3.0/js/bootstrap-datepicker.min.js"></script>
@@ -42,8 +42,8 @@
         </div>
         <div class="row">
             <div class="col-xs-4 col-sm-2">
-                <div class="btn-group-vertical btn-group-xs">
-                    <div class="btn inactive btn-info">Navigation</div>
+                <div class="btn-group-vertical btn-group-xs panel panel-primary">
+                    <div class="panel-heading panel-heading-small text-center">Navigation</div>
                     <a class="btn btn-default" href="/">Home</a>
                     <a class="btn btn-default" href="/blog">Blog</a>
                     <a class="btn btn-default" href="/music">Music</a>
@@ -66,8 +66,8 @@
                     </div>
                     <a class="btn btn-default" href="http://twitter.com/roncli" target="_blank">@roncli</a>
                 </div>
-                <div class="btn-group-vertical btn-group-xs">
-                    <div class="btn inactive btn-info">Contacts</div>
+                <div class="btn-group-vertical btn-group-xs panel panel-primary">
+                    <div class="panel-heading panel-heading-small text-center">Contacts</div>
                     <a class="btn btn-default" href="mailto:roncli@roncli.com">Email</a>
                     <a class="btn btn-default" href="http://www.facebook.com/roncli" target="_blank">Facebook</a>
                     <a class="btn btn-default" href="https://plus.google.com/+RonaldClifford" target="_blank">Google+</a>
@@ -77,8 +77,8 @@
                     <a class="btn btn-default" href="http://www.youtube.com/user/roncli" target="_blank">YouTube</a>
                 </div>
                 <div class="divider"></div>
-                <div class="btn-group-vertical btn-group-xs">
-                    <div class="btn inactive btn-info">Hosted Sites</div>
+                <div class="btn-group-vertical btn-group-xs panel panel-primary">
+                    <div class="panel-heading panel-heading-small text-center">Hosted Sites</div>
                     <a class="btn btn-default">Cheevos FTW!</a>
                     <a class="btn btn-default">June 20, 2009</a>
                     <a class="btn btn-default">Outpost Music</a>
@@ -115,6 +115,8 @@
         </div>
     </div>
 </div>
+<div style="clear: both;"><span class="glyphicon glyphicon-music"></span><br /><span class="glyphicon glyphicon-menu-hamburger"></span></div>
+<a class="media-player-trigger" href="#"></a>
 <script>!function(){var a=window.App=new(require("app/app"))({{jsonEscaped appData}})
 a.bootstrapData({{jsonEscaped bootstrappedData}}),a.start()}()</script>
 <script>window.App.loadFonts(window, document);</script>
