@@ -7,6 +7,7 @@ var config = require("./server/privateConfig").server,
     captchagen = require("./server/captcha/captchagen"),
     compression = require("compression"),
     morgan = require("morgan"),
+    morganExtensions = require("./server/morgan/morgan-extensions"),
     cookieParser = require("cookie-parser"),
     session = require("express-session"),
     bodyParser = require("body-parser"),
@@ -17,9 +18,12 @@ var config = require("./server/privateConfig").server,
         errorHandler: require("errorhandler")
     });
 
+// Add morgan extensions.
+morganExtensions(morgan);
+
 // Initialize middleware stack.
 app.use(compression());
-app.use(morgan("[:date] :remote-addr :method :url HTTP/:http-version :status :res[content-length] \":user-agent\" :response-time \":referrer\""));
+app.use(morgan(":colorstatus \x1b[30m\x1b[1m:method\x1b[0m :url\x1b[30m\x1b[1m:newline    Date :date[iso]    IP :remote-addr    Time :colorresponse ms"));
 app.use(cookieParser(config.secret));
 app.use(session({
     secret: config.secret,
