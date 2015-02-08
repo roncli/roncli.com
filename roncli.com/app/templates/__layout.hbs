@@ -115,8 +115,31 @@
         </div>
     </div>
 </div>
-<div style="clear: both;"><span class="glyphicon glyphicon-music"></span><br /><span class="glyphicon glyphicon-menu-hamburger"></span></div>
-<a class="media-player-trigger" href="#"></a>
+<div id="media-player-panel" class="panel panel-default">
+    <div id="media-player-body" class="panel-heading">
+        <div style="display: inline-block; float: left; width: 28px; height: 65px;"></div>
+        <div id="media-player-title" class="text-center text-primary">roncli.com Media Player</div>
+        <div id="media-player-now-playing" class="text-center text-info"></div>
+        <div style="clear: both;"></div>
+        <div id="media-player-content">
+            <div id="media-player-background"></div>
+            <div id="media-player-content-player"></div>
+        </div>
+        <div id="media-player-buttons" class="text-center">
+            <button id="media-player-back" class="btn btn-link"><span class="glyphicon glyphicon-backward"></span></button>
+            <button id="media-player-stop" class="btn btn-link"><span class="glyphicon glyphicon-stop"></span></button>
+            <button id="media-player-pause" class="btn btn-link"><span class="glyphicon glyphicon-pause"></span></button>
+            <button id="media-player-play" class="btn btn-link"><span class="glyphicon glyphicon-play"></span></button>
+            <button id="media-player-forward" class="btn btn-link"><span class="glyphicon glyphicon-forward"></span></button>
+        </div>
+        <div id="media-player-playlist"></div>
+    </div>
+</div>
+<div id="media-player-trigger" class="panel panel-default">
+    <div class="panel-heading panel-heading-small">
+        <button id="media-player-trigger-button" class="btn btn-link"><span class="glyphicon glyphicon-music"></span><br/><span class="glyphicon glyphicon-menu-hamburger"></span></button>
+    </div>
+</div>
 <script>!function(){var a=window.App=new(require("app/app"))({{jsonEscaped appData}})
 a.bootstrapData({{jsonEscaped bootstrappedData}}),a.start()}()</script>
 <script>window.App.loadFonts(window, document);</script>

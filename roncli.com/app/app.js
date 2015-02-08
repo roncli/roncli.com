@@ -594,6 +594,12 @@ module.exports = BaseApp.extend({
             app.router.navigate($(this).data("href"), {trigger: true});
         });
 
+        // Show media player trigger.
+        $("#media-player-trigger").show();
+        $("#media-player-trigger-button").on("click", function() {
+            $("#media-player-panel, #media-player-trigger").toggleClass("open");
+        });
+
         // Pass scrolling events to the view.
         $(document).ready(function() {
             var onScroll = _.debounce(function() {

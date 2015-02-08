@@ -63,6 +63,97 @@ div#logo {
     }
 }
 
+@media (max-width: 326px) {
+    div#logo {
+        width: 180px;
+        height: 30px;
+        background-size: 180px 30px;
+    }
+}
+
+#media-player-panel {
+    position: absolute;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border: solid #4b751e 1px;
+    border-left: none;
+    top: 80px;
+    left: -20px;
+    width: 0;
+    transition: width 0.75s ease-in-out, left 0.75s ease-in-out;
+    overflow: hidden;
+    z-index: 30000;
+}
+
+#media-player-panel.open {
+    left: 0;
+    width: 400px;
+}
+
+#media-player-body {
+    width: 400px;
+    height: 450px;
+}
+
+@media (max-width: 420px) {
+    #media-player-panel.open {
+        width: 320px;
+    }
+
+    #media-player-body {
+        width: 320px;
+    }
+}
+
+#media-player-content {
+    position: relative;
+    width: 100%;
+    height: 250px;
+}
+
+#media-player-background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #000000;
+}
+
+#media-player-content-player {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+#media-player-playlist {
+    width: 100%;
+    height: 79px;
+    border: solid 1px #000000;
+}
+
+#media-player-trigger {
+    position: absolute;
+    top: 90px;
+    left: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border: solid #4b751e 2px;
+    border-left: none;
+    display: none;
+    z-index: 30001;
+}
+
+#media-player-trigger.open {
+    border-color: #b94a48;
+}
+
+#media-player-trigger-button {
+    padding: 3px;
+}
+
+#media-player-trigger-button:active, #media-player-trigger-button:focus {
+    outline: none;
+}
+
 div.twitter-logo {
     display: inline-block;
     vertical-align: middle;
