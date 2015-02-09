@@ -143,7 +143,11 @@ div#logo {
 }
 
 #media-player-trigger.open {
-    border-color: #b94a48;
+    border-color: #191935;
+}
+
+#media-player-trigger.open button {
+    color: #191935;
 }
 
 #media-player-trigger-button {

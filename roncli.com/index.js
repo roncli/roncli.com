@@ -64,6 +64,7 @@ app.use(function(req, res, next) {
     d.run(next);
 });
 
+// Setup RSS route.
 app.get("*.rss", function(req, res) {
     "use strict";
 

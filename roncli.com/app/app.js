@@ -1,4 +1,4 @@
-/*global bootbox*/
+/*global bootbox, siteConfig, SC*/
 var BaseApp = require("rendr/shared/app"),
     handlebarsHelpers = require("./lib/handlebarsHelpers"),
     $ = require("jquery"),
@@ -9,11 +9,10 @@ var BaseApp = require("rendr/shared/app"),
 // Extend the BaseApp class, adding any custom methods or overrides.
 module.exports = BaseApp.extend({
 
-    /**
-     * Empty function in case fonts load prior to App start.
-     */
-    fontsComplete: function() {
-        "use strict";
+    // Media player.
+    mediaPlayer: {
+        playlist: [],
+        playing: false
     },
 
     /**
@@ -30,10 +29,16 @@ module.exports = BaseApp.extend({
                 families: ["Archivo+Narrow:400,700,400italic,700italic:latin,latin-ext"]
             },
             active: function() {
-                app.fontsComplete();
+                if (app.fontsComplete) {
+                    app.fontsComplete();
+                    app.fontsComplete = null;
+                }
             },
             inactive: function() {
-                app.fontsComplete();
+                if (app.fontsComplete) {
+                    app.fontsComplete();
+                    app.fontsComplete = null;
+                }
             }
         };
         (function() {
@@ -190,8 +195,8 @@ module.exports = BaseApp.extend({
          * Logs out a user at the server.
          */
         doLogout = function() {
-            var user = new User();
-            user.fetch({
+            var logoutUser = new User();
+            logoutUser.fetch({
                 url: "/user/logout",
                 type: "POST"
             });
@@ -204,6 +209,7 @@ module.exports = BaseApp.extend({
         logOutUser = function() {
             app.user = null;
             $("div#site-nav").html(app.templateAdapter.getTemplate("site/loggedOut")());
+
             if (typeof app.router.currentView.onLogout === "function") {
                 app.router.currentView.onLogout();
             }
@@ -453,13 +459,13 @@ module.exports = BaseApp.extend({
 
                 // Setup register button.
                 $("#register-button").on("click", function() {
-                    var user;
+                    var registerUser;
 
                     registerForm.validate().element("#register-retype-password");
                     if (registerForm.valid()) {
                         registerForm.find("input, button").prop("disabled", true);
-                        user = new User();
-                        user.fetch({
+                        registerUser = new User();
+                        registerUser.fetch({
                             url: "/user/register",
                             data: JSON.stringify({
                                 email: $("#register-email").val(),
@@ -504,12 +510,12 @@ module.exports = BaseApp.extend({
 
                 // Setup forgot password button.
                 $("#forgot-password-button").on("click", function() {
-                    var user;
+                    var forgotPasswordUser;
 
                     if (forgotPasswordForm.valid()) {
                         forgotPasswordForm.find("input, button").prop("disabled", true);
-                        user = new User();
-                        user.fetch({
+                        forgotPasswordUser = new User();
+                        forgotPasswordUser.fetch({
                             url: "/user/forgot-password",
                             data: JSON.stringify({
                                 email: $("#forgot-password-email").val()
@@ -520,7 +526,7 @@ module.exports = BaseApp.extend({
                             success: function() {
                                 bootbox.hideAll();
 
-                                if (user.get("validationRequired")) {
+                                if (forgotPasswordUser.get("validationRequired")) {
                                     // Display the dialog box.
                                     bootbox.dialog({
                                         title: "Account Validation Required",
@@ -744,13 +750,13 @@ module.exports = BaseApp.extend({
 
                             // Setup reset password button.
                             $("#password-reset-button").on("click", function() {
-                                var user;
+                                var passwordResetUser;
 
                                 passwordResetForm.validate().element("#password-reset-retype-password");
                                 if (passwordResetForm.valid()) {
                                     passwordResetForm.find("input, button").prop("disabled", true);
-                                    user = new User();
-                                    user.fetch({
+                                    passwordResetUser = new User();
+                                    passwordResetUser.fetch({
                                         url: "/user/password-reset",
                                         data: JSON.stringify({
                                             userId: +querystring.u,
@@ -859,12 +865,12 @@ module.exports = BaseApp.extend({
 
                             // Setup email change button.
                             $("#email-change-button").on("click", function() {
-                                var user;
+                                var emailChangeUser;
 
                                 if (emailChangeForm.valid()) {
                                     emailChangeForm.find("input, button").prop("disabled", true);
-                                    user = new User();
-                                    user.fetch({
+                                    emailChangeUser = new User();
+                                    emailChangeUser.fetch({
                                         url: "/user/email-change",
                                         data: JSON.stringify({
                                             userId: +querystring.u,
@@ -922,5 +928,110 @@ module.exports = BaseApp.extend({
 
         // Call base function.
         BaseApp.prototype.start.call(this);
+    },
+
+    /**
+     * Adds media to the playlist.
+     * @param {string} title The title of the media to insert into the playlist.
+     * @param {string} source The source of the song, such as "soundcloud" or "youtube".
+     * @param {string} url The URL of the media.
+     */
+    addToPlaylist: function(title, source, url) {
+        "use strict";
+
+        this.mediaPlayer.playlist.push({
+            title: title,
+            source: source,
+            url: url
+        });
+
+        if (!this.mediaPlayer.playing) {
+            this.play(this.mediaPlayer.playlist.length - 1);
+        }
+    },
+
+    /**
+     * Plays media from the playlist.
+     * @param {number} playlistIndex The index of the playlist to play.
+     */
+    play: function(playlistIndex) {
+        "use strict";
+
+        var app = this,
+            media = this.mediaPlayer.playlist[playlistIndex],
+            player = $("#media-player-content-player");
+
+        if (!media) {
+            return;
+        }
+
+        app.currentIndex = playlistIndex;
+
+        player.empty();
+
+        switch (media.source) {
+            case "soundcloud":
+                $.getJSON("https://api.soundcloud.com/resolve.json?client_id=" + siteConfig.soundcloud.client_id + "&url=" + media.url, function(data) {
+                    var widget;
+
+                    media.resolvedUrl = data.uri;
+                    $("#media-player-now-playing").text(data.user.username + " - " + data.title);
+
+                    player.html(app.templateAdapter.getTemplate("media/soundcloud")(media));
+                    player.show();
+
+                    widget = SC.Widget("media-player-soundcloud");
+
+                    $("#media-player-back").off("click").on("click", function() {
+                        app.currentIndex--;
+                        if (app.currentIndex < 0) {
+                            app.currentIndex = 0;
+                        } else {
+                            widget.pause();
+                            app.play(app.currentIndex);
+                        }
+                    });
+
+                    $("#media-player-pause").off("click").on("click", function() {
+                        widget.pause();
+                    });
+
+                    $("#media-player-play").off("click").on("click", function() {
+                        widget.play();
+                    });
+
+                    $("#media-player-forward").off("click").on("click", function() {
+                        app.currentIndex++;
+                        if (app.currentIndex < app.mediaPlayer.playlist.length) {
+                            widget.pause();
+                            app.play(app.currentIndex);
+                        } else {
+                            app.currentIndex = app.mediaPlayer.playlist.length - 1;
+                        }
+                    });
+
+                    widget.bind(SC.Widget.Events.PAUSE, function() {
+                        player.hide();
+                        app.mediaPlayer.playing = false;
+                    });
+
+                    widget.bind(SC.Widget.Events.PLAY, function() {
+                        setTimeout(function() {
+                            player.show();
+                        }, 500);
+                        app.mediaPlayer.playing = true;
+                    });
+
+                    widget.bind(SC.Widget.Events.FINISH, function() {
+                        player.hide();
+                        app.mediaPlayer.playing = false;
+                        app.currentIndex++;
+                        if (app.currentIndex < app.mediaPlayer.playlist.length) {
+                            app.play(app.currentIndex);
+                        }
+                    });
+                });
+                break;
+        }
     }
 });

@@ -263,6 +263,7 @@ tinymce.min.css
 
 ### Private Files ###
 privateConfig.js
+publicConfig.js
 
 ### Mac Junk Files ###
 .DS_Store

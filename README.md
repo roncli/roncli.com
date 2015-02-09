@@ -45,7 +45,7 @@ To run the website on Windows, make sure you perform the following steps.
 
         npm install -msvs_version=2013
 
-7. Add /roncli.com/server/privateConfig.js.  See below for file contents.
+7. Add /roncli.com/assets/js/publicConfig.js and /roncli.com/server/privateConfig.js.  See below for file contents.
 8. Apply the following patches:
     - https://github.com/roncli/remapify/compare/roncli:master...issue-24-from-1.4.4 - This fixes a bug with the ```remapify``` module in order to use it with the latest versions of the ```grunt-browserify``` module.
     - https://github.com/rendrjs/rendr-handlebars/pull/36 - This updates rendr-handlebars to use the latest version of handlebars.
@@ -71,7 +71,7 @@ Other Installations
 
         npm install
 
-4. Add /roncli.com/server/privateConfig.js.  See below for file contents.
+4. Add /roncli.com/assets/js/publicConfig.js and /roncli.com/server/privateConfig.js.  See below for file contents.
 5. Apply the following patches:
     - https://github.com/roncli/remapify/compare/roncli:master...issue-24-from-1.4.4 - This fixes a bug with the ```remapify``` module in order to use it with the latest versions of the ```grunt-browserify``` module.
     - https://github.com/rendrjs/rendr-handlebars/pull/36 - This updates rendr-handlebars to use the latest version of handlebars.
@@ -79,6 +79,16 @@ Other Installations
 
         grunt all
 
+publicConfig.js
+===============
+The following should be the contents of publicConfig.js:
+
+        window.siteConfig = {
+            soundcloud: {
+                client_id: "(Your Soundcloud Client ID)"
+            }
+        };
+        
 privateConfig.js
 ================
 The following should be the contents of privateConfig.js:
@@ -125,6 +135,9 @@ The following should be the contents of privateConfig.js:
             }
         };
 
+publicConfig.js
+===============
+        
 Version History
 ===============
 
