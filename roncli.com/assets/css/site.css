@@ -97,11 +97,11 @@ div#logo {
 
 @media (max-width: 420px) {
     #media-player-panel.open {
-        width: 320px;
+        width: 300px;
     }
 
     #media-player-body {
-        width: 320px;
+        width: 300px;
     }
 }
 

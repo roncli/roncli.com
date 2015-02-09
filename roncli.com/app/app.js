@@ -997,7 +997,9 @@ module.exports = BaseApp.extend({
                     });
 
                     $("#media-player-play").off("click").on("click", function() {
-                        widget.play();
+                        if (!app.mediaPlayer.playing) {
+                            widget.play();
+                        }
                     });
 
                     $("#media-player-forward").off("click").on("click", function() {
