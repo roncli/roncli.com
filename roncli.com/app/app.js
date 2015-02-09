@@ -959,23 +959,25 @@ module.exports = BaseApp.extend({
 
         var app = this,
             media = this.mediaPlayer.playlist[playlistIndex],
-            player = $("#media-player-content-player");
+            player = $("#media-player-content-player"),
+            nowPlaying = $("#media-player-now-playing"),
+            matches;
 
         if (!media) {
             return;
         }
-
-        app.currentIndex = playlistIndex;
-
-        player.empty();
 
         switch (media.source) {
             case "soundcloud":
                 $.getJSON("https://api.soundcloud.com/resolve.json?client_id=" + siteConfig.soundcloud.client_id + "&url=" + media.url, function(data) {
                     var widget;
 
+                    app.currentIndex = playlistIndex;
+
+                    player.empty();
+
                     media.resolvedUrl = data.uri;
-                    $("#media-player-now-playing").text(data.user.username + " - " + data.title);
+                    nowPlaying.text(data.user.username + " - " + data.title);
 
                     player.html(app.templateAdapter.getTemplate("media/soundcloud")(media));
                     player.show();
@@ -1032,6 +1034,27 @@ module.exports = BaseApp.extend({
                             app.play(app.currentIndex);
                         }
                     });
+                });
+                break;
+            case "youtube":
+                media.origin = window.location.origin;
+                matches = /^https?:\/\/(?:www\.)?youtube\.com\/watch\?v=([^&]*)(?:&.*)?$/.exec(media.url);
+                if (!matches || matches.length < 2) {
+                    // Invalid video.
+                    return;
+                }
+
+                media.videoId = matches[1];
+
+                $.getJSON("http://gdata.youtube.com/feeds/api/videos/" + media.videoId + "?alt=json", function(data) {
+                    app.currentIndex = playlistIndex;
+
+                    player.empty();
+
+                    nowPlaying.text(data.entry.author[0].name.$t + " - " + data.entry.title.$t);
+
+                    player.html(app.templateAdapter.getTemplate("media/youtube")(media));
+                    player.show();
                 });
                 break;
         }
