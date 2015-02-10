@@ -615,6 +615,27 @@ module.exports = BaseApp.extend({
             app.addToPlaylist(button.data("source"), button.data("url"));
         });
 
+        // Setup playlist buttons.
+        body.on("click", "div.media-player-item:not(.active) button.media-player-item-play", function() {
+            app.play($(this).closest("div.media-player-item").index());
+        });
+
+        // Setup playlist removal buttons.
+        body.on("click", "button.media-player-item-remove", function() {
+            var index = $(this).closest("div.media-player-item").index();
+
+            if (app.currentIndex === index) {
+                $("#media-player-content-player").empty();
+                app.currentIndex = null;
+            } else if (app.currentIndex > index) {
+                app.currentIndex--;
+            }
+
+            app.mediaPlayer.playlist.splice(index, 1);
+
+            $($("div.media-player-item")[index]).remove();
+        });
+
         // Pass scrolling events to the view.
         $(document).ready(function() {
             var onScroll = _.debounce(function() {
@@ -1030,6 +1051,7 @@ module.exports = BaseApp.extend({
 
         var app = this,
             media = this.mediaPlayer.playlist[playlistIndex],
+            items = $("div.media-player-item"),
             player = $("#media-player-content-player"),
             backButton = $("#media-player-back"),
             pauseButton = $("#media-player-pause"),
@@ -1043,6 +1065,10 @@ module.exports = BaseApp.extend({
         }
 
         app.currentIndex = playlistIndex;
+        app.mediaPlayer.playing = true;
+
+        items.removeClass("active");
+        $(items[playlistIndex]).addClass("active");
 
         player.empty();
 
@@ -1103,6 +1129,8 @@ module.exports = BaseApp.extend({
                     app.currentIndex++;
                     if (app.currentIndex < app.mediaPlayer.playlist.length) {
                         app.play(app.currentIndex);
+                    } else {
+                        app.currentIndex = app.mediaPlayer.playlist.length - 1;
                     }
                 });
                 break;

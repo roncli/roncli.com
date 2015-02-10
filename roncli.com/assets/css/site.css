@@ -124,8 +124,14 @@ div#logo {
     height: 100%;
 }
 
-button.media-player-button:active, button.media-player-button:focus {
+button.media-player-button:active,
+button.media-player-button:focus,
+button.media-player-item-play:active,
+button.media-player-item-play:focus,
+button.media-player-item-remove:active,
+button.media-player-item-remove:focus {
     border: none;
+    outline: none;
 }
 
 #media-player-playlist-container {
@@ -145,6 +151,10 @@ button.media-player-button:active, button.media-player-button:focus {
 div.media-player-item {
     display: table-row;
     width: 100%;
+}
+
+div.media-player-item.active {
+    background-color: #cccccc;
 }
 
 div.media-player-item-title {
