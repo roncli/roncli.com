@@ -1,4 +1,4 @@
-/*global bootbox, siteConfig, SC*/
+/*global bootbox, siteConfig, SC, YT*/
 var BaseApp = require("rendr/shared/app"),
     handlebarsHelpers = require("./lib/handlebarsHelpers"),
     $ = require("jquery"),
@@ -1047,6 +1047,8 @@ module.exports = BaseApp.extend({
                 media.videoId = matches[1];
 
                 $.getJSON("http://gdata.youtube.com/feeds/api/videos/" + media.videoId + "?alt=json", function(data) {
+                    var widget;
+
                     app.currentIndex = playlistIndex;
 
                     player.empty();
@@ -1055,6 +1057,63 @@ module.exports = BaseApp.extend({
 
                     player.html(app.templateAdapter.getTemplate("media/youtube")(media));
                     player.show();
+
+                    widget = new YT.Player("media-player-youtube");
+
+                    $("#media-player-back").off("click").on("click", function() {
+                        app.currentIndex--;
+                        if (app.currentIndex < 0) {
+                            app.currentIndex = 0;
+                        } else {
+                            widget.stopVideo();
+                            app.play(app.currentIndex);
+                        }
+                    });
+
+                    $("#media-player-pause").off("click").on("click", function() {
+                        widget.pauseVideo();
+                    });
+
+                    $("#media-player-play").off("click").on("click", function() {
+                        if (!app.mediaPlayer.playing) {
+                            widget.playVideo();
+                        }
+                    });
+
+                    $("#media-player-forward").off("click").on("click", function() {
+                        app.currentIndex++;
+                        if (app.currentIndex < app.mediaPlayer.playlist.length) {
+                            widget.stopVideo();
+                            app.play(app.currentIndex);
+                        } else {
+                            app.currentIndex = app.mediaPlayer.playlist.length - 1;
+                        }
+                    });
+
+                    widget.addEventListener("onStateChange", function(event) {
+                        switch (event.data) {
+                            case YT.PlayerState.PAUSED:
+                                player.hide();
+                                app.mediaPlayer.playing = false;
+                                break;
+                            case YT.PlayerState.PLAYING:
+                                setTimeout(function() {
+                                    player.show();
+                                }, 500);
+                                app.mediaPlayer.playing = true;
+                                break;
+                            case YT.PlayerState.ENDED:
+                                player.hide();
+                                app.mediaPlayer.playing = false;
+                                app.currentIndex++;
+                                if (app.currentIndex < app.mediaPlayer.playlist.length) {
+                                    app.play(app.currentIndex);
+                                } else {
+                                    app.currentIndex = app.mediaPlayer.playlist.length - 1;
+                                }
+                                break;
+                        }
+                    });
                 });
                 break;
         }
