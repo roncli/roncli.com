@@ -1,0 +1,16 @@
+<div class="media-player-item">
+    <div class="media-player-item-title">
+        <button class="btn btn-sm btn-link media-player-item-play">
+            {{#ifCond source "===" "soundcloud"}}
+                <span clas="glyphicon glyphicon-music"></span>
+            {{/ifCond}}
+            {{#ifCond source "===" "youtube"}}
+                <span class="glyphicon glyphicon-facetime-video"></span>
+            {{/ifCond}}
+            {{title}}
+        </button>
+    </div>
+    <div class="media-player-item-delete">
+        <button class="btn btn-sm btn-link text-danger media-player-item-remove"><span class="glyphicon glyphicon-remove"></span></button>
+    </div>
+</div>

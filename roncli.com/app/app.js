@@ -4,7 +4,10 @@ var BaseApp = require("rendr/shared/app"),
     $ = require("jquery"),
     moment = require("moment"),
     User = require("./models/user"),
-    Captcha = require("./models/captcha");
+    Captcha = require("./models/captcha"),
+    promise = require("promised-io/promise"),
+    Deferred = promise.Deferred,
+    all = promise.all;
 
 // Extend the BaseApp class, adding any custom methods or overrides.
 module.exports = BaseApp.extend({
@@ -606,6 +609,12 @@ module.exports = BaseApp.extend({
             $("#media-player-panel, #media-player-trigger").toggleClass("open");
         });
 
+        // Setup media links.
+        body.on("click", "button.add-to-media-player", function() {
+            var button = $(this);
+            app.addToPlaylist(button.data("source"), button.data("url"));
+        });
+
         // Pass scrolling events to the view.
         $(document).ready(function() {
             var onScroll = _.debounce(function() {
@@ -932,22 +941,84 @@ module.exports = BaseApp.extend({
 
     /**
      * Adds media to the playlist.
-     * @param {string} title The title of the media to insert into the playlist.
      * @param {string} source The source of the song, such as "soundcloud" or "youtube".
      * @param {string} url The URL of the media.
      */
-    addToPlaylist: function(title, source, url) {
+    addToPlaylist: function(source, url) {
         "use strict";
 
-        this.mediaPlayer.playlist.push({
-            title: title,
-            source: source,
-            url: url
-        });
+        var app = this,
+            deferred = new Deferred(),
+            media = {source: source, url: url},
+            matches;
 
-        if (!this.mediaPlayer.playing) {
-            this.play(this.mediaPlayer.playlist.length - 1);
+        switch (source) {
+            case "soundcloud":
+                // Get the track ID.
+                matches = /^https?:\/\/api\.soundcloud.com\/tracks\/([0-9]+)(?:\/stream)/.exec(media.url);
+                if (!matches || matches.length < 2) {
+                    // Invalid audio.
+                    deferred.reject("Invalid SoundCloud track.");
+                    return;
+                }
+                media.trackId = matches[1];
+
+                $.ajax({
+                    dataType: "json",
+                    url: "https://api.soundcloud.com/tracks/" + media.trackId + "?client_id=" + siteConfig.soundcloud.client_id + "&url=" + url,
+                    success: function(data) {
+                        media.title = data.user.username + " - " + data.title;
+                        media.resolvedUrl = data.uri;
+                        media.data = data;
+                        deferred.resolve();
+                    },
+                    error: function() {
+                        deferred.reject("SoundCloud track not found.");
+                    }
+                });
+                break;
+            case "youtube":
+                media.origin = window.location.origin;
+
+                // Get the video ID.
+                matches = /^https?:\/\/(?:www\.)?youtube\.com\/watch\?(?:.*&)?v=([^&]*)(?:&.*)?$/.exec(media.url);
+                if (!matches || matches.length < 2) {
+                    // Invalid video.
+                    deferred.reject("Invalid YouTube video.");
+                    return;
+                }
+                media.videoId = matches[1];
+
+                $.ajax({
+                    dataType: "json",
+                    url: "http://gdata.youtube.com/feeds/api/videos/" + media.videoId + "?alt=json",
+                    success: function(data) {
+                        media.title = data.entry.author[0].name.$t + " - " + data.entry.title.$t;
+                        media.data = data;
+                        deferred.resolve();
+                    },
+                    error: function() {
+                        deferred.reject("YouTube video not found.");
+                    }
+                });
+                break;
+            default:
+                deferred.reject("Invalid media format.");
+                break;
         }
+
+        deferred.promise.then(function() {
+            $("#media-player-playlist").append(app.templateAdapter.getTemplate("media/media")({title: media.title}));
+            app.mediaPlayer.playlist.push(media);
+
+            if (!app.mediaPlayer.playing) {
+                app.play(app.mediaPlayer.playlist.length - 1);
+            }
+        },
+
+        function() {
+            // TODO: Handle error
+        });
     },
 
     /**
@@ -960,160 +1031,137 @@ module.exports = BaseApp.extend({
         var app = this,
             media = this.mediaPlayer.playlist[playlistIndex],
             player = $("#media-player-content-player"),
+            backButton = $("#media-player-back"),
+            pauseButton = $("#media-player-pause"),
+            playButton = $("#media-player-play"),
+            forwardButton = $("#media-player-forward"),
             nowPlaying = $("#media-player-now-playing"),
-            matches;
+            widget;
 
         if (!media) {
             return;
         }
 
+        app.currentIndex = playlistIndex;
+
+        player.empty();
+
+        nowPlaying.text(media.title);
+
+        player.html(app.templateAdapter.getTemplate("media/" + media.source)(media));
+        player.show();
+
         switch (media.source) {
             case "soundcloud":
-                $.getJSON("https://api.soundcloud.com/resolve.json?client_id=" + siteConfig.soundcloud.client_id + "&url=" + media.url, function(data) {
-                    var widget;
+                widget = SC.Widget("media-player-soundcloud");
 
-                    app.currentIndex = playlistIndex;
-
-                    player.empty();
-
-                    media.resolvedUrl = data.uri;
-                    nowPlaying.text(data.user.username + " - " + data.title);
-
-                    player.html(app.templateAdapter.getTemplate("media/soundcloud")(media));
-                    player.show();
-
-                    widget = SC.Widget("media-player-soundcloud");
-
-                    $("#media-player-back").off("click").on("click", function() {
-                        app.currentIndex--;
-                        if (app.currentIndex < 0) {
-                            app.currentIndex = 0;
-                        } else {
-                            widget.pause();
-                            app.play(app.currentIndex);
-                        }
-                    });
-
-                    $("#media-player-pause").off("click").on("click", function() {
+                backButton.off("click").on("click", function() {
+                    app.currentIndex--;
+                    if (app.currentIndex < 0) {
+                        app.currentIndex = 0;
+                    } else {
                         widget.pause();
-                    });
+                        app.play(app.currentIndex);
+                    }
+                });
 
-                    $("#media-player-play").off("click").on("click", function() {
-                        if (!app.mediaPlayer.playing) {
-                            widget.play();
-                        }
-                    });
+                pauseButton.off("click").on("click", function() {
+                    widget.pause();
+                });
 
-                    $("#media-player-forward").off("click").on("click", function() {
-                        app.currentIndex++;
-                        if (app.currentIndex < app.mediaPlayer.playlist.length) {
-                            widget.pause();
-                            app.play(app.currentIndex);
-                        } else {
-                            app.currentIndex = app.mediaPlayer.playlist.length - 1;
-                        }
-                    });
+                playButton.off("click").on("click", function() {
+                    if (!app.mediaPlayer.playing) {
+                        widget.play();
+                    }
+                });
 
-                    widget.bind(SC.Widget.Events.PAUSE, function() {
-                        player.hide();
-                        app.mediaPlayer.playing = false;
-                    });
+                forwardButton.off("click").on("click", function() {
+                    app.currentIndex++;
+                    if (app.currentIndex < app.mediaPlayer.playlist.length) {
+                        widget.pause();
+                        app.play(app.currentIndex);
+                    } else {
+                        app.currentIndex = app.mediaPlayer.playlist.length - 1;
+                    }
+                });
 
-                    widget.bind(SC.Widget.Events.PLAY, function() {
-                        setTimeout(function() {
-                            player.show();
-                        }, 500);
-                        app.mediaPlayer.playing = true;
-                    });
+                widget.bind(SC.Widget.Events.PAUSE, function() {
+                    player.hide();
+                    app.mediaPlayer.playing = false;
+                });
 
-                    widget.bind(SC.Widget.Events.FINISH, function() {
-                        player.hide();
-                        app.mediaPlayer.playing = false;
-                        app.currentIndex++;
-                        if (app.currentIndex < app.mediaPlayer.playlist.length) {
-                            app.play(app.currentIndex);
-                        }
-                    });
+                widget.bind(SC.Widget.Events.PLAY, function() {
+                    setTimeout(function() {
+                        player.show();
+                    }, 500);
+                    app.mediaPlayer.playing = true;
+                });
+
+                widget.bind(SC.Widget.Events.FINISH, function() {
+                    player.hide();
+                    app.mediaPlayer.playing = false;
+                    app.currentIndex++;
+                    if (app.currentIndex < app.mediaPlayer.playlist.length) {
+                        app.play(app.currentIndex);
+                    }
                 });
                 break;
             case "youtube":
-                media.origin = window.location.origin;
-                matches = /^https?:\/\/(?:www\.)?youtube\.com\/watch\?v=([^&]*)(?:&.*)?$/.exec(media.url);
-                if (!matches || matches.length < 2) {
-                    // Invalid video.
-                    return;
-                }
+                widget = new YT.Player("media-player-youtube");
 
-                media.videoId = matches[1];
+                backButton.off("click").on("click", function() {
+                    app.currentIndex--;
+                    if (app.currentIndex < 0) {
+                        app.currentIndex = 0;
+                    } else {
+                        widget.stopVideo();
+                        app.play(app.currentIndex);
+                    }
+                });
 
-                $.getJSON("http://gdata.youtube.com/feeds/api/videos/" + media.videoId + "?alt=json", function(data) {
-                    var widget;
+                pauseButton.off("click").on("click", function() {
+                    widget.pauseVideo();
+                });
 
-                    app.currentIndex = playlistIndex;
+                playButton.off("click").on("click", function() {
+                    if (!app.mediaPlayer.playing) {
+                        widget.playVideo();
+                    }
+                });
 
-                    player.empty();
+                forwardButton.off("click").on("click", function() {
+                    app.currentIndex++;
+                    if (app.currentIndex < app.mediaPlayer.playlist.length) {
+                        widget.stopVideo();
+                        app.play(app.currentIndex);
+                    } else {
+                        app.currentIndex = app.mediaPlayer.playlist.length - 1;
+                    }
+                });
 
-                    nowPlaying.text(data.entry.author[0].name.$t + " - " + data.entry.title.$t);
-
-                    player.html(app.templateAdapter.getTemplate("media/youtube")(media));
-                    player.show();
-
-                    widget = new YT.Player("media-player-youtube");
-
-                    $("#media-player-back").off("click").on("click", function() {
-                        app.currentIndex--;
-                        if (app.currentIndex < 0) {
-                            app.currentIndex = 0;
-                        } else {
-                            widget.stopVideo();
-                            app.play(app.currentIndex);
-                        }
-                    });
-
-                    $("#media-player-pause").off("click").on("click", function() {
-                        widget.pauseVideo();
-                    });
-
-                    $("#media-player-play").off("click").on("click", function() {
-                        if (!app.mediaPlayer.playing) {
-                            widget.playVideo();
-                        }
-                    });
-
-                    $("#media-player-forward").off("click").on("click", function() {
-                        app.currentIndex++;
-                        if (app.currentIndex < app.mediaPlayer.playlist.length) {
-                            widget.stopVideo();
-                            app.play(app.currentIndex);
-                        } else {
-                            app.currentIndex = app.mediaPlayer.playlist.length - 1;
-                        }
-                    });
-
-                    widget.addEventListener("onStateChange", function(event) {
-                        switch (event.data) {
-                            case YT.PlayerState.PAUSED:
-                                player.hide();
-                                app.mediaPlayer.playing = false;
-                                break;
-                            case YT.PlayerState.PLAYING:
-                                setTimeout(function() {
-                                    player.show();
-                                }, 500);
-                                app.mediaPlayer.playing = true;
-                                break;
-                            case YT.PlayerState.ENDED:
-                                player.hide();
-                                app.mediaPlayer.playing = false;
-                                app.currentIndex++;
-                                if (app.currentIndex < app.mediaPlayer.playlist.length) {
-                                    app.play(app.currentIndex);
-                                } else {
-                                    app.currentIndex = app.mediaPlayer.playlist.length - 1;
-                                }
-                                break;
-                        }
-                    });
+                widget.addEventListener("onStateChange", function(event) {
+                    switch (event.data) {
+                        case YT.PlayerState.PAUSED:
+                            player.hide();
+                            app.mediaPlayer.playing = false;
+                            break;
+                        case YT.PlayerState.PLAYING:
+                            setTimeout(function() {
+                                player.show();
+                            }, 500);
+                            app.mediaPlayer.playing = true;
+                            break;
+                        case YT.PlayerState.ENDED:
+                            player.hide();
+                            app.mediaPlayer.playing = false;
+                            app.currentIndex++;
+                            if (app.currentIndex < app.mediaPlayer.playlist.length) {
+                                app.play(app.currentIndex);
+                            } else {
+                                app.currentIndex = app.mediaPlayer.playlist.length - 1;
+                            }
+                            break;
+                    }
                 });
                 break;
         }

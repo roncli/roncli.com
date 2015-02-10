@@ -124,10 +124,52 @@ div#logo {
     height: 100%;
 }
 
-#media-player-playlist {
+button.media-player-button:active, button.media-player-button:focus {
+    border: none;
+}
+
+#media-player-playlist-container {
     width: 100%;
     height: 79px;
-    border: solid 1px #000000;
+    background-color: #ffffff;
+    padding: 3px;
+    border-radius: 3px;
+    overflow-y: scroll;
+}
+
+#media-player-playlist {
+    display: table;
+    width: 100%;
+}
+
+div.media-player-item {
+    display: table-row;
+    width: 100%;
+}
+
+div.media-player-item-title {
+    display: table-cell;
+    width: auto;
+}
+
+button.media-player-item-play {
+    padding: 0 2px;
+    width: 100%;
+    text-align: left;
+}
+
+button.media-player-item-play:hover, button.media-player-item-play:active, button.media-player-item-play:focus {
+    text-decoration: none;
+}
+
+div.media-player-item-delete {
+    display: table-cell;
+    width: 20px;
+}
+
+button.media-player-item-remove {
+    padding: 0 2px;
+    width: 100%;
 }
 
 #media-player-trigger {
@@ -142,16 +184,13 @@ div#logo {
     z-index: 30001;
 }
 
-#media-player-trigger.open {
-    border-color: #191935;
-}
-
-#media-player-trigger.open button {
-    color: #191935;
-}
-
 #media-player-trigger-button {
+    color: #aaaaaa;
     padding: 3px;
+}
+
+#media-player-trigger.open #media-player-trigger-button {
+    color: #4b751e
 }
 
 #media-player-trigger-button:active, #media-player-trigger-button:focus {

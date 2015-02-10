@@ -7,5 +7,6 @@
 {{partial "blog/posts/blogNav"}}
 <div class="body">
     {{{post.embed}}}
+    <button class="btn btn-primary add-to-media-player" data-source="soundcloud" data-url="{{post.audio_url}}"><span class="glyphicon glyphicon-music"></span> Add To Playlist</button><br /><br />
     {{{post.caption}}}
 </div>
