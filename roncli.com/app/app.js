@@ -1038,7 +1038,12 @@ module.exports = BaseApp.extend({
         },
 
         function() {
-            // TODO: Handle error
+            bootbox.dialog({
+                title: "Error Adding to Playlist",
+                message: app.templateAdapter.getTemplate("media/addError")(),
+                buttons: {ok: {label: "OK"}},
+                show: false
+            }).off("shown.bs.modal").modal("show");
         });
     },
 
