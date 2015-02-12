@@ -58,8 +58,8 @@ var config = require("../privateConfig").tumblr,
              * @param {number} offset The post number to start retrieving posts from.
              */
             getPosts = function(offset) {
-                blog.posts({offset: offset}, function(err, posts) {
-                    var categories, categoryPosts, promises, fxs;
+                blog.posts({offset: offset}, function(err, data) {
+                    var posts, categories, categoryPosts, promises, fxs;
 
                     if (err) {
                         console.log("Bad response from Tumblr.");
@@ -71,9 +71,9 @@ var config = require("../privateConfig").tumblr,
                         return;
                     }
 
-                    totalPosts = totalPosts.concat(posts.posts);
+                    totalPosts = [].concat([], [totalPosts, data.posts]);
 
-                    if (offset + limit < posts.blog.posts) {
+                    if (offset + limit < data.blog.posts) {
                         // There are more posts, retrieve them.
                         getPosts(offset + limit);
                     } else {

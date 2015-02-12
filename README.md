@@ -85,7 +85,7 @@ The following should be the contents of publicConfig.js:
 
         window.siteConfig = {
             soundcloud: {
-                client_id: "(Your Soundcloud Client ID)"
+                client_id: "(Your SoundCloud Client ID)"
             }
         };
         
@@ -132,12 +132,12 @@ The following should be the contents of privateConfig.js:
                 consumer_secret: "(Your Tumblr consumer secret)",
                 token: "(Your Tumblr token)",
                 token_secret: "(Your Tumblr token secret)"
+            },
+            soundcloud: {
+                id: "(Your SoundCloud Client ID)"
             }
         };
 
-publicConfig.js
-===============
-        
 Version History
 ===============
 
