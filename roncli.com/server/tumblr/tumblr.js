@@ -71,7 +71,7 @@ var config = require("../privateConfig").tumblr,
                         return;
                     }
 
-                    totalPosts = [].concat([], [totalPosts, data.posts]);
+                    totalPosts = [].concat.apply([], [totalPosts, data.posts]);
 
                     if (offset + limit < data.blog.posts) {
                         // There are more posts, retrieve them.

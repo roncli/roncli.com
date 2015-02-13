@@ -158,3 +158,12 @@ var config = require("../privateConfig").soundcloud,
 // Initialize soundcloud.
 soundcloud.init(config);
 
+/**
+ * Forces the site to cache the tracks, even if they are already cached.
+ * @param {function} callback The callback function.
+ */
+module.exports.forceCacheTracks = function(callback) {
+    "use strict";
+
+    cacheTracks(callback);
+};

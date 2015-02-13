@@ -230,15 +230,12 @@ input[type="radio"], input[type="checkbox"] {
 }
 
 /* Modal */
-.modal {
-    overflow-y: inherit;
-    z-index: 10001;
-    position: absolute;
-    bottom: inherit;
-}
-
 .modal-backdrop {
     z-index: 10000;
+}
+
+.modal-dialog {
+    z-index: 10001;
 }
 
 .modal-open {
