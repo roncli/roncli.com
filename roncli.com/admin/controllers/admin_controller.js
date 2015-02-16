@@ -55,5 +55,16 @@ module.exports = {
             }
             callback(err, result);
         });
+    },
+
+    /**
+     * The music admin view.
+     * @param {object} params The parameters to use in the controller.
+     * @param {function((null | object), object=)} callback The callback to run upon completion of the controller running.
+     */
+    music: function(params, callback) {
+        "use strict";
+
+        callback();
     }
 };

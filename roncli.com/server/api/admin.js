@@ -225,6 +225,22 @@ module.exports.post = function(req, callback) {
                             return;
                     }
                     break;
+                case "music":
+                    switch (req.parsedPath[1]) {
+                        case "clear-caches":
+                            admin.clearMusicCaches(userId, function(err) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                    }
+                    break;
             }
             break;
     }

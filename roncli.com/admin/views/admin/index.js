@@ -1,6 +1,6 @@
 var BaseView = require("./base");
 
-// Sets up the admin view.
+// Sets up the default admin view.
 module.exports = BaseView.extend({
     className: "admin_index_view"
 });

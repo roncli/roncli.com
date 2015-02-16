@@ -6,7 +6,7 @@ var BaseView = require("./base"),
     backbone = require("rendr/node_modules/backbone"),
     sortable = require("sortablejs");
 
-// Sets up the admin view.
+// Sets up the page admin view.
 module.exports = BaseView.extend({
     className: "admin_page_view",
 

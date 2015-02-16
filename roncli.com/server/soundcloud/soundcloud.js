@@ -35,7 +35,7 @@ var config = require("../privateConfig").soundcloud,
                     }
 
                     if (data && data.collection && data.collection.length > 0) {
-                        totalTracks = [].concat.apply([], [totalTracks, data.collection.map]);
+                        totalTracks = [].concat.apply([], [totalTracks, data.collection]);
                     }
 
                     if (data && data.next_href) {
@@ -55,7 +55,7 @@ var config = require("../privateConfig").soundcloud,
                                 value: {
                                     trackSource: "soundcloud",
                                     id: track.id,
-                                    tags: [].concat.apply([], [[track.genre], track.replace(/"[^"]+"|( )/g, function(m, group1) {return group1 ? "||" : m;}).replace(/"/g, "").split("||")]),
+                                    tags: [].concat.apply([], [[track.genre], track.tag_list.length === 0 ? [] : track.tag_list.replace(/"[^"]+"|( )/g, function(match, group) {return group ? "||" : match;}).replace(/"/g, "").split("||")]),
                                     published: track.published,
                                     title: track.title,
                                     url: "/soundcloud/" + track.id + "/" + track.permalink
@@ -153,6 +153,8 @@ var config = require("../privateConfig").soundcloud,
                     }
                 });
             };
+
+        getTracks(0);
     };
 
 // Initialize soundcloud.

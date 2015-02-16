@@ -1,6 +1,6 @@
 var BaseView = require("rendr/shared/base/view");
 
-// Sets up the admin view.
+// Sets up the base admin view.
 module.exports = BaseView.extend({
     onLogout: function() {
         "use strict";

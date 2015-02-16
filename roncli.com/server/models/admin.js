@@ -2,6 +2,7 @@ var User = require("./user"),
     db = require("../database/database"),
     blog = require("../models/blog"),
     page = require("../models/page"),
+    music = require("../models/music"),
     cache = require("../cache/cache"),
     promise = require("promised-io/promise"),
     Deferred = promise.Deferred,
@@ -145,9 +146,11 @@ module.exports.clearBlogCaches = function(userId, callback) {
     "use strict";
 
     User.getUserRoles(userId, function(err, roles) {
+        var promises = [];
+
         if (err) {
             callback({
-                error: "There was a database error while approving a blog comment.  Please reload the page and try again.",
+                error: "There was a database error while clearing blog caches.  Please reload the page and try again.",
                 status: 500
             });
             return;
@@ -161,16 +164,24 @@ module.exports.clearBlogCaches = function(userId, callback) {
             return;
         }
 
-        cache.keys("roncli.com:[bt][lu][om][gb][:gl]*", function(keys) {
-            var cachePosts = function() {
-                blog.forceCachePosts(callback);
-            };
+        ["roncli.com:blogger:*", "roncli.com:tumblr:*", "roncli.com:blog:*"].forEach(function(key) {
+            var deferred = new Deferred();
 
-            if (keys.length > 0) {
-                cache.del(keys, cachePosts);
-            } else {
-                cachePosts();
-            }
+            cache.keys(key, function(keys) {
+                if (keys.length > 0) {
+                    cache.del(keys, function() {
+                        deferred.resolve();
+                    });
+                } else {
+                    deferred.resolve();
+                }
+            });
+
+            promises.push(deferred.promise);
+        });
+
+        all(promises).then(function() {
+            blog.forceCachePosts(callback);
         });
     });
 };
@@ -277,7 +288,7 @@ module.exports.getPagesByParentUrl = function(userId, url, callback) {
     User.getUserRoles(userId, function(err, roles) {
         if (err) {
             callback({
-                error: "There was a database error while approving a blog comment.  Please reload the page and try again.",
+                error: "There was a database error while getting pages by parent URL.  Please reload the page and try again.",
                 status: 500
             });
             return;
@@ -298,7 +309,7 @@ module.exports.getPagesByParentUrl = function(userId, url, callback) {
                 getChildPagesByUrl(url, function(err, pages) {
                     if (err) {
                         deferred.reject({
-                            error: "There was a database error while approving a blog comment.  Please reload the page and try again.",
+                            error: "There was a database error getting pages by parent URL.  Please reload the page and try again.",
                             status: 500
                         });
                         return;
@@ -667,7 +678,7 @@ module.exports.updatePage = function(userId, pageId, url, title, shortTitle, con
                                 console.log("Database error updating a page in admin.updatePage.");
                                 console.log(err);
                                 callback({
-                                    error: "There was a database error while adding a page.  Please reload the page and try again.",
+                                    error: "There was a database error while updating a page.  Please reload the page and try again.",
                                     status: 500
                                 });
                                 return;
@@ -741,7 +752,7 @@ module.exports.movePage = function(userId, pageId, newParentPageId, callback) {
     User.getUserRoles(userId, function(err, roles) {
         if (err) {
             callback({
-                error: "There was a database error while deleting a page.  Please reload the page and try again.",
+                error: "There was a database error while moving a page.  Please reload the page and try again.",
                 status: 500
             });
             return;
@@ -887,7 +898,7 @@ module.exports.changeOrder = function(userId, parentPageId, order, callback) {
 
         if (err) {
             callback({
-                error: "There was a database error while deleting a page.  Please reload the page and try again.",
+                error: "There was a database error while changing page order.  Please reload the page and try again.",
                 status: 500
             });
             return;
@@ -925,7 +936,7 @@ module.exports.changeOrder = function(userId, parentPageId, order, callback) {
                     console.log("Database error checking pages in admin.changeOrder.");
                     console.log(err);
                     callback({
-                        error: "There was a database error while ordering pages.  Please reload the page and try again.",
+                        error: "There was a database error while changing page order.  Please reload the page and try again.",
                         status: 500
                     });
                     return;
@@ -952,7 +963,7 @@ module.exports.changeOrder = function(userId, parentPageId, order, callback) {
                             console.log("Database error updating page order in admin.changeOrder.");
                             console.log(err);
                             callback({
-                                error: "There was a database error while ordering pages.  Please reload the page and try again.",
+                                error: "There was a database error while changing page order.  Please reload the page and try again.",
                                 status: 500
                             });
                             return;
@@ -1111,5 +1122,54 @@ module.exports.rejectPageComment = function(userId, commentId, callback) {
                 callback();
             }
         );
+    });
+};
+
+/**
+ * Clears the music's caches.
+ * @param {number} userId The user ID of the moderator.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.clearMusicCaches = function(userId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        var promises = [];
+
+        if (err) {
+            callback({
+                error: "There was a database error while clearing music caches.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        ["roncli.com:soundcloud:*", "roncli.com:song:*"].forEach(function(key) {
+            var deferred = new Deferred();
+
+            cache.keys(key, function(keys) {
+                if (keys.length > 0) {
+                    cache.del(keys, function() {
+                        deferred.resolve();
+                    });
+                } else {
+                    deferred.resolve();
+                }
+            });
+
+            promises.push(deferred.promise);
+        });
+
+        all(promises).then(function() {
+            music.forceCacheSongs(callback);
+        });
     });
 };
