@@ -588,3 +588,8 @@ div.comment-body {
 .mce-container button[role=presentation] span, .mce-container span.mce-text {
     font-family: "Archivo Narrow", Verdana, Arial, sans-serif !important;
 }
+
+div.music-soundcloud {
+    width: 100%;
+    height: 60px;
+}

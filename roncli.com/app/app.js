@@ -15,7 +15,8 @@ module.exports = BaseApp.extend({
     // Media player.
     mediaPlayer: {
         playlist: [],
-        playing: false
+        playing: false,
+        currentIndex: null
     },
 
     /**
@@ -624,11 +625,12 @@ module.exports = BaseApp.extend({
         body.on("click", "button.media-player-item-remove", function() {
             var index = $(this).closest("div.media-player-item").index();
 
-            if (app.currentIndex === index) {
+            if (app.mediaPlayer.currentIndex === index) {
                 $("#media-player-content-player").empty();
-                app.currentIndex = null;
-            } else if (app.currentIndex > index) {
-                app.currentIndex--;
+                app.mediaPlayer.currentIndex = null;
+                app.mediaPlayer.playing = false;
+            } else if (app.mediaPlayer.currentIndex > index) {
+                app.mediaPlayer.currentIndex--;
             }
 
             app.mediaPlayer.playlist.splice(index, 1);
@@ -976,7 +978,7 @@ module.exports = BaseApp.extend({
         switch (source) {
             case "soundcloud":
                 // Get the track ID.
-                matches = /^https?:\/\/api\.soundcloud.com\/tracks\/([0-9]+)(?:\/stream)/.exec(media.url);
+                matches = /^https?:\/\/api\.soundcloud.com\/tracks\/([0-9]+)(?:\/stream)?/.exec(media.url);
                 if (!matches || matches.length < 2) {
                     // Invalid audio.
                     deferred.reject("Invalid SoundCloud track.");
@@ -1069,7 +1071,7 @@ module.exports = BaseApp.extend({
             return;
         }
 
-        app.currentIndex = playlistIndex;
+        app.mediaPlayer.currentIndex = playlistIndex;
         app.mediaPlayer.playing = true;
 
         items.removeClass("active");
@@ -1079,6 +1081,9 @@ module.exports = BaseApp.extend({
 
         nowPlaying.text(media.title);
 
+        media.autoplay = true;
+        media.visual = true;
+
         player.html(app.templateAdapter.getTemplate("media/" + media.source)(media));
         player.show();
 
@@ -1087,12 +1092,12 @@ module.exports = BaseApp.extend({
                 widget = SC.Widget("media-player-soundcloud");
 
                 backButton.off("click").on("click", function() {
-                    app.currentIndex--;
-                    if (app.currentIndex < 0) {
-                        app.currentIndex = 0;
+                    app.mediaPlayer.currentIndex--;
+                    if (app.mediaPlayer.currentIndex < 0) {
+                        app.mediaPlayer.currentIndex = 0;
                     } else {
                         widget.pause();
-                        app.play(app.currentIndex);
+                        app.play(app.mediaPlayer.currentIndex);
                     }
                 });
 
@@ -1107,12 +1112,12 @@ module.exports = BaseApp.extend({
                 });
 
                 forwardButton.off("click").on("click", function() {
-                    app.currentIndex++;
-                    if (app.currentIndex < app.mediaPlayer.playlist.length) {
+                    app.mediaPlayer.currentIndex++;
+                    if (app.mediaPlayer.currentIndex < app.mediaPlayer.playlist.length) {
                         widget.pause();
-                        app.play(app.currentIndex);
+                        app.play(app.mediaPlayer.currentIndex);
                     } else {
-                        app.currentIndex = app.mediaPlayer.playlist.length - 1;
+                        app.mediaPlayer.currentIndex = app.mediaPlayer.playlist.length - 1;
                     }
                 });
 
@@ -1131,11 +1136,11 @@ module.exports = BaseApp.extend({
                 widget.bind(SC.Widget.Events.FINISH, function() {
                     player.hide();
                     app.mediaPlayer.playing = false;
-                    app.currentIndex++;
-                    if (app.currentIndex < app.mediaPlayer.playlist.length) {
-                        app.play(app.currentIndex);
+                    app.mediaPlayer.currentIndex++;
+                    if (app.mediaPlayer.currentIndex < app.mediaPlayer.playlist.length) {
+                        app.play(app.mediaPlayer.currentIndex);
                     } else {
-                        app.currentIndex = app.mediaPlayer.playlist.length - 1;
+                        app.mediaPlayer.currentIndex = app.mediaPlayer.playlist.length - 1;
                     }
                 });
                 break;
@@ -1143,12 +1148,12 @@ module.exports = BaseApp.extend({
                 widget = new YT.Player("media-player-youtube");
 
                 backButton.off("click").on("click", function() {
-                    app.currentIndex--;
-                    if (app.currentIndex < 0) {
-                        app.currentIndex = 0;
+                    app.mediaPlayer.currentIndex--;
+                    if (app.mediaPlayer.currentIndex < 0) {
+                        app.mediaPlayer.currentIndex = 0;
                     } else {
                         widget.stopVideo();
-                        app.play(app.currentIndex);
+                        app.play(app.mediaPlayer.currentIndex);
                     }
                 });
 
@@ -1163,12 +1168,12 @@ module.exports = BaseApp.extend({
                 });
 
                 forwardButton.off("click").on("click", function() {
-                    app.currentIndex++;
-                    if (app.currentIndex < app.mediaPlayer.playlist.length) {
+                    app.mediaPlayer.currentIndex++;
+                    if (app.mediaPlayer.currentIndex < app.mediaPlayer.playlist.length) {
                         widget.stopVideo();
-                        app.play(app.currentIndex);
+                        app.play(app.mediaPlayer.currentIndex);
                     } else {
-                        app.currentIndex = app.mediaPlayer.playlist.length - 1;
+                        app.mediaPlayer.currentIndex = app.mediaPlayer.playlist.length - 1;
                     }
                 });
 
@@ -1187,11 +1192,11 @@ module.exports = BaseApp.extend({
                         case YT.PlayerState.ENDED:
                             player.hide();
                             app.mediaPlayer.playing = false;
-                            app.currentIndex++;
-                            if (app.currentIndex < app.mediaPlayer.playlist.length) {
-                                app.play(app.currentIndex);
+                            app.mediaPlayer.currentIndex++;
+                            if (app.mediaPlayer.currentIndex < app.mediaPlayer.playlist.length) {
+                                app.play(app.mediaPlayer.currentIndex);
                             } else {
-                                app.currentIndex = app.mediaPlayer.playlist.length - 1;
+                                app.mediaPlayer.currentIndex = app.mediaPlayer.playlist.length - 1;
                             }
                             break;
                     }

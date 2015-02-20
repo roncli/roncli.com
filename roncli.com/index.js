@@ -79,7 +79,7 @@ app.get("/images/captcha.png", function(req, res) {
 
     req.session.captcha = {text: captcha.text(), expires: moment().add(5, "minutes")};
 
-    res.writeHead(200, {"Content-Type": "image/png", "Cache-Control": "no-cache"});
+    res.writeHead(200, {"Content-Type": "image/png", "Cache-Control": "no-store"});
     res.end(captcha.buffer());
 });
 

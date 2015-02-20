@@ -58,7 +58,8 @@ var config = require("../privateConfig").soundcloud,
                                     tags: [].concat.apply([], [[track.genre], track.tag_list.length === 0 ? [] : track.tag_list.replace(/"[^"]+"|( )/g, function(match, group) {return group ? "||" : match;}).replace(/"/g, "").split("||")]),
                                     published: track.published,
                                     title: track.title,
-                                    url: "/soundcloud/" + track.id + "/" + track.permalink
+                                    url: "/soundcloud/" + track.id + "/" + track.permalink,
+                                    audioUrl: track.uri
                                 }
                             };
                         });
@@ -161,11 +162,24 @@ var config = require("../privateConfig").soundcloud,
 soundcloud.init(config);
 
 /**
- * Forces the site to cache the tracks, even if they are already cached.
+ * Ensures that the tracks are cached.
+ * @param {boolean} force Forces the caching of tracks.
  * @param {function} callback The callback function.
  */
-module.exports.forceCacheTracks = function(callback) {
+module.exports.cacheTracks = function(force, callback) {
     "use strict";
 
-    cacheTracks(callback);
+    if (force) {
+        cacheTracks(callback);
+        return;
+    }
+
+    cache.keys("roncli.com:soundcloud:tracks", function(keys) {
+        if (keys && keys.length > 0) {
+            callback();
+            return;
+        }
+
+        cacheTracks(callback);
+    });
 };

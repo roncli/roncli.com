@@ -11,15 +11,16 @@ var Moment = require("moment"),
 
     /**
      * Cache the posts from blogger and tumblr.
+     * @param {boolean} force Whether to force the caching of posts.
      * @param {function} callback The callback function.
      */
-    cachePosts = function(callback) {
+    cachePosts = function(force, callback) {
         "use strict";
 
         var bloggerDeferred = new Deferred(),
             tumblrDeferred = new Deferred();
 
-        blogger.cachePosts(false, function(err) {
+        blogger.cachePosts(force, function(err) {
             if (err) {
                 bloggerDeferred.reject(err);
             } else {
@@ -27,7 +28,7 @@ var Moment = require("moment"),
             }
         });
 
-        tumblr.cachePosts(false, function(err) {
+        tumblr.cachePosts(force, function(err) {
             if (err) {
                 tumblrDeferred.reject(err);
             } else {
@@ -133,7 +134,7 @@ var Moment = require("moment"),
 module.exports.forceCachePosts = function(callback) {
     "use strict";
 
-    cachePosts(callback);
+    cachePosts(true, callback);
 };
 
 /**
@@ -172,7 +173,7 @@ module.exports.getLatestPostByCategory = function(category, callback) {
         };
 
     getPost(function() {
-        cachePosts(function(err) {
+        cachePosts(false, function(err) {
             if (err) {
                 callback(err);
                 return;
@@ -214,7 +215,7 @@ module.exports.getPostByIndex = function(index, callback) {
         };
 
     getPost(function() {
-        cachePosts(function(err) {
+        cachePosts(false, function(err) {
             if (err) {
                 callback(err);
                 return;
@@ -256,7 +257,7 @@ module.exports.getPostByUrl = function(url, callback) {
         };
 
     getPostFromUrl(url, getPost, function() {
-        cachePosts(function(err) {
+        cachePosts(false, function(err) {
             if (err) {
                 callback(err);
                 return;
@@ -361,7 +362,7 @@ module.exports.getPost = function(post, callback) {
     }
 
     getIndex("roncli.com:blog:posts", rankDeferred, function() {
-        cachePosts(function(err) {
+        cachePosts(false, function(err) {
             if (err) {
                 rankDeferred.reject(err);
                 return;
@@ -461,7 +462,7 @@ module.exports.getCategories = function(callback) {
     };
 
     getCategories(function() {
-        cachePosts(function(err) {
+        cachePosts(false, function(err) {
             if (err) {
                 callback(err);
                 return;
@@ -563,7 +564,7 @@ module.exports.getCommentsByUrl = function(url, callback) {
     };
 
     getPostFromUrl(url, getComments, function() {
-        cachePosts(function(err) {
+        cachePosts(false, function(err) {
             if (err) {
                 callback(err);
                 return;
@@ -635,7 +636,7 @@ module.exports.postComment = function(userId, url, content, callback) {
                 };
 
             getPostFromUrl(url, resolve, function() {
-                cachePosts(function(err) {
+                cachePosts(false, function(err) {
                     if (err) {
                         callback(err);
                         return;

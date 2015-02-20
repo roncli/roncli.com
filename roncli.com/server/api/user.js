@@ -7,6 +7,8 @@ module.exports.get = function(req, callback) {
 
     var userId = req.session.user ? req.session.user.id : 0;
 
+    req.res.setHeader("cache-control", "no-store");
+
     switch (req.parsedPath.length) {
         case 0:
             // Attempt to get data for the currently logged in user.
@@ -18,12 +20,15 @@ module.exports.get = function(req, callback) {
 
             // Attempt to log in the user from a cookie.
             if (req.cookies.login) {
+                console.log("Loading user from cookie.");
+                console.log(req.sessionID);
                 user.login(req.cookies.login.email, req.cookies.login.password, function(err, data) {
                     if (err) {
                         handleError(err, req);
                         callback(err);
                         return;
                     }
+                    console.log(data);
                     req.session.user = data;
 
                     callback(data);
@@ -38,6 +43,7 @@ module.exports.get = function(req, callback) {
             switch (req.parsedPath[0]) {
                 case "getNotifications":
                     if (userId === 0) {
+                        console.log(req.sessionID);
                         req.res.status(401);
                         callback({error: "You are not logged in."});
                         return;
@@ -116,6 +122,7 @@ module.exports.post = function(req, callback) {
                     break;
                 case "login":
                     user.login(req.body.email, req.body.password, function(err, data) {
+                        console.log(req);
                         if (err) {
                             handleError(err, req);
                             callback(err);

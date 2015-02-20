@@ -1,4 +1,3 @@
-/*global twttr*/
 var BaseView = require("rendr/shared/base/view"),
     $ = require("jquery");
 

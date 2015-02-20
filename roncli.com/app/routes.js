@@ -27,6 +27,9 @@ module.exports = function(match) {
     // Specific blog pages.
     match(/^\/?((?:blogger|tumblr)\/[0-9]+\/[^\/]+)$/, "blog#url");
 
+    // The music page.
+    match(/^\/?music$/, "music#index");
+
     // The default route if none of the above match.
     match(/\/?(.*)/, "default#index");
 };
