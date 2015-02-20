@@ -2,19 +2,21 @@
     <div class="page-content">
         {{{page.attributes.page.content}}}
         <div class="panel panel-primary">
-            <div class="panel-heading text-center"><h3>Latest Music</h3></div>
+            <div class="panel-heading text-center"><h3>The Nightstalker's Latest Music</h3></div>
         </div>
         <div class="row">
             {{#each songs.models}}
-                <div class="col-sm-6" style="margin-bottom: 20px;">
-                    <div class="panel panel-primary">
-                        <div class="panel-heading text-center"><h4>{{attributes.title}}</h4></div>
-                        <div class="panel-body">
+                <div class="col-sm-6">
+                    <div class="btn-group-vertical">
+                        <a class="btn btn-default" href="{{attributes.url}}">
+                            <div class="panel-heading panel-title text-center"><h4>{{attributes.title}}</h4></div>
+                        </a>
+                        <div class="body">
                             <div class="music-soundcloud">
                                 {{partial "media/soundcloud" resolvedUrl=attributes.audioUrl autoplay=false visual=false}}
                             </div><br />
                             <div class="text-center">
-                                <button class="btn btn-xs btn-primary add-to-media-player" data-source="soundcloud" data-url="{{attributes.audioUrl}}/stream?client_id="><span class="glyphicon glyphicon-music"></span> Add To Playlist</button>
+                                <button class="btn btn-xs btn-primary add-to-media-player" style="font-size: 12px;" data-source="soundcloud" data-url="{{attributes.audioUrl}}/stream?client_id="><span class="glyphicon glyphicon-music"></span> Add To Playlist</button>
                             </div>
                         </div>
                     </div>
@@ -23,6 +25,75 @@
                 </div>
                 <div class="row">
                 {{/every}}
+            {{/each}}
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading text-center"><h3>Discography</h3></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4" style="margin-bottom: 20px;">
+                <a class="btn btn-default" href="/music/tag/Classic" style="white-space: normal; width: 100%;">
+                    <div class="text-center text-success"><h4>Classics</h4></div>
+                    <div class="text-left" style="color: #000000;">These are the timeless classics that define the music of The Nightstalker.</div>
+                </a>
+            </div>
+            <div class="col-sm-4" style="margin-bottom: 20px;">
+                <a class="btn btn-default" href="/music/tag/Release" style="white-space: normal; width: 100%;">
+                    <div class="text-center text-success"><h4>Releases</h4></div>
+                    <div class="text-left" style="color: #000000;">An archive of The Nightstalker's significant releases.</div>
+                </a>
+            </div>
+            <div class="col-sm-4" style="margin-bottom: 20px;">
+                <a class="btn btn-default" href="/music/tag/Stripped Down" style="white-space: normal; width: 100%;">
+                    <div class="text-center text-success"><h4>Stripped Down</h4></div>
+                    <div class="text-left" style="color: #000000;">Experience the raw emotion of The Nightstalker with this collection of stripped down recordings.</div>
+                </a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4" style="margin-bottom: 20px;">
+                <a class="btn btn-default" href="/music/tag/Preview" style="white-space: normal; width: 100%;">
+                    <div class="text-center text-success"><h4>Previews</h4></div>
+                    <div class="text-left" style="color: #000000;">Listen to clips and early versions of new works from The Nightstalker.</div>
+                </a>
+            </div>
+            <div class="col-sm-4" style="margin-bottom: 20px;">
+                <a class="btn btn-default" href="/music/tag/Remake" style="white-space: normal; width: 100%;">
+                    <div class="text-center text-success"><h4>Remakes</h4></div>
+                    <div class="text-left" style="color: #000000;">Here you will find new versions of old songs, touched up and reimagined.</div>
+                </a>
+            </div>
+            <div class="col-sm-4" style="margin-bottom: 20px;">
+                <a class="btn btn-default" href="/music/tag/B-Side" style="white-space: normal; width: 100%;">
+                    <div class="text-center text-success"><h4>B-Sides</h4></div>
+                    <div class="text-left" style="color: #000000;">Not every song can be an instant classic. These are some of the more obscure releases from The Nightstalker.</div>
+                </a>
+            </div>
+        </div>
+        <div class="panel panel-primary">
+            <div class="panel-heading text-center"><h3>Other Collections</h3></div>
+        </div>
+        <div class="row">
+            {{#each tags.models}}
+                {{#ifCond attributes.tag "!==" "Classic"}}
+                    {{#ifCond attributes.tag "!==" "Release"}}
+                        {{#ifCond attributes.tag "!==" "Stripped Down"}}
+                            {{#ifCond attributes.tag "!==" "Preview"}}
+                                {{#ifCond attributes.tag "!==" "Remake"}}
+                                    {{#ifCond attributes.tag "!==" "B-Side"}}
+                                        <div class="col-sm-4" style="margin-bottom: 20px;">
+                                            <div class="btn-group-vertical">
+                                                <a class="btn btn-default" href="/music/tag/{{attributes.tag}}">
+                                                    <div class="panel-heading panel-title text-center"><h4>{{attributes.tag}}</h4></div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    {{/ifCond}}
+                                {{/ifCond}}
+                            {{/ifCond}}
+                        {{/ifCond}}
+                    {{/ifCond}}
+                {{/ifCond}}
             {{/each}}
         </div>
     </div>
@@ -35,7 +106,7 @@
             <li class="active">Music</li>
         </ol>
         <div class="panel-body">
-            This is the home of The Nightstalker.  Here, you will find all of the music I have released over the years, listen to stripped down versions of some of my vocal works, as well as get a sneak peak at what I'm working on.
+            Welcome to the home of The Nightstalker.  Here, you will find all of the music I have released over the years, listen to stripped down versions of some of my vocal works, and get a sneak peak at what I'm working on.
         </div>
     </div>
     {{partial "site/share"}}

@@ -152,6 +152,13 @@ h6,
     pointer-events: none;
 }
 
+/* Buttons */
+.btn-default:focus,
+.btn-default:hover {
+    background: #d0d0d0 none;
+    text-shadow: none;
+}
+
 /* ABBR */
 abbr {
     border-bottom: none !important;
