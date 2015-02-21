@@ -10,7 +10,9 @@ module.exports = {
         var app = this.app;
 
         app.fetch({
-            blog: {model: "Blog_GetLatest", params: {}}
+            blog: {model: "Blog_GetLatest", params: {}},
+            songs: {collection: "Song_GetLatest", params: {count: 3}},
+            classics: {collection: "Song_GetLatestByTag", params: {tag: "Classic", count:3}}
         }, function(err, result) {
             if (app.req) {
                 result.meta = {

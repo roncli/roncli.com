@@ -124,6 +124,12 @@ div#logo {
     height: 100%;
 }
 
+button.media-player-button,
+button.media-player-item-play,
+button.media-player-item-remove {
+    border: none;
+}
+
 button.media-player-button:active,
 button.media-player-button:focus,
 button.media-player-item-play:active,
@@ -419,8 +425,14 @@ img.thumb {
 }
 
 div.blog.constrain-height div.body {
-    max-height: 400px;
+    height: 400px;
     overflow-y: auto;
+}
+
+div.blog.constrain-height div.home-panel div.body {
+    height: 200px;
+    overflow-y: auto;
+    padding: 5px;
 }
 
 div.blog iframe.soundcloud_audio_player {

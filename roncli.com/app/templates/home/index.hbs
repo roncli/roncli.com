@@ -6,11 +6,32 @@
         {{partial "blog/post" post=blog.attributes.post header="default"}}
     </div>
     <div class="row">
-        <div class="col-xs-6">
-            <div class="btn-group-vertical">
+        <div class="col-sm-6">
+            <div class="btn-group-vertical home-panel">
                 <a class="btn btn-info" href="/music">
                     <div class="panel-heading panel-title text-center"><h3>Music</h3></div>
                 </a>
+                <div class="body">
+                    <div class="text-center" style="border-bottom: 5px;"><h4>Latest</h4></div>
+                    {{#each songs.models}}
+                        <div style="height: 22px;">
+                            <div class="pull-right">
+                                <button class="btn btn-xs btn-primary add-to-media-player" style="font-size: 12px;" data-source="soundcloud" data-url="{{attributes.audioUrl}}"><span class="glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-music"></span></button>
+                            </div>
+                            <a href="{{attributes.url}}">{{attributes.title}}</a>
+                        </div>
+                    {{/each}}
+                    <br />
+                    <div class="text-center" style="border-bottom: 5px;"><a href="/music/tag/Classic"><h4>Classics</h4></a></div>
+                    {{#each classics.models}}
+                        <div style="height: 22px;">
+                            <div class="pull-right">
+                                <button class="btn btn-xs btn-primary add-to-media-player" style="font-size: 12px;" data-source="soundcloud" data-url="{{attributes.audioUrl}}"><span class="glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-music"></span></button>
+                            </div>
+                            <a href="{{attributes.url}}">{{attributes.title}}</a>
+                        </div>
+                    {{/each}}
+                </div>
             </div>
         </div>
     </div>

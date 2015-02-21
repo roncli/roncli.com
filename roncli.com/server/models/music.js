@@ -43,7 +43,48 @@ module.exports.getLatestSongs = function(count, callback) {
 
             getSongs(function() {
                 callback({
-                    error: "Song tags do not exist.",
+                    error: "Songs do not exist.",
+                    status: 400
+                });
+            });
+        });
+    });
+};
+
+/**
+ * Returns the latest songs for a tag.
+ * @param {string} tag The tag to return songs for.
+ * @param {number} count The number of songs to return.
+ * @param {function} callback The callback function.
+ */
+module.exports.getLatestSongsByTag = function(tag, count, callback) {
+    "use strict";
+
+    /**
+     * Retrieves songs from
+     * @param failureCallback
+     */
+    var getSongs = function(failureCallback) {
+        cache.zrevrange("roncli.com:soundcloud:tag:" + tag, 0, count - 1, function(songs) {
+            if (songs && songs.length > 0) {
+                callback(null, songs);
+                return;
+            }
+
+            failureCallback();
+        });
+    };
+
+    getSongs(function() {
+        soundcloud.cacheTracks(false, function(err) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            getSongs(function() {
+                callback({
+                    error: "Songs for this tag do not exist.",
                     status: 400
                 });
             });

@@ -988,7 +988,7 @@ module.exports = BaseApp.extend({
 
                 $.ajax({
                     dataType: "json",
-                    url: "https://api.soundcloud.com/tracks/" + media.trackId + "?client_id=" + siteConfig.soundcloud.client_id + "&url=" + url,
+                    url: "https://api.soundcloud.com/tracks/" + media.trackId + "?client_id=" + siteConfig.soundcloud.client_id,
                     success: function(data) {
                         media.title = data.user.username + " - " + data.title;
                         media.resolvedUrl = data.uri;
@@ -1128,7 +1128,9 @@ module.exports = BaseApp.extend({
 
                 widget.bind(SC.Widget.Events.PLAY, function() {
                     setTimeout(function() {
-                        player.show();
+                        if (app.mediaPlayer.playing) {
+                            player.show();
+                        }
                     }, 500);
                     app.mediaPlayer.playing = true;
                 });
@@ -1185,7 +1187,9 @@ module.exports = BaseApp.extend({
                             break;
                         case YT.PlayerState.PLAYING:
                             setTimeout(function() {
-                                player.show();
+                                if (app.mediaPlayer.playing) {
+                                    player.show();
+                                }
                             }, 500);
                             app.mediaPlayer.playing = true;
                             break;
