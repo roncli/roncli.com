@@ -85,10 +85,7 @@
     <Build Include="dbo\Tables\tblProjectIssueDiscussion.sql" />
     <Build Include="dbo\Tables\tblProjectSVN.sql" />
     <Build Include="dbo\Tables\tblRole.sql" />
-    <Build Include="dbo\Tables\tblSong.sql" />
     <Build Include="dbo\Tables\tblSongComment.sql" />
-    <Build Include="dbo\Tables\tblSongFeature.sql" />
-    <Build Include="dbo\Tables\tblSongFile.sql" />
     <Build Include="dbo\Tables\tblUser.sql" />
     <Build Include="dbo\Tables\tblUserRole.sql" />
     <Build Include="Security\Roles\RoleMemberships.sql" />
