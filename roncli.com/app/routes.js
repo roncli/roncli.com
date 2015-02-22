@@ -33,6 +33,9 @@ module.exports = function(match) {
     // The music tag page.
     match(/^\/?music\/tag\/([^\/]+)$/, "music#tag");
 
+    // Specific music pages.
+    match(/^\/?((?:soundcloud)\/[0-9]+\/[^\/]+)$/, "music#url");
+
     // The default route if none of the above match.
     match(/\/?(.*)/, "default#index");
 };

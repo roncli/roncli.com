@@ -243,6 +243,7 @@ module.exports.getPostByUrl = function(url, callback) {
 
         /**
          * Retrieves the post from the cache.
+         * TODO: Handle when the post hasn't been cached.
          * @param {object} post The post to retrieve.
          */
         getPost = function(post) {

@@ -1081,8 +1081,13 @@ module.exports = BaseApp.extend({
 
         nowPlaying.text(media.title);
 
-        media.autoplay = true;
-        media.visual = true;
+        switch (media.source) {
+            case "soundcloud":
+                media.autoplay = true;
+                media.visual = true;
+                media.id = "media-player-" + media.source;
+                break;
+        }
 
         player.html(app.templateAdapter.getTemplate("media/" + media.source)(media));
         player.show();

@@ -140,7 +140,7 @@ module.exports.getTags = function(callback) {
  * @param {function} callback The callback function.
  */
 module.exports.getSongsByTag = function(tag, callback) {
-    "use strict";console.log(tag);
+    "use strict";
 
     /**
      * Retrieves songs from
@@ -168,6 +168,67 @@ module.exports.getSongsByTag = function(tag, callback) {
                 callback({
                     error: "Songs for this tag do not exist.",
                     status: 400
+                });
+            });
+        });
+    });
+};
+
+/**
+ * Retrieves a song via URL.
+ * @param {string} url The URL of the song.
+ * @param {function} callback The callback function.
+ */
+module.exports.getSongByUrl = function(url, callback) {
+    "use strict";
+
+    /**
+     * Retrieves song data.
+     * TODO: Handle when the post hasn't been cached.
+     * @param {object} song The song object.
+     */
+    var getSong = function(song) {
+            cache.get("roncli.com:" + song.trackSource + ":track:" + song.id, function(track) {
+                if (track) {
+                    callback(null, track);
+                    return;
+                }
+
+                callback({
+                    error: "Page not found.",
+                    status: 404
+                });
+            });
+        },
+
+        /**
+         * Gets song data for a URL from the cache.
+         * @param {string} url The URL to get song data for.
+         * @param {function} callback The success callback when the song is found.
+         * @param {function} failureCallback The failure callback when there are no songs.
+         */
+        getSongFromUrl = function(url, callback, failureCallback) {
+            cache.hget("roncli.com:song:urls", url, function(song) {
+                if (song) {
+                    callback(song);
+                    return;
+                }
+
+                failureCallback();
+            });
+        };
+
+    getSongFromUrl(url, getSong, function() {
+        soundcloud.cacheTracks(false, function(err) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            getSongFromUrl(url, getSong, function() {
+                callback({
+                    error: "Page not found.",
+                    status: 404
                 });
             });
         });

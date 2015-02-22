@@ -3,7 +3,7 @@ var BaseView = require("rendr/shared/base/view"),
 
 // Sets up the music view.
 module.exports = BaseView.extend({
-    className: "music_index_view",
+    className: "music_url_view",
 
     events: {
         "click img.thumb": "thumbClick"
@@ -12,6 +12,9 @@ module.exports = BaseView.extend({
     postRender: function() {
         "use strict";
 
+        if ($("#sibling-pages-wrapper").length > 0) {
+            this.app.addPageScroller("#sibling-pages-wrapper", {mouseWheel: true, scrollbars: true});
+        }
         if ($("#children-pages-wrapper").length > 0) {
             this.app.addPageScroller("#children-pages-wrapper", {mouseWheel: true, scrollbars: true});
         }
@@ -36,4 +39,4 @@ module.exports = BaseView.extend({
     }
 });
 
-module.exports.id = "music/index";
+module.exports.id = "music/url";

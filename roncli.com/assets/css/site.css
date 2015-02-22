@@ -609,3 +609,8 @@ div.music-soundcloud {
     width: 100%;
     height: 60px;
 }
+
+div.song-soundcloud {
+    width: 100%;
+    height: 400px;
+}
