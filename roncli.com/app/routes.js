@@ -30,6 +30,9 @@ module.exports = function(match) {
     // The music page.
     match(/^\/?music$/, "music#index");
 
+    // The music tag page.
+    match(/^\/?music\/tag\/([^\/]+)$/, "music#tag");
+
     // The default route if none of the above match.
     match(/\/?(.*)/, "default#index");
 };

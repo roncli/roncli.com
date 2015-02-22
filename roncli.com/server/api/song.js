@@ -26,6 +26,16 @@ module.exports.get = function(req, callback) {
                         callback(songs);
                     });
                     return;
+                case "tag":
+                    music.getSongsByTag(decodeURIComponent(req.parsedPath[1]), function(err, songs) {
+                        if (err) {
+                            req.res.status(err.status);
+                            callback(err);
+                            return;
+                        }
+                        callback(songs);
+                    });
+                    return;
             }
             break;
         case 3:
@@ -39,7 +49,7 @@ module.exports.get = function(req, callback) {
                         return;
                     }
 
-                    music.getLatestSongsByTag(req.parsedPath[1], +count, function(err, songs) {
+                    music.getLatestSongsByTag(decodeURIComponent(req.parsedPath[1]), +count, function(err, songs) {
                         if (err) {
                             req.res.status(err.status);
                             callback(err);

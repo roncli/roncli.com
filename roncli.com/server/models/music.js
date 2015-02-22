@@ -132,3 +132,44 @@ module.exports.getTags = function(callback) {
         });
     });
 };
+
+
+/**
+ * Returns the songs for a tag.
+ * @param {string} tag The tag to return songs for.
+ * @param {function} callback The callback function.
+ */
+module.exports.getSongsByTag = function(tag, callback) {
+    "use strict";console.log(tag);
+
+    /**
+     * Retrieves songs from
+     * @param failureCallback
+     */
+    var getSongs = function(failureCallback) {
+        cache.zrevrange("roncli.com:soundcloud:tag:" + tag, 0, -1, function(songs) {
+            if (songs && songs.length > 0) {
+                callback(null, songs);
+                return;
+            }
+
+            failureCallback();
+        });
+    };
+
+    getSongs(function() {
+        soundcloud.cacheTracks(false, function(err) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            getSongs(function() {
+                callback({
+                    error: "Songs for this tag do not exist.",
+                    status: 400
+                });
+            });
+        });
+    });
+};
