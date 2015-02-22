@@ -10,6 +10,9 @@
                     <button class="btn btn-primary add-to-media-player" data-source="soundcloud" data-url="{{song.attributes.uri}}"><span class="glyphicon glyphicon-music"></span> Add To Playlist</button>
                 </div>
             </div>
+            <div class="panel-body">
+                {{text song.attributes.description}}
+            </div>
         </div>
         {{{page.attributes.page.content}}}
     </div>

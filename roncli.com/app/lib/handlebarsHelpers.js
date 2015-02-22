@@ -186,6 +186,15 @@ module.exports = function(Handlebars) {
          */
         every: function(count, index, isLast, options) {
             return (!isLast && index % count === count - 1) ? options.fn(this) : options.inverse(this);
+        },
+
+        /**
+         * Returns text with line breaks replaced by BRs.
+         * @param {string} text The string to replace.
+         * @returns {base.HandlebarsEnvironment.SafeString} The string with line breaks replaced.
+         */
+        text: function(text) {
+            return new Handlebars.SafeString(text.replace(/(\r\n|\n|\r)/gm, "<br />"));
         }
     };
 };
