@@ -72,6 +72,8 @@ module.exports.post = function(req, callback) {
 
     var userId = req.session.user ? req.session.user.id : 0;
 
+    req.res.setHeader("cache-control", "no-store");
+
     switch (req.parsedPath.length) {
         case 1:
             switch (req.parsedPath[0]) {
