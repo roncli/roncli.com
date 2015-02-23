@@ -193,7 +193,7 @@ module.exports = function(Handlebars) {
          * @param {string} text The string to replace.
          * @returns {base.HandlebarsEnvironment.SafeString} The string with line breaks replaced.
          */
-        text: function(text) {
+        showText: function(text) {
             return new Handlebars.SafeString(text.replace(/(\r\n|\n|\r)/gm, "<br />"));
         }
     };

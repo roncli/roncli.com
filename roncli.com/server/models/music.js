@@ -1,5 +1,32 @@
-var soundcloud = require("../soundcloud/soundcloud"),
-    cache = require("../cache/cache");
+var Moment = require("moment"),
+    sanitizeHtml = require("sanitize-html"),
+    soundcloud = require("../soundcloud/soundcloud"),
+    cache = require("../cache/cache"),
+    db = require("../database/database"),
+    promise = require("promised-io/promise"),
+    Deferred = promise.Deferred,
+    all = promise.all,
+
+    /**
+     * Gets song data for a URL from the cache.
+     * @param {string} url The URL to get song data for.
+     * @param {function} callback The success callback when the song is found.
+     * @param {function} failureCallback The failure callback when there are no songs.
+     */
+    getSongFromUrl = function(url, callback, failureCallback) {
+        "use strict";
+
+        cache.hget("roncli.com:song:urls", url, function(song) {
+            if (song) {
+                callback(song);
+                return;
+            }
+
+            failureCallback();
+        });
+    };
+
+
 
 /**
  * Forces the site to cache the songs, even if they are already cached.
@@ -184,7 +211,7 @@ module.exports.getSongByUrl = function(url, callback) {
 
     /**
      * Retrieves song data.
-     * TODO: Handle when the post hasn't been cached.
+     * TODO: Handle when the song hasn't been cached.
      * @param {object} song The song object.
      */
     var getSong = function(song) {
@@ -198,23 +225,6 @@ module.exports.getSongByUrl = function(url, callback) {
                     error: "Page not found.",
                     status: 404
                 });
-            });
-        },
-
-        /**
-         * Gets song data for a URL from the cache.
-         * @param {string} url The URL to get song data for.
-         * @param {function} callback The success callback when the song is found.
-         * @param {function} failureCallback The failure callback when there are no songs.
-         */
-        getSongFromUrl = function(url, callback, failureCallback) {
-            cache.hget("roncli.com:song:urls", url, function(song) {
-                if (song) {
-                    callback(song);
-                    return;
-                }
-
-                failureCallback();
             });
         };
 
@@ -233,4 +243,182 @@ module.exports.getSongByUrl = function(url, callback) {
             });
         });
     });
+};
+
+/**
+ * Gets comments for a song via the song URL.
+ * @param {string} url The URL of the song.
+ * @param {function} callback The callback function.
+ */
+module.exports.getCommentsByUrl = function(url, callback) {
+    "use strict";
+
+    /**
+     * Gets the comments for a song.
+     */
+    var getComments = function() {
+        db.query(
+            "SELECT sc.CommentID, sc.Comment, sc.CrDate, u.Alias FROM tblSongComment sc INNER JOIN tblUser u ON sc.CrUserID = u.UserID WHERE sc.SongURL = @url AND sc.ModeratedDate IS NOT NULL ORDER BY sc.CrDate",
+            {url: {type: db.VARCHAR(1024), value: url}},
+            function(err, data) {
+                var comments;
+                if (err) {
+                    console.log("Database error in music.getCommentsByUrl.");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error retrieving song comments.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                if (data[0]) {
+                    comments = data[0].map(function(comment) {
+                        return {
+                            id: comment.CommentID,
+                            published: comment.CrDate.getTime(),
+                            content: comment.Comment,
+                            author: comment.Alias,
+                            songSource: "site"
+                        };
+                    });
+                }
+
+                callback(null, comments);
+            }
+        );
+    };
+
+    getSongFromUrl(url, getComments, function() {
+        soundcloud.cacheTracks(false, function(err) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            getSongFromUrl(url, getComments, function() {
+                callback({
+                    error: "Page not found.",
+                    status: 404
+                });
+            });
+        });
+    });
+};
+
+/**
+ * Posts a comment to a song page.
+ * @param {int} userId The User ID posting the comment.
+ * @param {string} url The URL of the page.
+ * @param {string} content The content of the post.
+ * @param {function} callback The callback function.
+ */
+module.exports.postComment = function(userId, url, content, callback) {
+    "use strict";
+
+    all(
+        /**
+         * Check to see if the user has posted a comment within the last 60 seconds to prevent spam.
+         */
+        (function() {
+            var deferred = new Deferred();
+
+            db.query(
+                "SELECT MAX(CrDate) LastComment FROM tblSongComment WHERE CrUserID = @userId",
+                {userId: {type: db.INT, value: userId}},
+                function(err, data) {
+                    if (err) {
+                        console.log("Database error in music.postComment while checking the user's last comment time.");
+                        console.log(err);
+                        deferred.reject({
+                            error: "There was a database error posting a song comment.  Please reload the page and try again.",
+                            status: 500
+                        });
+                        return;
+                    }
+
+                    if (data[0] && data[0][0] && data[0][0].LastComment > new Moment().add(-1, "minute")) {
+                        deferred.reject({
+                            error: "You must wait a minute after posting a comment to post a new comment.",
+                            status: 400
+                        });
+                        return;
+                    }
+
+                    deferred.resolve(true);
+                }
+            );
+
+            return deferred.promise;
+        }()),
+
+        /**
+         * Ensure the URL the user is posting to exists.
+         */
+        (function() {
+            var deferred = new Deferred(),
+                resolve = function() {
+                    deferred.resolve(true);
+                };
+
+            getSongFromUrl(url, resolve, function() {
+                soundcloud.cacheTracks(false, function(err) {
+                    if (err) {
+                        callback(err);
+                        return;
+                    }
+
+                    getSongFromUrl(url, resolve, function() {
+                        callback({
+                            error: "Page not found.",
+                            status: 404
+                        });
+                    });
+                });
+            });
+
+            return deferred.promise;
+        }())
+    ).then(
+        /**
+         * Add the post to the database.
+         */
+        function() {
+            var attributes = sanitizeHtml.defaults.allowedAttributes;
+            attributes.p = ["style"];
+            attributes.span = ["style"];
+
+            content = sanitizeHtml(content, {
+                allowedTags: sanitizeHtml.defaults.allowedTags.concat(["h1", "h2", "u", "sup", "sub", "strike", "address", "span"]),
+                allowedAttributes: attributes
+            });
+
+            db.query(
+                "INSERT INTO tblSongComment (SongURL, Comment, CrDate, CrUserID) VALUES (@url, @content, GETUTCDATE(), @userId)",
+                {
+                    url: {type: db.VARCHAR(1024), value: url},
+                    content: {type: db.TEXT, value: content},
+                    userId: {type: db.INT, value: userId}
+                },
+                function(err) {
+                    if (err) {
+                        console.log("Database error in music.postComment while posting a comment.");
+                        console.log(err);
+                        callback({
+                            error: "There was a database error posting a song comment.  Please reload the page and try again.",
+                            status: 500
+                        });
+                        return;
+                    }
+
+                    callback();
+                }
+            );
+        },
+
+        // If any of the functions error out, it will be handled here.
+        function(err) {
+            callback(err);
+        }
+    );
 };

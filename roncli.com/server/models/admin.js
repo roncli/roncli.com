@@ -80,7 +80,7 @@ var User = require("./user"),
     };
 
 /**
- * Reeturn list of blog comments to moderate.
+ * Return list of blog comments to moderate.
  * @param {number} userId The user ID of the moderator.
  * @param {function(null, object)|function(object)} callback The callback function.
  */
@@ -978,7 +978,7 @@ module.exports.changeOrder = function(userId, parentPageId, order, callback) {
 };
 
 /**
- * Reeturn list of page comments to moderate.
+ * Return list of page comments to moderate.
  * @param {number} userId The user ID of the moderator.
  * @param {function(null, object)|function(object)} callback The callback function.
  */
@@ -1171,5 +1171,153 @@ module.exports.clearMusicCaches = function(userId, callback) {
         all(promises).then(function() {
             music.forceCacheSongs(callback);
         });
+    });
+};
+
+/**
+ * Return list of song comments to moderate.
+ * @param {number} userId The user ID of the moderator.
+ * @param {function(null, object)|function(object)} callback The callback function.
+ */
+module.exports.getSongCommentsToModerate = function(userId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while getting song comments to moderate.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        db.query(
+            "SELECT sc.CommentID, sc.Comment, sc.CrDate, u.Alias, sc.SongURL FROM tblSongComment sc INNER JOIN tblUser u ON sc.CrUserID = u.UserID WHERE sc.ModeratedDate IS NULL ORDER BY sc.CrDate",
+            {},
+            function(err, data) {
+                if (err) {
+                    console.log("Database error in admin.getSongCommentsToModerate");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while getting song comments to moderate.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                if (!data[0]) {
+                    callback(null, {});
+                    return;
+                }
+
+                callback(null, data[0].map(function(comment) {
+                    return {
+                        id: comment.CommentID,
+                        published: comment.CrDate.getTime(),
+                        content: comment.Comment,
+                        author: comment.Alias,
+                        url: comment.SongURL
+                    };
+                }));
+            }
+        );
+    });
+};
+
+/**
+ * Approves a song comment.
+ * @param {number} userId The user ID of the moderator.
+ * @param {number} commentId The comment ID to approve.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.approveSongComment = function(userId, commentId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while approving a song comment.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        db.query(
+            "UPDATE tblSongComment SET ModeratedDate = GETUTCDATE() WHERE CommentID = @id",
+            {id: {type: db.INT, value: commentId}},
+            function(err) {
+                if (err) {
+                    console.log("Database error in admin.approveSongComment.");
+                    callback({
+                        error: "There was a database error while approving a song comment.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                callback();
+            }
+        );
+    });
+};
+
+/**
+ * Rejects a song comment.
+ * @param {number} userId The user ID of the moderator.
+ * @param {number} commentId The comment ID to reject.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.rejectSongComment = function(userId, commentId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while rejecting a song comment.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        db.query(
+            "DELETE FROM tblSongComment WHERE CommentID = @id",
+            {id: {type: db.INT, value: commentId}},
+            function(err) {
+                if (err) {
+                    console.log("Database error in admin.approveSongComment.");
+                    callback({
+                        error: "There was a database error while rejecting a song comment.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                callback();
+            }
+        );
     });
 };

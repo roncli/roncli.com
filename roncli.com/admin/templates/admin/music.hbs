@@ -3,7 +3,7 @@
         <div class="panel-heading text-center"><h3>External Resources</h3></div>
         <div class="panel-body text-center">
             Visit these websites to add or update Soundcloud songs.<br /><br />
-            <a href="https://soundcloud.com" target="_blank" class="btn btn-lg btn-primary" style="margin-right: 20px;">SoundCloud</a>
+            <a href="https://soundcloud.com" target="_blank" class="btn btn-lg btn-primary">SoundCloud</a>
         </div>
     </div>
     <div class="panel panel-primary">
@@ -12,6 +12,15 @@
             Use this after adding or updating SoundCloud songs to force the website to update immediately.<br /><br />
             <button id="clear-caches" class="btn btn-lg btn-primary"><span class="glyphicon glyphicon-trash"></span> Clear Caches</button>
         </div>
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading text-center"><h3>Comments to Moderate</h3></div>
+        {{#each comments.models}}
+            {{partial "admin/music/comment"}}
+        {{/each}}
+        {{#ifCond comments.models.length "===" 0}}
+            <div class="panel-body">There are no comments pending moderation.</div>
+        {{/ifCond}}
     </div>
 </div>
 <div class="col-sm-2 hidden-xs right-side">

@@ -75,6 +75,21 @@ module.exports.get = function(req, callback) {
                             return;
                     }
                     break;
+                case "music":
+                    switch (req.parsedPath[1]) {
+                        case "comments":
+                            admin.getSongCommentsToModerate(userId, function(err, comments) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                callback(comments);
+                            });
+                            return;
+                    }
+                    break;
             }
             break;
     }
@@ -229,6 +244,30 @@ module.exports.post = function(req, callback) {
                     switch (req.parsedPath[1]) {
                         case "clear-caches":
                             admin.clearMusicCaches(userId, function(err) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                        case "approve-comment":
+                            admin.approveSongComment(userId, req.body.commentId, function(err) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                        case "reject-comment":
+                            admin.rejectSongComment(userId, req.body.commentId, function(err) {
                                 if (err) {
                                     req.res.status(err.status);
                                     callback(err);

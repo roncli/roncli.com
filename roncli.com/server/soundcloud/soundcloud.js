@@ -47,6 +47,7 @@ var config = require("../privateConfig").soundcloud,
                             track.published = (track.release_year ?
                                 new Date(track.release_year, track.release_month ? track.release_month - 1 : 0, track.release_day || 1) :
                                 new Date(track.created_at)).getTime();
+                            track.songUrl = "/soundcloud/" + track.id + "/" + track.permalink;
                         });
 
                         tracks = totalTracks.map(function(track) {
@@ -58,7 +59,7 @@ var config = require("../privateConfig").soundcloud,
                                     tags: [].concat.apply([], [[track.genre], track.tag_list.length === 0 ? [] : track.tag_list.replace(/"[^"]+"|( )/g, function(match, group) {return group ? "||" : match;}).replace(/"/g, "").split("||")]),
                                     published: track.published,
                                     title: track.title,
-                                    url: "/soundcloud/" + track.id + "/" + track.permalink,
+                                    url: track.songUrl,
                                     audioUrl: track.uri
                                 }
                             };

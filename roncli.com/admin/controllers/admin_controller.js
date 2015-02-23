@@ -65,6 +65,8 @@ module.exports = {
     music: function(params, callback) {
         "use strict";
 
-        callback();
+        this.app.fetch({
+            comments: {collection: "Admin_MusicComments", params: {}}
+        }, {readFromCache: false, writeToCache: false}, callback);
     }
 };
