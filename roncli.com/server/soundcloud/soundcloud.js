@@ -48,6 +48,7 @@ var config = require("../privateConfig").soundcloud,
                                 new Date(track.release_year, track.release_month ? track.release_month - 1 : 0, track.release_day || 1) :
                                 new Date(track.created_at)).getTime();
                             track.songUrl = "/soundcloud/" + track.id + "/" + track.permalink;
+                            track.trackSource = "soundcloud";
                         });
 
                         tracks = totalTracks.map(function(track) {
