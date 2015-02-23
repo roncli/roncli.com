@@ -44,8 +44,8 @@
     <Content Include="app\templates\__layout.hbs" />
     <Content Include="assets\css\bootstrap-theme-override.css" />
     <Content Include="assets\css\bootstrap-theme.css" />
+    <Content Include="assets\css\bootstrap.css" />
     <Content Include="assets\css\site.css" />
-    <Content Include="assets\tools\bootstrap-magic.less" />
     <Content Include="package.json" />
     <Content Include="public\images\blogger%402x.png" />
     <Content Include="public\images\blogger.png" />
@@ -155,7 +155,6 @@
     <Folder Include="assets\" />
     <Folder Include="assets\css\" />
     <Folder Include="assets\js\" />
-    <Folder Include="assets\tools\" />
     <Folder Include="public\" />
     <Folder Include="public\css\" />
     <Folder Include="public\images\" />

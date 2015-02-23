@@ -5,6 +5,8 @@ var moment = require("moment"),
 module.exports.get = function(req, callback) {
     "use strict";
 
+    req.res.setHeader("cache-control", "no-store");
+
     switch (req.parsedPath.length) {
         case 0:
             // Attempt to get data for the currently logged in user.
@@ -42,6 +44,8 @@ module.exports.post = function(req, callback) {
     "use strict";
 
     var userId = req.session.user ? req.session.user.id : 0;
+
+    req.res.setHeader("cache-control", "no-store");
 
     switch (req.parsedPath.length) {
         case 1:

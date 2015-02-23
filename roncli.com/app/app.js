@@ -30,10 +30,16 @@ module.exports = BaseApp.extend({
                 families: ["Archivo+Narrow:400,700,400italic,700italic:latin,latin-ext"]
             },
             active: function() {
-                app.fontsComplete();
+                if (app.fontsComplete) {
+                    app.fontsComplete();
+                    app.fontsComplete = null;
+                }
             },
             inactive: function() {
-                app.fontsComplete();
+                if (app.fontsComplete) {
+                    app.fontsComplete();
+                    app.fontsComplete = null;
+                }
             }
         };
         (function() {
@@ -190,8 +196,8 @@ module.exports = BaseApp.extend({
          * Logs out a user at the server.
          */
         doLogout = function() {
-            var user = new User();
-            user.fetch({
+            var logoutUser = new User();
+            logoutUser.fetch({
                 url: "/user/logout",
                 type: "POST"
             });
@@ -204,6 +210,7 @@ module.exports = BaseApp.extend({
         logOutUser = function() {
             app.user = null;
             $("div#site-nav").html(app.templateAdapter.getTemplate("site/loggedOut")());
+
             if (typeof app.router.currentView.onLogout === "function") {
                 app.router.currentView.onLogout();
             }
@@ -453,13 +460,13 @@ module.exports = BaseApp.extend({
 
                 // Setup register button.
                 $("#register-button").on("click", function() {
-                    var user;
+                    var registerUser;
 
                     registerForm.validate().element("#register-retype-password");
                     if (registerForm.valid()) {
                         registerForm.find("input, button").prop("disabled", true);
-                        user = new User();
-                        user.fetch({
+                        registerUser = new User();
+                        registerUser.fetch({
                             url: "/user/register",
                             data: JSON.stringify({
                                 email: $("#register-email").val(),
@@ -504,12 +511,12 @@ module.exports = BaseApp.extend({
 
                 // Setup forgot password button.
                 $("#forgot-password-button").on("click", function() {
-                    var user;
+                    var forgotPasswordUser;
 
                     if (forgotPasswordForm.valid()) {
                         forgotPasswordForm.find("input, button").prop("disabled", true);
-                        user = new User();
-                        user.fetch({
+                        forgotPasswordUser = new User();
+                        forgotPasswordUser.fetch({
                             url: "/user/forgot-password",
                             data: JSON.stringify({
                                 email: $("#forgot-password-email").val()
@@ -520,7 +527,7 @@ module.exports = BaseApp.extend({
                             success: function() {
                                 bootbox.hideAll();
 
-                                if (user.get("validationRequired")) {
+                                if (forgotPasswordUser.get("validationRequired")) {
                                     // Display the dialog box.
                                     bootbox.dialog({
                                         title: "Account Validation Required",
@@ -737,13 +744,13 @@ module.exports = BaseApp.extend({
 
                             // Setup reset password button.
                             $("#password-reset-button").on("click", function() {
-                                var user;
+                                var passwordResetUser;
 
                                 passwordResetForm.validate().element("#password-reset-retype-password");
                                 if (passwordResetForm.valid()) {
                                     passwordResetForm.find("input, button").prop("disabled", true);
-                                    user = new User();
-                                    user.fetch({
+                                    passwordResetUser = new User();
+                                    passwordResetUser.fetch({
                                         url: "/user/password-reset",
                                         data: JSON.stringify({
                                             userId: +querystring.u,
@@ -852,12 +859,12 @@ module.exports = BaseApp.extend({
 
                             // Setup email change button.
                             $("#email-change-button").on("click", function() {
-                                var user;
+                                var emailChangeUser;
 
                                 if (emailChangeForm.valid()) {
                                     emailChangeForm.find("input, button").prop("disabled", true);
-                                    user = new User();
-                                    user.fetch({
+                                    emailChangeUser = new User();
+                                    emailChangeUser.fetch({
                                         url: "/user/email-change",
                                         data: JSON.stringify({
                                             userId: +querystring.u,

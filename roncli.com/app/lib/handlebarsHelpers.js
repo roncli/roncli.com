@@ -156,6 +156,26 @@ module.exports = function(Handlebars) {
         toTimeAgo: function(timestamp) {
             var date = new Date(timestamp);
             return "<abbr class=\"setTime\" title=\"" + timestamp.toString() + "\">" + (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear() + "</abbr>";
+        },
+
+        /**
+         * Returns whether to do something every so many iterations.
+         * @param {number} count The number of iterations to perform the action.
+         * @param {number} index The index of the current iteration.
+         * @param {boolean} isLast Whether this is the last iteration.
+         * @param {object} options The Handlebars helpers object.
+         */
+        every: function(count, index, isLast, options) {
+            return (!isLast && index % count === count - 1) ? options.fn(this) : options.inverse(this);
+        },
+
+        /**
+         * Returns text with line breaks replaced by BRs.
+         * @param {string} text The string to replace.
+         * @returns {base.HandlebarsEnvironment.SafeString} The string with line breaks replaced.
+         */
+        showText: function(text) {
+            return new Handlebars.SafeString(text.replace(/(\r\n|\n|\r)/gm, "<br />"));
         }
     };
 };

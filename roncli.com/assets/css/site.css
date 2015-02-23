@@ -63,6 +63,14 @@ div#logo {
     }
 }
 
+@media (max-width: 326px) {
+    div#logo {
+        width: 180px;
+        height: 30px;
+        background-size: 180px 30px;
+    }
+}
+
 div.twitter-logo {
     display: inline-block;
     vertical-align: middle;
@@ -250,6 +258,10 @@ div.tweets div.hr {
 div.body {
     background-color: #ffffff;
     padding: 20px;
+}
+
+.btn-group-vertical > div.body {
+    line-height: 1;
 }
 
 .btn-group-vertical > div.body:first-child {
