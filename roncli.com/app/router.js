@@ -18,7 +18,7 @@ Router.prototype.constructor = BaseClientRouter;
 /**
  * Records an impression whenever an action is started.
  */
-Router.prototype.postInitialize = function() {
+Router.prototype.initialize = function() {
     "use strict";
 
     this.on("action:start", this.actionStart, this);
