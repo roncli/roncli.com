@@ -1,3 +1,5 @@
+var handleServerError = require("../lib/handleServerError");
+
 module.exports = {
     /**
      * The default home view.
@@ -14,6 +16,25 @@ module.exports = {
             songs: {collection: "Song_GetLatest", params: {count: 3}},
             classics: {collection: "Song_GetLatestByTag", params: {tag: "Classic", count:3}}
         }, function(err, result) {
+            console.log(err);
+            console.log(result.classics);
+            if (!err && result && result.blog && result.blog.attributes && result.blog.attributes.error) {
+                err = result.blog.attributes;
+            }
+
+            if (!err && result && result.songs && result.songs.models && result.songs.models[0] && result.songs.models[0].attributes && result.songs.models[0].attributes.error) {
+                err = result.songs.models[0].attributes;
+            }
+
+            if (!err && result && result.classics && result.classics.models && result.classics.models[0] && result.classics.models[0].attributes && result.classics.models[0].attributes.error) {
+                err = result.classics.models[0].attributes;
+            }
+
+            if (err) {
+                handleServerError(err, app, result, callback);
+                return;
+            }
+
             if (app.req) {
                 result.meta = {
                     "og:description": "This is the homepage of Ronald M. Clifford.",

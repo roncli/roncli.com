@@ -1,10 +1,11 @@
-var moment = require("moment");
+var handleServerError = require("../lib/handleServerError"),
+    moment = require("moment");
 
 module.exports = {
     /**
      * The blog page view.
      * @param {object} params The parameters to use in the controller.
-     * @param {function((null | object), object=)} callback The callback to run upon completion of the controller running.
+     * @param {function} callback The callback to run upon completion of the controller running.
      */
     index: function(params, callback) {
         "use strict";
@@ -15,6 +16,19 @@ module.exports = {
             blog: {model: "Blog_GetLatest", params: {}},
             categories: {collection: "BlogCategories", params: {}}
         }, function(err, result) {
+            if (!err && result && result.blog && result.blog.attributes && result.blog.attributes.error) {
+                err = result.blog.attributes;
+            }
+
+            if (!err && result && result.categories && result.categories.models && result.categories.models[0] && result.categories.models[0].attributes && result.categories.models[0].attributes.error) {
+                err = result.categories.models[0].attributes;
+            }
+
+            if (err) {
+                handleServerError(err, app, result, callback);
+                return;
+            }
+
             if (app.req) {
                 result.meta = {
                     "og:description": "This is the roncli.com Blog.",
@@ -49,6 +63,19 @@ module.exports = {
             blog: {model: "Blog_GetLatestByCategory", params: {category: params[0]}},
             categories: {collection: "BlogCategories", params: {}}
         }, function(err, result) {
+            if (!err && result && result.blog && result.blog.attributes && result.blog.attributes.error) {
+                err = result.blog.attributes;
+            }
+
+            if (!err && result && result.categories && result.categories.models && result.categories.models[0] && result.categories.models[0].attributes && result.categories.models[0].attributes.error) {
+                err = result.categories.models[0].attributes;
+            }
+
+            if (err) {
+                handleServerError(err, app, result, callback);
+                return;
+            }
+
             if (app.req) {
                 result.meta = {
                     "og:description": "This is the " + decodeURIComponent(params[0]) + " category of the roncli.com Blog.",
@@ -84,6 +111,19 @@ module.exports = {
             categories: {collection: "BlogCategories", params: {}}
         }, function(err, result) {
             var post, content;
+
+            if (!err && result && result.blog && result.blog.attributes && result.blog.attributes.error) {
+                err = result.blog.attributes;
+            }
+
+            if (!err && result && result.categories && result.categories.models && result.categories.models[0] && result.categories.models[0].attributes && result.categories.models[0].attributes.error) {
+                err = result.categories.models[0].attributes;
+            }
+
+            if (err) {
+                handleServerError(err, app, result, callback);
+                return;
+            }
 
             if (app.req) {
                 post = result.blog.get("post");

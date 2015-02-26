@@ -107,7 +107,7 @@ module.exports = function(grunt) {
 
             combine_admin_js_files: {
                 options: {
-                    external: ["jquery", "rendr/shared/base/view", "app/collections/base", "app/models/base", "rendr/node_modules/backbone"],
+                    external: ["jquery", "rendr/shared/base/view", "app/collections/base", "app/models/base", "app/lib/handleServerError", "rendr/node_modules/backbone"],
                     preBundleCB: function(b) {
                         b.on("remapify:files", function(file, expandedAliases) {
                             Object.keys(expandedAliases).forEach(function(key) {

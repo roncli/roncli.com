@@ -1,3 +1,5 @@
+var handleServerError = require("../lib/handleServerError");
+
 module.exports = {
     /**
      * The music view.
@@ -14,6 +16,23 @@ module.exports = {
             songs: {collection: "Song_GetLatest", params: {count: 6}},
             tags: {collection: "SongTags", params: {}}
         }, function(err, result) {
+            if (!err && result && result.page && result.page.attributes && result.page.attributes.error) {
+                err = result.page.attributes;
+            }
+
+            if (!err && result && result.songs && result.songs.models && result.songs.models[0] && result.songs.models[0].attributes && result.songs.models[0].attributes.error) {
+                err = result.songs.models[0].attributes;
+            }
+
+            if (!err && result && result.tags && result.tags.models && result.tags.models[0] && result.tags.models[0].attributes && result.tags.models[0].attributes.error) {
+                err = result.tags.models[0].attributes;
+            }
+
+            if (err) {
+                handleServerError(err, app, result, callback);
+                return;
+            }
+
             if (app.req) {
                 result.meta = {
                     "og:description": "This is the home of roncli, The Nightstalker.  Listen to all of The Nightstalker's releases here.",
@@ -48,6 +67,19 @@ module.exports = {
             page: {model: "PageOptional", params: {url: "/music/tag/" + params[0]}},
             songs: {collection: "Song_ByTag", params: {tag: params[0]}}
         }, function(err, result) {
+            if (!err && result && result.page && result.page.attributes && result.page.attributes.error) {
+                err = result.page.attributes;
+            }
+
+            if (!err && result && result.songs && result.songs.models && result.songs.models[0] && result.songs.models[0].attributes && result.songs.models[0].attributes.error) {
+                err = result.songs.models[0].attributes;
+            }
+
+            if (err) {
+                handleServerError(err, app, result, callback);
+                return;
+            }
+
             if (app.req) {
                 result.meta = {
                     "og:description": "This is the music of The Nightstalker with the " + decodeURIComponent(params[0]) + " tag.",
@@ -82,8 +114,21 @@ module.exports = {
         app.fetch({
             page: {model: "PageOptional", params: {url: "/" + params[0]}},
             song: {model: "Song_GetFromUrl", params: {url: "/" + params[0]}}
-        }, function(err, result) {console.log(app);
+        }, function(err, result) {
             var content;
+
+            if (!err && result && result.page && result.page.attributes && result.page.attributes.error) {
+                err = result.page.attributes;
+            }
+
+            if (!err && result && result.song && result.song.attributes && result.song.attributes.error) {
+                err = result.song.attributes;
+            }
+
+            if (err) {
+                handleServerError(err, app, result, callback);
+                return;
+            }
 
             if (app.req) {
                 content = result.song.attributes.description.replace("\n", " ").replace("\r", " ").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();

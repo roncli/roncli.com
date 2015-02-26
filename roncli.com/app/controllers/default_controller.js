@@ -1,3 +1,5 @@
+var handleServerError = require("../lib/handleServerError");
+
 module.exports = {
     /**
      * The default view.
@@ -14,32 +16,12 @@ module.exports = {
         }, function(err, result) {
             var page, content;
 
-            // On the server, a 404 is sent as a valid result.  We need to check for this and set err to the result's attributes if this is the case.
-            // On the client, if there is an error, it is sent under err, and therefore we don't want to mess with it.
             if (!err && result && result.page && result.page.attributes && result.page.attributes.error) {
                 err = result.page.attributes;
             }
 
             if (err) {
-                if (err.status) {
-                    // This is a known error.
-                    if (app && app.req && app.req.res) {
-                        app.req.res.status(err.status);
-                    }
-
-                    if (err.status === 404) {
-                        callback(null, "error/404", result);
-                    } else {
-                        callback(null, "error/other", result);
-                    }
-                    return;
-                }
-
-                // This is an unknown error.
-                if (app && app.req && app.req.res) {
-                    app.req.res.status(500);
-                }
-                callback(null, "error/other", result);
+                handleServerError(err, app, result, callback);
                 return;
             }
 
