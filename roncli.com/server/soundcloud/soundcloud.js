@@ -25,7 +25,7 @@ var config = require("../privateConfig").soundcloud,
                     var tracks, tags, tagTracks, promises, fxs;
 
                     if (err) {
-                        console.log("Bad response from Soundcloud.");
+                        console.log("Bad response from SoundCloud.");
                         console.log(err);
                         callback({
                             error: "Bad response from SoundCloud.",

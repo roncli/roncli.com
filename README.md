@@ -135,6 +135,11 @@ The following should be the contents of privateConfig.js:
             },
             soundcloud: {
                 id: "(Your SoundCloud Client ID)"
+            },
+            github: {
+                type: "oauth",
+                key: "(Your Github client ID)",
+                secret: "(Your Github client secret)"
             }
         };
 
