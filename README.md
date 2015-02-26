@@ -48,7 +48,7 @@ To run the website on Windows, make sure you perform the following steps.
 7. Add /roncli.com/server/privateConfig.js.  See below for file contents.
 8. Apply the following patches:
     - https://github.com/roncli/remapify/compare/roncli:master...issue-24-from-1.4.4 - This fixes a bug with the ```remapify``` module in order to use it with the latest versions of the ```grunt-browserify``` module.
-    - https://github.com/rendrjs/rendr-handlebars/pull/36 - This updates rendr-handlebars to use the latest version of handlebars.
+    - https://github.com/rendrjs/rendr/pull/443 - This updates ```rendr``` to fix some bugs with the 1.0.0 release related to jQuery.
 9. If using [iisnode](https://github.com/tjanczuk/iisnode):
     - Point an IIS application to the inner /roncli.com directory
     - Run ```grunt``` from the same directory when installing and after every time you change code.
@@ -74,7 +74,7 @@ Other Installations
 4. Add /roncli.com/server/privateConfig.js.  See below for file contents.
 5. Apply the following patches:
     - https://github.com/roncli/remapify/compare/roncli:master...issue-24-from-1.4.4 - This fixes a bug with the ```remapify``` module in order to use it with the latest versions of the ```grunt-browserify``` module.
-    - https://github.com/rendrjs/rendr-handlebars/pull/36 - This updates rendr-handlebars to use the latest version of handlebars.
+    - https://github.com/rendrjs/rendr/pull/443 - This updates ```rendr``` to fix some bugs with the 1.0.0 release related to jQuery.
 6. Run the following command to compile and run the web server:
 
         grunt all
@@ -112,21 +112,16 @@ The following should be the contents of privateConfig.js:
                 host: "(Your redis server hostname)",
                 port: (Your redis server hostname),
                 password: "(Your redis server password)"
-            },
-            google: {
-                blog_id: "(Your Google Blogger blog ID)",
-                api_key: "(Your Google Blogger API key)"
-            },
-            tumblr: {
-                consumer_key: "(Your Tumblr consumer key)",
-                consumer_secret: "(Your Tumblr consumer secret)",
-                token: "(Your Tumblr token)",
-                token_secret: "(Your Tumblr token secret)"
             }
         };
 
 Version History
 ===============
+
+0.4
+---
+
+This version implements the music section, which links to SoundCloud.  Included are comments, RSS feeds for the music and each individual tag, and an administration section.  Music pages also double as HTML pages, meaning that if you create a page with the same URL as a music page, that HTML will display on the page along with the music.
 
 0.3.1
 -----
@@ -155,11 +150,6 @@ This version introduces the bare bones of the website, including the layout, Twi
 
 Planned Versions
 ================
-
-0.4
----
-
-* Implement Music section.
 
 0.5
 ---
