@@ -1,12 +1,11 @@
 var page = require("../models/page");
 
-module.exports.get = function(req, callback) {
+module.exports.get = function(req, query, callback) {
     "use strict";
 
     switch (req.parsedPath.length) {
-        case 1:
-            // TODO: This is a workaround until we can get the querystring parameters from Rendr's server sync.  See https://github.com/rendrjs/rendr/pull/392 for the upcoming fix.
-            page.getCommentsByPageId(req.parsedPath[0], function(err, comments) {
+        case 0:
+            page.getCommentsByPageId(+query.pageId, function(err, comments) {
                 if (err) {
                     req.res.status(err.status);
                     callback(err);
@@ -21,7 +20,7 @@ module.exports.get = function(req, callback) {
     callback({error: "API not found."});
 };
 
-module.exports.post = function(req, callback) {
+module.exports.post = function(req, query, callback) {
     "use strict";
 
     var userId = req.session.user ? req.session.user.id : 0;

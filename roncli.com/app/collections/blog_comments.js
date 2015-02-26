@@ -6,7 +6,7 @@ module.exports = Collection.extend({
     url: function() {
         "use strict";
 
-        return "/blog-comment" + this.blogUrl;
+        return "/blog-comment?url=" + this.blogUrl;
     }
 });
 

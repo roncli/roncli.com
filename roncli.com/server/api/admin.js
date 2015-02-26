@@ -1,6 +1,6 @@
 var admin = require("../models/admin");
 
-module.exports.get = function(req, callback) {
+module.exports.get = function(req, query, callback) {
     "use strict";
 
     var userId = req.session.user ? req.session.user.id : 0;
@@ -11,25 +11,20 @@ module.exports.get = function(req, callback) {
         return;
     }
 
-    if (req.parsedPath.length > 0) {
-        if (req.parsedPath[0] === "page") {
-            // TODO: This is a workaround until we can get the querystring parameters from Rendr's server sync.  See https://github.com/rendrjs/rendr/pull/392 for the upcoming fix.
-            admin.getPageByUrl(userId, req.parsedPath.slice(1).join("/"), function(err, data) {
-                if (err) {
-                    req.res.status(err.status);
-                    callback(err);
-                    return;
-                }
-
-                callback(data);
-            });
-            return;
-        }
-    }
-
     switch (req.parsedPath.length) {
         case 1:
             switch (req.parsedPath[0]) {
+                case "page":
+                    admin.getPageByUrl(userId, query.url, function(err, data) {
+                        if (err) {
+                            req.res.status(err.status);
+                            callback(err);
+                            return;
+                        }
+
+                        callback(data);
+                    });
+                    return;
                 case "pages":
                     admin.getPagesByParentUrl(userId, null, function(err, pages) {
                         if (err) {
@@ -98,7 +93,7 @@ module.exports.get = function(req, callback) {
     callback({error: "API not found."});
 };
 
-module.exports.post = function(req, callback) {
+module.exports.post = function(req, query, callback) {
     "use strict";
 
     var userId = req.session.user ? req.session.user.id : 0;

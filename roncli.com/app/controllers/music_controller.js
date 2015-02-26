@@ -45,7 +45,7 @@ module.exports = {
         var app = this.app;
 
         app.fetch({
-            page: {model: "PageOptional", params: {url: "music/tag/" + params[0]}},
+            page: {model: "PageOptional", params: {url: "/music/tag/" + params[0]}},
             songs: {collection: "Song_ByTag", params: {tag: params[0]}}
         }, function(err, result) {
             if (app.req) {
@@ -80,8 +80,8 @@ module.exports = {
         var app = this.app;
 
         app.fetch({
-            page: {model: "PageOptional", params: {url: params[0]}},
-            song: {model: "Song_GetFromUrl", params: {url: params[0]}}
+            page: {model: "PageOptional", params: {url: "/" + params[0]}},
+            song: {model: "Song_GetFromUrl", params: {url: "/" + params[0]}}
         }, function(err, result) {
             var content;
 

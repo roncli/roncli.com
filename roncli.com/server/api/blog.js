@@ -1,6 +1,6 @@
 var blog = require("../models/blog");
 
-module.exports.get = function(req, callback) {
+module.exports.get = function(req, query, callback) {
     "use strict";
 
     switch (req.parsedPath.length) {
@@ -16,12 +16,8 @@ module.exports.get = function(req, callback) {
                         callback(post);
                     });
                     return;
-            }
-            break;
-        case 2:
-            switch (req.parsedPath[0]) {
-                case "getLatestByCategory":
-                    blog.getLatestPostByCategory(decodeURIComponent(req.parsedPath[1]), function(err, post) {
+                case "getFromUrl":
+                    blog.getPostByUrl(query.url, function(err, post) {
                         if (err) {
                             req.res.status(err.status);
                             callback(err);
@@ -32,11 +28,10 @@ module.exports.get = function(req, callback) {
                     return;
             }
             break;
-        case 4:
+        case 2:
             switch (req.parsedPath[0]) {
-                case "getFromUrl":
-                    // TODO: This is a workaround until we can get the querystring parameters from Rendr's server sync.  See https://github.com/rendrjs/rendr/pull/392 for the upcoming fix.
-                    blog.getPostByUrl("/" + req.parsedPath[1] + "/" + req.parsedPath[2] + "/" + req.parsedPath[3], function(err, post) {
+                case "getLatestByCategory":
+                    blog.getLatestPostByCategory(decodeURIComponent(req.parsedPath[1]), function(err, post) {
                         if (err) {
                             req.res.status(err.status);
                             callback(err);

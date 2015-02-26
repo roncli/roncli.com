@@ -1,11 +1,22 @@
 var music = require("../models/music");
 
-module.exports.get = function(req, callback) {
+module.exports.get = function(req, query, callback) {
     "use strict";
 
     var count;
 
     switch (req.parsedPath.length) {
+        case 1:
+            case "getFromUrl":
+                music.getSongByUrl(query.url, function(err, song) {
+                    if (err) {
+                        req.res.status(err.status);
+                        callback(err);
+                        return;
+                    }
+                    callback(song);
+                });
+                return;
         case 2:
             switch (req.parsedPath[0]) {
                 case "get-latest":
@@ -56,21 +67,6 @@ module.exports.get = function(req, callback) {
                             return;
                         }
                         callback(songs);
-                    });
-                    return;
-            }
-            break;
-        case 4:
-            switch (req.parsedPath[0]) {
-                case "getFromUrl":
-                    // TODO: This is a workaround until we can get the querystring parameters from Rendr's server sync.  See https://github.com/rendrjs/rendr/pull/392 for the upcoming fix.
-                    music.getSongByUrl("/" + req.parsedPath[1] + "/" + req.parsedPath[2] + "/" + req.parsedPath[3], function(err, song) {
-                        if (err) {
-                            req.res.status(err.status);
-                            callback(err);
-                            return;
-                        }
-                        callback(song);
                     });
                     return;
             }

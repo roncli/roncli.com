@@ -1,6 +1,6 @@
 var blog = require("../models/blog");
 
-module.exports.get = function(req, callback) {
+module.exports.get = function(req, query, callback) {
     "use strict";
 
     switch (req.parsedPath.length) {

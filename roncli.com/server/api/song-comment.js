@@ -1,12 +1,11 @@
 var music = require("../models/music");
 
-module.exports.get = function(req, callback) {
+module.exports.get = function(req, query, callback) {
     "use strict";
 
     switch (req.parsedPath.length) {
-        case 3:
-            // TODO: This is a workaround until we can get the querystring parameters from Rendr's server sync.  See https://github.com/rendrjs/rendr/pull/392 for the upcoming fix.
-            music.getCommentsByUrl("/" + req.parsedPath[0] + "/" + req.parsedPath[1] + "/" + req.parsedPath[2], function(err, comments) {
+        case 0:
+            music.getCommentsByUrl(query.url, function(err, comments) {
                 if (err) {
                     req.res.status(err.status);
                     callback(err);
@@ -21,7 +20,7 @@ module.exports.get = function(req, callback) {
     callback({error: "API not found."});
 };
 
-module.exports.post = function(req, callback) {
+module.exports.post = function(req, query, callback) {
     "use strict";
 
     var userId = req.session.user ? req.session.user.id : 0;

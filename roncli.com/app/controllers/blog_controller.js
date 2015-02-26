@@ -80,7 +80,7 @@ module.exports = {
         var app = this.app;
 
         app.fetch({
-            blog: {model: "Blog_GetFromUrl", params: {url: params[0]}},
+            blog: {model: "Blog_GetFromUrl", params: {url: "/" + params[0]}},
             categories: {collection: "BlogCategories", params: {}}
         }, function(err, result) {
             var post, content;
