@@ -2,7 +2,7 @@ module.exports = {
     /**
      * The default view.
      * @param {object} params The parameters to use in the controller.
-     * @param {function((null | object), object=)} callback The callback to run upon completion of the controller running.
+     * @param {function} callback The callback to run upon completion of the controller running.
      */
     index: function(params, callback) {
         "use strict";
@@ -21,15 +21,17 @@ module.exports = {
             }
 
             if (err) {
-                result = {error: true};
                 if (err.status) {
                     // This is a known error.
                     if (app && app.req && app.req.res) {
                         app.req.res.status(err.status);
                     }
 
-                    result["status" + err.status] = true;
-                    callback(null, result);
+                    if (err.status === 404) {
+                        callback(null, "error/404", result);
+                    } else {
+                        callback(null, "error/other", result);
+                    }
                     return;
                 }
 
@@ -37,12 +39,11 @@ module.exports = {
                 if (app && app.req && app.req.res) {
                     app.req.res.status(500);
                 }
-                callback(null, result);
+                callback(null, "error/other", result);
                 return;
             }
 
             // This matched a page.
-            result.error = false;
             if (app.req) {
                 page = result.page.get("page");
                 content = page.content.replace("\n", " ").replace("\r", " ").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
@@ -68,7 +69,7 @@ module.exports = {
                 };
             }
 
-            callback(err, result);
+            callback(err, "page/index", result);
         });
     }
 };

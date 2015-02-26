@@ -82,7 +82,7 @@ module.exports = {
         app.fetch({
             page: {model: "PageOptional", params: {url: "/" + params[0]}},
             song: {model: "Song_GetFromUrl", params: {url: "/" + params[0]}}
-        }, function(err, result) {
+        }, function(err, result) {console.log(app);
             var content;
 
             if (app.req) {
