@@ -2,7 +2,7 @@ var moment = require("moment"),
     user = require("../models/user.js"),
     handleError = require("../handleError");
 
-module.exports.get = function(req, callback) {
+module.exports.get = function(req, query, callback) {
     "use strict";
 
     var userId = req.session.user ? req.session.user.id : 0;
@@ -67,7 +67,7 @@ module.exports.get = function(req, callback) {
     callback({error: "API not found."});
 };
 
-module.exports.post = function(req, callback) {
+module.exports.post = function(req, query, callback) {
     "use strict";
 
     var userId = req.session.user ? req.session.user.id : 0;

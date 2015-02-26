@@ -1,6 +1,6 @@
 var captcha = require("../models/captcha");
 
-module.exports.post = function(req, callback) {
+module.exports.post = function(req, query, callback) {
     "use strict";
 
     switch (req.parsedPath.length) {
