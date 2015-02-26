@@ -141,6 +141,11 @@ The following should be the contents of privateConfig.js:
 Version History
 ===============
 
+0.4
+---
+
+This version implements the music section, which links to SoundCloud.  Included are comments, RSS feeds for the music and each individual tag, and an administration section.  Music pages also double as HTML pages, meaning that if you create a page with the same URL as a music page, that HTML will display on the page along with the music.
+
 0.3.1
 -----
 
@@ -168,11 +173,6 @@ This version introduces the bare bones of the website, including the layout, Twi
 
 Planned Versions
 ================
-
-0.4
----
-
-* Implement Music section.
 
 0.5
 ---
