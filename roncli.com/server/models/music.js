@@ -211,22 +211,35 @@ module.exports.getSongByUrl = function(url, callback) {
 
     /**
      * Retrieves song data.
-     * TODO: Handle when the song hasn't been cached.
      * @param {object} song The song object.
      */
     var getSong = function(song) {
-            cache.get("roncli.com:" + song.trackSource + ":track:" + song.id, function(track) {
-                if (track) {
-                    callback(null, track);
+        cache.get("roncli.com:" + song.trackSource + ":track:" + song.id, function(track) {
+            if (track) {
+                callback(null, track);
+                return;
+            }
+
+            soundcloud.cacheTracks(true, function(err) {
+                if (err) {
+                    callback(err);
                     return;
                 }
 
-                callback({
-                    error: "Page not found.",
-                    status: 404
+                cache.get("roncli.com:" + song.trackSource + ":track:" + song.id, function(track) {
+                    if (track) {
+                        callback(null, track);
+                        return;
+                    }
+
+                    callback({
+                        error: "Page not found.",
+                        status: 404
+                    });
                 });
             });
-        };
+        });
+    };
 
     getSongFromUrl(url, getSong, function() {
         soundcloud.cacheTracks(false, function(err) {

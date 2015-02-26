@@ -348,7 +348,7 @@ module.exports.post = function(id, callback) {
         }
 
         blog.posts({id: id}, function(err, posts) {
-            var post;
+            var blogPost;
 
             if (err || !posts || !posts.posts || !posts.posts[0]) {
                 console.log("Bad response from Tumblr.");
@@ -360,11 +360,11 @@ module.exports.post = function(id, callback) {
                 return;
             }
 
-            post = posts.posts[0];
+            blogPost = posts.posts[0];
 
-            cache.set("roncli.com:tumblr:post:" + id, post, 86400);
+            cache.set("roncli.com:tumblr:post:" + id, blogPost, 86400);
 
-            callback(null, post);
+            callback(null, blogPost);
         });
     });
 };
