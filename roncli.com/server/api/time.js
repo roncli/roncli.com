@@ -1,5 +1,5 @@
 module.exports = {
-    get: function(req, callback) {
+    get: function(req, query, callback) {
         "use strict";
 
         // Return the time.

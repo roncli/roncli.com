@@ -1,7 +1,7 @@
 var tweet = require("../models/tweet"),
     handleError = require("../handleError");
 
-module.exports.get = function(req, callback) {
+module.exports.get = function(req, query, callback) {
     "use strict";
 
     tweet.getTweets(function(err, data) {

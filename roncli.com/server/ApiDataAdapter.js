@@ -70,7 +70,7 @@ ApiDataAdapter.prototype.request = function(req, api, options, callback) {
                 });
 
                 d.run(function() {
-                    script[method](req, function(json) {
+                    script[method](req, api.query, function(json) {
                         callback(null, req.res, json);
                     });
                 });
