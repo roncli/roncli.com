@@ -257,6 +257,13 @@ module.exports.cacheEvents = function(force, callback) {
     });
 };
 
+/**
+ * Ensures that a repository is cached.
+ * @param {string} user The user of the repository to cache.
+ * @param {string} repository The repository to cache.
+ * @param {boolean} force Forces the caching of the repository.
+ * @param {function} callback The callback function.
+ */
 module.exports.cacheRepository = function(user, repository, force, callback) {
     "use strict";
 

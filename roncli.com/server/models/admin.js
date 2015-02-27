@@ -3,6 +3,7 @@ var User = require("./user"),
     blog = require("../models/blog"),
     page = require("../models/page"),
     music = require("../models/music"),
+    coding = require("../models/coding"),
     cache = require("../cache/cache"),
     promise = require("promised-io/promise"),
     Deferred = promise.Deferred,
@@ -1321,3 +1322,49 @@ module.exports.rejectSongComment = function(userId, commentId, callback) {
         );
     });
 };
+
+/**
+ * Clears the coding caches.
+ * @param {number} userId The user ID of the moderator.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.clearCodingCaches = function(userId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        var deferred;
+
+        if (err) {
+            callback({
+                error: "There was a database error while clearing coding caches.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        deferred = new Deferred();
+
+        cache.keys("roncli.com:github:*", function(keys) {
+            if (keys.length > 0) {
+                cache.del(keys, function() {
+                    deferred.resolve();
+                });
+            } else {
+                deferred.resolve();
+            }
+        });
+
+        deferred.promise.then(function() {
+            coding.forceCacheEvents(callback);
+        });
+    });
+};
+

@@ -275,6 +275,22 @@ module.exports.post = function(req, query, callback) {
                             return;
                     }
                     break;
+                case "coding":
+                    switch (req.parsedPath[1]) {
+                        case "clear-caches":
+                            admin.clearCodingCaches(userId, function(err) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                    }
+                    break;
             }
             break;
     }
