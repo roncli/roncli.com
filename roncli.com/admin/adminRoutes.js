@@ -19,4 +19,7 @@ module.exports = function(app) {
 
     // The music admin page.
     app.router.route(/^\/?admin\/music$/, "admin#music");
+
+    // The coding admin page.
+    app.router.route(/^\/?admin\/coding$/, "admin#coding");
 };

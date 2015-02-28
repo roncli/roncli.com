@@ -191,7 +191,6 @@ module.exports = BaseView.extend({
                 var list = $("#song-comment-server-error-list"),
                     message;
 
-                console.log(xhr, error);
                 if (error && error.body && error.body.error) {
                     message = error.body.error;
                 } else {

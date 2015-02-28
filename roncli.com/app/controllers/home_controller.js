@@ -16,8 +16,6 @@ module.exports = {
             songs: {collection: "Song_GetLatest", params: {count: 3}},
             classics: {collection: "Song_GetLatestByTag", params: {tag: "Classic", count:3}}
         }, function(err, result) {
-            console.log(err);
-            console.log(result.classics);
             if (!err && result && result.blog && result.blog.attributes && result.blog.attributes.error) {
                 err = result.blog.attributes;
             }
