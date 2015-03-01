@@ -12,23 +12,62 @@
                     <div class="panel-heading panel-title text-center"><h3>Music</h3></div>
                 </a>
                 <div class="body">
-                    <div class="text-center" style="border-bottom: 5px;"><h4>Latest</h4></div>
-                    {{#each songs.models}}
-                        <div style="height: 22px;">
-                            <div class="pull-right">
-                                <button class="btn btn-xs btn-primary add-to-media-player" style="font-size: 12px;" data-source="soundcloud" data-url="{{attributes.audioUrl}}"><span class="glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-music"></span></button>
+                    <div class="text-center"><h4>Latest</h4></div>
+                    <div class="div-table">
+                        {{#each songs.models}}
+                            <div>
+                                <div style="padding-bottom: 2px;">
+                                    <a href="{{attributes.url}}">{{attributes.title}}</a>
+                                </div>
+                                <div style="padding: 0 0 2px 5px; width: 1px;">
+                                <button class="btn btn-xs btn-primary add-to-media-player" style="font-size: 12px; white-space: nowrap;" data-source="soundcloud" data-url="{{attributes.audioUrl}}"><span class="glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-music"></span></button>
+                                </div>
                             </div>
-                            <a href="{{attributes.url}}">{{attributes.title}}</a>
-                        </div>
-                    {{/each}}
+                        {{/each}}
+                    </div>
                     <br />
-                    <div class="text-center" style="border-bottom: 5px;"><a href="/music/tag/Classic"><h4>Classics</h4></a></div>
-                    {{#each classics.models}}
-                        <div style="height: 22px;">
-                            <div class="pull-right">
-                                <button class="btn btn-xs btn-primary add-to-media-player" style="font-size: 12px;" data-source="soundcloud" data-url="{{attributes.audioUrl}}"><span class="glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-music"></span></button>
+                    <div class="text-center"><a href="/music/tag/Classic"><h4>Classics</h4></a></div>
+                    <div class="div-table">
+                        {{#each classics.models}}
+                            <div>
+                                <div style="padding-bottom: 2px;">
+                                    <a href="{{attributes.url}}">{{attributes.title}}</a>
+                                </div>
+                                <div style="padding: 0 0 2px 5px; width: 1px;">
+                                    <button class="btn btn-xs btn-primary add-to-media-player" style="font-size: 12px; white-space: nowrap;" data-source="soundcloud" data-url="{{attributes.audioUrl}}"><span class="glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-music"></span></button>
+                                </div>
                             </div>
-                            <a href="{{attributes.url}}">{{attributes.title}}</a>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="btn-group-vertical home-panel">
+                <a class="btn btn-info" href="/coding">
+                    <div class="panel-heading panel-title text-center"><h3>Coding</h3></div>
+                </a>
+                <div class="body">
+                    <div class="text-center"><h4>Recent GitHub Activity</h4></div>
+                    {{#each codingEvents.models}}
+                        <div class="div-table" style="margin-bottom: 2px;">
+                            <div>
+                                <div>
+                                    <div style="display: table; table-layout: fixed; width: 100%;">
+                                        <span style="display: table-cell; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.1;">
+                                            {{#ifCond attributes.type "===" "push"}}
+                                                {{attributes.message}}
+                                            {{/ifCond}}
+                                            {{#ifCond attributes.type "===" "release"}}
+                                                Released {{attributes.release}}
+                                            {{/ifCond}}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div style="padding-left: 5px; width: 1px; white-space: nowrap;">
+                                    <a href="/github/{{attributes.repository}}">{{attributes.repository}}</a>
+                                </div>
+                            </div>
                         </div>
                     {{/each}}
                 </div>

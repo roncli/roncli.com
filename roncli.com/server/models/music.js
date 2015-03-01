@@ -47,8 +47,8 @@ module.exports.getLatestSongs = function(count, callback) {
     "use strict";
 
     /**
-     * Retrieves songs from
-     * @param failureCallback
+     * Retrieves songs from the cache.
+     * @param {function} failureCallback The failure callback when there are no songs.
      */
     var getSongs = function(failureCallback) {
         cache.zrevrange("roncli.com:soundcloud:tracks", 0, count - 1, function(songs) {
@@ -88,8 +88,8 @@ module.exports.getLatestSongsByTag = function(tag, count, callback) {
     "use strict";
 
     /**
-     * Retrieves songs from
-     * @param failureCallback
+     * Retrieves songs for the tag from the cache.
+     * @param {function} failureCallback The failure callback when there are no songs.
      */
     var getSongs = function(failureCallback) {
         cache.zrevrange("roncli.com:soundcloud:tag:" + tag, 0, count - 1, function(songs) {

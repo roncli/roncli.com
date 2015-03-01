@@ -14,7 +14,8 @@ module.exports = {
         app.fetch({
             blog: {model: "Blog_GetLatest", params: {}},
             songs: {collection: "Song_GetLatest", params: {count: 3}},
-            classics: {collection: "Song_GetLatestByTag", params: {tag: "Classic", count:3}}
+            classics: {collection: "Song_GetLatestByTag", params: {tag: "Classic", count:3}},
+            codingEvents: {collection: "Event_GetLatest", params: {count: 4}}
         }, function(err, result) {
             if (!err && result && result.blog && result.blog.attributes && result.blog.attributes.error) {
                 err = result.blog.attributes;
@@ -26,6 +27,10 @@ module.exports = {
 
             if (!err && result && result.classics && result.classics.models && result.classics.models[0] && result.classics.models[0].attributes && result.classics.models[0].attributes.error) {
                 err = result.classics.models[0].attributes;
+            }
+
+            if (!err && result && result.codingEvents && result.codingEvents.models && result.codingEvents.models[0] && result.codingEvents.models[0].attributes && result.codingEvents.models[0].attributes.error) {
+                err = result.codingEvents.models[0].attributes;
             }
 
             if (err) {

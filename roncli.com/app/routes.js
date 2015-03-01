@@ -36,6 +36,9 @@ module.exports = function(match) {
     // Specific music pages.
     match(/^\/?((?:soundcloud)\/[0-9]+\/[^\/]+)$/, "music#url");
 
+    // The coding page.
+    match(/^\/?coding$/, "coding#index");
+
     // The default route if none of the above match.
     match(/\/?(.*)/, "default#index");
 };

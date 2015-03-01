@@ -3,7 +3,7 @@ var Song = require("../models/song"),
 
 module.exports = Collection.extend({
     model: Song,
-    url: "/song/get-latest"
+    url: "/event/get-latest"
 });
 
-module.exports.id = "Song_GetLatest";
+module.exports.id = "Event_GetLatest";
