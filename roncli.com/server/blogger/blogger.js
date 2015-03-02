@@ -1,7 +1,7 @@
 var config = require("../privateConfig").google,
     google = require("googleapis"),
     blogger = google.blogger("v3"),
-    cache = require("../cache/cache.js"),
+    cache = require("../cache/cache"),
     promise = require("promised-io/promise"),
     Deferred = promise.Deferred,
     all = promise.all,

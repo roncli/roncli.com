@@ -1,6 +1,6 @@
 var config = require("../privateConfig").soundcloud,
     soundcloud = require("node-soundcloud"),
-    cache = require("../cache/cache.js"),
+    cache = require("../cache/cache"),
     promise = require("promised-io/promise"),
     Deferred = promise.Deferred,
     all = promise.all,

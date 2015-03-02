@@ -48,6 +48,11 @@
                     <div class="panel-heading panel-title text-center"><h3>Coding</h3></div>
                 </a>
                 <div class="body">
+                    <div class="text-center"><h4>Featured Projects</h4></div>
+                    {{#each projects.models}}
+                        <a href="{{attributes.url}}">{{attributes.title}}</a><br />
+                    {{/each}}
+                    <br />
                     <div class="text-center"><h4>Recent GitHub Activity</h4></div>
                     {{#each codingEvents.models}}
                         <div class="div-table" style="margin-bottom: 2px;">

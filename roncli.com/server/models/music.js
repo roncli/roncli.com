@@ -275,6 +275,7 @@ module.exports.getCommentsByUrl = function(url, callback) {
             {url: {type: db.VARCHAR(1024), value: url}},
             function(err, data) {
                 var comments;
+
                 if (err) {
                     console.log("Database error in music.getCommentsByUrl.");
                     console.log(err);

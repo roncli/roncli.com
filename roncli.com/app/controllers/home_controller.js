@@ -15,7 +15,8 @@ module.exports = {
             blog: {model: "Blog_GetLatest", params: {}},
             songs: {collection: "Song_GetLatest", params: {count: 3}},
             classics: {collection: "Song_GetLatestByTag", params: {tag: "Classic", count:3}},
-            codingEvents: {collection: "Event_GetLatest", params: {count: 4}}
+            codingEvents: {collection: "Event_GetLatest", params: {count: 4}},
+            projects: {collection: "Project_GetFeatured", params: {count: 3}}
         }, function(err, result) {
             if (!err && result && result.blog && result.blog.attributes && result.blog.attributes.error) {
                 err = result.blog.attributes;
@@ -31,6 +32,10 @@ module.exports = {
 
             if (!err && result && result.codingEvents && result.codingEvents.models && result.codingEvents.models[0] && result.codingEvents.models[0].attributes && result.codingEvents.models[0].attributes.error) {
                 err = result.codingEvents.models[0].attributes;
+            }
+
+            if (!err && result && result.projects && result.projects.models && result.projects.models[0] && result.projects.models[0].attributes && result.projects.models[0].attributes.error) {
+                err = result.projects.models[0].attributes;
             }
 
             if (err) {

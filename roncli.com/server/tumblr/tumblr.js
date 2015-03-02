@@ -1,7 +1,7 @@
 var config = require("../privateConfig").tumblr,
     tumblr = require("tumblr"),
     blog = new tumblr.Blog("roncli.tumblr.com", config),
-    cache = require("../cache/cache.js"),
+    cache = require("../cache/cache"),
     promise = require("promised-io/promise"),
     Deferred = promise.Deferred,
     all = promise.all,
