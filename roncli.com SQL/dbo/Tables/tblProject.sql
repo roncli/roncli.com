@@ -1,7 +1,8 @@
 ﻿CREATE TABLE [dbo].[tblProject] (
     [ProjectID]   INT           IDENTITY (1, 1) NOT NULL,
     [Title]       VARCHAR (255) NOT NULL,
-    [URL]         VARCHAR (1024) NULL,
+    [URL]         VARCHAR (1024) NOT NULL,
+    [ProjectURL]  VARCHAR (1024) NULL,
     [User]        VARCHAR (50)  NULL,
     [Repository]  VARCHAR (50)  NULL,
     [Description] TEXT          NOT NULL,
