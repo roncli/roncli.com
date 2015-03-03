@@ -85,6 +85,21 @@ module.exports.get = function(req, query, callback) {
                             return;
                     }
                     break;
+                case "coding":
+                    switch (req.parsedPath[1]) {
+                        case "projects":
+                            admin.getProjects(userId, function(err, projects) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                callback(projects);
+                            });
+                            return;
+                    }
+                    break;
             }
             break;
     }
@@ -279,6 +294,18 @@ module.exports.post = function(req, query, callback) {
                     switch (req.parsedPath[1]) {
                         case "clear-caches":
                             admin.clearCodingCaches(userId, function(err) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                        case "add-project":
+                            admin.addProject(userId, req.body.url, req.body.title, req.body.projectUrl, req.body.user, req.body.repository, req.body.description, function(err) {
                                 if (err) {
                                     req.res.status(err.status);
                                     callback(err);

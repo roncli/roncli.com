@@ -22,4 +22,7 @@ module.exports = function(app) {
 
     // The coding admin page.
     app.router.route(/^\/?admin\/coding$/, "admin#coding");
+
+    // The project admin page.
+    app.router.route(/^\/?admin\/project(\/.*)$/, "admin#project");
 };

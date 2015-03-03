@@ -4,6 +4,16 @@ module.exports.get = function(req, query, callback) {
     "use strict";
 
     switch (req.parsedPath.length) {
+        case 0:
+            coding.getProjects(function(err, projects) {
+                if (err) {
+                    req.res.status(err.status);
+                    callback(err);
+                    return;
+                }
+                callback(projects);
+            });
+            return;
         case 1:
             switch (req.parsedPath[0]) {
                 case "get-featured":

@@ -1,8 +1,8 @@
-var Song = require("../models/song"),
+var Project = require("../models/project"),
     Collection = require("./base");
 
 module.exports = Collection.extend({
-    model: Song,
+    model: Project,
     url: "/project/get-featured"
 });
 

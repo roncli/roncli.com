@@ -28,7 +28,8 @@ module.exports = BaseView.extend({
     deletePage: function(ev) {
         "use strict";
 
-        var app = this.app,
+        var view = this,
+            app = this.app,
             deleteButton = $(ev.target),
             pageId = deleteButton.closest(".page-container").data("id"),
             admin = new Admin();
@@ -60,12 +61,7 @@ module.exports = BaseView.extend({
                                     message = "There was a server error deleting the page.  Please try again later.";
                                 }
 
-                                bootbox.dialog({
-                                    title: "Error",
-                                    message: app.templateAdapter.getTemplate("admin/error")({message: message}),
-                                    buttons: {ok: {label: "OK"}},
-                                    show: false
-                                }).off("shown.bs.modal").modal("show");
+                                view.showError(message);
 
                                 deleteButton.prop("disabled", false);
                             }
@@ -81,7 +77,7 @@ module.exports = BaseView.extend({
     movePage: function() {
         "use strict";
 
-        var app = this.app,
+        var view = this,
             movePage = $("#move-page"),
             pageId = $("#move-page-list").val(),
             admin = new Admin();
@@ -112,12 +108,7 @@ module.exports = BaseView.extend({
                     message = "There was a server error moving the page.  Please try again later.";
                 }
 
-                bootbox.dialog({
-                    title: "Error",
-                    message: app.templateAdapter.getTemplate("admin/error")({message: message}),
-                    buttons: {ok: {label: "OK"}},
-                    show: false
-                }).off("shown.bs.modal").modal("show");
+                view.showError(message);
 
                 movePage.prop("disabled", false);
             }
@@ -130,13 +121,7 @@ module.exports = BaseView.extend({
         var url = $("#add-page-url").val();
 
         if (url.length <= 1 || url.substring(0, 1) !== "/") {
-            bootbox.dialog({
-                title: "Error",
-                message: this.app.templateAdapter.getTemplate("admin/error")({message: "You must enter a valid URL."}),
-                buttons: {ok: {label: "OK"}},
-                show: false
-            }).off("shown.bs.modal").modal("show");
-
+            this.showError("You must enter a valid URL.");
             return;
         }
 
@@ -172,6 +157,7 @@ module.exports = BaseView.extend({
         var approveButton = commentPost.find(".approve-comment"),
             rejectButton = commentPost.find(".reject-comment"),
             admin = new Admin(),
+            view = this,
             app = this.app;
 
         approveButton.prop("disabled", true);
@@ -196,12 +182,7 @@ module.exports = BaseView.extend({
                     message = "There was a server error processing your registration.  Please try again later.";
                 }
 
-                bootbox.dialog({
-                    title: "Error",
-                    message: app.templateAdapter.getTemplate("admin/error")({message: message}),
-                    buttons: {ok: {label: "OK"}},
-                    show: false
-                }).off("shown.bs.modal").modal("show");
+                view.showError(message);
 
                 approveButton.prop("disabled", false);
                 rejectButton.prop("disabled", false);

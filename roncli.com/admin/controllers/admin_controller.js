@@ -147,6 +147,21 @@ module.exports = {
     coding: function(params, callback) {
         "use strict";
 
-        callback();
+        var app = this.app;
+
+        app.fetch({
+            projects: {collection: "Admin_Projects", params: {}}
+        }, {readFromCache: false, writeToCache: false}, function(err, result) {
+            if (!err && result && result.projects && result.projects.models && result.projects.models[0] && result.projects.models[0].attributes && result.projects.models[0].attributes.error) {
+                err = result.projects.models[0].attributes;
+            }
+
+            if (err) {
+                handleServerError(err, app, result, callback);
+                return;
+            }
+
+            callback(err, result);
+        });
     }
 };

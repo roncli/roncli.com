@@ -601,7 +601,13 @@ module.exports = BaseApp.extend({
 
         // Handle link buttons.
         body.on("click", "button.link", function() {
-            app.router.navigate($(this).data("href"), {trigger: true});
+            var href = $(this).data("href");
+
+            if (/^http(s):\/\//.test(href)) {
+                window.location.href = href;
+            } else {
+                app.router.navigate(href, {trigger: true});
+            }
         });
 
         // Show media player trigger.

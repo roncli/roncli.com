@@ -101,3 +101,70 @@ module.exports.getFeaturedProjects = function(count, callback) {
         );
     });
 };
+
+/**
+ * Gets the projects.
+ * @param {function} callback The callback function.
+ */
+module.exports.getProjectList = function(callback) {
+    "use strict";
+
+    db.query(
+        "SELECT ProjectID, Title, URL, Description FROM tblProject ORDER BY Title",
+        {},
+        function(err, data) {
+            var projects;
+
+            if (err) {
+                console.log("Database error in coding.getProjects.");
+                console.log(err);
+                callback({
+                    error: "There was a database error retrieving projects.  Please reload the page and try again.",
+                    status: 500
+                });
+                return;
+            }
+
+            if (!data || !data[0]) {
+                callback(null, []);
+            }
+
+            callback(null, data[0].map(function(project) {
+                return {
+                    id: project.ProjectID,
+                    title: project.Title,
+                    url: project.URL,
+                    description: project.Description
+                };
+            }));
+        }
+    );
+};
+
+/**
+ * Gets the projects, retrieving from the cache first if they exist.
+ * @param {function} callback The callback function.
+ */
+module.exports.getProjects = function(callback) {
+    "use strict";
+
+    var coding = this;
+
+    cache.get("roncli.com:projects", function(cachedProjects) {
+        if (cachedProjects) {
+            callback(null, cachedProjects);
+            return;
+        }
+
+        coding.getProjectList(function(err, projects) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            cache.set("roncli.com:projects", projects, 3600);
+
+            callback(null, projects);
+        });
+    });
+};

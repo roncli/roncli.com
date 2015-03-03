@@ -219,6 +219,7 @@ module.exports.approveBlogComment = function(userId, commentId, callback) {
             function(err) {
                 if (err) {
                     console.log("Database error in admin.approveBlogComment.");
+                    console.log(err);
                     callback({
                         error: "There was a database error while approving a blog comment.  Please reload the page and try again.",
                         status: 500
@@ -264,6 +265,7 @@ module.exports.rejectBlogComment = function(userId, commentId, callback) {
             function(err) {
                 if (err) {
                     console.log("Database error in admin.approveBlogComment.");
+                    console.log(err);
                     callback({
                         error: "There was a database error while rejecting a blog comment.  Please reload the page and try again.",
                         status: 500
@@ -1068,6 +1070,7 @@ module.exports.approvePageComment = function(userId, commentId, callback) {
             function(err) {
                 if (err) {
                     console.log("Database error in admin.approvePageComment.");
+                    console.log(err);
                     callback({
                         error: "There was a database error while approving a page comment.  Please reload the page and try again.",
                         status: 500
@@ -1113,6 +1116,7 @@ module.exports.rejectPageComment = function(userId, commentId, callback) {
             function(err) {
                 if (err) {
                     console.log("Database error in admin.approvePageComment.");
+                    console.log(err);
                     callback({
                         error: "There was a database error while rejecting a page comment.  Please reload the page and try again.",
                         status: 500
@@ -1265,6 +1269,7 @@ module.exports.approveSongComment = function(userId, commentId, callback) {
             function(err) {
                 if (err) {
                     console.log("Database error in admin.approveSongComment.");
+                    console.log(err);
                     callback({
                         error: "There was a database error while approving a song comment.  Please reload the page and try again.",
                         status: 500
@@ -1310,6 +1315,7 @@ module.exports.rejectSongComment = function(userId, commentId, callback) {
             function(err) {
                 if (err) {
                     console.log("Database error in admin.approveSongComment.");
+                    console.log(err);
                     callback({
                         error: "There was a database error while rejecting a song comment.  Please reload the page and try again.",
                         status: 500
@@ -1368,3 +1374,104 @@ module.exports.clearCodingCaches = function(userId, callback) {
     });
 };
 
+/**
+ * Gets the projects.
+ * @param {number} userId The user ID of the moderator.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.getProjects = function(userId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while clearing coding caches.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        coding.getProjectList(function(err, projects) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            callback(null, projects);
+        });
+    });
+};
+
+/**
+ * Adds a project.
+ * @param {number} userId The user ID of the moderator.
+ * @param {string} url The URL of the project on the site.
+ * @param {string} title The title of the project.
+ * @param {string} projectUrl The URL of the project's official project page.
+ * @param {string} user The GitHub username.
+ * @param {string} repository The GitHub repository.
+ * @param {string} description The description of the project.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.addProject = function(userId, url, title, projectUrl, user, repository, description, callback) {
+    "use strict";
+
+    // Ensure the project doesn't already exist.
+    db.query(
+        "SELECT COUNT(ProjectID) Projects FROM tblProject WHERE URL = @url",
+        {url: {type: db.VARCHAR(1024), value: url}},
+        function(err, data) {
+            if (err) {
+                console.log("Database error checking if project exists in admin.addProject.");
+                console.log(err);
+                callback({
+                    error: "There was a database error while adding a project.  Please reload the page and try again.",
+                    status: 500
+                });
+                return;
+            }
+
+            if (data && data[0] && data[0][0] && data[0][0].Projects > 0) {
+                callback({
+                    error: "Project URL already exists.",
+                    status: 400
+                });
+                return;
+            }
+
+            // Add the project.
+            db.query(
+                "INSERT INTO tblProject (URL, Title, ProjectURL, [User], Repository, Description) VALUES (@url, @title, @projectUrl, @user, @repository, @description)",
+                {
+                    url: {type: db.VARCHAR(1024), value: url},
+                    title: {type: db.VARCHAR(255), value: title},
+                    projectUrl: {type: db.VARCHAR(1024), value: projectUrl},
+                    user: {type: db.VARCHAR(50), value: user},
+                    repository: {type: db.VARCHAR(50), value: repository},
+                    description: {type: db.TEXT, value: description}
+                },
+                function(err) {
+                    if (err) {
+                        console.log("Database error adding a project in admin.addProject.");
+                        console.log(err);
+                        callback({
+                            error: "There was a database error while adding a project.  Please reload the page and try again.",
+                            status: 500
+                        });
+                        return;
+                    }
+
+                    callback();
+                }
+            );
+        }
+    );
+};

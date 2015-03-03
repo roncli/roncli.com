@@ -13,6 +13,57 @@
             <button id="clear-caches" class="btn btn-lg btn-primary"><span class="glyphicon glyphicon-trash"></span> Clear Caches</button>
         </div>
     </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading text-center"><h3>Projects</h3></div>
+        <div class="panel-body text-center">
+            From here, you can add, edit, and remove projects from the database.<br /><br />
+            {{#each projects.models}}
+                <div data-id="{{attributes.id}}" class="navbar navbar-default project-container" style="background-color: #eeeeee; border: solid 1px #cccccc;">
+                    <div class="container-fluid">
+                        <div class="navbar-left" style="margin-right: 20px;">
+                            <ul class="nav navbar-nav">
+                                <li class="navbar-text" style="font-size: 20px; padding: 10px 0; color: #000000;">{{attributes.title}}</li>
+                            </ul>
+                        </div>
+                        <div class="navbar-right" style="margin-right: 0;">
+                            <ul class="nav">
+                                <li>
+                                    <button class="btn btn-primary link navbar-btn edit-project" style="margin-right: 20px;" data-href="/admin/project{{{attributes.url}}}"><span class="glyphicon glyphicon-pencil"></span> Edit</button>
+                                    <button class="btn btn-danger navbar-btn delete-project"><span class="glyphicon glyphicon-trash"></span> Delete</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {{/each}}
+        </div>
+    </div>
+    <div class="panel panel-primary">
+        <div class="panel-heading text-center"><h3>Add Project</h3></div>
+        <div class="panel-body">
+            <div class="input-group">
+                <span class="input-group-addon">URL:</span>
+                <input id="project-url" type="text" maxlength="1024" class="form-control" placeholder="/your/url/here"/>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">Title:</span>
+                <input id="project-title" type="text" maxlength="255" class="form-control" placeholder="Project Title"/>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">Project URL:</span>
+                <input id="project-project-url" type="text" maxlength="1024" class="form-control" placeholder="http://url.to/project"/>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">GitHub URL:</span>
+                <input id="project-user" type="text" maxlength="50" class="form-control" placeholder="user"/>
+                <input id="project-repository" type="text" maxlength="50" class="form-control" placeholder="repository"/>
+            </div>
+            <div class="vertical-margin"><textarea style="width: 100%; height: 400px;" id="project-description"></textarea></div>
+            <div class="text-center">
+                <button type="button" id="project-save" class="btn btn-lg btn-primary"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="col-sm-2 hidden-xs right-side">
     <div class="panel panel-primary">

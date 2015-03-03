@@ -1,8 +1,8 @@
-var Song = require("../models/song"),
+var Event = require("../models/event"),
     Collection = require("./base");
 
 module.exports = Collection.extend({
-    model: Song,
+    model: Event,
     url: "/event/get-latest"
 });
 
