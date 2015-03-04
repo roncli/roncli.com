@@ -36,6 +36,17 @@ module.exports.get = function(req, query, callback) {
                         callback(pages);
                     });
                     return;
+                case "project":
+                    admin.getProjectByUrl(userId, query.url, function(err, data) {
+                        if (err) {
+                            req.res.status(err.status);
+                            callback(err);
+                            return;
+                        }
+
+                        callback(data);
+                    });
+                    return;
             }
             break;
         case 2:
@@ -318,6 +329,18 @@ module.exports.post = function(req, query, callback) {
                             return;
                         case "delete-project":
                             admin.deleteProject(userId, req.body.projectId, function(err) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                        case "update-project":
+                            admin.updateProject(userId, req.body.projectId, req.body.url, req.body.title, req.body.projectUrl, req.body.user, req.body.repository, req.body.description, function(err) {
                                 if (err) {
                                     req.res.status(err.status);
                                     callback(err);

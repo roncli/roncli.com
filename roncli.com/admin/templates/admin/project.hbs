@@ -1,0 +1,43 @@
+<div class="col-xs-8">
+    <div class="panel panel-primary">
+        <div class="panel-heading text-center"><h3>Edit Project</h3></div>
+        <div class="panel-body">
+            <div class="input-group">
+                <span class="input-group-addon">URL:</span>
+                <input id="project-url" type="text" maxlength="1024" class="form-control" placeholder="/your/url/here" value="{{project.attributes.url}}"/>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">Title:</span>
+                <input id="project-title" type="text" maxlength="255" class="form-control" placeholder="Project Title" value="{{project.attributes.title}}"/>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">Project URL:</span>
+                <input id="project-project-url" type="text" maxlength="1024" class="form-control" placeholder="http://url.to/project" value="{{project.attributes.projectUrl}}"/>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">GitHub URL:</span>
+                <input id="project-user" type="text" maxlength="50" class="form-control" placeholder="user" value="{{project.attributes.user}}"/>
+                <input id="project-repository" type="text" maxlength="50" class="form-control" placeholder="repository" value="{{project.attributes.repository}}"/>
+            </div>
+            <div class="vertical-margin"><textarea style="width: 100%; height: 100px;" id="project-description">{{project.attributes.description}}</textarea></div>
+            <div class="text-center">
+                <button type="button" id="project-save" class="btn btn-lg btn-primary"><span class="glyphicon glyphicon-floppy-disk"></span> Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-sm-2 hidden-xs right-side">
+    <div class="panel panel-primary">
+        <div class="panel-heading panel-heading-small text-center">Site Administration</div>
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li><a href="/admin">Admin</a></li>
+            <li><a href="/admin/coding">Coding</a></li>
+            <li class="active">{{project.attributes.title}}</li>
+        </ol>
+        <div class="panel-body">
+            Update projects from GitHub.<br/><br/>
+            Please keep in mind that you cannot navigate directly to the URL of this page, nor may you bookmark this page. You must access this page via the Admin menu.
+        </div>
+    </div>
+</div>

@@ -1,8 +1,8 @@
-var Comment = require("../models/admin__page_comment"),
+var Project = require("../models/admin__project"),
     Collection = require("app/collections/base");
 
 module.exports = Collection.extend({
-    model: Comment,
+    model: Project,
     url: "/admin/coding/projects"
 });
 

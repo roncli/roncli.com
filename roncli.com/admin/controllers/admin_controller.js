@@ -163,5 +163,31 @@ module.exports = {
 
             callback(err, result);
         });
+    },
+
+    /**
+     * The project admin view.
+     * @param {object} params The parameters to use in the controller.
+     * @param {function} callback The callback to run upon completion of the controller running.
+     */
+    project: function(params, callback) {
+        "use strict";
+
+        var app = this.app;
+
+        app.fetch({
+            project: {model: "Admin_Project", params: {url: params[0]}}
+        }, {readFromCache: false, writeToCache: false}, function(err, result) {
+            if (!err && result && result.projects && result.projects.models && result.projects.models[0] && result.projects.models[0].attributes && result.projects.models[0].attributes.error) {
+                err = result.projects.models[0].attributes;
+            }
+
+            if (err) {
+                handleServerError(err, app, result, callback);
+                return;
+            }
+
+            callback(err, result);
+        });
     }
 };

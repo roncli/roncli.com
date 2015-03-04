@@ -1424,56 +1424,74 @@ module.exports.getProjects = function(userId, callback) {
 module.exports.addProject = function(userId, url, title, projectUrl, user, repository, description, callback) {
     "use strict";
 
-    // Ensure the project doesn't already exist.
-    db.query(
-        "SELECT COUNT(ProjectID) Projects FROM tblProject WHERE URL = @url",
-        {url: {type: db.VARCHAR(1024), value: url}},
-        function(err, data) {
-            if (err) {
-                console.log("Database error checking if project exists in admin.addProject.");
-                console.log(err);
-                callback({
-                    error: "There was a database error while adding a project.  Please reload the page and try again.",
-                    status: 500
-                });
-                return;
-            }
-
-            if (data && data[0] && data[0][0] && data[0][0].Projects > 0) {
-                callback({
-                    error: "Project URL already exists.",
-                    status: 400
-                });
-                return;
-            }
-
-            // Add the project.
-            db.query(
-                "INSERT INTO tblProject (URL, Title, ProjectURL, [User], Repository, Description) VALUES (@url, @title, @projectUrl, @user, @repository, @description)",
-                {
-                    url: {type: db.VARCHAR(1024), value: url},
-                    title: {type: db.VARCHAR(255), value: title},
-                    projectUrl: {type: db.VARCHAR(1024), value: projectUrl},
-                    user: {type: db.VARCHAR(50), value: user},
-                    repository: {type: db.VARCHAR(50), value: repository},
-                    description: {type: db.TEXT, value: description}
-                },
-                function(err) {
-                    if (err) {
-                        console.log("Database error adding a project in admin.addProject.");
-                        console.log(err);
-                        callback({
-                            error: "There was a database error while adding a project.  Please reload the page and try again.",
-                            status: 500
-                        });
-                        return;
-                    }
-
-                    callback();
-                }
-            );
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while adding a project.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
         }
-    );
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        // Ensure the project doesn't already exist.
+        db.query(
+            "SELECT COUNT(ProjectID) Projects FROM tblProject WHERE URL = @url",
+            {url: {type: db.VARCHAR(1024), value: url}},
+            function(err, data) {
+                if (err) {
+                    console.log("Database error checking if project exists in admin.addProject.");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while adding a project.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                if (data && data[0] && data[0][0] && data[0][0].Projects > 0) {
+                    callback({
+                        error: "Project URL already exists.",
+                        status: 400
+                    });
+                    return;
+                }
+
+                // Add the project.
+                db.query(
+                    "INSERT INTO tblProject (URL, Title, ProjectURL, [User], Repository, Description) VALUES (@url, @title, @projectUrl, @user, @repository, @description)",
+                    {
+                        url: {type: db.VARCHAR(1024), value: url},
+                        title: {type: db.VARCHAR(255), value: title},
+                        projectUrl: {type: db.VARCHAR(1024), value: projectUrl},
+                        user: {type: db.VARCHAR(50), value: user},
+                        repository: {type: db.VARCHAR(50), value: repository},
+                        description: {type: db.TEXT, value: description}
+                    },
+                    function(err) {
+                        if (err) {
+                            console.log("Database error adding a project in admin.addProject.");
+                            console.log(err);
+                            callback({
+                                error: "There was a database error while adding a project.  Please reload the page and try again.",
+                                status: 500
+                            });
+                            return;
+                        }
+
+                        callback();
+                    }
+                );
+            }
+        );
+    });
 };
 
 /**
@@ -1517,6 +1535,169 @@ module.exports.deleteProject = function(userId, projectId, callback) {
                 }
 
                 callback();
+            }
+        );
+    });
+};
+
+/**
+ * Gets project data for a URL.
+ * @param {number} userId The user ID of the moderator.
+ * @param {string} url The URL of the project to get.
+ * @param {function(null, object)|function(object)} callback The callback function.
+ */
+module.exports.getProjectByUrl = function(userId, url, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error retrieving the project.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        db.query(
+            "SELECT ProjectID, URL, Title, ProjectURL, [User], Repository, Description FROM tblProject WHERE URL = @url",
+            {url: {type: db.VARCHAR(1024), value: url}},
+            function(err, data) {
+                if (err) {
+                    console.log("Database error in admin.getPageByUrl.");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error retrieving the project.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                if (!data || !data[0] || data[0].length === 0) {
+                    callback({
+                        error: "Project not found.",
+                        status: 404
+                    });
+                    return;
+                }
+
+                callback(null, {
+                    id: data[0][0].ProjectID,
+                    url: data[0][0].URL,
+                    title: data[0][0].Title,
+                    projectUrl: data[0][0].ProjectURL,
+                    user: data[0][0].User,
+                    repository: data[0][0].Repository,
+                    description: data[0][0].Description
+                });
+            }
+        );
+    });
+};
+
+/**
+ * Updates a project.
+ * @param {number} userId The user ID of the moderator.
+ * @param {number} projectId The project ID to update.
+ * @param {string} url The URL of the project on the site.
+ * @param {string} title The title of the project.
+ * @param {string} projectUrl The URL of the project's official project page.
+ * @param {string} user The GitHub username.
+ * @param {string} repository The GitHub repository.
+ * @param {string} description The description of the project.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.updateProject = function(userId, projectId, url, title, projectUrl, user, repository, description, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while updating a project.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        if (projectUrl.length === 0) {
+            projectUrl = null;
+        }
+
+        if (user.length === 0) {
+            user = null;
+        }
+
+        if (repository.length === 0) {
+            repository = null;
+        }
+
+        // Ensure the project doesn't already exist.
+        db.query(
+            "SELECT COUNT(ProjectID) Projects FROM tblProject WHERE URL = @url AND ProjectID <> @projectId",
+            {
+                url: {type: db.VARCHAR(1024), value: url},
+                projectId: {type: db.INT, value: projectId}
+            },
+            function(err, data) {
+                if (err) {
+                    console.log("Database error checking if project exists in admin.updateProject.");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while updating a project.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                if (data && data[0] && data[0][0] && data[0][0].Projects > 0) {
+                    callback({
+                        error: "Project URL already exists.",
+                        status: 400
+                    });
+                    return;
+                }
+
+                // Update the project.
+                db.query(
+                    "UPDATE tblProject SET URL = @url, Title = @title, ProjectURL = @projectUrl, [User] = @user, Repository = @repository, Description = @description WHERE ProjectID = @projectId",
+                    {
+                        url: {type: db.VARCHAR(1024), value: url},
+                        title: {type: db.VARCHAR(255), value: title},
+                        projectUrl: {type: db.VARCHAR(1024), value: projectUrl},
+                        user: {type: db.VARCHAR(50), value: user},
+                        repository: {type: db.VARCHAR(50), value: repository},
+                        description: {type: db.TEXT, value: description},
+                        projectId: {type: db.INT, value: projectId}
+                    },
+                    function(err) {
+                        if (err) {
+                            console.log("Database error updating a project in admin.updateProject.");
+                            console.log(err);
+                            callback({
+                                error: "There was a database error while updating a project.  Please reload the page and try again.",
+                                status: 500
+                            });
+                            return;
+                        }
+
+                        callback();
+                    }
+                );
             }
         );
     });
