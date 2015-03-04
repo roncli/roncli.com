@@ -11,7 +11,8 @@ module.exports = BaseView.extend({
 
     events: {
         "click button#clear-caches": "clearCaches",
-        "click button#project-save": "projectSave"
+        "click button#project-save": "projectSave",
+        "click button.delete-project": "deleteProject"
     },
 
     clearCaches: function() {
@@ -108,7 +109,7 @@ module.exports = BaseView.extend({
                 if (error && error.body && error.body.error) {
                     message = error.body.error;
                 } else {
-                    message = "There was a server error saving the page.  Please try again later.";
+                    message = "There was a server error saving the project.  Please try again later.";
                 }
 
                 view.showMessage(message);
@@ -116,6 +117,56 @@ module.exports = BaseView.extend({
                 projectSave.prop("disabled", false);
             }
         });
+    },
+
+    deleteProject: function(ev) {
+        "use strict";
+
+        var view = this,
+            app = this.app,
+            deleteButton = $(ev.target),
+            projectId = deleteButton.closest(".project-container").data("id"),
+            admin = new Admin();
+
+        bootbox.dialog({
+            title: "Delete Project",
+            message: app.templateAdapter.getTemplate("admin/coding/deleteConfirm")(),
+            buttons: {
+                yes: {
+                    label: "Yes",
+                    className: "btn-primary",
+                    callback: function() {
+                        deleteButton.prop("disabled", true);
+
+                        admin.fetch({
+                            url: "/admin/coding/delete-project",
+                            data: JSON.stringify({projectId: projectId}),
+                            type: "POST",
+                            contentType: "application/json",
+                            dataType: "json",
+                            success: function() {
+                                backbone.history.loadUrl(window.location.pathname);
+                            },
+                            error: function(xhr, error) {
+                                var message;
+                                if (error && error.body && error.body.error) {
+                                    message = error.body.error;
+                                } else {
+                                    message = "There was a server error deleting the project.  Please try again later.";
+                                }
+
+                                view.showError(message);
+
+                                deleteButton.prop("disabled", false);
+                            }
+                        });
+                    }
+                },
+                no: {label: "No"}
+            },
+            show: false
+        }).off("shown.bs.modal").modal("show");
+
     }
 });
 

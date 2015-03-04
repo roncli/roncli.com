@@ -316,6 +316,18 @@ module.exports.post = function(req, query, callback) {
                                 callback();
                             });
                             return;
+                        case "delete-project":
+                            admin.deleteProject(userId, req.body.projectId, function(err) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
                     }
                     break;
             }

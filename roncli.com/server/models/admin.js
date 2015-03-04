@@ -1385,7 +1385,7 @@ module.exports.getProjects = function(userId, callback) {
     User.getUserRoles(userId, function(err, roles) {
         if (err) {
             callback({
-                error: "There was a database error while clearing coding caches.  Please reload the page and try again.",
+                error: "There was a database error while getting projects.  Please reload the page and try again.",
                 status: 500
             });
             return;
@@ -1474,4 +1474,50 @@ module.exports.addProject = function(userId, url, title, projectUrl, user, repos
             );
         }
     );
+};
+
+/**
+ * Deletes a project.
+ * @param {number} userId The user ID of the moderator.
+ * @param {number} projectId The project ID.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.deleteProject = function(userId, projectId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while deleting a project.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        db.query(
+            "UPDATE tblProjectFeature SET [Order] = [Order] - 1 WHERE EXISTS(SELECT [Order] FROM tblProjectFeature WHERE ProjectID = @projectId) AND [Order] > (SELECT [Order] FROM tblProjectFeature WHERE ProjectID = @projectId); DELETE FROM tblProjectFeature WHERE ProjectID = @projectId; DELETE FROM tblProject WHERE ProjectID = @projectId",
+            {projectId: {type: db.INT, value: projectId}},
+            function(err) {
+                if (err) {
+                    console.log("Database error in admin.deleteProject.");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while deleting a project.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                callback();
+            }
+        );
+    });
 };
