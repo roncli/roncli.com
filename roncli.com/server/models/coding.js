@@ -54,11 +54,49 @@ module.exports.getLatestEvents = function(count, callback) {
 
 /**
  * Gets the featured projects.
+ * @param {function} callback The callback function.
+ */
+module.exports.getFeaturedProjectList = function(callback) {
+    "use strict";
+
+    db.query(
+        "SELECT p.ProjectID, p.Title, p.URL FROM tblProject p INNER JOIN tblProjectFeature pf ON p.ProjectID = pf.ProjectID ORDER BY pf.[Order]",
+        {},
+        function(err, data) {
+            if (err) {
+                console.log("Database error in coding.getFeaturedProjectList.");
+                console.log(err);
+                callback({
+                    error: "There was a database error retrieving featured projects.  Please reload the page and try again.",
+                    status: 500
+                });
+                return;
+            }
+
+            if (!data || !data[0]) {
+                callback(null, []);
+            }
+
+            callback(null, data[0].map(function(project) {
+                return {
+                    id: project.ProjectID,
+                    title: project.Title,
+                    url: project.URL
+                };
+            }));
+        }
+    );
+};
+
+/**
+ * Gets the featured projects.
  * @param {number} count The number of projects to return.
  * @param {function} callback The callback function.
  */
 module.exports.getFeaturedProjects = function(count, callback) {
     "use strict";
+
+    var coding = this;
 
     cache.get("roncli.com:projects:featured", function(cachedProjects) {
         if (cachedProjects) {
@@ -66,39 +104,16 @@ module.exports.getFeaturedProjects = function(count, callback) {
             return;
         }
 
-        db.query(
-            "SELECT p.ProjectID, p.Title, p.URL FROM tblProject p INNER JOIN tblProjectFeature pf ON p.ProjectID = pf.ProjectID ORDER BY pf.[Order]",
-            {},
-            function(err, data) {
-                var projects;
-
-                if (err) {
-                    console.log("Database error in coding.getFeaturedProjects.");
-                    console.log(err);
-                    callback({
-                        error: "There was a database error retrieving featured projects.  Please reload the page and try again.",
-                        status: 500
-                    });
-                    return;
-                }
-
-                if (!data || !data[0]) {
-                    callback(null, []);
-                }
-
-                projects = data[0].map(function(project) {
-                    return {
-                        id: project.ProjectID,
-                        title: project.Title,
-                        url: project.URL
-                    };
-                });
-
-                cache.set("roncli.com:projects:featured", projects, 3600);
-
-                callback(null, projects.slice(0, count));
+        coding.getFeaturedProjectList(function(err, projects) {
+            if (err) {
+                callback(err);
+                return;
             }
-        );
+
+            cache.set("roncli.com:projects:featured", projects, 3600);
+
+            callback(null, projects);
+        });
     });
 };
 
@@ -113,10 +128,8 @@ module.exports.getProjectList = function(callback) {
         "SELECT ProjectID, Title, URL, Description FROM tblProject ORDER BY Title",
         {},
         function(err, data) {
-            var projects;
-
             if (err) {
-                console.log("Database error in coding.getProjects.");
+                console.log("Database error in coding.getProjectList.");
                 console.log(err);
                 callback({
                     error: "There was a database error retrieving projects.  Please reload the page and try again.",

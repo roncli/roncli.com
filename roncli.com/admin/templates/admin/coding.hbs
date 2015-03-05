@@ -14,6 +14,41 @@
         </div>
     </div>
     <div class="panel panel-primary">
+        <div class="panel-heading text-center"><h3>Featured Projects</h3></div>
+        <div class="panel-body text-center">
+            From here, you can add, remove, and sort featured projects in the database.<br/><br/>
+            <div id="featured-projects">
+                {{#each featured.models}}
+                    <div data-id="{{attributes.id}}" class="navbar navbar-default featured-container" style="background-color: #eeeeee; border: solid 1px #cccccc;">
+                        <div class="container-fluid">
+                            <div class="navbar-left" style="margin-right: 20px;">
+                                <ul class="nav navbar-nav">
+                                    <li class="navbar-text" style="font-size: 20px; padding: 10px 0; color: #000000;">{{attributes.title}}</li>
+                                </ul>
+                            </div>
+                            <div class="navbar-right" style="margin-right: 0;">
+                                <ul class="nav">
+                                    <li>
+                                        <button class="btn btn-danger navbar-btn unfeature-project"><span class="glyphicon glyphicon-remove"></span> Remove</button>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                {{/each}}
+            </div>
+            <div class="form-inline">
+                <select class="form-control" id="feature-project-list">
+                    <option value="">-- Select a project to feature --</option>
+                    {{#each unfeatured.models}}
+                        {{partial "site/option" value=attributes.id text=attributes.title}}
+                    {{/each}}
+                </select>
+                <button class="btn btn-primary" id="feature-project"><span class="glyphicon glyphicon-plus"></span> Feature Project</button>
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-primary">
         <div class="panel-heading text-center"><h3>Projects</h3></div>
         <div class="panel-body text-center">
             From here, you can add, edit, and remove projects from the database.<br /><br />

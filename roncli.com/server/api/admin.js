@@ -109,6 +109,28 @@ module.exports.get = function(req, query, callback) {
                                 callback(projects);
                             });
                             return;
+                        case "featured-projects":
+                            admin.getFeaturedProjects(userId, function(err, projects) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                callback(projects);
+                            });
+                            return;
+                        case "unfeatured-projects":
+                            admin.getUnfeaturedProjects(userId, function(err, projects) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                callback(projects);
+                            });
+                            return;
                     }
                     break;
             }
@@ -341,6 +363,42 @@ module.exports.post = function(req, query, callback) {
                             return;
                         case "update-project":
                             admin.updateProject(userId, req.body.projectId, req.body.url, req.body.title, req.body.projectUrl, req.body.user, req.body.repository, req.body.description, function(err) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                        case "feature-project":
+                            admin.featureProject(userId, req.body.projectId, function(err) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                        case "unfeature-project":
+                            admin.unfeatureProject(userId, req.body.projectId, function(err) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                        case "change-feature-order":
+                            admin.changeFeatureProjectOrder(userId, req.body.order, function(err) {
                                 if (err) {
                                     req.res.status(err.status);
                                     callback(err);

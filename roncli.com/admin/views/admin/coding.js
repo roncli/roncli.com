@@ -3,16 +3,56 @@
 var BaseView = require("./base"),
     $ = require("jquery"),
     Admin = require("../../models/admin"),
-    backbone = require("rendr/node_modules/backbone");
+    backbone = require("rendr/node_modules/backbone"),
+    sortable = require("sortablejs");
 
-    // Sets up the default admin view.
+// Sets up the default admin view.
 module.exports = BaseView.extend({
     className: "admin_coding_view",
 
     events: {
         "click button#clear-caches": "clearCaches",
+        "click button.unfeature-project": "unfeatureProject",
+        "click button#feature-project": "featureProject",
         "click button.delete-project": "deleteProject",
         "click button#project-save": "projectSave"
+    },
+
+    postRender: function() {
+        "use strict";
+
+        var view = this;
+
+        // Setup sortable.
+        this.app.sortable = sortable.create($("#featured-projects")[0], {
+            store: {
+                get: function() {return [];},
+                set: function(sortable) {
+                    var admin = new Admin();
+
+                    admin.fetch({
+                        url: "/admin/coding/change-feature-order",
+                        data: JSON.stringify({
+                            order: sortable.toArray()
+                        }),
+                        type: "POST",
+                        contentType: "application/json",
+                        dataType: "json",
+                        error: function(xhr, error) {
+                            var message;
+                            if (error && error.body && error.body.error) {
+                                message = error.body.error;
+                            } else {
+                                message = "There was a server error ordering the featured projects.  Please try again later.";
+                            }
+
+                            view.showError(message);
+                        }
+                    });
+                }
+            },
+            filter: "button"
+        });
     },
 
     clearCaches: function() {
@@ -45,12 +85,84 @@ module.exports = BaseView.extend({
                 if (error && error.body && error.body.error) {
                     message = error.body.error;
                 } else {
-                    message = "There was a server error processing your registration.  Please try again later.";
+                    message = "There was a server error clearing the coding caches.  Please try again later.";
                 }
 
                 view.showError(message);
 
                 clearCaches.prop("disabled", false);
+            }
+        });
+    },
+
+    unfeatureProject: function(ev) {
+        "use strict";
+
+        var unfeatureButton = $(ev.target),
+            projectId = unfeatureButton.closest(".featured-container").data("id"),
+            view = this,
+            admin = new Admin();
+
+        unfeatureButton.prop("disabled", true);
+
+        admin.fetch({
+            url: "/admin/coding/unfeature-project",
+            data: JSON.stringify({projectId: projectId}),
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            success: function() {
+                backbone.history.loadUrl(window.location.pathname);
+            },
+            error: function(xhr, error) {
+                var message;
+                if (error && error.body && error.body.error) {
+                    message = error.body.error;
+                } else {
+                    message = "There was a server error featuring the project.  Please try again later.";
+                }
+
+                view.showMessage(message);
+
+                unfeatureButton.prop("disabled", false);
+            }
+        });
+    },
+
+    featureProject: function() {
+        "use strict";
+
+        var view = this,
+            featureProject = $("#feature-project"),
+            projectId = $("#feature-project-list").val(),
+            admin = new Admin();
+
+        if (!projectId) {
+            return;
+        }
+
+        featureProject.prop("disabled", true);
+
+        admin.fetch({
+            url: "/admin/coding/feature-project",
+            data: JSON.stringify({projectId: projectId}),
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            success: function() {
+                backbone.history.loadUrl(window.location.pathname);
+            },
+            error: function(xhr, error) {
+                var message;
+                if (error && error.body && error.body.error) {
+                    message = error.body.error;
+                } else {
+                    message = "There was a server error featuring the project.  Please try again later.";
+                }
+
+                view.showMessage(message);
+
+                featureProject.prop("disabled", false);
             }
         });
     },

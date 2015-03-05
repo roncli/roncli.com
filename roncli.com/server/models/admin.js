@@ -1338,7 +1338,7 @@ module.exports.clearCodingCaches = function(userId, callback) {
     "use strict";
 
     User.getUserRoles(userId, function(err, roles) {
-        var deferred;
+        var promises = [];
 
         if (err) {
             callback({
@@ -1356,20 +1356,24 @@ module.exports.clearCodingCaches = function(userId, callback) {
             return;
         }
 
-        deferred = new Deferred();
+        ["roncli.com:projects", "roncli.com:projects:*", "roncli.com:github:*"].forEach(function(key) {
+            var deferred = new Deferred();
 
-        cache.keys("roncli.com:github:*", function(keys) {
-            if (keys.length > 0) {
-                cache.del(keys, function() {
+            cache.keys(key, function(keys) {
+                if (keys.length > 0) {
+                    cache.del(keys, function() {
+                        deferred.resolve();
+                    });
+                } else {
                     deferred.resolve();
-                });
-            } else {
-                deferred.resolve();
-            }
+                }
+            });
+
+            promises.push(deferred.promise);
         });
 
-        deferred.promise.then(function() {
-            coding.forceCacheEvents(callback);
+        all(promises).then(function() {
+            music.forceCacheSongs(callback);
         });
     });
 };
@@ -1701,4 +1705,247 @@ module.exports.updateProject = function(userId, projectId, url, title, projectUr
             }
         );
     });
+};
+
+/**
+ * Gets the featured projects.
+ * @param {number} userId The user ID of the moderator.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.getFeaturedProjects = function(userId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while getting featured projects.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        coding.getFeaturedProjectList(function(err, projects) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            callback(null, projects);
+        });
+    });
+};
+
+/**
+ * Gets the unfeatured projects.
+ * @param {number} userId The user ID of the moderator.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.getUnfeaturedProjects = function(userId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while retrieving unfeatured projects.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        db.query(
+            "SELECT ProjectID, Title FROM tblProject WHERE ProjectID NOT IN (SELECT ProjectID FROM tblProjectFeature) ORDER BY Title",
+            {},
+            function(err, data) {
+                if (err) {
+                    console.log("Database error in admin.getUnfeaturedProjects.");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while retrieving unfeatured projects.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                if (!data || !data[0]) {
+                    callback(null, []);
+                }
+
+                callback(null, data[0].map(function(project) {
+                    return {
+                        id: project.ProjectID,
+                        title: project.Title
+                    };
+                }));
+            }
+        );
+    });
+};
+
+/**
+ * Features a project.
+ * @param {number} userId The user ID of the moderator.
+ * @param {number} projectId The project ID to feature.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.featureProject = function(userId, projectId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while featuring a project.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        // Ensure the project is not already featured.
+        db.query(
+            "SELECT COUNT(FeatureID) Projects FROM tblProjectFeature WHERE ProjectID = @projectId",
+            {projectId: {type: db.INT, value: projectId}},
+            function(err, data) {
+                if (err) {
+                    console.log("Database error checking if project is featured in admin.featureProject.");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while featuring a project.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                if (data && data[0] && data[0][0] && data[0][0].Projects > 0) {
+                    callback({
+                        error: "Project already featured.",
+                        status: 400
+                    });
+                    return;
+                }
+
+                // Feature the project.
+                db.query(
+                    "INSERT INTO tblProjectFeature (ProjectID, [Order]) SELECT @projectId, (SELECT COUNT(FeatureID) + 1 FROM tblProjectFeature)",
+                    {projectId: {type: db.INT, value: projectId}},
+                    function(err) {
+                        if (err) {
+                            console.log("Database error featuring a project in admin.featureProject.");
+                            console.log(err);
+                            callback({
+                                error: "There was a database error while featuring a project.  Please reload the page and try again.",
+                                status: 500
+                            });
+                            return;
+                        }
+
+                        callback();
+                    }
+                );
+            }
+        );
+    });
+};
+
+/**
+ * Unfeatures a project.
+ * @param {number} userId The user ID of the moderator.
+ * @param {number} projectId The project ID to unfeature.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.unfeatureProject = function(userId, projectId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while unfeaturing a project.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        db.query(
+            "UPDATE tblProjectFeature SET [Order] = [Order] - 1 WHERE [Order] > (SELECT [Order] FROM tblProjectFeature WHERE ProjectID = @projectId); DELETE FROM tblProjectFeature WHERE ProjectID = @projectId",
+            {projectId: {type: db.INT, value: projectId}},
+            function(err) {
+                if (err) {
+                    console.log("Database error in admin.unfeatureProject.");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while unfeaturing a project.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                callback();
+            }
+        );
+    });
+};
+
+/**
+ * Changes the order of featured projects.
+ * @param {number} userId The user ID of the moderator.
+ * @param {int[]} order The order of projectIDs.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.changeFeatureProjectOrder = function(userId, order, callback) {
+    "use strict";
+
+    var sql = [],
+        sqlVariables = {};
+
+    order.forEach(function(projectId, index) {
+        sql.push("UPDATE tblProjectFeature SET [Order] = @order" + index + " WHERE ProjectID = @project" + projectId);
+        sqlVariables["order" + index] = {type: db.INT, value: index + 1};
+        sqlVariables["project" + projectId] = {type: db.INT, value: projectId};
+    });
+
+    db.query(
+        sql.join(";"), sqlVariables, function(err) {
+            if (err) {
+                console.log("Database error in admin.changeFeatureProjectOrder.");
+                console.log(err);
+                callback({
+                    error: "There was a database error while changing featured projects order.  Please reload the page and try again.",
+                    status: 500
+                });
+                return;
+            }
+
+            callback();
+        }
+    );
 };

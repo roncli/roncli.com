@@ -150,10 +150,20 @@ module.exports = {
         var app = this.app;
 
         app.fetch({
-            projects: {collection: "Admin_Projects", params: {}}
+            projects: {collection: "Admin_Projects", params: {}},
+            unfeatured: {collection: "Admin_Project_GetUnfeatured", params: {}},
+            featured: {collection: "Admin_Project_GetFeatured", params: {}}
         }, {readFromCache: false, writeToCache: false}, function(err, result) {
             if (!err && result && result.projects && result.projects.models && result.projects.models[0] && result.projects.models[0].attributes && result.projects.models[0].attributes.error) {
                 err = result.projects.models[0].attributes;
+            }
+
+            if (!err && result && result.unfeatured && result.unfeatured.models && result.unfeatured.models[0] && result.unfeatured.models[0].attributes && result.unfeatured.models[0].attributes.error) {
+                err = result.unfeatured.models[0].attributes;
+            }
+
+            if (!err && result && result.featured && result.featured.models && result.featured.models[0] && result.featured.models[0].attributes && result.featured.models[0].attributes.error) {
+                err = result.featured.models[0].attributes;
             }
 
             if (err) {
@@ -178,8 +188,8 @@ module.exports = {
         app.fetch({
             project: {model: "Admin_Project", params: {url: params[0]}}
         }, {readFromCache: false, writeToCache: false}, function(err, result) {
-            if (!err && result && result.projects && result.projects.models && result.projects.models[0] && result.projects.models[0].attributes && result.projects.models[0].attributes.error) {
-                err = result.projects.models[0].attributes;
+            if (!err && result && result.project && result.project.attributes && result.project.attributes.error) {
+                err = result.project.attributes;
             }
 
             if (err) {

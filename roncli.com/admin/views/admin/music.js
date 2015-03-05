@@ -45,7 +45,7 @@ module.exports = BaseView.extend({
                 if (error && error.body && error.body.error) {
                     message = error.body.error;
                 } else {
-                    message = "There was a server error processing your registration.  Please try again later.";
+                    message = "There was a server error clearing the music caches.  Please try again later.";
                 }
 
                 view.showError(message);
@@ -105,7 +105,7 @@ module.exports = BaseView.extend({
                 if (error && error.body && error.body.error) {
                     message = error.body.error;
                 } else {
-                    message = "There was a server error processing your registration.  Please try again later.";
+                    message = "There was a server error moderating the comment.  Please try again later.";
                 }
 
                 view.showError(message);
