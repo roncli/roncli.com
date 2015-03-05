@@ -93,7 +93,7 @@ var config = require("../privateConfig").github,
                         })
                     ]);
 
-                    cache.zadd("roncli.com:github:events", allEvents, 86400, function() {
+                    cache.zadd("roncli.com:github:events", allEvents, 3600, function() {
                         callback();
                     });
                 };
@@ -207,15 +207,15 @@ var config = require("../privateConfig").github,
                     cacheCommitsDeferred = new Deferred(),
                     cacheReleasesDeferred = new Deferred();
 
-                cache.set("roncli.com:github:repository:" + user + ":" + repository, repo, 86400, function() {
+                cache.set("roncli.com:github:repository:" + user + ":" + repository, repo, 3600, function() {
                     cacheRepositoryDeferred.resolve(true);
                 });
 
-                cache.zadd("roncli.com:github:repository:" + user + ":" + repository + ":commits", commits, 86400, function() {
+                cache.zadd("roncli.com:github:repository:" + user + ":" + repository + ":commits", commits, 3600, function() {
                     cacheCommitsDeferred.resolve(true);
                 });
 
-                cache.zadd("roncli.com:github:repository:" + user + ":" + repository + ":releases", releases, 86400, function() {
+                cache.zadd("roncli.com:github:repository:" + user + ":" + repository + ":releases", releases, 3600, function() {
                     cacheReleasesDeferred.resolve(true);
                 });
 

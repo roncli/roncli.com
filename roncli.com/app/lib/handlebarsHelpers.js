@@ -174,7 +174,7 @@ module.exports = function(Handlebars) {
          */
         toTimeAgo: function(timestamp) {
             var date = new Date(timestamp);
-            return "<abbr class=\"setTime\" title=\"" + timestamp.toString() + "\">" + (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear() + "</abbr>";
+            return "<abbr class=\"setTime\" title=\"" + date.toISOString() + "\">" + (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear() + "</abbr>";
         },
 
         /**

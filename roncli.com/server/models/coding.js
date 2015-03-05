@@ -27,7 +27,35 @@ module.exports.getLatestEvents = function(count, callback) {
     var getEvents = function(failureCallback) {
         cache.zrevrange("roncli.com:github:events", 0, count - 1, function(events) {
             if (events && events.length > 0) {
-                callback(null, events);
+                // Match github projects to local projects.
+                db.query(
+                    "SELECT URL, [User], Repository FROM tblProject WHERE [User] IS NOT NULL AND Repository IS NOT NULL",
+                    {}, function(err, data) {
+                        var projects = {};
+
+                        if (err) {
+                            console.log("Database error in coding.getLatestEvents.");
+                            console.log(err);
+                            callback({
+                                error: "There was a database error retrieving latest events.  Please reload the page and try again.",
+                                status: 500
+                            });
+                            return;
+                        }
+
+                        if (data && data[0] && data[0].length > 0) {
+                            data[0].forEach(function(project) {
+                                projects[project.User + "/" + project.Repository] = project.URL;
+                            });
+
+                            events.forEach(function(event) {
+                                event.url = projects[event.repository];
+                            });
+                        }
+
+                        callback(null, events);
+                    }
+                );
                 return;
             }
 

@@ -71,7 +71,11 @@
                                     </div>
                                 </div>
                                 <div style="padding-left: 5px; width: 1px; white-space: nowrap;">
-                                    <a href="/github/{{attributes.repository}}">{{attributes.repository}}</a>
+                                    {{#if attributes.url}}
+                                        <a href="{{attributes.url}}">{{attributes.repository}}</a>
+                                    {{else}}
+                                        <a href="https://github.com/{{attributes.repository}}" target="_blank">{{attributes.repository}}</a>
+                                    {{/if}}
                                 </div>
                             </div>
                         </div>
