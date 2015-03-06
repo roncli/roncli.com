@@ -165,7 +165,7 @@ module.exports.clearBlogCaches = function(userId, callback) {
             return;
         }
 
-        ["roncli.com:blogger:*", "roncli.com:tumblr:*", "roncli.com:blog:*"].forEach(function(key) {
+        ["roncli.com:blogger:*", "roncli.com:tumblr:*", "roncli.com:blog:*", "roncli.com:rss:blog:*"].forEach(function(key) {
             var deferred = new Deferred();
 
             cache.keys(key, function(keys) {
@@ -1157,7 +1157,7 @@ module.exports.clearMusicCaches = function(userId, callback) {
             return;
         }
 
-        ["roncli.com:soundcloud:*", "roncli.com:song:*"].forEach(function(key) {
+        ["roncli.com:soundcloud:*", "roncli.com:song:*", "roncli.com:rss:music:*"].forEach(function(key) {
             var deferred = new Deferred();
 
             cache.keys(key, function(keys) {
@@ -1356,7 +1356,7 @@ module.exports.clearCodingCaches = function(userId, callback) {
             return;
         }
 
-        ["roncli.com:projects", "roncli.com:projects:*", "roncli.com:github:*"].forEach(function(key) {
+        ["roncli.com:projects", "roncli.com:projects:*", "roncli.com:github:*", "roncli.com:rss:coding:*"].forEach(function(key) {
             var deferred = new Deferred();
 
             cache.keys(key, function(keys) {
