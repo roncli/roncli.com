@@ -1,9 +1,9 @@
 var BaseView = require("rendr/shared/base/view"),
     $ = require("jquery");
 
-// Sets up the coding view.
+// Sets up the project view.
 module.exports = BaseView.extend({
-    className: "coding_index_view",
+    className: "coding_project_view",
 
     postRender: function() {
         "use strict";
@@ -12,4 +12,4 @@ module.exports = BaseView.extend({
     }
 });
 
-module.exports.id = "coding/index";
+module.exports.id = "coding/project";

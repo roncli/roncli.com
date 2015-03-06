@@ -5,14 +5,25 @@ module.exports.get = function(req, query, callback) {
 
     switch (req.parsedPath.length) {
         case 0:
-            coding.getProjects(function(err, projects) {
-                if (err) {
-                    req.res.status(err.status);
-                    callback(err);
-                    return;
-                }
-                callback(projects);
-            });
+            if (query.url && query.url.length > 0) {
+                coding.getProject(query.url, function(err, project) {
+                    if (err) {
+                        req.res.status(err.status);
+                        callback(err);
+                        return;
+                    }
+                    callback(project);
+                });
+            } else {
+                coding.getProjects(function(err, projects) {
+                    if (err) {
+                        req.res.status(err.status);
+                        callback(err);
+                        return;
+                    }
+                    callback(projects);
+                });
+            }
             return;
         case 1:
             switch (req.parsedPath[0]) {

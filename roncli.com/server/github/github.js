@@ -182,7 +182,7 @@ var config = require("../privateConfig").github,
             }
 
             releasesDeferred.resolve(releases.filter(function(release) {
-                return release.draft;
+                return !release.draft;
             }).map(function(release) {
                 var date = new Date(release.created_at).getTime();
 
@@ -191,6 +191,7 @@ var config = require("../privateConfig").github,
                     value: {
                         id: release.id,
                         name: release.name,
+                        url: release.html_url,
                         created: date,
                         body: release.body
                     }
@@ -211,13 +212,17 @@ var config = require("../privateConfig").github,
                     cacheRepositoryDeferred.resolve(true);
                 });
 
-                cache.zadd("roncli.com:github:repository:" + user + ":" + repository + ":commits", commits, 3600, function() {
-                    cacheCommitsDeferred.resolve(true);
-                });
+                if (commits.length > 0) {
+                    cache.zadd("roncli.com:github:repository:" + user + ":" + repository + ":commits", commits, 3600, function() {
+                        cacheCommitsDeferred.resolve(true);
+                    });
+                }
 
-                cache.zadd("roncli.com:github:repository:" + user + ":" + repository + ":releases", releases, 3600, function() {
-                    cacheReleasesDeferred.resolve(true);
-                });
+                if (releases.length > 0) {
+                    cache.zadd("roncli.com:github:repository:" + user + ":" + repository + ":releases", releases, 3600, function() {
+                        cacheReleasesDeferred.resolve(true);
+                    });
+                }
 
                 all(cacheRepositoryDeferred.promise, cacheCommitsDeferred.promise, cacheReleasesDeferred.promise).then(
                     function() {

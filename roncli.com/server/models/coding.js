@@ -1,5 +1,8 @@
 var github = require("../github/github"),
     cache = require("../cache/cache"),
+    promise = require("promised-io/promise"),
+    Deferred = promise.Deferred,
+    all = promise.all,
     db = require("../database/database");
 
 /**
@@ -208,4 +211,102 @@ module.exports.getProjects = function(callback) {
             callback(null, projects);
         });
     });
+};
+
+/**
+ * Gets a project.
+ * @param {string} url The URL of the project.
+ * @param {function} callback The callback function.
+ */
+module.exports.getProject = function(url, callback) {
+    "use strict";
+
+    db.query(
+        "SELECT ProjectID, Title, ProjectURL, [User], Repository, Description FROM tblProject WHERE URL = @url",
+        {url: {type: db.VARCHAR(1024), value: url}},
+        function(err, data) {
+            var project, githubDeferred;
+
+            if (err) {
+                console.log("Database error in coding.getProject.");
+                console.log(err);
+                callback({
+                    error: "There was a database error retrieving a project.  Please reload the page and try again.",
+                    status: 500
+                });
+                return;
+            }
+
+            if (!data || !data[0] || data[0].length === 0) {
+                callback({
+                    error: "Project does not exist.",
+                    status: 404
+                });
+                return;
+            }
+
+            project = {
+                id: data[0][0].ProjectID,
+                title: data[0][0].Title,
+                projectUrl: data[0][0].ProjectURL,
+                user: data[0][0].User,
+                repository: data[0][0].Repository,
+                description: data[0][0].Description
+            };
+
+            githubDeferred = new Deferred();
+
+            // If this is a GitHub project, get the releases and commits.
+            if (project.user && project.repository && project.user.length > 0 && project.repository.length > 0) {
+                github.cacheRepository(project.user, project.repository, true, function() {
+                    all(
+                        (function() {
+                            var deferred = new Deferred();
+
+                            cache.get("roncli.com:github:repository:" + project.user + ":" + project.repository, function(repository) {
+                                project.project = repository;
+                                deferred.resolve(true);
+                            });
+
+                            return deferred.promise;
+                        }()),
+                        (function() {
+                            var deferred = new Deferred();
+
+                            cache.zrevrange("roncli.com:github:repository:" + project.user + ":" + project.repository + ":releases", 0, -1, function(releases) {
+                                project.releases = releases;
+                                deferred.resolve(true);
+                            });
+
+                            return deferred.promise;
+                        }()),
+                        (function() {
+                            var deferred = new Deferred();
+
+                            cache.zrevrange("roncli.com:github:repository:" + project.user + ":" + project.repository + ":commits", 0, 100, function(commits) {
+                                project.commits = commits.map(function(commit) {
+                                    commit.shortSha = commit.sha.substring(0, 7);
+
+                                    return commit;
+                                });
+                                deferred.resolve(true);
+                            });
+
+                            return deferred.promise;
+                        }())
+                    ).then(
+                        function() {
+                            githubDeferred.resolve();
+                        }
+                    );
+                });
+            } else {
+                githubDeferred.resolve();
+            }
+
+            githubDeferred.promise.then(function() {
+                callback(null, project);
+            });
+        }
+    );
 };

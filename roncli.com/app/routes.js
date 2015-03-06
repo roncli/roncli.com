@@ -39,6 +39,9 @@ module.exports = function(match) {
     // The coding page.
     match(/^\/?coding$/, "coding#index");
 
+    // Specific music pages.
+    match(/\/?(project\/.*)/, "coding#project");
+
     // The default route if none of the above match.
     match(/\/?(.*)/, "default#index");
 };
