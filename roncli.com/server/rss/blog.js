@@ -15,7 +15,7 @@ var cache = require("../cache/cache"),
 module.exports.rss = function(req, res, callback) {
     "use strict";
 
-    var startIndex = req.query["start-index"] || 1,
+    var startIndex = +req.query["start-index"] || 1,
         category = req.query.category,
         cacheKey = "roncli.com:rss:blog:" + (category ? ":" + category : "") + startIndex,
         feed = new Rss();
@@ -179,7 +179,7 @@ module.exports.rss = function(req, res, callback) {
                 function() {
                     xml = feed.xml();
 
-                    cache.set(cacheKey, xml, startIndex === 1 ? 900 : 86400);
+                    cache.set(cacheKey, xml, 900);
 
                     callback(xml);
                 },

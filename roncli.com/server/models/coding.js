@@ -258,7 +258,7 @@ module.exports.getProject = function(url, callback) {
 
             // If this is a GitHub project, get the releases and commits.
             if (project.user && project.repository && project.user.length > 0 && project.repository.length > 0) {
-                github.cacheRepository(project.user, project.repository, true, function() {
+                github.cacheRepository(project.user, project.repository, false, function() {
                     all(
                         (function() {
                             var deferred = new Deferred();
