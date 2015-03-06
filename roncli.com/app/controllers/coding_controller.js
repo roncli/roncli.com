@@ -66,7 +66,7 @@ module.exports = {
         app.fetch({
             page: {model: "PageOptional", params: {url: "/" + params[0]}},
             project: {model: "Project", params: {url: "/" + params[0]}}
-        }, function(err, result) {
+        }, {readFromCache: false, writeToCache: false}, function(err, result) {
             var content;
 
             if (!err && result && result.page && result.page.attributes && result.page.attributes.error) {
