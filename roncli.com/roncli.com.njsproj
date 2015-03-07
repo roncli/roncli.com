@@ -136,6 +136,7 @@
     <Compile Include="server\models\tweet.js" />
     <Compile Include="server\models\user.js" />
     <Compile Include="server\morgan\morgan-extensions.js" />
+    <Compile Include="server\privateConfig.js" />
     <Compile Include="server\templates\template.js" />
   </ItemGroup>
   <ItemGroup>
