@@ -309,3 +309,16 @@ div.right-side div.panel-body.sharing img {
         height: 32px;
     }
 }
+
+div.div-table {
+    display: table;
+    width: 100%;
+}
+
+div.div-table > div {
+    display: table-row;
+}
+
+div.div-table > div > div {
+    display: table-cell;
+}

@@ -1,5 +1,5 @@
 var moment = require("moment"),
-    user = require("../models/user.js"),
+    user = require("../models/user"),
     handleError = require("../handleError");
 
 module.exports.get = function(req, query, callback) {

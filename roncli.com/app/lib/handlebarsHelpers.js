@@ -84,10 +84,14 @@ module.exports = function(Handlebars) {
         /**
          * Turns a timestamp in milliseconds from Unix epoch into a formatted date.
          * @param {number} timestamp The number of milliseconds from Unix epoch.
+         * @param {string} [format] The optional format to use.
          * @returns {string} The formatted date.
          */
-        timestampToDate: function(timestamp) {
-            return moment(timestamp).format("dddd, MMMM Do, YYYY h:mm:ss a");
+        timestampToDate: function(timestamp, format) {
+            if (typeof format !== "string") {
+                format = "dddd, MMMM Do, YYYY h:mm:ss a";
+            }
+            return moment(timestamp).format(format);
         },
 
         /**
@@ -98,6 +102,10 @@ module.exports = function(Handlebars) {
             return new Date().getFullYear();
         },
 
+        /**
+         * Returns the version of the application.
+         * @returns {string} The version.
+         */
         version: function() {
             return pjson.version;
         },
@@ -155,7 +163,7 @@ module.exports = function(Handlebars) {
          */
         toTimeAgo: function(timestamp) {
             var date = new Date(timestamp);
-            return "<abbr class=\"setTime\" title=\"" + timestamp.toString() + "\">" + (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear() + "</abbr>";
+            return "<abbr class=\"setTime\" title=\"" + date.toISOString() + "\">" + (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear() + "</abbr>";
         },
 
         /**

@@ -14,9 +14,9 @@ var config = require("../privateConfig").twitter,
 module.exports.getTweets = function(callback) {
     "use strict";
 
-    cache.get("roncli.com:tweets", function(tweets) {
-        if (tweets) {
-            callback(null, tweets);
+    cache.get("roncli.com:tweets", function(cachedTweets) {
+        if (cachedTweets) {
+            callback(null, cachedTweets);
             return;
         }
 

@@ -39,7 +39,7 @@ var config = require("../privateConfig").redis,
 /**
  * Deletes keys from the cache.
  * @param {string[]} keys An array of keys.
- * @param {function} callback The callback function.
+ * @param {function} [callback] The optional callback function.
  */
 module.exports.del = function(keys, callback) {
     "use strict";
