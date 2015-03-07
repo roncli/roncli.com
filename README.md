@@ -116,10 +116,15 @@ The following should be the contents of privateConfig.js:
 Version History
 ===============
 
+0.5
+---
+
+This version implements the coding section, which links to GitHub.  Included are RSS feeds for the coding page and each project pages, and an administration section.  Coding pages also double as HTML pages, meaning that if you create a page with the same URL as a coding page, that HTML will display on the page along with the rest of the page.
+
 0.4
 ---
 
-This version implements the music section, which links to SoundCloud.  Included are comments, RSS feeds for the music and each individual tag, and an administration section.  Music pages also double as HTML pages, meaning that if you create a page with the same URL as a music page, that HTML will display on the page along with the music.
+This version implements the music section, which links to SoundCloud.  Included are comments, RSS feeds for the music and each individual tag, and an administration section.  Music pages also double as HTML pages, meaning that if you create a page with the same URL as a music page, that HTML will display on the page along with the rest of the page.
 
 0.3.1
 -----
@@ -148,11 +153,6 @@ This version introduces the bare bones of the website, including the layout, Twi
 
 Planned Versions
 ================
-
-0.5
----
-
-* Implement Coding section with GitHub connectivity.
 
 0.6
 ---
