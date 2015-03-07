@@ -135,6 +135,7 @@
     <Compile Include="server\models\captcha.js" />
     <Compile Include="server\models\tweet.js" />
     <Compile Include="server\models\user.js" />
+    <Compile Include="server\morgan\morgan-extensions.js" />
     <Compile Include="server\templates\template.js" />
   </ItemGroup>
   <ItemGroup>
@@ -169,6 +170,7 @@
     <Folder Include="server\guid\" />
     <Folder Include="server\mail\" />
     <Folder Include="server\models\" />
+    <Folder Include="server\morgan\" />
     <Folder Include="server\templates\" />
     <Folder Include="server\templates\email\" />
     <Folder Include="server\templates\email\changeEmail\" />
