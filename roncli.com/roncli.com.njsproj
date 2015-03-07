@@ -23,6 +23,7 @@
     <Content Include="admin\templates\admin\blog\reject.hbs" />
     <Content Include="admin\templates\admin\coding.hbs" />
     <Content Include="admin\templates\admin\coding\cachesCleared.hbs" />
+    <Content Include="admin\templates\admin\coding\deleteConfirm.hbs" />
     <Content Include="admin\templates\admin\error.hbs" />
     <Content Include="admin\templates\admin\index.hbs" />
     <Content Include="admin\templates\admin\music.hbs" />
@@ -32,9 +33,12 @@
     <Content Include="admin\templates\admin\music\reject.hbs" />
     <Content Include="admin\templates\admin\page.hbs" />
     <Content Include="admin\templates\admin\pages.hbs" />
+    <Content Include="admin\templates\admin\pages\approve.hbs" />
     <Content Include="admin\templates\admin\pages\comment.hbs" />
     <Content Include="admin\templates\admin\pages\deleteConfirm.hbs" />
     <Content Include="admin\templates\admin\pages\page.hbs" />
+    <Content Include="admin\templates\admin\pages\reject.hbs" />
+    <Content Include="admin\templates\admin\project.hbs" />
     <Content Include="app\templates\account\account.hbs" />
     <Content Include="app\templates\account\aliasChanged.hbs" />
     <Content Include="app\templates\account\changeAlias.hbs" />
@@ -62,6 +66,8 @@
     <Content Include="app\templates\blog\posts\tumblrText.hbs" />
     <Content Include="app\templates\blog\posts\tumblrYouTube.hbs" />
     <Content Include="app\templates\blog\url.hbs" />
+    <Content Include="app\templates\coding\index.hbs" />
+    <Content Include="app\templates\coding\project.hbs" />
     <Content Include="app\templates\error\404.hbs" />
     <Content Include="app\templates\error\other.hbs" />
     <Content Include="app\templates\home\index.hbs" />
@@ -157,6 +163,9 @@
     <Compile Include="admin\collections\admin__blog_comments.js" />
     <Compile Include="admin\collections\admin__music_comments.js" />
     <Compile Include="admin\collections\admin__page_comments.js" />
+    <Compile Include="admin\collections\admin__projects.js" />
+    <Compile Include="admin\collections\admin__project__get_featured.js" />
+    <Compile Include="admin\collections\admin__project__get_unfeatured.js" />
     <Compile Include="admin\controllers\admin_controller.js" />
     <Compile Include="admin\models\admin.js" />
     <Compile Include="admin\models\admin__blog_comment.js" />
@@ -164,6 +173,7 @@
     <Compile Include="admin\models\admin__page.js" />
     <Compile Include="admin\models\admin__pages.js" />
     <Compile Include="admin\models\admin__page_comment.js" />
+    <Compile Include="admin\models\admin__project.js" />
     <Compile Include="admin\models\user__get_notifications.js" />
     <Compile Include="admin\templates\adminTemplates.js" />
     <Compile Include="admin\views\admin\base.js" />
@@ -173,11 +183,15 @@
     <Compile Include="admin\views\admin\music.js" />
     <Compile Include="admin\views\admin\page.js" />
     <Compile Include="admin\views\admin\pages.js" />
+    <Compile Include="admin\views\admin\project.js" />
     <Compile Include="app\app.js" />
     <Compile Include="app\collections\base.js" />
     <Compile Include="app\collections\blog_categories.js" />
     <Compile Include="app\collections\blog_comments.js" />
+    <Compile Include="app\collections\event__get_latest.js" />
     <Compile Include="app\collections\page_comments.js" />
+    <Compile Include="app\collections\projects.js" />
+    <Compile Include="app\collections\project__get_featured.js" />
     <Compile Include="app\collections\song_comments.js" />
     <Compile Include="app\collections\song_tags.js" />
     <Compile Include="app\collections\song__by_tag.js" />
@@ -186,6 +200,7 @@
     <Compile Include="app\collections\tweets.js" />
     <Compile Include="app\controllers\account_controller.js" />
     <Compile Include="app\controllers\blog_controller.js" />
+    <Compile Include="app\controllers\coding_controller.js" />
     <Compile Include="app\controllers\default_controller.js" />
     <Compile Include="app\controllers\home_controller.js" />
     <Compile Include="app\controllers\music_controller.js" />
@@ -199,9 +214,11 @@
     <Compile Include="app\models\blog__get_latest.js" />
     <Compile Include="app\models\blog__get_latest_by_category.js" />
     <Compile Include="app\models\captcha.js" />
+    <Compile Include="app\models\event.js" />
     <Compile Include="app\models\page.js" />
     <Compile Include="app\models\page_comment.js" />
     <Compile Include="app\models\page_optional.js" />
+    <Compile Include="app\models\project.js" />
     <Compile Include="app\models\song.js" />
     <Compile Include="app\models\song_comment.js" />
     <Compile Include="app\models\song_tag.js" />
@@ -217,6 +234,8 @@
     <Compile Include="app\views\blog\category.js" />
     <Compile Include="app\views\blog\index.js" />
     <Compile Include="app\views\blog\url.js" />
+    <Compile Include="app\views\coding\index.js" />
+    <Compile Include="app\views\coding\project.js" />
     <Compile Include="app\views\error\404.js" />
     <Compile Include="app\views\error\other.js" />
     <Compile Include="app\views\home\index.js" />
@@ -236,9 +255,11 @@
     <Compile Include="server\api\blog-comment.js" />
     <Compile Include="server\api\blog.js" />
     <Compile Include="server\api\captcha.js" />
+    <Compile Include="server\api\event.js" />
     <Compile Include="server\api\page-comment.js" />
     <Compile Include="server\api\page-optional.js" />
     <Compile Include="server\api\page.js" />
+    <Compile Include="server\api\project.js" />
     <Compile Include="server\api\song-comment.js" />
     <Compile Include="server\api\song-tag.js" />
     <Compile Include="server\api\song.js" />
@@ -264,6 +285,7 @@
     <Compile Include="server\morgan\morgan-extensions.js" />
     <Compile Include="server\privateConfig.js" />
     <Compile Include="server\rss\blog.js" />
+    <Compile Include="server\rss\coding.js" />
     <Compile Include="server\rss\music.js" />
     <Compile Include="server\rss\rss.js" />
     <Compile Include="server\soundcloud\soundcloud.js" />
@@ -293,6 +315,7 @@
     <Folder Include="app\templates\blog\" />
     <Folder Include="app\templates\blog\comments\" />
     <Folder Include="app\templates\blog\posts\" />
+    <Folder Include="app\templates\coding\" />
     <Folder Include="app\templates\error\" />
     <Folder Include="app\templates\home\" />
     <Folder Include="app\templates\media\" />
@@ -302,6 +325,7 @@
     <Folder Include="app\views\" />
     <Folder Include="app\views\account\" />
     <Folder Include="app\views\blog\" />
+    <Folder Include="app\views\coding\" />
     <Folder Include="app\views\error\" />
     <Folder Include="app\views\home\" />
     <Folder Include="app\views\music\" />
