@@ -69,6 +69,34 @@ var config = require("../privateConfig").battlenet,
                 callback();
             });
         });
+    },
+
+    /**
+     * Caches an item from Battle.Net.
+     * @param {number} itemId The Item ID to cache.
+     * @param {function} callback The callback function.
+     */
+    cacheItem = function(itemId, callback) {
+        "use strict";
+
+        bnet.wow.item.item({
+            origin: "us",
+            id: itemId
+        }, function(err, item) {
+            if (err) {
+                console.log("Bad response from Battle.Net while getting the item.");
+                console.log(err);
+                callback({
+                    error: "Bad response from Battle.Net.",
+                    status: 502
+                });
+                return;
+            }
+
+            cache.set("roncli.com:battlenet:wow:item:" + itemId, 2592000, function() {
+                callback();
+            });
+        });
     };
 
 /**
@@ -91,5 +119,29 @@ module.exports.cacheCharacter = function(force, callback) {
         }
 
         cacheCharacter(callback);
+    });
+};
+
+/**
+ * Ensures that the item is cached.
+ * @param {boolean} force Forces the caching of the item.
+ * @param {number} itemId The item ID to cache.
+ * @param {function} callback The callback function.
+ */
+module.exports.cacheItem = function(force, itemId, callback) {
+    "use strict";
+
+    if (force) {
+        cacheItem(itemId, callback);
+        return;
+    }
+
+    cache.keys("roncli.com:battlenet:wow:item:" + itemId, function(keys) {
+        if (keys && keys.length > 0) {
+            callback();
+            return;
+        }
+
+        cacheItem(itemId, callback);
     });
 };
