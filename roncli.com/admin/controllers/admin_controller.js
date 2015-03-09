@@ -199,5 +199,16 @@ module.exports = {
 
             callback(err, result);
         });
+    },
+
+    /**
+     * The gaming admin view.
+     * @param {object} params The parameters to use in the controller.
+     * @param {function} callback The callback to run upon completion of the controller running.
+     */
+    gaming: function(params, callback) {
+        "use strict";
+
+        callback();
     }
 };

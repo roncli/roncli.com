@@ -36,7 +36,7 @@ var config = require("../privateConfig").battlenet,
                 profile: "http://us.battle.net/static-render/us/" + result.thumbnail.replace("avatar.jpg", "profilemain.jpg")
             };
 
-            feed = character.feed.filter(function(item) {
+            feed = result.feed.filter(function(item) {
                 return ["ACHIEVEMENT", "BOSSKILL", "LOOT"].indexOf(item.type) !== -1;
             }).map(function(item) {
                 return {
