@@ -59,8 +59,10 @@ var config = require("../privateConfig").battlenet,
                 (function() {
                     var deferred = new Deferred();
 
-                    cache.zadd("roncli.com:battlenet:wow:feed", feed, 86400, function() {
-                        deferred.resolve(true);
+                    cache.del(["roncli.com:battlenet:wow:feed"], function() {
+                        cache.zadd("roncli.com:battlenet:wow:feed", feed, 86400, function() {
+                            deferred.resolve(true);
+                        });
                     });
 
                     return deferred.promise;

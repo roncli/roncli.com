@@ -138,6 +138,12 @@ The following should be the contents of privateConfig.js:
                 type: "oauth",
                 key: "(Your Github client ID)",
                 secret: "(Your Github client secret)"
+            },
+            battlenet: {
+                apikey: "(Your Battle.Net API key)"
+            },
+            riot: {
+                apikey: "(Your Riot Games API key)"
             }
         };
 

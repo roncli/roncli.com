@@ -1978,7 +1978,7 @@ module.exports.clearGamingCaches = function(userId, callback) {
             return;
         }
 
-        ["roncli.com:battlenet:*"].forEach(function(key) {
+        ["roncli.com:battlenet:*", "roncli.com:riot:*"].forEach(function(key) {
             var deferred = new Deferred();
 
             cache.keys(key, function(keys) {
@@ -2009,6 +2009,15 @@ module.exports.clearGamingCaches = function(userId, callback) {
                     var deferred = new Deferred();
 
                     gaming.forceCacheProfile(function() {
+                        deferred.resolve(true);
+                    });
+
+                    return deferred.promise;
+                }()),
+                (function() {
+                    var deferred = new Deferred();
+
+                    gaming.forceCacheRanked(function() {
                         deferred.resolve(true);
                     });
 
