@@ -416,6 +416,7 @@ module.exports.post = function(req, query, callback) {
                         case "clear-caches":
                             admin.clearGamingCaches(userId, function(err) {
                                 if (err) {
+                                    console.log(err);
                                     req.res.status(err.status);
                                     callback(err);
                                     return;

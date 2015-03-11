@@ -93,7 +93,7 @@ var config = require("../privateConfig").battlenet,
                 return;
             }
 
-            cache.set("roncli.com:battlenet:wow:item:" + itemId, 2592000, function() {
+            cache.set("roncli.com:battlenet:wow:item:" + itemId, item, 2592000, function() {
                 callback();
             });
         });

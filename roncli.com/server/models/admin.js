@@ -1995,7 +1995,28 @@ module.exports.clearGamingCaches = function(userId, callback) {
         });
 
         all(promises).then(function() {
-            gaming.forceCacheCharacter(callback);
+            all(
+                (function() {
+                    var deferred = new Deferred();
+
+                    gaming.forceCacheCharacter(function() {
+                        deferred.resolve(true);
+                    });
+
+                    return deferred.promise;
+                }()),
+                (function() {
+                    var deferred = new Deferred();
+
+                    gaming.forceCacheProfile(function() {
+                        deferred.resolve(true);
+                    });
+
+                    return deferred.promise;
+                }())
+            ).then(function() {
+                callback();
+            });
         });
     });
 };
