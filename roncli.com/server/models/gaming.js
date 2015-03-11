@@ -31,3 +31,13 @@ module.exports.forceCacheRanked = function(callback) {
 
     lol.cacheRanked(true, callback);
 };
+
+/**
+ * Forces the site to cache the ranked data, even if it is already cached.
+ * @param {function} callback The callback function.
+ */
+module.exports.forceCacheChampions = function(callback) {
+    "use strict";
+
+    lol.cacheChampions(true, callback);
+};

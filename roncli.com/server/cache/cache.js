@@ -127,6 +127,43 @@ module.exports.get = function(key, callback) {
     });
 };
 
+module.exports.hexists = function(key, field, callback) {
+    "use strict";
+
+    login(function(err, client) {
+        if (err) {
+            callback(false);
+            callback = null;
+            return;
+        }
+
+        client.on("error", function(err) {
+            console.log("Error retrieving cache using hexists", key, field);
+            console.log(err);
+            client.end();
+            callback(false);
+            callback = null;
+        });
+
+        client.hexists(key, field, function(err, data) {
+            client.end();
+
+            if (err) {
+                console.log("Error retrieving cache using hexists", key, field);
+                console.log(err);
+                callback(false);
+                callback = null;
+                return;
+            }
+
+            if (typeof callback === "function") {
+                callback(data);
+                callback = null;
+            }
+        });
+    });
+};
+
 /**
  * Gets an item from a hash in the cache.
  * @param {string} key The key to get from the cache.

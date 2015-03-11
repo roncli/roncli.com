@@ -102,6 +102,70 @@ var config = require("../privateConfig").riot,
                 callback(err);
             }
         );
+    },
+
+    /**
+     * Caches the champions from Riot.
+     * @param {function} callback The callback function.
+     */
+    cacheChampions = function(callback) {
+        "use strict";
+
+        lol.Static.getChampions({champData: "image"}, function(err, champions) {
+            var key, results = [];
+
+            if (err) {
+                console.log("Bad response from Riot while getting the champions.");
+                console.log(err);
+                callback({
+                    error: "Bad response from Riot.",
+                    status: 502
+                });
+                return;
+            }
+
+            if (champions && champions.data) {
+                for (key in champions.data) {
+                    if (champions.data.hasOwnProperty(key)) {
+                        results.push({
+                            key: champions.data[key].id,
+                            value: champions.data[key]
+                        });
+                    }
+                }
+
+                cache.hmset("roncli.com:riot:lol:champions", results, 2592000, function() {
+                    callback();
+                });
+            }
+        });
+    },
+
+    /**
+     * Caches a champion from Riot.
+     * @param {number} championId The champion ID to cache.
+     * @param {function} callback The callback function.
+     */
+    cacheChampion = function(championId, callback) {
+        "use strict";
+
+        lol.Static.getChampion(championId, {champData: "image"}, function(err, champion) {
+            if (err) {
+                console.log("Bad response from Riot while getting the champions.");
+                console.log(err);
+                callback({
+                    error: "Bad response from Riot.",
+                    status: 502
+                });
+                return;
+            }
+
+            if (champion) {
+                cache.hmset("roncli.com:riot:lol:champions", [{key: champion.id, value: champion}], 2592000, function() {
+                    callback();
+                });
+            }
+        });
     };
 
 // TODO: Set limit to application's limits for live.
@@ -127,5 +191,59 @@ module.exports.cacheRanked = function(force, callback) {
         }
 
         cacheRanked(callback);
+    });
+};
+
+/**
+ * Ensures that the champions are cached.
+ * @param {boolean} force Forces the caching of the ranked info.
+ * @param {function} callback The callback function.
+ */
+module.exports.cacheChampions = function(force, callback) {
+    "use strict";
+
+    if (force) {
+        cacheChampions(callback);
+        return;
+    }
+
+    cache.keys("roncli.com:riot:lol:champions", function(keys) {
+        if (keys && keys.length > 0) {
+            callback();
+            return;
+        }
+
+        cacheChampions(callback);
+    });
+};
+
+/**
+ * Ensures that a champion is cached.
+ * @param {boolean} force Forces the caching of the ranked info.
+ * @param {number} championId The champion ID to cache.
+ * @param {function} callback The callback function.
+ */
+module.exports.cacheChampion = function(force, championId, callback) {
+    "use strict";
+
+    if (force) {
+        cacheChampion(championId, callback);
+        return;
+    }
+
+    cache.keys("roncli.com:riot:lol:champions", function(keys) {
+        if (keys && keys.length > 0) {
+            cache.hexists("roncli.com:riot:lol:champions", championId, function(exists) {
+                if (exists) {
+                    callback();
+                    return;
+                }
+
+                cacheChampion(championId, callback);
+            });
+            return;
+        }
+
+        cacheChampions(callback);
     });
 };

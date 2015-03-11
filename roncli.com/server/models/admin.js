@@ -2022,6 +2022,15 @@ module.exports.clearGamingCaches = function(userId, callback) {
                     });
 
                     return deferred.promise;
+                }()),
+                (function() {
+                    var deferred = new Deferred();
+
+                    gaming.forceCacheChampions(function() {
+                        deferred.resolve(true);
+                    });
+
+                    return deferred.promise;
                 }())
             ).then(function() {
                 callback();
