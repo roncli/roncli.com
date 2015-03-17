@@ -18,8 +18,8 @@ module.exports = {
             codingEvents: {collection: "Event_GetLatest", params: {count: 4}},
             projects: {collection: "Project_GetFeatured", params: {count: 3}},
             wow: {model: "WarcraftFeed_GetLatest", params: {}},
-            d3: {model: "Diablo_GetMain", params: {}},
-            lol: {model: "League_GetRanked", params: {}}
+            d3: {model: "DiabloProfile_GetMain", params: {}},
+            lol: {model: "LeagueRanked", params: {}}
         }, function(err, result) {
             if (!err && result && result.blog && result.blog.attributes && result.blog.attributes.error) {
                 err = result.blog.attributes;

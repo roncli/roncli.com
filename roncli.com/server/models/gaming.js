@@ -154,7 +154,139 @@ module.exports.getLatestWowFeed = function(callback) {
 
             getCharacter(function() {
                 callback({
-                    error: "Character does not exist.",
+                    error: "World of Warcraft character does not exist.",
+                    status: 400
+                });
+            });
+        });
+    });
+};
+
+/**
+ * Gets the information about the main character for Diablo.
+ * @param {function} callback The callback function.
+ */
+module.exports.getDiabloMain = function(callback) {
+    "use strict";
+
+    /**
+     * Gets the profile from the cache.
+     * @param {function} failureCallback The failure callback when there are no posts.
+     */
+    var getProfile = function(failureCallback) {
+        cache.get("roncli.com:battlenet:d3:profile", function(profile) {
+            if (!profile) {
+                failureCallback();
+                return;
+            }
+
+            callback(null, profile);
+        });
+    };
+
+    getProfile(function() {
+        d3.cacheProfile(false, function(err) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            getProfile(function() {
+                callback({
+                    error: "Diablo 3 profile does not exist.",
+                    status: 400
+                });
+            });
+        });
+    });
+};
+
+/**
+ * Gets the information about ranked League of Legends stats.
+ * @param {function} callback The callback function.
+ */
+module.exports.getLolRanked = function(callback) {
+    "use strict";
+
+    var result = {},
+
+        /**
+         * Gets the champion history from the cache.
+         * @param {function} failureCallback The failure callback when there are no posts.
+         */
+        getChampion = function(failureCallback) {
+            cache.hget("roncli.com:riot:lol:champions", result.game.participants[0].championId, function(champion) {
+                if (!champion) {
+                    failureCallback();
+                    return;
+                }
+
+                result.champion = champion;
+
+                callback(null, result);
+            });
+        },
+
+        /**
+         * Gets the last game from the game history cache.
+         * @param {function} failureCallback The failure callback when there are no posts.
+         */
+        getHistory = function(failureCallback) {
+            cache.zrevrange("roncli.com:riot:lol:history", 0, 0, function(history) {
+                if (!history) {
+                    failureCallback();
+                    return;
+                }
+
+                result.game = history[0];
+
+                getChampion(function() {
+                    lol.cacheChampion(false, result.game.participants[0].championId, function(err) {
+                        if (err) {
+                            callback(err);
+                            return;
+                        }
+
+                        getChampion(function() {
+                            callback({
+                                error: "League of Legends champions do not exist.",
+                                status: 400
+                            });
+                        });
+                    });
+                });
+            });
+        },
+
+        /**
+         * Gets the ranked stats from the cache.
+         * @param {function} failureCallback The failure callback when there are no posts.
+         */
+        getRanked = function(failureCallback) {
+            cache.get("roncli.com:riot:lol:league", function(ranked) {
+                if (!ranked) {
+                    failureCallback();
+                    return;
+                }
+
+                result.ranked = ranked;
+
+                getHistory(function() {
+                    failureCallback();
+                });
+            });
+        };
+
+    getRanked(function() {
+        lol.cacheRanked(false, function(err) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            getRanked(function() {
+                callback({
+                    error: "League of Legends ranked stats do not exist.",
                     status: 400
                 });
             });

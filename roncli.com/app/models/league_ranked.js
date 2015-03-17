@@ -1,7 +1,7 @@
 var Model = require("./base");
 
 module.exports = Model.extend({
-    url: "/diablo/get-main"
+    url: "/league-ranked"
 });
 
-module.exports.id = "Diablo_GetMain";
+module.exports.id = "LeagueRanked";
