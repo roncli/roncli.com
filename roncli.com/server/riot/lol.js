@@ -166,6 +166,32 @@ var config = require("../privateConfig").riot,
                 });
             }
         });
+    },
+
+    /**
+     * Caches the latest version from Riot.
+     * @param {function} callback The callback function.
+     */
+    cacheVersion = function(callback) {
+        "use strict";
+
+        lol.Static.getVersions(function(err, versions) {
+            if (err) {
+                console.log("Bad response from Riot while getting the versions.");
+                console.log(err);
+                callback({
+                    error: "Bad response from Riot.",
+                    status: 502
+                });
+                return;
+            }
+
+            if (versions) {
+                cache.set("roncli.com:riot:lol:version", versions[0], 86400, function() {
+                    callback();
+                });
+            }
+        });
     };
 
 // TODO: Set limit to application's limits for live.
@@ -245,5 +271,28 @@ module.exports.cacheChampion = function(force, championId, callback) {
         }
 
         cacheChampions(callback);
+    });
+};
+
+/**
+ * Ensures that the latest version is cached.
+ * @param {boolean} force Forces the caching of the version info.
+ * @param {function} callback The callback function.
+ */
+module.exports.cacheVersion = function(force, callback) {
+    "use strict";
+
+    if (force) {
+        cacheVersion(callback);
+        return;
+    }
+
+    cache.keys("roncli.com:riot:lol:version", function(keys) {
+        if (keys && keys.length > 0) {
+            callback();
+            return;
+        }
+
+        cacheVersion(callback);
     });
 };

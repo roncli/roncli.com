@@ -3,7 +3,63 @@ var wow = require("../battlenet/wow"),
     lol = require("../riot/lol"),
     cache = require("../cache/cache"),
     promise = require("promised-io/promise"),
-    Deferred = promise.Deferred;
+    Deferred = promise.Deferred,
+    classNames = {
+        barbarian: "Barbarian",
+        crusader: "Crusader",
+        "demon-hunter": "Demon Hunter",
+        monk: "Monk",
+        "witch-doctor": "Witch Doctor",
+        wizard: "Wizard"
+    },
+    tierNames = {
+        CHALLENGER: "Challenger",
+        MASTER: "Master",
+        DIAMOND: "Diamond",
+        PLATINUM: "Platinum",
+        GOLD: "Gold",
+        SILVER: "Silver",
+        BRONZE: "Bronze"
+    },
+
+    /**
+     * Gets the latest version of the API.
+     * @param {function} callback The callback function.
+     */
+    getVersion = function(callback) {
+        "use strict";
+
+        /**
+         * Gets the latest version of the API from the cache.
+         * @param {function} failureCallback The failure callback function.
+         */
+        var getVersion = function(failureCallback) {
+            cache.get("roncli.com:riot:lol:version", function(version) {
+                if (!version) {
+                    failureCallback();
+                    return;
+                }
+
+                callback(null, version);
+            });
+        };
+
+        getVersion(function() {
+            lol.cacheVersion(false, function(err) {
+                if (err) {
+                    callback(err);
+                    return;
+                }
+
+                getVersion(function() {
+                    callback({
+                        error: "League of Legends version does not exist.",
+                        status: 400
+                    });
+                });
+            });
+        });
+    };
 
 /**
  * Forces the site to cache the character, even if it is already cached.
@@ -56,7 +112,7 @@ module.exports.getLatestWowFeed = function(callback) {
 
         /**
          * Gets the character from the cache.
-         * @param {function} failureCallback The failure callback when there are no posts.
+         * @param {function} failureCallback The failure callback function.
          */
         getCharacter = function(failureCallback) {
             cache.get("roncli.com:battlenet:wow:character", function(character) {
@@ -73,19 +129,19 @@ module.exports.getLatestWowFeed = function(callback) {
 
                         /**
                          * Gets an item from the cache.
-                         * @param {function} failureCallback The failure callback when there are no posts.
+                         * @param {function} failureCallback The failure callback function.
                          */
                         getItem = function(failureCallback) {
-                            cache.get("roncli.com:battlenet:wow:item:" + feedItem.itemId, function(item) {
+                            cache.get("roncli.com:battlenet:wow:item:" + feedItem[0].itemId, function(item) {
                                 if (!item) {
                                     failureCallback();
                                     return;
                                 }
 
                                 result.feedItem = {
-                                    type: feedItem.type,
-                                    timestamp: feedItem.timestamp,
-                                    itemId: feedItem.itemId,
+                                    type: feedItem[0].type,
+                                    timestamp: feedItem[0].timestamp,
+                                    itemId: feedItem[0].itemId,
                                     item: item.name
                                 };
 
@@ -93,29 +149,29 @@ module.exports.getLatestWowFeed = function(callback) {
                             });
                         };
 
-                    switch (feedItem.type) {
+                    switch (feedItem[0].type) {
                         case "ACHIEVEMENT":
                             result.feedItem = {
-                                type: feedItem.type,
-                                timestamp: feedItem.timestamp,
-                                achievement: feedItem.achievement.title,
-                                icon: feedItem.achievement.icon
+                                type: feedItem[0].type,
+                                timestamp: feedItem[0].timestamp,
+                                achievement: feedItem[0].achievement.title,
+                                icon: feedItem[0].achievement.icon
                             };
                             deferred.resolve(true);
                             break;
                         case "BOSSKILL":
-                            matches = /^(.*) kills \(.*\)$/.exec(feedItem.achievement.title);
-                            boss = matches ? matches[1] : feedItem.achievement.title;
+                            matches = /^(.*) kills \(.*\)$/.exec(feedItem[0].achievement.title);
+                            boss = matches ? matches[1] : feedItem[0].achievement.title;
                             result.feedItem = {
-                                type: feedItem.type,
-                                timestamp: feedItem.timestamp,
+                                type: feedItem[0].type,
+                                timestamp: feedItem[0].timestamp,
                                 boss: boss
                             };
                             deferred.resolve(true);
                             break;
                         case "LOOT":
                             getItem(function() {
-                                wow.cacheItem(false, feedItem.itemId, function(err) {
+                                wow.cacheItem(false, feedItem[0].itemId, function(err) {
                                     if (err) {
                                         deferred.reject(err);
                                         return;
@@ -171,7 +227,7 @@ module.exports.getDiabloMain = function(callback) {
 
     /**
      * Gets the profile from the cache.
-     * @param {function} failureCallback The failure callback when there are no posts.
+     * @param {function} failureCallback The failure callback function.
      */
     var getProfile = function(failureCallback) {
         cache.get("roncli.com:battlenet:d3:profile", function(profile) {
@@ -180,7 +236,18 @@ module.exports.getDiabloMain = function(callback) {
                 return;
             }
 
-            callback(null, profile);
+            callback(null, {
+                seasonal: profile.seasonal,
+                hardcore: profile.hardcore,
+                paragonLevel: profile.hero.paragonLevel,
+                name: profile.hero.name,
+                "class": classNames[profile.hero.class],
+                lastUpdated: profile.hero["last-updated"] * 1000,
+                damage: profile.heroData.stats.damage,
+                toughness: profile.heroData.stats.toughness,
+                healing: profile.heroData.stats.healing,
+                eliteKills: profile.heroData.kills.elites
+            });
         });
     };
 
@@ -212,24 +279,34 @@ module.exports.getLolRanked = function(callback) {
 
         /**
          * Gets the champion history from the cache.
-         * @param {function} failureCallback The failure callback when there are no posts.
+         * @param {function} failureCallback The failure callback function.
          */
         getChampion = function(failureCallback) {
-            cache.hget("roncli.com:riot:lol:champions", result.game.participants[0].championId, function(champion) {
+            cache.hget("roncli.com:riot:lol:champions", result.game.championId, function(champion) {
                 if (!champion) {
                     failureCallback();
                     return;
                 }
 
-                result.champion = champion;
+                getVersion(function(err, version) {
+                    if (err) {
+                        callback(err);
+                        return;
+                    }
 
-                callback(null, result);
+                    result.champion = {
+                        name: champion.name,
+                        image: "//ddragon.leagueoflegends.com/cdn/" + version + "/img/champion/" + champion.image.full
+                    };
+
+                    callback(null, result);
+                });
             });
         },
 
         /**
          * Gets the last game from the game history cache.
-         * @param {function} failureCallback The failure callback when there are no posts.
+         * @param {function} failureCallback The failure callback function.
          */
         getHistory = function(failureCallback) {
             cache.zrevrange("roncli.com:riot:lol:history", 0, 0, function(history) {
@@ -238,10 +315,21 @@ module.exports.getLolRanked = function(callback) {
                     return;
                 }
 
-                result.game = history[0];
+                result.game = {
+                    matchDuration: {
+                        minutes: Math.floor(history[0].matchDuration / 60),
+                        seconds: history[0].matchDuration % 60
+                    },
+                    winner: history[0].participants[0].stats.winner,
+                    kills: history[0].participants[0].stats.kills,
+                    deaths: history[0].participants[0].stats.deaths,
+                    assists: history[0].participants[0].stats.assists,
+                    goldPerMinute: 60 * history[0].participants[0].stats.goldEarned / history[0].matchDuration,
+                    championId: history[0].participants[0].championId
+                };
 
                 getChampion(function() {
-                    lol.cacheChampion(false, result.game.participants[0].championId, function(err) {
+                    lol.cacheChampion(false, result.game.championId, function(err) {
                         if (err) {
                             callback(err);
                             return;
@@ -260,7 +348,7 @@ module.exports.getLolRanked = function(callback) {
 
         /**
          * Gets the ranked stats from the cache.
-         * @param {function} failureCallback The failure callback when there are no posts.
+         * @param {function} failureCallback The failure callback function.
          */
         getRanked = function(failureCallback) {
             cache.get("roncli.com:riot:lol:league", function(ranked) {
@@ -269,7 +357,14 @@ module.exports.getLolRanked = function(callback) {
                     return;
                 }
 
-                result.ranked = ranked;
+                result.ranked = {
+                    tier: tierNames[ranked.tier],
+                    division: ranked.entries[0].division,
+                    leaguePoints: ranked.entries[0].leaguePoints,
+                    wins: ranked.entries[0].wins,
+                    losses: ranked.entries[0].losses,
+                    isHotStreak: ranked.entries[0].isHotStreak
+                };
 
                 getHistory(function() {
                     failureCallback();
