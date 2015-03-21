@@ -75,23 +75,41 @@ var config = require("../privateConfig").battlenet,
 
     /**
      * Caches an item from Battle.Net.
-     * @param {number} itemId The Item ID to cache.
+     * @param {string} itemId The Item ID to cache.
      * @param {function} callback The callback function.
      */
     cacheItem = function(itemId, callback) {
         "use strict";
 
-        bnet.wow.item.item({
-            origin: "us",
-            id: itemId
-        }, function(err, item) {
+        var getItem = function(itemIdWithContext, callback) {
+            bnet.wow.item.item({
+                origin: "us",
+                id: itemIdWithContext
+            }, function(err, item) {
+                if (err) {
+                    console.log("Bad response from Battle.Net while getting the item.");
+                    console.log(err);
+                    callback({
+                        error: "Bad response from Battle.Net.",
+                        status: 502
+                    });
+                    return;
+                }
+
+                if (item.name) {
+                    callback(null, item);
+                    return;
+                }
+
+                if (item.availableContexts && item.availableContexts.length > 0) {
+                    getItem(itemIdWithContext + "/" + item.availableContexts[0], callback);
+                }
+            });
+        };
+
+        getItem(itemId, function(err, item) {
             if (err) {
-                console.log("Bad response from Battle.Net while getting the item.");
-                console.log(err);
-                callback({
-                    error: "Bad response from Battle.Net.",
-                    status: 502
-                });
+                callback(err);
                 return;
             }
 

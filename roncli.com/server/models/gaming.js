@@ -142,7 +142,8 @@ module.exports.getLatestWowFeed = function(callback) {
                                     type: feedItem[0].type,
                                     timestamp: feedItem[0].timestamp,
                                     itemId: feedItem[0].itemId,
-                                    item: item.name
+                                    item: item.name,
+                                    icon: item.icon
                                 };
 
                                 deferred.resolve(true);
@@ -316,15 +317,16 @@ module.exports.getLolRanked = function(callback) {
                 }
 
                 result.game = {
+                    matchCreation: history[0].matchCreation,
                     matchDuration: {
                         minutes: Math.floor(history[0].matchDuration / 60),
-                        seconds: history[0].matchDuration % 60
+                        seconds: history[0].matchDuration % 60 < 10 ? "0" + history[0].matchDuration % 60 : history[0].matchDuration % 60
                     },
                     winner: history[0].participants[0].stats.winner,
                     kills: history[0].participants[0].stats.kills,
                     deaths: history[0].participants[0].stats.deaths,
                     assists: history[0].participants[0].stats.assists,
-                    goldPerMinute: 60 * history[0].participants[0].stats.goldEarned / history[0].matchDuration,
+                    goldPerMinute: (60 * history[0].participants[0].stats.goldEarned / history[0].matchDuration).toFixed(2),
                     championId: history[0].participants[0].championId
                 };
 

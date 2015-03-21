@@ -84,6 +84,81 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="btn-group-vertical home-panel">
+                <a class="btn btn-info" href="/gaming">
+                    <div class="panel-heading panel-title text-center"><h3>Gaming</h3></div>
+                </a>
+                <div class="body">
+                    <div>
+                        <div class="div-table" style="margin-bottom: 5px;">
+                            <div>
+                                <div class="hidden-sm" style="vertical-align: top; width: 55px;">
+                                    <div style="width: 50px; height: 50px; background-image: url('{{wow.attributes.character.thumbnail}}'); background-size: 50px 50px; display: inline-block;"></div>
+                                </div>
+                                <div style="vertical-align: top;">
+                                    <div class="text-center"><h4>World of Warcraft</h4></div>
+                                    <div>{{wow.attributes.character.achievementPoints}} achievement points</div>
+                                    {{#ifCond wow.attributes.feedItem.type "===" "BOSSKILL"}}
+                                        Defeated <b>{{wow.attributes.feedItem.boss}}</b>
+                                    {{/ifCond}}
+                                    {{#ifCond wow.attributes.feedItem.type "===" "LOOT"}}
+                                        <div style="width: 20px; height: 20px; background-image: url('http://us.media.blizzard.com/wow/icons/56/{{wow.attributes.feedItem.icon}}.jpg'); display: inline-block;"></div>
+                                        <div style="display: inline-block;">
+                                            Looted <b>{{wow.attributes.feedItem.name}}</b>
+                                        </div>
+                                    {{/ifCond}}
+                                    {{#ifCond wow.attributes.feedItem.type "===" "ACHIEVEMENT"}}
+                                        <div style="width: 20px; height: 20px; background-image: url('http://us.media.blizzard.com/wow/icons/56/{{wow.attributes.feedItem.icon}}.jpg'); display: inline-block;"></div>
+                                        <div style="display: inline-block;">
+                                            Earned <b>{{wow.attributes.feedItem.title}}</b>
+                                        </div>
+                                    {{/ifCond}}<br />
+                                    {{{toTimeAgo wow.attributes.feedItem.timestamp}}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="div-table" style="margin-bottom: 5px;">
+                            <div>
+                                <div class="hidden-sm" style="vertical-align: top; width: 55px;">
+                                    <div style="width: 50px; height: 50px; background-image: url('/images/d3.png'); background-size: 50px 50px; display: inline-block;"></div>
+                                </div>
+                                <div style="vertical-align: top;">
+                                    <div class="text-center"><h4>Diablo III</h4></div>
+                                    {{#if d3.attributes.seasonal}}Seasonal {{/if}}
+                                    {{#if d3.attributes.hardcore}}Hardcore {{/if}}
+                                    {{d3.attributes.class}} <b>{{d3.attributes.name}}</b><br />
+                                    Paragon {{d3.attributes.paragonLevel}} - {{d3.attributes.damage}} Damage<br />
+                                    {{d3.attributes.eliteKills}} elite kills<br />
+                                    {{{toTimeAgo d3.attributes.lastUpdated}}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="div-table" style="margin-bottom: 5px;">
+                            <div>
+                                <div class="hidden-sm" style="vertical-align: top; width: 55px;">
+                                    <div style="width: 50px; height: 50px; background-image: url('{{lol.attributes.champion.image}}'); background-size: 50px 50px; display: inline-block;"></div>
+                                </div>
+                                <div style="vertical-align: top;">
+                                    <div class="text-center"><h4>League of Legends</h4></div>
+                                    {{lol.attributes.ranked.tier}} {{lol.attributes.ranked.division}} {{lol.attributes.ranked.leaguePoints}} LP, {{lol.attributes.ranked.wins}}-{{lol.attributes.ranked.losses}}<br/>
+                                    Last game: {{#if lol.attributes.game.winner}}<span class="text-success">Won</span>{{else}}<span class="text-danger">Lost</span>{{/if}} -
+                                    {{lol.attributes.game.matchDuration.minutes}}:{{lol.attributes.game.matchDuration.seconds}}<br />
+                                    <b>{{lol.attributes.champion.name}}</b> - {{lol.attributes.game.kills}}/{{lol.attributes.game.deaths}}/{{lol.attributes.game.assists}} - {{lol.attributes.game.goldPerMinute}} GPM<br />
+                                    {{{toTimeAgo lol.attributes.game.matchCreation}}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="col-sm-2 hidden-xs right-side">
     <div class="panel panel-primary">
