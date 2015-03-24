@@ -67,10 +67,6 @@
   <ItemGroup>
     <Build Include="dbo\Tables\tblEmailChangeAuthorization.sql" />
     <Build Include="dbo\Tables\tblGame.sql" />
-    <Build Include="dbo\Tables\tblGameComment.sql" />
-    <Build Include="dbo\Tables\tblGameFeature.sql" />
-    <Build Include="dbo\Tables\tblGameFile.sql" />
-    <Build Include="dbo\Tables\tblGameURL.sql" />
     <Build Include="dbo\Tables\tblLifeFeature.sql" />
     <Build Include="dbo\Tables\tblPage.sql" />
     <Build Include="dbo\Tables\tblPageComment.sql" />
