@@ -114,6 +114,32 @@ module.exports = {
     },
 
     /**
+     * The files admin view.
+     * @param {object} params The parameters to use in the controller.
+     * @param {function} callback The callback to run upon completion of the controller running.
+     */
+    files: function(params, callback) {
+        "use strict";
+
+        var app = this.app;
+
+        app.fetch({
+            files: {collection: "Admin_Files", params: {}}
+        }, {readFromCache: false, writeToCache: false}, function(err, result) {
+            if (!err && result && result.files && result.files.models && result.files.models[0] && result.files.models[0].attributes && result.files.models[0].attributes.error) {
+                err = result.files.models[0].attributes;
+            }
+
+            if (err) {
+                handleServerError(err, app, result, callback);
+                return;
+            }
+
+            callback(err, result);
+        });
+    },
+
+    /**
      * The music admin view.
      * @param {object} params The parameters to use in the controller.
      * @param {function} callback The callback to run upon completion of the controller running.

@@ -17,6 +17,9 @@ module.exports = function(app) {
     // The page admin page.
     app.router.route(/^\/?admin\/page(\/.*)$/, "admin#page");
 
+    // The files admin page.
+    app.router.route(/^\/?admin\/files$/, "admin#files");
+
     // The music admin page.
     app.router.route(/^\/?admin\/music$/, "admin#music");
 
