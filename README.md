@@ -121,8 +121,11 @@ The following should be the contents of privateConfig.js:
                 port: (Your redis server hostname),
                 password: "(Your redis server password)"
             },
+            files: {
+                path: "(A path to a directory that the application has read and write access to for file storage)"
+            },
             google: {
-                blog_id: "(Your Google Blogger blog ID)",
+                blog_id: "(Your Google Blogger blog ID)",7
                 api_key: "(Your Google Blogger API key)"
             },
             tumblr: {

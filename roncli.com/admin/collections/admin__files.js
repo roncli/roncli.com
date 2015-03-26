@@ -3,7 +3,7 @@ var File = require("../models/admin__file"),
 
 module.exports = Collection.extend({
     model: File,
-    url: "/admin/coding/files"
+    url: "/admin/files"
 });
 
 module.exports.id = "Admin_Files";

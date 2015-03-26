@@ -36,6 +36,17 @@ module.exports.get = function(req, query, callback) {
                         callback(pages);
                     });
                     return;
+                case "files":
+                    admin.getFiles(userId, function(err, files) {
+                        if (err) {
+                            req.res.status(err.status);
+                            callback(err);
+                            return;
+                        }
+
+                        callback(files);
+                    });
+                    return;
                 case "project":
                     admin.getProjectByUrl(userId, query.url, function(err, data) {
                         if (err) {
@@ -246,7 +257,7 @@ module.exports.post = function(req, query, callback) {
                             });
                             return;
                         case "change-order":
-                            admin.changeOrder(userId, req.body.pageId, req.body.order, function(err) {
+                            admin.changePageOrder(userId, req.body.pageId, req.body.order, function(err) {
                                 if (err) {
                                     req.res.status(err.status);
                                     callback(err);

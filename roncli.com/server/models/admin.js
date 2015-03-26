@@ -1,4 +1,7 @@
 var User = require("./user"),
+    fs = require("fs"),
+    path = require("path"),
+    config = require("../privateConfig").files,
     db = require("../database/database"),
     blog = require("../models/blog"),
     page = require("../models/page"),
@@ -893,7 +896,7 @@ module.exports.movePage = function(userId, pageId, newParentPageId, callback) {
  * @param {int[]} order The order of pageIDs.
  * @param {function()|function(object)} callback The callback function.
  */
-module.exports.changeOrder = function(userId, parentPageId, order, callback) {
+module.exports.changePageOrder = function(userId, parentPageId, order, callback) {
     "use strict";
 
     User.getUserRoles(userId, function(err, roles) {
@@ -937,7 +940,7 @@ module.exports.changeOrder = function(userId, parentPageId, order, callback) {
                     sqlVariables = {};
 
                 if (err) {
-                    console.log("Database error checking pages in admin.changeOrder.");
+                    console.log("Database error checking pages in admin.changePageOrder.");
                     console.log(err);
                     callback({
                         error: "There was a database error while changing page order.  Please reload the page and try again.",
@@ -964,7 +967,7 @@ module.exports.changeOrder = function(userId, parentPageId, order, callback) {
                 db.query(
                     sql.join(";"), sqlVariables, function(err) {
                         if (err) {
-                            console.log("Database error updating page order in admin.changeOrder.");
+                            console.log("Database error updating page order in admin.changePageOrder.");
                             console.log(err);
                             callback({
                                 error: "There was a database error while changing page order.  Please reload the page and try again.",
@@ -1128,6 +1131,97 @@ module.exports.rejectPageComment = function(userId, commentId, callback) {
                 callback();
             }
         );
+    });
+};
+
+/**
+ * Gets the files.
+ * @param {number} userId The user ID of the moderator.
+ * @param {function(null, object)|function(object)} callback The callback function.
+ */
+module.exports.getFiles = function(userId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while getting the files.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        fs.readdir(config.path, function(err, files) {
+            var ls = [], promises = [];
+
+            if (err) {
+                console.log("File system error while reading the directory in admin.getFiles.");
+                console.log(err);
+                callback({
+                    error: "There was a server error while getting the files.  Please reload the page and try again.",
+                    status: 500
+                });
+                return;
+            }
+
+            if (files.length === 0) {
+                callback(null, []);
+                return;
+            }
+
+            files.forEach(function(file) {
+                promises.push(
+                    (function() {
+                        var deferred = new Deferred();
+
+                        fs.stat(path.join(config.path, file), function(err, stats) {
+                            if (err) {
+                                console.log("File system error while reading a file in admin.getFiles.");
+                                console.log(err);
+                                deferred.reject({
+                                    error: "There was a server error while getting the files.  Please reload the page and try again.",
+                                    status: 500
+                                });
+                                return;
+                            }
+
+                            if (stats.isFile()) {
+                                ls.push({
+                                    file: file,
+                                    size: stats.size,
+                                    created: stats.ctime.getTime(),
+                                    modified: stats.mtime.getTime()
+                                });
+                            }
+
+                            deferred.resolve(true);
+                        });
+
+                        return deferred.promise;
+                    }())
+                );
+            });
+
+            all(promises).then(
+                function() {
+                    callback(null, ls.sort(function(a, b) {
+                        return a.file.toLowerCase().localeCompare(b.file.toLowerCase());
+                    }));
+                },
+
+                function(err) {
+                    callback(err);
+                }
+            );
+        });
     });
 };
 
