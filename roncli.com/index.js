@@ -1,4 +1,6 @@
-var config = require("./server/privateConfig").server,
+var config = require("./server/privateConfig"),
+    serverConfig = config.server,
+    filesConfig = config.files,
     express = require("express"),
     domain = require("domain"),
     path = require("path"),
@@ -11,6 +13,7 @@ var config = require("./server/privateConfig").server,
     cookieParser = require("cookie-parser"),
     session = require("express-session"),
     bodyParser = require("body-parser"),
+    multer = require("multer"),
     rss = require("./server/rss/rss"),
     app = express(),
     ApiDataAdapter = require("./server/ApiDataAdapter"),
@@ -25,15 +28,23 @@ morganExtensions(morgan);
 // Initialize middleware stack.
 app.use(compression());
 app.use(morgan(":colorstatus \x1b[30m\x1b[1m:method\x1b[0m :url\x1b[30m\x1b[1m:newline    Date :date[iso]    IP :remote-addr    Time :colorresponse ms"));
-app.use(cookieParser(config.secret));
+app.use(cookieParser(serverConfig.secret));
 app.use(session({
-    secret: config.secret,
+    secret: serverConfig.secret,
     resave: true,
     saveUninitialized: true
 }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(multer({
+    dest: filesConfig.path,
+    rename: function(field, file) {
+        "use strict";
+
+        return file;
+    }
+}));
 
 // Remove powered by header.
 app.use(function(req, res, next) {

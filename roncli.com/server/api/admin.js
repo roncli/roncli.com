@@ -294,6 +294,14 @@ module.exports.post = function(req, query, callback) {
                             return;
                     }
                     break;
+                case "files":
+                    switch (req.parsedPath[1]) {
+                        case "upload":
+                            console.log(req.files);
+                            console.log(req.body);
+                            return;
+                    }
+                    break;
                 case "music":
                     switch (req.parsedPath[1]) {
                         case "clear-caches":

@@ -13,9 +13,10 @@ var config = require("../privateConfig").google,
     cachePosts = function(callback) {
         "use strict";
 
+        // TODO: Loop through results past 500
         blogger.posts.list({
             blogId: config.blog_id,
-            maxResults: 100000,
+            maxResults: 500,
             status: "live",
             fields: "items(id,labels,published,title,url)",
             key: config.api_key
