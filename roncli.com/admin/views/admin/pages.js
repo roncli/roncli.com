@@ -3,8 +3,7 @@
 var BaseView = require("./base"),
     $ = require("jquery"),
     Admin = require("../../models/admin"),
-    backbone = require("rendr/node_modules/backbone"),
-    sortable = require("sortablejs");
+    backbone = require("rendr/node_modules/backbone");
 
 // Sets up the pages admin view.
 module.exports = BaseView.extend({

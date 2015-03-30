@@ -1226,6 +1226,48 @@ module.exports.getFiles = function(userId, callback) {
 };
 
 /**
+ * Deletes a file.
+ * @param {number} userId The user ID of the moderator.
+ * @param {string} filename The name of the file to delete.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.deleteFile = function(userId, filename, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while getting the files.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        fs.unlink(path.join(config.path, filename), function(err) {
+            if (err) {
+                console.log("File system error while deleting a file in admin.deleteFile.");
+                console.log(err);
+                callback({
+                    error: "There was a server error while delete a file.  Please reload the page and try again.",
+                    status: 500
+                });
+                return;
+            }
+
+            callback();
+        });
+    });
+};
+
+/**
  * Clears the music's caches.
  * @param {number} userId The user ID of the moderator.
  * @param {function()|function(object)} callback The callback function.

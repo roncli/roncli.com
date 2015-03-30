@@ -297,8 +297,21 @@ module.exports.post = function(req, query, callback) {
                 case "files":
                     switch (req.parsedPath[1]) {
                         case "upload":
-                            console.log(req.files);
-                            console.log(req.body);
+                            // Multer does the work for this API, so just return a 204.
+                            req.res.status(204);
+                            callback();
+                            return;
+                        case "delete":
+                            admin.deleteFile(userId, req.body.filename, function(err) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
                             return;
                     }
                     break;

@@ -14,6 +14,7 @@ var config = require("./server/privateConfig"),
     session = require("express-session"),
     bodyParser = require("body-parser"),
     multer = require("multer"),
+    User = require("./server/models/user.js"),
     rss = require("./server/rss/rss"),
     app = express(),
     ApiDataAdapter = require("./server/ApiDataAdapter"),
@@ -35,6 +36,7 @@ app.use(session({
     saveUninitialized: true
 }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use("/files", express.static(path.join(__dirname, "files")));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(multer({
@@ -43,6 +45,23 @@ app.use(multer({
         "use strict";
 
         return file;
+    },
+    onFileUploadStart: function(file, req, res) {
+        "use strict";
+
+        var userId = req.session.user ? req.session.user.id : 0;
+
+        if (userId === 0) {
+            return false;
+        }
+
+        User.getUserRoles(userId, function(err, roles) {
+            if (err || roles.indexOf("SiteAdmin") === -1) {
+                req.pause();
+                res.status = 403;
+                res.end("You do not have access to this resource.");
+            }
+        });
     }
 }));
 

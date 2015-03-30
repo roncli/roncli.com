@@ -2,14 +2,76 @@
 
 var BaseView = require("./base"),
     $ = require("jquery"),
-    Admin = require("../../models/admin");
+    Admin = require("../../models/admin"),
+    backbone = require("rendr/node_modules/backbone");
 
 // Sets up the files admin view.
 module.exports = BaseView.extend({
     className: "admin_files_view",
 
     events: {
+        "click a.download-file": "downloadFile",
+        "click button.delete-file": "deleteFile",
         "click button#upload-file": "uploadFile"
+    },
+
+    downloadFile: function(ev) {
+        "use strict";
+
+        // Open download in new window.
+        window.open($(ev.target).attr("href"), "_blank");
+
+        // Do not open download in current window!
+        return false;
+    },
+
+    deleteFile: function(ev) {
+        "use strict";
+
+        var view = this,
+            app = this.app,
+            deleteFile = $(ev.target),
+            filename = deleteFile.closest("div.file").data("filename"),
+            admin = new Admin();
+
+        bootbox.dialog({
+            title: "Delete Page",
+            message: app.templateAdapter.getTemplate("admin/files/deleteConfirm")(),
+            buttons: {
+                yes: {
+                    label: "Yes",
+                    className: "btn-primary",
+                    callback: function() {
+                        deleteFile.prop("disabled", true);
+
+                        admin.fetch({
+                            url: "/admin/files/delete",
+                            data: JSON.stringify({filename: filename}),
+                            type: "POST",
+                            contentType: "application/json",
+                            dataType: "json",
+                            success: function() {
+                                backbone.history.loadUrl(window.location.pathname);
+                            },
+                            error: function(xhr, error) {
+                                var message;
+                                if (error && error.body && error.body.error) {
+                                    message = error.body.error;
+                                } else {
+                                    message = "There was a server error deleting the page.  Please try again later.";
+                                }
+
+                                view.showError(message);
+
+                                deleteFile.prop("disabled", false);
+                            }
+                        });
+                    }
+                },
+                no: {label: "No"}
+            },
+            show: false
+        }).off("shown.bs.modal").modal("show");
     },
 
     uploadFile: function() {
