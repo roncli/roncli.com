@@ -20,12 +20,12 @@ module.exports = {
                 err = result.page.attributes;
             }
 
-            if (!err && result && result.songs && result.songs.models && result.songs.models[0] && result.songs.models[0].attributes && result.songs.models[0].attributes.error) {
-                err = result.songs.models[0].attributes;
+            if (!err && result && result.codingEvents && result.codingEvents.models && result.codingEvents.models[0] && result.codingEvents.models[0].attributes && result.codingEvents.models[0].attributes.error) {
+                err = result.codingEvents.models[0].attributes;
             }
 
-            if (!err && result && result.tags && result.tags.models && result.tags.models[0] && result.tags.models[0].attributes && result.tags.models[0].attributes.error) {
-                err = result.tags.models[0].attributes;
+            if (!err && result && result.projects && result.projects.models && result.projects.models[0] && result.projects.models[0].attributes && result.projects.models[0].attributes.error) {
+                err = result.projects.models[0].attributes;
             }
 
             if (err) {

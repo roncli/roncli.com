@@ -36,7 +36,7 @@ app.use(session({
     saveUninitialized: true
 }));
 app.use(express.static(path.join(__dirname, "public")));
-app.use("/files", express.static(path.join(__dirname, "files")));
+app.use("/files", express.static(path.join(__dirname, "files"), {redirect: false}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(multer({
