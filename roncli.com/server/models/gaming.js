@@ -273,7 +273,7 @@ module.exports.getDiabloMain = function(callback) {
  * Gets the information about ranked League of Legends stats.
  * @param {function} callback The callback function.
  */
-module.exports.getLolRanked = function(callback) {
+module.exports.getLatestLolRanked = function(callback) {
     "use strict";
 
     var result = {},

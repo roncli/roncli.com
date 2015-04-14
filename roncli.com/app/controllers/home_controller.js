@@ -19,7 +19,7 @@ module.exports = {
             projects: {collection: "Project_GetFeatured", params: {count: 3}},
             wow: {model: "WarcraftFeed_GetLatest", params: {}},
             d3: {model: "DiabloProfile_GetMain", params: {}},
-            lol: {model: "LeagueRanked", params: {}}
+            lol: {model: "LeagueRanked_GetLatest", params: {}}
         }, function(err, result) {
             if (!err && result && result.blog && result.blog.attributes && result.blog.attributes.error) {
                 err = result.blog.attributes;

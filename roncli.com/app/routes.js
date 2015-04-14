@@ -45,6 +45,9 @@ module.exports = function(match) {
     // Specific music pages.
     match(/\/?(project\/.*)/, "coding#project");
 
+    // The gaming page.
+    match(/^\/?gaming$/, "gaming#index");
+
     // The default route if none of the above match.
     match(/\/?(.*)/, "default#index");
 };
