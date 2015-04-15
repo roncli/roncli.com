@@ -14,7 +14,7 @@ var config = require("../privateConfig").battlenet,
 
         bnet.wow.character.aggregate({
             origin: "us",
-            realm: "lightbringer",
+            realm: "sen'jin",
             name: "Roncli",
             fields: ["feed"]
         }, function(err, result) {
