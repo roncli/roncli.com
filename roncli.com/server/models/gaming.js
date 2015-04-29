@@ -4,6 +4,7 @@ var wow = require("../battlenet/wow"),
     cache = require("../cache/cache"),
     promise = require("promised-io/promise"),
     Deferred = promise.Deferred,
+    seq = promise.seq,
     classNames = {
         barbarian: "Barbarian",
         crusader: "Crusader",
@@ -63,6 +64,62 @@ var wow = require("../battlenet/wow"),
                 icon: item.icon
             });
         });
+    },
+
+    /**
+     * Gets feed item data.
+     * @param {object} feedItem The feed item from the cache.
+     * @param {function} callback The callback function.
+     */
+    getWowFeedItem = function(feedItem, callback) {
+        "use strict";
+
+        var matches, boss,
+
+            /**
+             * Returns the item.
+             * @param {object} item The item to return.
+             */
+            returnItem = function(item) {
+                callback(null, item);
+            };
+
+        switch (feedItem.type) {
+            case "ACHIEVEMENT":
+                callback(null, {
+                    type: feedItem.type,
+                    timestamp: feedItem.timestamp,
+                    achievement: feedItem.achievement.title,
+                    icon: feedItem.achievement.icon
+                });
+                break;
+            case "BOSSKILL":
+                matches = /^(.*) kills \(.*\)$/.exec(feedItem.achievement.title);
+                boss = matches ? matches[1] : feedItem.achievement.title;
+                callback(null, {
+                    type: feedItem.type,
+                    timestamp: feedItem.timestamp,
+                    boss: boss
+                });
+                break;
+            case "LOOT":
+                getWowItem(feedItem, returnItem, function() {
+                    wow.cacheItem(false, feedItem.itemId, function(err) {
+                        if (err) {
+                            callback(err);
+                            return;
+                        }
+
+                        getWowItem(feedItem, returnItem, function() {
+                            callback({
+                                error: "Item does not exist.",
+                                status: 400
+                            });
+                        });
+                    });
+                });
+                break;
+        }
     },
 
     /**
@@ -151,8 +208,67 @@ module.exports.forceCacheChampions = function(callback) {
 module.exports.getWowFeed = function(callback) {
     "use strict";
 
+    var result = {},
 
-},
+        /**
+         * Gets the feed for the character from the cache.
+         * @param {object} character The character object.
+         */
+        getFeed = function(character) {
+            result.character = character;
+
+            cache.zrevrange("roncli.com:battlenet:wow:feed", 0, -1, function(feedItems) {
+                var fxs = [];
+
+                result.feedItems = [];
+
+                feedItems.forEach(function(feedItem) {
+                    fxs.push(function() {
+                        var deferred = new Deferred();
+
+                        getWowFeedItem(feedItem, function(err, item) {
+                            if (err) {
+                                deferred.reject(err);
+                                return;
+                            }
+
+                            result.feedItems.push(item);
+                            deferred.resolve();
+                        });
+
+                        return deferred.promise;
+                    });
+                });
+
+                seq(fxs).then(
+                    function() {
+                        callback(null, result);
+                    },
+
+                    // If any of the functions error out, it will be handled here.
+                    function(err) {
+                        callback(err);
+                    }
+                );
+            });
+        };
+
+    getWowCharacter(getFeed, function() {
+        wow.cacheCharacter(false, function(err) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            getWowCharacter(getFeed, function() {
+                callback({
+                    error: "World of Warcraft character does not exist.",
+                    status: 400
+                });
+            });
+        });
+    });
+};
 
 /**
  * Gets the latest WoW feed item.
@@ -173,61 +289,16 @@ module.exports.getLatestWowFeed = function(callback) {
             cache.zrevrange("roncli.com:battlenet:wow:feed", 0, 0, function(feedItem) {
                 // TODO: What if feedItem.length === 0?
 
-                var deferred = new Deferred(),
-                    matches, boss,
-                    setItem = function(item) {
-                        result.feedItem = item;
-                        deferred.resolve(true);
-                    };
-
-                switch (feedItem[0].type) {
-                    case "ACHIEVEMENT":
-                        result.feedItem = {
-                            type: feedItem[0].type,
-                            timestamp: feedItem[0].timestamp,
-                            achievement: feedItem[0].achievement.title,
-                            icon: feedItem[0].achievement.icon
-                        };
-                        deferred.resolve(true);
-                        break;
-                    case "BOSSKILL":
-                        matches = /^(.*) kills \(.*\)$/.exec(feedItem[0].achievement.title);
-                        boss = matches ? matches[1] : feedItem[0].achievement.title;
-                        result.feedItem = {
-                            type: feedItem[0].type,
-                            timestamp: feedItem[0].timestamp,
-                            boss: boss
-                        };
-                        deferred.resolve(true);
-                        break;
-                    case "LOOT":
-                        getWowItem(feedItem[0], setItem, function() {
-                            wow.cacheItem(false, feedItem[0].itemId, function(err) {
-                                if (err) {
-                                    deferred.reject(err);
-                                    return;
-                                }
-
-                                getWowItem(feedItem[0], setItem, function() {
-                                    deferred.reject({
-                                        error: "Item does not exist.",
-                                        status: 400
-                                    });
-                                });
-                            });
-                        });
-                        break;
-                }
-
-                deferred.promise.then(
-                    function() {
-                        callback(null, result);
-                    },
-
-                    function(err) {
+                getWowFeedItem(feedItem[0], function(err, item) {
+                    if (err) {
                         callback(err);
+                        return;
                     }
-                );
+
+                    result.feedItem = item;
+
+                    callback(null, result);
+                });
             });
         };
 
