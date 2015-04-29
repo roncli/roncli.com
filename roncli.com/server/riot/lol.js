@@ -195,7 +195,7 @@ var config = require("../privateConfig").riot,
     };
 
 // TODO: Set limit to application's limits for live.
-lol.setRateLimit(10, 500);
+lol.setRateLimit(9, 499);
 
 /**
  * Ensures that the ranked info is cached.
@@ -212,8 +212,14 @@ module.exports.cacheRanked = function(force, callback) {
 
     cache.keys("roncli.com:riot:lol:league", function(keys) {
         if (keys && keys.length > 0) {
-            callback();
-            return;
+            cache.keys("roncli.com:riot:lol:league", function(keys) {
+                if (keys && keys.length > 0) {
+                    callback();
+                    return;
+                }
+
+                cacheRanked(callback);
+            });
         }
 
         cacheRanked(callback);

@@ -170,7 +170,9 @@ module.exports.getLatestWowFeed = function(callback) {
         getFeed = function(character) {
             result.character = character;
 
-            cache.zrevrange("roncli.com:battlenet:wow:feed", 0, 1, function(feedItem) {
+            cache.zrevrange("roncli.com:battlenet:wow:feed", 0, 0, function(feedItem) {
+                // TODO: What if feedItem.length === 0?
+
                 var deferred = new Deferred(),
                     matches, boss,
                     setItem = function(item) {
@@ -338,7 +340,7 @@ module.exports.getLatestLolRanked = function(callback) {
          */
         getHistory = function(failureCallback) {
             cache.zrevrange("roncli.com:riot:lol:history", 0, 0, function(history) {
-                if (!history) {
+                if (!history || history.length === 0) {
                     failureCallback();
                     return;
                 }
