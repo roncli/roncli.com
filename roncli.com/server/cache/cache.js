@@ -214,6 +214,61 @@ module.exports.hget = function(key, field, callback) {
 };
 
 /**
+ * Gets all items from a hash in the cache.
+ * @param {string} key The key to get from the cache.
+ * @param {function} callback The callback function.
+ */
+module.exports.hgetall = function(key, callback) {
+    "use strict";
+
+    login(function(err, client) {
+        if (err) {
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+            return;
+        }
+
+        client.on("error", function(err) {
+            console.log("Error retrieving cache using hgetall", key);
+            console.log(err);
+            client.end();
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+        });
+
+        client.hgetall(key, function(err, data) {
+            var index;
+
+            client.end();
+
+            if (err) {
+                console.log("Error retrieving cache using hgetall", key);
+                console.log(err);
+                if (typeof callback === "function") {
+                    callback();
+                    callback = null;
+                }
+                return;
+            }
+
+            if (typeof callback === "function") {
+                for (index in data) {
+                    if (data.hasOwnProperty(index)) {
+                        data[index] = JSON.parse(data[index]);
+                    }
+                }
+                callback(data);
+                callback = null;
+            }
+        });
+    });
+};
+
+/**
  * Adds items to a hash in the cache.
  * @param {string} key The key to add to a hash in the cache.
  * @param {{key: string, value: object}[]} keyValuePairs An array of objects contaning a key and a value.

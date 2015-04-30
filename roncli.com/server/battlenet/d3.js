@@ -16,7 +16,9 @@ var config = require("../privateConfig").battlenet,
             origin: "us",
             tag: "roncli-1818"
         }, function(err, profile) {
-            var levels, result, seasonalProfile, index, characterClass;
+            var profileDeferred = new Deferred(),
+                heroesDeferred = new Deferred(),
+                levels, result, seasonalProfile, index, characterClass;
 
             if (err) {
                 console.log("Bad response from Battle.Net while getting the career.");
@@ -85,7 +87,7 @@ var config = require("../privateConfig").battlenet,
                 if (err) {
                     console.log("Bad response from Battle.Net while getting the profile.");
                     console.log(err);
-                    callback({
+                    profileDeferred.reject({
                         error: "Bad response from Battle.Net.",
                         status: 502
                     });
@@ -95,9 +97,27 @@ var config = require("../privateConfig").battlenet,
                 result.heroData = hero;
 
                 cache.set("roncli.com:battlenet:d3:profile", result, 86400, function() {
-                    callback();
+                    profileDeferred.resolve();
                 });
             });
+            
+            // Cache the basic hero data.
+            cache.hmset("roncli.com:battlenet:d3:heroes", profile.heroes.map(function(hero) {
+                return {key: hero.id, value: hero};
+            }), 86400, function() {
+                heroesDeferred.resolve();
+            });
+            
+            all([profileDeferred.promise, heroesDeferred.promise]).then(
+                function() {
+                    callback();
+                },
+
+                // If any of the functions error out, it will be handled here.                
+                function(err) {
+                    callback(err);
+                }
+            )
         });
     },
 
@@ -144,8 +164,14 @@ module.exports.cacheProfile = function(force, callback) {
 
     cache.keys("roncli.com:battlenet:d3:profile", function(keys) {
         if (keys && keys.length > 0) {
-            callback();
-            return;
+            cache.keys("roncli.com:battlenet:d3:heroes", function(keys) {
+                if (keys && keys.length > 0) {
+                    callback();
+                    return;
+                }
+
+                cacheProfile(callback);
+            });
         }
 
         cacheProfile(callback);

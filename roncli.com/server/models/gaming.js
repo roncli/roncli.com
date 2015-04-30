@@ -320,6 +320,62 @@ module.exports.getLatestWowFeed = function(callback) {
 };
 
 /**
+ * Gets basic data about characters in Diablo.
+ * @param {function} callback The callback function.
+ */
+module.exports.getDiabloHeroes = function(callback) {
+    "use strict";
+    
+    /**
+     * Gets the heroes from the cache.
+     * @param {function} failureCallback The failure callback function.
+     */
+    var getHeroes = function(failureCallback) {
+        cache.hgetall("roncli.com:battlenet:d3:heroes", function(heroes) {
+            var key, hero, results = [];
+            
+            if (!heroes) {
+                failureCallback();
+                return;
+            }
+            
+            for (key in heroes) {
+                if (heroes.hasOwnProperty(key)) {
+                    hero = heroes[key];
+                    results.push({
+                        id: hero.id,
+                        seasonal: hero.seasonal,
+                        hardcore: hero.hardcore,
+                        paragonLevel: hero.paragonLevel,
+                        name: hero.name,
+                        "class": classNames[hero.class],
+                        lastUpdated: hero["last-updated"] * 1000,
+                    });
+                };
+            }
+
+            callback(null, results);
+        });
+    };
+
+    getHeroes(function() {
+        d3.cacheProfile(false, function(err) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            getHeroes(function() {
+                callback({
+                    error: "Diablo 3 heroes do not exist.",
+                    status: 400
+                });
+            });
+        });
+    });
+};
+
+/**
  * Gets the information about the main character for Diablo.
  * @param {function} callback The callback function.
  */

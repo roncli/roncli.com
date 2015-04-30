@@ -1,11 +1,11 @@
-var gaming = require("../models/gaming.js");
+var gaming = require("../models/gaming");
 
 module.exports.get = function(req, query, callback) {
     "use strict";
 
     switch (req.parsedPath.length) {
         case 0:
-            gaming.getDiabloData(function(err, data) {
+            gaming.getDiabloHeroes(function(err, data) {
                 if (err) {
                     req.res.status(err.status);
                     callback(err);

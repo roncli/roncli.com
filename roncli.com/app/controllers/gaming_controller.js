@@ -13,15 +13,15 @@ module.exports = {
 
         app.fetch({
             wow: {model: "WarcraftFeed", params: {}},
-            d3: {model: "DiabloProfile", params: {}},
+            d3: {collection: "DiabloProfiles", params: {}},
             lol: {model: "LeagueRanked", params: {}}
         }, function(err, result) {
             if (!err && result && result.wow && result.wow.attributes && result.wow.attributes.error) {
                 err = result.wow.attributes;
             }
 
-            if (!err && result && result.d3 && result.d3.attributes && result.d3.attributes.error) {
-                err = result.d3.attributes;
+            if (!err && result && result.d3 && result.d3.models && result.d3.models[0] && result.d3.models[0].attributes && result.d3.models[0].attributes.error) {
+                err = result.d3.models[0].attributes;
             }
 
             if (!err && result && result.lol && result.lol.attributes && result.lol.attributes.error) {

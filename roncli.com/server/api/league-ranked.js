@@ -1,4 +1,4 @@
-var gaming = require("../models/gaming.js");
+var gaming = require("../models/gaming");
 
 module.exports.get = function(req, query, callback) {
     "use strict";
