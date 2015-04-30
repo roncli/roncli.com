@@ -8,7 +8,8 @@
  */
 
 var config = require("../privateConfig").twitter,
-    twitter = new (require("twitter"))(config),
+    Twitter = require("twitter"),
+    twitter = new Twitter(config),
     cache = require("../cache/cache");
 
 module.exports.getTweets = function(callback) {

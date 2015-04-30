@@ -1,3 +1,4 @@
+/// <reference path="../../typings/node/node.d.ts"/>
 module.exports = require("node-uuid");
 
 var parse = module.exports.parse,

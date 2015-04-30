@@ -1,3 +1,4 @@
+/// <reference path="../typings/node/node.d.ts"/>
 var DataAdapter = require("rendr/server/data_adapter"),
     fs = require("fs"),
     util = require("util"),

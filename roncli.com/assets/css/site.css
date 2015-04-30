@@ -43,7 +43,7 @@ div#logo {
     background-image: url("/images/roncliLogo@2x.png");
 }
 
-@media (-webkit-min-device-pixel-ratio: 1.5) or (min-resolution: 1.5dppx) {
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
     div#logo {
         background: url("/images/roncliLogo@4x.png") 480px 80px;
     }
@@ -221,7 +221,7 @@ div.twitter-logo {
     background-image: url("/images/twitter/logo.png");
 }
 
-@media (-webkit-min-device-pixel-ratio: 1.5) or (min-resolution: 1.5dppx) {
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
     div.twitter-logo {
         background: url("/images/twitter/logo@2x.png") 80px 16px;
     }
@@ -294,7 +294,7 @@ div.tweet a div.favorite {
     background-image: url("/images/twitter/favorite.png");
 }
 
-@media (-webkit-min-device-pixel-ratio: 1.5) or (min-resolution: 1.5dppx) {
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
     div.tweet a div.reply {
         background: url("/images/twitter/reply@2x.png") 16px 16px;
     }
@@ -346,7 +346,7 @@ div.tweets div.hr {
     background-image: url("/images/twitter.png");
 }
 
-@media (-webkit-min-device-pixel-ratio: 1.5) or (min-resolution: 1.5dppx) {
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
     .bookmark-blogger {
         background-image: url("/images/blogger@2x.png");
     }

@@ -1,3 +1,4 @@
+/// <reference path="typings/node/node.d.ts"/>
 var config = require("./server/privateConfig"),
     serverConfig = config.server,
     filesConfig = config.files,
