@@ -349,9 +349,9 @@ module.exports.getDiabloHeroes = function(callback) {
                         paragonLevel: hero.paragonLevel,
                         name: hero.name,
                         "class": classNames[hero.class],
-                        lastUpdated: hero["last-updated"] * 1000,
+                        lastUpdated: hero["last-updated"] * 1000
                     });
-                };
+                }
             }
 
             callback(null, results);
@@ -426,7 +426,146 @@ module.exports.getDiabloMain = function(callback) {
 };
 
 /**
- * Gets the information about ranked League of Legends stats.
+ * Gets the information about ranked League of Legends stats, including the latest 50 games.
+ */
+module.exports.getLolRanked = function(callback) {
+    "use strict";
+    
+    var result = {},
+    
+        /**
+         * Gets champions from the cache.
+         * @param {array} championIds The list of champion IDs to return.
+         * @param {function} failureCallback The failure callback function.
+         */
+        getChampions = function(championIds, failureCallback) {
+            cache.hmget("roncli.com:riot:lol:champions", championIds, function(champions) {
+                if (!champions || champions.length !== championIds.length) {
+                    failureCallback();
+                    return;
+                }
+
+                getLolVersion(function(err, version) {
+                    if (err) {
+                        callback(err);
+                        return;
+                    }
+
+                    result.champions = {};
+
+                    champions.forEach(function(champion) {
+                        result.champions[champion.id] = {
+                            name: champion.name,
+                            image: "//ddragon.leagueoflegends.com/cdn/" + version + "/img/champion/" + champion.image.full
+                        };
+                    });
+
+                    callback(null, result);
+                });
+            });
+        },
+
+        /**
+         * Gets the last 50 games from the game history cache.
+         * @param {function} failureCallback The failure callback function.
+         */
+        getHistory = function(failureCallback) {
+            cache.zrevrange("roncli.com:riot:lol:history", 0, 49, function(history) {
+                var championIds;
+
+                if (!history || history.length === 0) {
+                    failureCallback();
+                    return;
+                }
+
+                history.forEach(function(game, index) {
+                    history[index] = {
+                        matchCreation: game.matchCreation,
+                        matchDuration: {
+                            minutes: Math.floor(game.matchDuration / 60),
+                            seconds: game.matchDuration % 60 < 10 ? "0" + game.matchDuration % 60 : game.matchDuration % 60
+                        },
+                        winner: game.participants[0].stats.winner,
+                        kills: game.participants[0].stats.kills,
+                        deaths: game.participants[0].stats.deaths,
+                        assists: game.participants[0].stats.assists,
+                        cs: game.participants[0].stats.minionsKilled + game.participants[0].stats.neutralMinionsKilled,
+                        goldPerMinute: (60 * game.participants[0].stats.goldEarned / game.matchDuration).toFixed(2),
+                        championId: game.participants[0].championId
+                    };
+                });
+
+                championIds = history.map(function(game) {
+                    return game.championId;
+                }).filter(function(value, index, self) {
+                    return self.indexOf(value) === index;
+                });
+
+                result.games = history;
+
+                getChampions(championIds, function() {
+                    lol.cacheChampions(true, function(err) {
+                        if (err) {
+                            callback(err);
+                            return;
+                        }
+
+                        getChampions(championIds, function() {
+                            callback({
+                                error: "League of Legends champions do not exist.",
+                                status: 400
+                            });
+                        });
+                    });
+                });
+            });
+        },
+
+        /**
+         * Gets the ranked stats from the cache.
+         * @param {function} failureCallback The failure callback function.
+         */
+        getRanked = function(failureCallback) {
+            cache.get("roncli.com:riot:lol:league", function(ranked) {
+                if (!ranked) {
+                    failureCallback();
+                    return;
+                }
+
+                result.ranked = {
+                    tier: tierNames[ranked.tier],
+                    division: ranked.entries[0].division,
+                    leaguePoints: ranked.entries[0].leaguePoints,
+                    wins: ranked.entries[0].wins,
+                    losses: ranked.entries[0].losses,
+                    isHotStreak: ranked.entries[0].isHotStreak
+                };
+
+                getHistory(function() {
+                    failureCallback();
+                });
+            });
+        };
+
+    getRanked(function() {
+        lol.cacheRanked(false, function(err) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            getRanked(function() {
+                callback({
+                    error: "League of Legends ranked stats do not exist.",
+                    status: 400
+                });
+            });
+        });
+    });
+};
+
+/**
+ * Gets the information about ranked League of Legends stats, including the latest game.
  * @param {function} callback The callback function.
  */
 module.exports.getLatestLolRanked = function(callback) {
@@ -435,7 +574,7 @@ module.exports.getLatestLolRanked = function(callback) {
     var result = {},
 
         /**
-         * Gets the champion history from the cache.
+         * Gets a champion from the cache.
          * @param {function} failureCallback The failure callback function.
          */
         getChampion = function(failureCallback) {

@@ -127,6 +127,12 @@ module.exports.get = function(key, callback) {
     });
 };
 
+/**
+ * Determines if a key exists in a hash in the cache.
+ * @param {string} key The key to check in the cache.
+ * @param {string} field The field to check in the hash.
+ * @param {function} callback The callback function.
+ */
 module.exports.hexists = function(key, field, callback) {
     "use strict";
 
@@ -247,6 +253,66 @@ module.exports.hgetall = function(key, callback) {
 
             if (err) {
                 console.log("Error retrieving cache using hgetall", key);
+                console.log(err);
+                if (typeof callback === "function") {
+                    callback();
+                    callback = null;
+                }
+                return;
+            }
+
+            if (typeof callback === "function") {
+                for (index in data) {
+                    if (data.hasOwnProperty(index)) {
+                        data[index] = JSON.parse(data[index]);
+                    }
+                }
+                callback(data);
+                callback = null;
+            }
+        });
+    });
+};
+
+/**
+ * Gets items from a hash in the cache.
+ * @param {string} key The key to add to a hash in the cache.
+ * @param {string[]} fields The fields to retrieve values from in the cache.
+ * @param {function} [callback] The optional callback function.
+ */
+module.exports.hmget = function(key, fields, callback) {
+    "use strict";
+
+    login(function(err, client) {
+        var values = [];
+
+        if (err) {
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+            return;
+        }
+
+        client.on("error", function(err) {
+            console.log("Error retrieving cache using hmget", key);
+            console.log(err);
+            client.end();
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+        });
+
+        values = [key].concat(fields);
+
+        client.hmget(values, function(err, data) {
+            var index;
+
+            client.end();
+
+            if (err) {
+                console.log("Error retrieving cache using hmget", key);
                 console.log(err);
                 if (typeof callback === "function") {
                     callback();
