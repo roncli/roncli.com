@@ -104,15 +104,15 @@
                                         Defeated <b>{{wow.attributes.feedItem.boss}}</b>
                                     {{/ifCond}}
                                     {{#ifCond wow.attributes.feedItem.type "===" "LOOT"}}
-                                        <div style="width: 20px; height: 20px; background-image: url('http://us.media.blizzard.com/wow/icons/56/{{wow.attributes.feedItem.icon}}.jpg'); display: inline-block;"></div>
+                                        <div style="width: 20px; height: 20px; background-size: 20px 20px; background-image: url('http://us.media.blizzard.com/wow/icons/56/{{wow.attributes.feedItem.icon}}.jpg'); display: inline-block;"></div>
                                         <div style="display: inline-block;">
-                                            Looted <b>{{wow.attributes.feedItem.name}}</b>
+                                            Looted <b>{{wow.attributes.feedItem.item}}</b>
                                         </div>
                                     {{/ifCond}}
                                     {{#ifCond wow.attributes.feedItem.type "===" "ACHIEVEMENT"}}
-                                        <div style="width: 20px; height: 20px; background-image: url('http://us.media.blizzard.com/wow/icons/56/{{wow.attributes.feedItem.icon}}.jpg'); display: inline-block;"></div>
+                                        <div style="width: 20px; height: 20px; background-size: 20px 20px; background-image: url('http://us.media.blizzard.com/wow/icons/56/{{wow.attributes.feedItem.icon}}.jpg'); display: inline-block;"></div>
                                         <div style="display: inline-block;">
-                                            Earned <b>{{wow.attributes.feedItem.title}}</b>
+                                            Earned <b>{{wow.attributes.feedItem.achievement}}</b>
                                         </div>
                                     {{/ifCond}}<br />
                                     {{{toTimeAgo wow.attributes.feedItem.timestamp}}}

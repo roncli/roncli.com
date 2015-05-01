@@ -354,6 +354,10 @@ module.exports.getDiabloHeroes = function(callback) {
                 }
             }
 
+            results.sort(function(a, b) {
+                return b.lastUpdated - a.lastUpdated;
+            });
+
             callback(null, results);
         });
     };
