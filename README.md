@@ -147,6 +147,9 @@ The following should be the contents of privateConfig.js:
             },
             riot: {
                 apikey: "(Your Riot Games API key)"
+            },
+            steam: {
+                apikey: "(Your Steam API key)"
             }
         };
 

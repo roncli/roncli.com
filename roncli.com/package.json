@@ -46,6 +46,7 @@
         "rss": "1.1.1",
         "sanitize-html": "1.6.1",
         "sortablejs": "1.1.1",
+        "steam-api": "1.1.2",
         "tumblr": "0.4.1",
         "twitter": "1.2.1",
         "underscore": "1.8.2"
