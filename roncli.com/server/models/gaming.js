@@ -495,7 +495,7 @@ module.exports.getLolRanked = function(callback) {
                         assists: game.participants[0].stats.assists,
                         cs: game.participants[0].stats.minionsKilled + game.participants[0].stats.neutralMinionsKilled,
                         goldPerMinute: (60 * game.participants[0].stats.goldEarned / game.matchDuration).toFixed(2),
-                        championId: game.participants[0].championId
+                        championId: game.participants[0].championId.toString()
                     };
                 });
 
@@ -626,7 +626,7 @@ module.exports.getLatestLolRanked = function(callback) {
                     deaths: history[0].participants[0].stats.deaths,
                     assists: history[0].participants[0].stats.assists,
                     goldPerMinute: (60 * history[0].participants[0].stats.goldEarned / history[0].matchDuration).toFixed(2),
-                    championId: history[0].participants[0].championId
+                    championId: history[0].participants[0].championId.toString()
                 };
 
                 getChampion(function() {

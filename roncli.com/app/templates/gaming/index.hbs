@@ -113,7 +113,37 @@
     <div class="panel panel-primary">
         <div class="panel-heading text-center"><h3>League of Legends</h3></div>
         <div class="panel-body">
-
+            <div>
+                <div class="hidden-xs" style="width: 192px; height: 192px; background-image: url('/images/league/{{{toLower lol.attributes.ranked.tier}}}.png'); background-size: 192px 192px; float: left; margin-right: 3px;"></div>
+                I've been playing League of Legends since 2013, but did not get into playing ranked until the summer of 2014.  I'm pretty bad, so I started a series called Ron's Bronze Plays, where I play at least 3 games a week.  This airs on <a href="http://twitch.tv/roncli" target="_blank">Twitch</a> starting sometime around midnight Monday Eastern/9 PM Sunday Pacific, sometimes later.
+            </div>
+            <div style="clear: both;">
+                <h3 class="text-center" style="margin-top: 10px;">Current Season</h3>
+                <div class="text-center">
+                    {{lol.attributes.ranked.tier}} {{lol.attributes.ranked.division}}, {{lol.attributes.ranked.leaguePoints}} League Points - {{lol.attributes.ranked.wins}} Wins, {{lol.attributes.ranked.losses}} Losses
+                </div>
+                <h4 class="text-center" style="margin-top: 10px;">Match History</h4>
+                <div style="max-height:200px;overflow-x:hidden;overflow-y:auto;border:solid 1px #ccc;padding:1px 3px">
+                    {{#each lol.attributes.games}}
+                        <div class="div-table" style="margin-bottom: 5px;">
+                            <div>
+                                <div style="padding-right: 5px; width: 20px; height: 20px; vertical-align: top;">
+                                    {{#each ../lol.attributes.champions}}{{#ifCond @key "===" ../championId}}<div style="width: 20px; height: 20px; background-size: 20px 20px; background-image: url('{{image}}'); display: inline-block;"></div>{{/ifCond}}{{/each}}
+                                </div>
+                                <div style="vertical-align: top;">
+                                    <div style="display: table; table-layout: fixed; width: 100%;">
+                                        {{#if winner}}<span class="text-success">Won</span>{{else}}<span class="text-danger">Lost</span>{{/if}} -
+                                        {{matchDuration.minutes}}:{{matchDuration.seconds}} - <b>{{#each ../lol.attributes.champions}}{{#ifCond @key "===" ../championId}}{{name}}{{/ifCond}}{{/each}}</b> - {{kills}}/{{deaths}}/{{assists}} - {{goldPerMinute}} GPM<br />
+                                    </div>
+                                </div>
+                                <div class="hidden-xs" style="padding-left: 5px; width: 1px; white-space: nowrap; vertical-align: top;">
+                                    {{{toTimeAgo matchCreation}}}
+                                </div>
+                            </div>
+                        </div>
+                    {{/each}}
+                </div>
+            </div>
             <div class="text-center" style="margin-top: 5px;">
                 <h3 class="text-center" style="clear: both;"><a href="/playlist/PLoqgd0t_KsN5YU7YGjhofQ7DJTt8pV4OZ/gaming-league-of-legends">League of Legends Playlist</a></h3>
                 <h4 class="text-center" style="margin-bottom: 3px;">{{lolVideo.attributes.title}}</h4>

@@ -31,6 +31,29 @@ var config = require("../privateConfig").riot,
                         return;
                     }
 
+                    if (!leagues[40501037]) {
+                        cache.set("roncli.com:riot:lol:league", {
+                            "queue": "RANKED_SOLO_5x5",
+                            "name": "",
+                            "entries": [{
+                                "leaguePoints": 0,
+                                "isFreshBlood": false,
+                                "isHotStreak": false,
+                                "division": "",
+                                "isInactive": false,
+                                "isVeteran": false,
+                                "losses": 0,
+                                "playerOrTeamName": "roncli",
+                                "playerOrTeamId": "40501037",
+                                "wins": 0
+                            }],
+                            "tier": "UNRANKED"
+                        }, 86400, function() {
+                            deferred.resolve(true);
+                        });
+                        return;
+                    }
+
                     league = leagues[40501037].sort(function(a, b) {
                         if (tiers.indexOf(a.tier) > tiers.indexOf(b.tier)) {
                             return 1;

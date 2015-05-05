@@ -257,6 +257,15 @@ module.exports = function(Handlebars) {
                 return (Math.floor(size / (Math.pow(1024, 3) * 102.4)) / 10).toFixed(1) + " TB";
             }
             return (Math.floor(size / (Math.pow(1024, 3) * 1024))).toFixed(0) + " TB";
+        },
+
+        /**
+         * Turns a string to lower case.
+         * @param {string} str The string to turn to lower case.
+         * @returns {string} The string in lower case.
+         */
+        toLower: function(str) {
+            return str.toLowerCase();
         }
     };
 };
