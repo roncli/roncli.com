@@ -1,6 +1,5 @@
 var moment = require("moment"),
-    user = require("../models/user"),
-    handleError = require("../handleError");
+    user = require("../models/user");
 
 module.exports.get = function(req, query, callback) {
     "use strict";
@@ -24,7 +23,7 @@ module.exports.get = function(req, query, callback) {
                 console.log(req.sessionID);
                 user.login(req.cookies.login.email, req.cookies.login.password, function(err, data) {
                     if (err) {
-                        handleError(err, req);
+                        req.res.status(err.status);
                         callback(err);
                         return;
                     }
@@ -51,7 +50,7 @@ module.exports.get = function(req, query, callback) {
 
                     user.getNotifications(userId, function(err, data) {
                         if (err) {
-                            handleError(err, req);
+                            req.res.status(err.status);
                             callback(err);
                             return;
                         }
@@ -83,7 +82,7 @@ module.exports.post = function(req, query, callback) {
                         // Ensure the user's DOB is at least 13 years old.
                         user.isDobValid(req.body.coppaDob, function(err, data) {
                             if (err) {
-                                handleError(err, req);
+                                req.res.status(err.status);
                                 callback(err);
                                 return;
                             }
@@ -97,7 +96,7 @@ module.exports.post = function(req, query, callback) {
                         // Ensure the chosen alias is unique.
                         user.aliasExists(req.body.aliasExists, userId, function(err, data) {
                             if (err) {
-                                handleError(err, req);
+                                req.res.status(err.status);
                                 callback(err);
                                 return;
                             }
@@ -111,7 +110,7 @@ module.exports.post = function(req, query, callback) {
                         // Ensure the chosen email is unique.
                         user.emailExists(req.body.emailExists, userId, function(err, data) {
                             if (err) {
-                                handleError(err, req);
+                                req.res.status(err.status);
                                 callback(err);
                                 return;
                             }
@@ -126,7 +125,7 @@ module.exports.post = function(req, query, callback) {
                     user.login(req.body.email, req.body.password, function(err, data) {
                         console.log(req);
                         if (err) {
-                            handleError(err, req);
+                            req.res.status(err.status);
                             callback(err);
                             return;
                         }
@@ -150,7 +149,7 @@ module.exports.post = function(req, query, callback) {
                 case "register":
                     user.register(req.body.email, req.body.password, req.body.alias, req.body.dob, req.session.captcha, req.body.captcha, function(err) {
                         if (err) {
-                            handleError(err, req);
+                            req.res.status(err.status);
                             callback(err);
                             return;
                         }
@@ -163,7 +162,7 @@ module.exports.post = function(req, query, callback) {
                 case "validate-account":
                     user.validateAccount(req.body.userId, req.body.validationCode, function(err) {
                         if (err) {
-                            handleError(err, req);
+                            req.res.status(err.status);
                             callback(err);
                             return;
                         }
@@ -176,7 +175,7 @@ module.exports.post = function(req, query, callback) {
                 case "forgot-password":
                     user.forgotPassword(req.body.email, function(err, validationRequired) {
                         if (err) {
-                            handleError(err, req);
+                            req.res.status(err.status);
                             callback(err);
                             return;
                         }
@@ -188,7 +187,7 @@ module.exports.post = function(req, query, callback) {
                 case "password-reset-request":
                     user.passwordResetRequest(req.body.userId, req.body.authorizationCode, function(err) {
                         if (err) {
-                            handleError(err, req);
+                            req.res.status(err.status);
                             callback(err);
                             return;
                         }
@@ -201,7 +200,7 @@ module.exports.post = function(req, query, callback) {
                 case "password-reset":
                     user.passwordReset(req.body.userId, req.body.authorizationCode, req.body.password, req.session.captcha, req.body.captcha, function(err) {
                         if (err) {
-                            handleError(err, req);
+                            req.res.status(err.status);
                             callback(err);
                             return;
                         }
@@ -220,7 +219,7 @@ module.exports.post = function(req, query, callback) {
 
                     user.changeEmail(userId, req.body.password, req.session.captcha, req.body.captcha, function(err) {
                         if (err) {
-                            handleError(err, req);
+                            req.res.status(err.status);
                             callback(err);
                             return;
                         }
@@ -233,7 +232,7 @@ module.exports.post = function(req, query, callback) {
                 case "email-change-request":
                     user.emailChangeRequest(req.body.userId, req.body.authorizationCode, function(err) {
                         if (err) {
-                            handleError(err, req);
+                            req.res.status(err.status);
                             callback(err);
                             return;
                         }
@@ -246,7 +245,7 @@ module.exports.post = function(req, query, callback) {
                 case "email-change":
                     user.emailChange(req.body.userId, req.body.authorizationCode, req.body.password, req.body.email, function(err) {
                         if (err) {
-                            handleError(err, req);
+                            req.res.status(err.status);
                             callback(err);
                             return;
                         }
@@ -259,7 +258,7 @@ module.exports.post = function(req, query, callback) {
                 case "change-password":
                     user.changePassword(userId, req.body.oldPassword, req.body.newPassword, req.session.captcha, req.body.captcha, function(err) {
                         if (err) {
-                            handleError(err, req);
+                            req.res.status(err.status);
                             callback(err);
                             return;
                         }
@@ -272,7 +271,7 @@ module.exports.post = function(req, query, callback) {
                 case "change-alias":
                     user.changeAlias(userId, req.body.alias, function(err) {
                         if (err) {
-                            handleError(err, req);
+                            req.res.status(err.status);
                             callback(err);
                             return;
                         }

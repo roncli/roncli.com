@@ -1,17 +1,15 @@
-var file = require("../models/file"),
-    handleError = require("../handleError");
+var file = require("../models/file");
 
 module.exports.get = function(req, query, callback) {
     "use strict";
 
     file.getFiles(function(err, data) {
         if (err) {
-            handleError(err, req);
+            req.res.status(err.status);
             callback(err);
             return;
         }
 
-        req.res.status(200);
         callback(data);
     });
 };

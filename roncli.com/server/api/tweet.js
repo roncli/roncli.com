@@ -1,17 +1,15 @@
-var tweet = require("../models/tweet"),
-    handleError = require("../handleError");
+var tweet = require("../models/tweet");
 
 module.exports.get = function(req, query, callback) {
     "use strict";
 
     tweet.getTweets(function(err, data) {
         if (err) {
-            handleError(err, req);
+            req.res.status(err.status);
             callback(err);
             return;
         }
 
-        req.res.status(200);
         callback(data);
     });
 };
