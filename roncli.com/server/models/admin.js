@@ -2114,7 +2114,7 @@ module.exports.clearGamingCaches = function(userId, callback) {
             return;
         }
 
-        ["roncli.com:battlenet:*", "roncli.com:riot:*"].forEach(function(key) {
+        ["roncli.com:battlenet:*", "roncli.com:riot:*", "roncli.com:steam:*", "roncli.com:youtube:*"].forEach(function(key) {
             var deferred = new Deferred();
 
             cache.keys(key, function(keys) {

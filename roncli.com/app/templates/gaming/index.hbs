@@ -1,5 +1,39 @@
 <div class="col-xs-8">
     <div class="panel panel-primary">
+        <div class="panel-heading text-center"><h3>Gaming</h3></div>
+        <div class="panel-body">
+            I'm a gamer.  Since owning a Texas Instruments 99/4A, I have used games to entertain, explore, compete, and relax.  From first person shooters, to role-playing games, to action platformers, to real-time strategy games, and more.  Below is my current collection of games that I play extensively, along with all of the games in my Steam collection.<br /><br />
+            <div class="div-table" style="width: auto; margin: 0 auto;">
+                <div>
+                    <div style="vertical-align: middle; padding-right: 5px;"><img src="/images/icons/sixGaming.png" style="width: 32px; height: 32px;"/></div>
+                    <div style="vertical-align: middle;"><h3><a href="#sixGaming">Six Gaming</a></h3></div>
+                </div>
+                <div>
+                    <div style="vertical-align: middle; padding-right: 5px;"><img src="/images/icons/wow.png" style="width: 32px; height: 32px;"/></div>
+                    <div style="vertical-align: middle;"><h3><a href="#wow">World of Warcraft</a></h3></div>
+                </div>
+                <div>
+                    <div style="vertical-align: middle; padding-right: 5px;"><img src="/images/icons/diablo3.png" style="width: 32px; height: 32px;"/></div>
+                    <div style="vertical-align: middle;"><h3><a href="#diablo3">Diablo III</a></h3></div>
+                </div>
+                <div>
+                    <div style="vertical-align: middle; padding-right: 5px;"><img src="/images/icons/lol.png" style="width: 32px; height: 32px;"/></div>
+                    <div style="vertical-align: middle;"><h3><a href="#lol">League of Legends</a></h3></div>
+                </div>
+                <div>
+                    <div style="vertical-align: middle; padding-right: 5px;"><img src="/images/icons/descent.png" style="width: 32px; height: 32px;"/></div>
+                    <div style="vertical-align: middle;"><h3><a href="#descent">Descent</a></h3></div>
+                </div>
+                <div>
+                    <div style="vertical-align: middle; padding-right: 5px;"><img src="/images/icons/steam.png" style="width: 32px; height: 32px;"/></div>
+                    <div style="vertical-align: middle;"><h3><a href="#steam">Steam</a></h3></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{{page.attributes.page.content}}}
+    <a name="sixGaming"></a>
+    <div class="panel panel-primary">
         <div class="panel-heading text-center"><h3>Six Gaming</h3></div>
         <div class="panel-body">
             <div style="float: left; margin-right: 5px;"><img src="/images/sixGaming.png" style="max-width: 250px; width: 100%;" /></div>
@@ -13,6 +47,7 @@
             </div>
         </div>
     </div>
+    <a name="wow"></a>
     <div class="panel panel-primary">
         <div class="panel-heading text-center"><h3>World of Warcraft</h3></div>
         <div class="panel-body">
@@ -63,20 +98,21 @@
                     </div>
                 </div>
             </div>
-            <div class="text-center" style="margin-top: 5px;">
-                <h3 class="text-center" style="clear: both;"><a href="/playlist/PLoqgd0t_KsN4SzIkVVyPVt7UuT3d6Rr7G/gaming-world-of-warcraft">World of Warcraft Playlist</a></h3>
+            <div class="text-center" style="margin-top: 10px;">
+                <h3 class="text-center" style="clear: both;"><a href="/playlist/PLoqgd0t_KsN4SzIkVVyPVt7UuT3d6Rr7G/gaming-world-of-warcraft">World of Warcraft Videos</a></h3>
                 <h4 class="text-center" style="margin-bottom: 3px;">{{wowVideo.attributes.title}}</h4>
                 <iframe src="https://www.youtube.com/embed/{{{wowVideo.attributes.id}}}?feature=oembed&amp;enablejsapi=1&amp;wmode=opaque" frameborder="0" allowfullscreen="" style="width: 100%; height: 200px;"></iframe><br />
                 <button class="btn btn-primary add-to-media-player" data-source="youtube" data-url="https://www.youtube.com/watch?v={{{wowVideo.attributes.id}}}"><span class="glyphicon glyphicon-music"></span> Add To Playlist</button>
             </div>
         </div>
     </div>
+    <a name="diablo3"></a>
     <div class="panel panel-primary">
         <div class="panel-heading text-center"><h3>Diablo III</h3></div>
         <div class="panel-body">
             <div>
                 <div class="hidden-xs" style="width: 320px; height: 169px; background-image: url('/images/d3ros.png'); background-size: 320px 169px; float: left; margin-right: 3px;"></div>
-                I've played Diablo III since beta fairly regularly. I am the leader of the Six Gaming clan, which consists mostly of former Six Minutes To Release members and friends.
+                I've played <a href="http://www.diablo3.com/" target="_blank">Diablo III</a> since beta fairly regularly. I am the leader of the Six Gaming clan, which consists mostly of former Six Minutes To Release members and friends.
             </div>
             <div style="clear: both;">
                 <h4 class="text-center" style="margin-top: 10px;">Heroes</h4>
@@ -86,7 +122,7 @@
                             <div style="vertical-align: top;">
                                 <div style="display: table; table-layout: fixed; width: 100%;">
                                     <span style="display: table-cell;">
-                                        <a href="/d3/{{attributes.id}}/{{attributes.name}}">
+                                        <a href="http://us.battle.net/d3/en/profile/roncli-1818/hero/{{attributes.id}}" target="_blank">
                                             {{#if attributes.seasonal}}<span class="text-success"><b>Seasonal</b></span> {{/if}}
                                             {{#if attributes.hardcore}}<span class="text-danger"><b>Hardcore</b></span> {{/if}}
                                             {{attributes.class}} <b>{{attributes.name}}</b>
@@ -102,20 +138,21 @@
                     </div>
                 {{/each}}
             </div>
-            <div class="text-center" style="margin-top: 5px;">
-                <h3 class="text-center" style="clear: both;"><a href="/playlist/PLoqgd0t_KsN7LEYsVepkfbn2xOiC5M5yY/gaming-diablo-iii">Diablo III Playlist</a></h3>
+            <div class="text-center" style="margin-top: 10px;">
+                <h3 class="text-center" style="clear: both;"><a href="/playlist/PLoqgd0t_KsN7LEYsVepkfbn2xOiC5M5yY/gaming-diablo-iii">Diablo III Videos</a></h3>
                 <h4 class="text-center" style="margin-bottom: 3px;">{{d3Video.attributes.title}}</h4>
                 <iframe src="https://www.youtube.com/embed/{{{d3Video.attributes.id}}}?feature=oembed&amp;enablejsapi=1&amp;wmode=opaque" frameborder="0" allowfullscreen="" style="width: 100%; height: 200px;"></iframe><br />
                 <button class="btn btn-primary add-to-media-player" data-source="youtube" data-url="https://www.youtube.com/watch?v={{{d3Video.attributes.id}}}"><span class="glyphicon glyphicon-music"></span> Add To Playlist</button>
             </div>
         </div>
     </div>
+    <a name="lol"></a>
     <div class="panel panel-primary">
         <div class="panel-heading text-center"><h3>League of Legends</h3></div>
         <div class="panel-body">
             <div>
                 <div class="hidden-xs" style="width: 192px; height: 192px; background-image: url('/images/league/{{{toLower lol.attributes.ranked.tier}}}.png'); background-size: 192px 192px; float: left; margin-right: 3px;"></div>
-                I've been playing League of Legends since 2013, but did not get into playing ranked until the summer of 2014.  I'm pretty bad, so I started a series called Ron's Bronze Plays, where I play at least 3 games a week.  This airs on <a href="http://twitch.tv/roncli" target="_blank">Twitch</a> starting sometime around midnight Monday Eastern/9 PM Sunday Pacific, sometimes later.
+                I've been playing <a href="http://www.leagueoflegends.com" target="_blank">League of Legends</a> since 2013, but did not get into playing ranked until the summer of 2014.  I'm pretty bad, so I started a series called Ron's Bronze Plays, where I play at least 3 games a week.  This airs on <a href="http://twitch.tv/roncli" target="_blank">Twitch</a> starting sometime around midnight Monday Eastern/9 PM Sunday Pacific, sometimes later.
                 <h3 class="text-center" style="margin-top: 10px;">Current Season</h3>
                 <div class="text-center">
                     {{lol.attributes.ranked.tier}} {{lol.attributes.ranked.division}}, {{lol.attributes.ranked.leaguePoints}} League Points<br />{{lol.attributes.ranked.wins}} Win{{#ifCond lol.attributes.ranked.wins "!==" 1}}s{{/ifCond}}, {{lol.attributes.ranked.losses}} Loss{{#ifCond lol.attributes.ranked.losses "!==" 1}}es{{/ifCond}}
@@ -132,8 +169,9 @@
                                 </div>
                                 <div style="vertical-align: top;">
                                     <div style="display: table; table-layout: fixed; width: 100%;">
+                                        <a href="http://matchhistory.na.leagueoflegends.com/en/#match-details/NA1/{{matchId}}/203469552" target="_blank"><b>{{#each ../lol.attributes.champions}}{{#ifCond @key "===" ../championId}}{{name}}{{/ifCond}}{{/each}}</b></a> -
                                         {{#if winner}}<span class="text-success">Won</span>{{else}}<span class="text-danger">Lost</span>{{/if}} -
-                                        {{matchDuration.minutes}}:{{matchDuration.seconds}} - <b>{{#each ../lol.attributes.champions}}{{#ifCond @key "===" ../championId}}{{name}}{{/ifCond}}{{/each}}</b> - {{kills}}/{{deaths}}/{{assists}} - {{goldPerMinute}} GPM<br />
+                                        {{matchDuration.minutes}}:{{matchDuration.seconds}} - {{kills}}/{{deaths}}/{{assists}} - {{goldPerMinute}} GPM<br />
                                     </div>
                                 </div>
                                 <div class="hidden-xs" style="padding-left: 5px; width: 1px; white-space: nowrap; vertical-align: top;">
@@ -144,14 +182,36 @@
                     {{/each}}
                 </div>
             </div>
-            <div class="text-center" style="margin-top: 5px;">
-                <h3 class="text-center" style="clear: both;"><a href="/playlist/PLoqgd0t_KsN5YU7YGjhofQ7DJTt8pV4OZ/gaming-league-of-legends">League of Legends Playlist</a></h3>
+            <div class="text-center" style="margin-top: 10px;">
+                <h3 class="text-center" style="clear: both;"><a href="/playlist/PLoqgd0t_KsN5YU7YGjhofQ7DJTt8pV4OZ/gaming-league-of-legends">League of Legends Videos</a></h3>
                 <h4 class="text-center" style="margin-bottom: 3px;">{{lolVideo.attributes.title}}</h4>
                 <iframe src="https://www.youtube.com/embed/{{{lolVideo.attributes.id}}}?feature=oembed&amp;enablejsapi=1&amp;wmode=opaque" frameborder="0" allowfullscreen="" style="width: 100%; height: 200px;"></iframe><br />
                 <button class="btn btn-primary add-to-media-player" data-source="youtube" data-url="https://www.youtube.com/watch?v={{{lolVideo.attributes.id}}}"><span class="glyphicon glyphicon-music"></span> Add To Playlist</button>
             </div>
         </div>
     </div>
+    <a name="descent"></a>
+    <div class="panel panel-primary">
+        <div class="panel-heading text-center"><h3>Descent</h3></div>
+        <div class="panel-body">
+            <div>
+                <div class="hidden-xs" style="width: 320px; height: 53px; background-image: url('/images/descent.png'); background-size: 320px 53px; float: left; margin-right: 3px;"></div>
+                I've been playing <a href="http://store.steampowered.com/app/273570/" target="_blank">Descent</a>, <a href="http://store.steampowered.com/app/273580/" target="_blank">Descent 2</a>, and <a href="http://store.steampowered.com/app/273590/" target="_blank">Descent 3</a> since they were released, in 1995, 1996, and 1999 respectively.  I have also backed the next game in the series, Descent: Underground, from <a href="http://www.descendentstudios.com/" target="_blank">Descendent Studios</a> via <a href="https://www.kickstarter.com/projects/descendentstudios/descent-underground" target="_blank">Kickstarter</a>.<br /><br />
+                When Descent 3 was released, I joined the Wildcards Empire and earned their top pilot status in Descent and Descent 3, Death Squadron Elite.  I also played for Team X and Nightwing over the years.  I took over the Descent 3 Teams League in 2002 and ran it for several years, running the D3TL Tournament, which was a 16-team league that lasted 4-month in which everyone played 16 games.  Although 4 teams dropped out, it still remains the largest organized team tournament for Descent 3.  Most recently, I've joined the <a href="http://www.descentrangers.com" target="_blank">Descent Rangers</a> to help get active into playing again with the upcoming Descent: Underground title around the corner.<br /><br />
+                Because Descent and Descent 2 were released such a long time ago, there are some modifications that you need to make to get the game to work on modern systems.  After installing the games, either from media, on Steam, or on <a href="http://www.gog.com" target="_blank">gog.com</a>, you will need to visit <a href="http://www.dxx-rebirth.com/" target="_blank">dxx-rebirth.com</a> to get the latest source port that runs on modern machines.  You will also want to install the Retro package as part of the installation, or you can grab it from the <a href="http://www.descentrangers.com/WebContent/Index?key=Downloads" target="_blank">Descent Rangers</a> downloads section.
+            </div>
+            <div style="clear: both; margin-top: 10px;">
+                <h3 class="text-center" style="clear: both;"><a href="/playlist/PLoqgd0t_KsN5hXZPYr9GjcGrDaj3Uq2A-/gaming-descent-dcl">Descent Champions Ladder Videos</a></h3>
+                The <a href="http://www.descentchampions.org" _blank>Descent Champions Ladder</a> is an active Descent league that ranks each player via a ladder system.  If you defeat a player higher than you, you take their spot.  Players are also rated based on performance, and you can get a litany of stats about their games.  I stream my DCL matches on <a href="http://twitch.tv/roncli" target="_blank">Twitch</a> and then move them to YouTube afterwards.  An average DCL game is about 20 minutes, but can vary depending on the size of the map and aggression of the players involved.<br/><br/>
+                <h4 class="text-center" style="margin-bottom: 3px;">{{dclVideo.attributes.title}}</h4>
+                <div class="text-center">
+                    <iframe src="https://www.youtube.com/embed/{{{dclVideo.attributes.id}}}?feature=oembed&amp;enablejsapi=1&amp;wmode=opaque" frameborder="0" allowfullscreen="" style="width: 100%; height: 200px;"></iframe><br />
+                    <button class="btn btn-primary add-to-media-player" data-source="youtube" data-url="https://www.youtube.com/watch?v={{{dclVideo.attributes.id}}}"><span class="glyphicon glyphicon-music"></span> Add To Playlist</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a name="steam"></a>
     <div class="panel panel-primary">
         <div class="panel-heading text-center"><h3>Steam Collection</h3></div>
     </div>
@@ -188,4 +248,20 @@
         </div>
     </div>
     {{partial "site/share"}}
+    {{#if page.attributes.children}}
+        <div class="btn-group-vertical btn-group-xs panel panel-primary">
+            <div class="panel-heading panel-heading-small text-center">{{#if page.attributes.page.shortTitle}}{{page.attributes.page.shortTitle}}{{else}}{{page.attributes.page.title}}{{/if}}</div>
+            <div class="children-pages">
+                <div class="scroller-wrapper" id="children-pages-wrapper">
+                    <div class="scroller">
+                        <div class="children btn-group-vertical btn-group-xs">
+                            {{#each page.attributes.children}}
+                                <a class="btn btn-default" href="{{{url}}}">{{shortTitle}}</a>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {{/if}}
 </div>

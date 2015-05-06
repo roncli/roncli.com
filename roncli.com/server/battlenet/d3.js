@@ -78,46 +78,10 @@ var config = require("../privateConfig").battlenet,
                 return b["last-updated"] - a["last-updated"];
             })[0];
 
-            // Get the hero's items.
-            bnet.d3.profile.hero({
-                origin: "us",
-                tag: "roncli-1818",
-                hero: result.hero.id
-            }, function(err, hero) {
-                if (err) {
-                    console.log("Bad response from Battle.Net while getting the profile.");
-                    console.log(err);
-                    profileDeferred.reject({
-                        error: "Bad response from Battle.Net.",
-                        status: 502
-                    });
-                    return;
-                }
-
-                result.heroData = hero;
-
-                cache.set("roncli.com:battlenet:d3:profile", result, 86400, function() {
-                    profileDeferred.resolve();
-                });
-            });
-            
             // Cache the basic hero data.
             cache.hmset("roncli.com:battlenet:d3:heroes", profile.heroes.map(function(hero) {
                 return {key: hero.id, value: hero};
-            }), 86400, function() {
-                heroesDeferred.resolve();
-            });
-            
-            all([profileDeferred.promise, heroesDeferred.promise]).then(
-                function() {
-                    callback();
-                },
-
-                // If any of the functions error out, it will be handled here.                
-                function(err) {
-                    callback(err);
-                }
-            )
+            }), 86400, callback);
         });
     },
 

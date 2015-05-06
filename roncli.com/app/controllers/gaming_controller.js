@@ -12,6 +12,7 @@ module.exports = {
         var app = this.app;
 
         app.fetch({
+            page: {model: "PageOptional", params: {url: "/gaming"}},
             sixGamingPodcast: {model: "Video", params: {playlistId: "PLzcYb51h4me8-Jq9mOk6Vk1MLodmhRZ6K"}},
             wow: {model: "WarcraftFeed", params: {}},
             wowVideo: {model: "Video", params: {playlistId: "PLoqgd0t_KsN4SzIkVVyPVt7UuT3d6Rr7G"}},
@@ -19,8 +20,13 @@ module.exports = {
             d3Video: {model: "Video", params: {playlistId: "PLoqgd0t_KsN7LEYsVepkfbn2xOiC5M5yY"}},
             lol: {model: "LeagueRanked", params: {}},
             lolVideo: {model: "Video", params: {playlistId: "PLoqgd0t_KsN5YU7YGjhofQ7DJTt8pV4OZ"}},
+            dclVideo: {model: "Video", params: {playlistId: "PLoqgd0t_KsN5hXZPYr9GjcGrDaj3Uq2A-"}},
             steam: {collection: "SteamGames", params: {}}
         }, function(err, result) {
+            if (!err && result && result.page && result.page.attributes && result.page.attributes.error) {
+                err = result.page.attributes;
+            }
+
             if (!err && result && result.sixGamingPodcast && result.sixGamingPodcast.attributes && result.sixGamingPodcast.attributes.error) {
                 err = result.sixGamingPodcast.attributes;
             }
@@ -47,6 +53,10 @@ module.exports = {
 
             if (!err && result && result.lolVideo && result.lolVideo.attributes && result.lolVideo.attributes.error) {
                 err = result.lolVideo.attributes;
+            }
+
+            if (!err && result && result.dclVideo && result.dclVideo.attributes && result.dclVideo.attributes.error) {
+                err = result.dclVideo.attributes;
             }
 
             if (!err && result && result.steam && result.steam.models && result.steam.models[0] && result.steam.models[0].attributes && result.steam.models[0].attributes.error) {

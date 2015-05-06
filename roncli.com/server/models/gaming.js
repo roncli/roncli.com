@@ -485,6 +485,7 @@ module.exports.getLolRanked = function(callback) {
 
                 history.forEach(function(game, index) {
                     history[index] = {
+                        matchId: game.matchId,
                         matchCreation: game.matchCreation,
                         matchDuration: {
                             minutes: Math.floor(game.matchDuration / 60),
@@ -700,7 +701,7 @@ module.exports.getSteamGames = function(callback) {
 
     var getGames = function(failureCallback) {
         cache.zrevrange("roncli.com:steam:games", 0, -1, function(games) {
-            if (!games) {
+            if (!games || games.length === 0) {
                 failureCallback();
                 return;
             }
