@@ -116,12 +116,12 @@
             <div>
                 <div class="hidden-xs" style="width: 192px; height: 192px; background-image: url('/images/league/{{{toLower lol.attributes.ranked.tier}}}.png'); background-size: 192px 192px; float: left; margin-right: 3px;"></div>
                 I've been playing League of Legends since 2013, but did not get into playing ranked until the summer of 2014.  I'm pretty bad, so I started a series called Ron's Bronze Plays, where I play at least 3 games a week.  This airs on <a href="http://twitch.tv/roncli" target="_blank">Twitch</a> starting sometime around midnight Monday Eastern/9 PM Sunday Pacific, sometimes later.
-            </div>
-            <div style="clear: both;">
                 <h3 class="text-center" style="margin-top: 10px;">Current Season</h3>
                 <div class="text-center">
-                    {{lol.attributes.ranked.tier}} {{lol.attributes.ranked.division}}, {{lol.attributes.ranked.leaguePoints}} League Points - {{lol.attributes.ranked.wins}} Wins, {{lol.attributes.ranked.losses}} Losses
+                    {{lol.attributes.ranked.tier}} {{lol.attributes.ranked.division}}, {{lol.attributes.ranked.leaguePoints}} League Points<br />{{lol.attributes.ranked.wins}} Win{{#ifCond lol.attributes.ranked.wins "!==" 1}}s{{/ifCond}}, {{lol.attributes.ranked.losses}} Loss{{#ifCond lol.attributes.ranked.losses "!==" 1}}es{{/ifCond}}
                 </div>
+            </div>
+            <div style="clear: both;">
                 <h4 class="text-center" style="margin-top: 10px;">Match History</h4>
                 <div style="max-height:200px;overflow-x:hidden;overflow-y:auto;border:solid 1px #ccc;padding:1px 3px">
                     {{#each lol.attributes.games}}
