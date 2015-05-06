@@ -645,6 +645,55 @@ module.exports.zrange = function(key, start, end, callback) {
 };
 
 /**
+ * Returns the index of an item in a sorted set.
+ * @param {string} key The key to remove from a sorted set in the cache.
+ * @param {object[]} value The value to look for.
+ * @param {function} [callback] The optional callback function.
+ */
+module.exports.zrank = function(key, value, callback) {
+    "use strict";
+
+    login(function(err, client) {
+        if (err) {
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+            return;
+        }
+
+        client.on("error", function(err) {
+            console.log("Error retrieving index using zrank", key, value);
+            console.log(err);
+            client.end();
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+        });
+
+        client.zrank(key, JSON.stringify(value), function(err, index) {
+            client.end();
+
+            if (err) {
+                console.log("Error retrieving index using zrank", key, value);
+                console.log(err);
+                if (typeof callback === "function") {
+                    callback();
+                    callback = null;
+                }
+                return;
+            }
+
+            if (typeof callback === "function") {
+                callback(index);
+                callback = null;
+            }
+        });
+    });
+};
+
+/**
  * Removes items from a sorted set in the cache.
  * @param {string} key The key to remove from a sorted set in the cache.
  * @param {object[]} values An array of objects contaning a values.
