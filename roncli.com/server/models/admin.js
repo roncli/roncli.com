@@ -2114,7 +2114,7 @@ module.exports.clearGamingCaches = function(userId, callback) {
             return;
         }
 
-        ["roncli.com:battlenet:*", "roncli.com:riot:*", "roncli.com:steam:*", "roncli.com:youtube:*"].forEach(function(key) {
+        ["roncli.com:battlenet:*", "roncli.com:riot:*", "roncli.com:steam:*"].forEach(function(key) {
             var deferred = new Deferred();
 
             cache.keys(key, function(keys) {
@@ -2171,6 +2171,170 @@ module.exports.clearGamingCaches = function(userId, callback) {
             ).then(function() {
                 callback();
             });
+        });
+    });
+};
+
+/**
+ * Clears the YouTube caches.
+ * @param {number} userId The user ID of the moderator.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.clearYoutubeCaches = function(userId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        var promises = [];
+
+        if (err) {
+            callback({
+                error: "There was a database error while clearing gaming caches.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        ["roncli.com:youtube:*"].forEach(function(key) {
+            var deferred = new Deferred();
+
+            cache.keys(key, function(keys) {
+                var index;
+                if (keys.length > 0) {
+                    index = keys.indexOf("roncli.com:youtube:playlists");
+
+                    if (index !== -1) {
+                        keys.splice(index, 1);
+                    }
+                    if (keys.length > 0) {
+                        cache.del(keys, function() {
+                            deferred.resolve();
+                        });
+                    } else {
+                        deferred.resolve();
+                    }
+                } else {
+                    deferred.resolve();
+                }
+            });
+
+            promises.push(deferred.promise);
+        });
+
+        all(promises).then(function() {
+            callback();
+        });
+    });
+};
+
+/**
+ * Retrieves the allowed playlists
+ * @param {number} userId The user ID of the moderator.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.getPlaylists = function(userId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+
+        if (err) {
+            callback({
+                error: "There was a database error while clearing gaming caches.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        cache.zrange("roncli.com:youtube:playlists", 0, -1, function(playlists) {
+            if (playlists && playlists.length > 0) {
+                callback(null, playlists.map(function(playlist) {
+                    return {playlistId: playlist};
+                }));
+                return;
+            }
+
+            callback(null, []);
+        });
+    });
+};
+
+/**
+ * Adds an item to the allowed playlists.
+ * @param {number} userId The user ID of the moderator.
+ * @param {string} playlistId The playlist ID to add.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.addPlaylist = function(userId, playlistId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+
+        if (err) {
+            callback({
+                error: "There was a database error while clearing gaming caches.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        cache.zadd("roncli.com:youtube:playlists", [{value: playlistId, score: 0}], 0, function() {
+            callback();
+        });
+    });
+};
+
+/**
+ * Removes an item from the allowed playlists.
+ * @param {number} userId The user ID of the moderator.
+ * @param {string} playlistId The playlist ID to remove.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.removePlaylist = function(userId, playlistId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+
+        if (err) {
+            callback({
+                error: "There was a database error while clearing gaming caches.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        cache.zrem("roncli.com:youtube:playlists", [playlistId], function() {
+            callback();
         });
     });
 };

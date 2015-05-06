@@ -645,6 +645,58 @@ module.exports.zrange = function(key, start, end, callback) {
 };
 
 /**
+ * Removes items from a sorted set in the cache.
+ * @param {string} key The key to remove from a sorted set in the cache.
+ * @param {object[]} values An array of objects contaning a values.
+ * @param {function} [callback] The optional callback function.
+ */
+module.exports.zrem = function(key, values, callback) {
+    "use strict";
+
+    login(function(err, client) {
+        var keys;
+
+        if (err) {
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+            return;
+        }
+
+        client.on("error", function(err) {
+            console.log("Error updating cache using zrem", key, values);
+            console.log(err);
+            client.end();
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+        });
+
+        keys = [key];
+
+        values.forEach(function(value) {
+            keys.push(JSON.stringify(value));
+        });
+
+        client.zrem(keys, function(err) {
+            client.end();
+
+            if (err) {
+                console.log("Error updating cache using zrem", key, values);
+                console.log(err);
+            }
+
+            if (typeof callback === "function") {
+                callback();
+                callback = null;
+            }
+        });
+    });
+};
+
+/**
  * Retrieves items from a sorted set in the cache in reverse order.
  * @param {string} key The key to get the sorted set from in the cache.
  * @param {number} start The start of the range.

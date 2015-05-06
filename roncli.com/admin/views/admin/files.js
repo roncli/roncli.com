@@ -35,7 +35,7 @@ module.exports = BaseView.extend({
             admin = new Admin();
 
         bootbox.dialog({
-            title: "Delete Page",
+            title: "Delete File",
             message: app.templateAdapter.getTemplate("admin/files/deleteConfirm")(),
             buttons: {
                 yes: {
@@ -58,7 +58,7 @@ module.exports = BaseView.extend({
                                 if (error && error.body && error.body.error) {
                                     message = error.body.error;
                                 } else {
-                                    message = "There was a server error deleting the page.  Please try again later.";
+                                    message = "There was a server error deleting the file.  Please try again later.";
                                 }
 
                                 view.showError(message);

@@ -144,6 +144,21 @@ module.exports.get = function(req, query, callback) {
                             return;
                     }
                     break;
+                case "youtube":
+                    switch (req.parsedPath[1]) {
+                        case "playlist":
+                            admin.getPlaylists(userId, function(err, playlists) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                callback(playlists);
+                            });
+                            return;
+                    }
+                    break;
             }
             break;
     }
@@ -447,6 +462,49 @@ module.exports.post = function(req, query, callback) {
                     switch (req.parsedPath[1]) {
                         case "clear-caches":
                             admin.clearGamingCaches(userId, function(err) {
+                                if (err) {
+                                    console.log(err);
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                    }
+                    break;
+                case "youtube":
+                    switch (req.parsedPath[1]) {
+                        case "clear-caches":
+                            admin.clearYoutubeCaches(userId, function(err) {
+                                if (err) {
+                                    console.log(err);
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                        case "add-playlist":
+                            admin.addPlaylist(userId, req.body.playlistId, function(err) {
+                                if (err) {
+                                    console.log(err);
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                        case "delete-playlist":
+                            admin.removePlaylist(userId, req.body.playlistId, function(err) {
                                 if (err) {
                                     console.log(err);
                                     req.res.status(err.status);

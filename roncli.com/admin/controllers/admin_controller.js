@@ -236,5 +236,32 @@ module.exports = {
         "use strict";
 
         callback();
+    },
+
+    /**
+     * The YouTube admin view.
+     * @param {object} params The parameters to use in the controller.
+     * @param {function} callback The callback to run upon completion of the controller running.
+     */
+    youtube: function(params, callback) {
+        "use strict";
+
+        var app = this.app;
+
+        app.fetch({
+            youtube: {collection: "Admin_Playlists", params: {}}
+        }, {readFromCache: false, writeToCache: false}, function(err, result) {
+            if (!err && result && result.youtube && result.youtube.models && result.youtube.models[0] && result.youtube.models[0].attributes && result.youtube.models[0].attributes.error) {
+                err = result.youtube.models[0].attributes;
+            }
+
+            if (err) {
+                handleServerError(err, app, result, callback);
+                return;
+            }
+
+            callback(err, result);
+        });
+
     }
 };

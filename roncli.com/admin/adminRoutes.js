@@ -31,4 +31,7 @@ module.exports = function(app) {
 
     // The gaming admin page.
     app.router.route(/^\/?admin\/gaming$/, "admin#gaming");
+
+    // The YouTube admin page.
+    app.router.route(/^\/?admin\/youtube$/, "admin#youtube");
 };
