@@ -153,10 +153,27 @@
         </div>
     </div>
     <div class="panel panel-primary">
-        <div class="panel-heading text-center"><h3>Steam</h3></div>
-        <div class="panel-body">
-
-        </div>
+        <div class="panel-heading text-center"><h3>Steam Collection</h3></div>
+    </div>
+    <div class="row">
+        {{#each steam.models}}
+            <div class="col-sm-4">
+                <div class="btn-group-vertical">
+                    <a class="btn btn-default" href="{{attributes.url}}">
+                        <div class="panel-heading panel-title text-center"><h4>{{attributes.name}}</h4></div>
+                    </a>
+                    <div class="body" style="padding: 0;">
+                        <a href="{{attributes.url}}">
+                            <img src="{{attributes.image}}" style="width: 100%;" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {{#every 3 @index @last}}
+            </div>
+            <div class="row">
+            {{/every}}
+        {{/each}}
     </div>
 </div>
 <div class="col-sm-2 hidden-xs right-side">

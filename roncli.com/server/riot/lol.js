@@ -251,7 +251,7 @@ module.exports.cacheRanked = function(force, callback) {
 
 /**
  * Ensures that the champions are cached.
- * @param {boolean} force Forces the caching of the ranked info.
+ * @param {boolean} force Forces the caching of the champions.
  * @param {function} callback The callback function.
  */
 module.exports.cacheChampions = function(force, callback) {
@@ -274,7 +274,7 @@ module.exports.cacheChampions = function(force, callback) {
 
 /**
  * Ensures that a champion is cached.
- * @param {boolean} force Forces the caching of the ranked info.
+ * @param {boolean} force Forces the caching of the champion.
  * @param {number} championId The champion ID to cache.
  * @param {function} callback The callback function.
  */

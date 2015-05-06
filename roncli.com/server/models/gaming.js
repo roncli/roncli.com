@@ -1,6 +1,7 @@
 var wow = require("../battlenet/wow"),
     d3 = require("../battlenet/d3"),
     lol = require("../riot/lol"),
+    steam = require("../steam/steam"),
     cache = require("../cache/cache"),
     promise = require("promised-io/promise"),
     Deferred = promise.Deferred,
@@ -683,6 +684,48 @@ module.exports.getLatestLolRanked = function(callback) {
             getRanked(function() {
                 callback({
                     error: "League of Legends ranked stats do not exist.",
+                    status: 400
+                });
+            });
+        });
+    });
+};
+
+/**
+ * Gets the Steam games
+ * @param {function} callback The callback function.
+ */
+module.exports.getSteamGames = function(callback) {
+    "use strict";
+
+    var getGames = function(failureCallback) {
+        cache.zrevrange("roncli.com:steam:games", 0, -1, function(games) {
+            if (!games) {
+                failureCallback();
+                return;
+            }
+
+            callback(null, games.map(function(game) {
+                return {
+                    appId: game.appId,
+                    name: game.name,
+                    image: game.header,
+                    url: "/game/steam/" + game.appId + "/" + game.name.replace(/[^a-zA-Z0-9]/g, "-").replace(/-+/g, "-").replace(/^-/, "").replace(/-$/, "").toLowerCase()
+                };
+            }));
+        });
+    };
+
+    getGames(function() {
+        steam.cacheGames(false, function(err) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            getGames(function() {
+                callback({
+                    error: "Steam games do not exist.",
                     status: 400
                 });
             });
