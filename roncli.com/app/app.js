@@ -15,6 +15,8 @@ module.exports = BaseApp.extend({
     // Media player.
     mediaPlayer: {
         playlist: [],
+        adding: false,
+        toAdd: [],
         playing: false,
         currentIndex: null
     },
@@ -981,6 +983,13 @@ module.exports = BaseApp.extend({
             media = {source: source, url: url},
             matches;
 
+        if (this.mediaPlayer.adding) {
+            this.mediaPlayer.toAdd.push(media);
+            return;
+        }
+
+        this.mediaPlayer.adding = true;
+
         switch (source) {
             case "soundcloud":
                 // Get the track ID.
@@ -998,7 +1007,6 @@ module.exports = BaseApp.extend({
                     success: function(data) {
                         media.title = data.user.username + " - " + data.title;
                         media.resolvedUrl = data.uri;
-                        media.data = data;
                         deferred.resolve();
                     },
                     error: function() {
@@ -1020,10 +1028,9 @@ module.exports = BaseApp.extend({
 
                 $.ajax({
                     dataType: "json",
-                    url: "http://gdata.youtube.com/feeds/api/videos/" + media.videoId + "?alt=json",
+                    url: "http://" + window.location.host + "/api/-/youtube/get-video-info?videoId=" + media.videoId,
                     success: function(data) {
-                        media.title = data.entry.author[0].name.$t + " - " + data.entry.title.$t;
-                        media.data = data;
+                        media.title = data.channelTitle + " - " + data.title;
                         deferred.resolve();
                     },
                     error: function() {
@@ -1037,11 +1044,22 @@ module.exports = BaseApp.extend({
         }
 
         deferred.promise.then(function() {
+            var nextMedia;
+
             $("#media-player-playlist").append(app.templateAdapter.getTemplate("media/media")({title: media.title}));
             app.mediaPlayer.playlist.push(media);
 
             if (!app.mediaPlayer.playing) {
                 app.play(app.mediaPlayer.playlist.length - 1);
+            }
+
+            if (app.mediaPlayer.toAdd.length > 0) {
+                nextMedia = app.mediaPlayer.toAdd.shift();
+
+                app.mediaPlayer.adding = false;
+                app.addToPlaylist(nextMedia.source, nextMedia.url);
+            } else {
+                app.mediaPlayer.adding = false;
             }
         },
 

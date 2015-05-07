@@ -375,9 +375,14 @@ module.exports.post = function(id, callback) {
 
             return deferred;
         }())
-    ).then(function(results) {
-        callback(null, {post: results[0], comments: results[1]});
-    }, function(err) {
-        callback(err);
-    });
+    ).then(
+        function(results) {
+            callback(null, {post: results[0], comments: results[1]});
+        },
+
+        // If any of the functions error out, it will be handled here.
+        function(err) {
+            callback(err);
+        }
+    );
 };

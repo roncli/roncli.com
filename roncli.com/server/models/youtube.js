@@ -37,8 +37,19 @@ module.exports.getPlaylist = function(id, callback) {
          */
         var getPlaylist = function(failureCallback) {
             cache.zrevrange("roncli.com:youtube:playlist:" + id, 0, -1, function(videos) {
+                var result = {};
+
                 if (videos && videos.length > 0) {
-                    callback(null, videos);
+                    result.videos = videos;
+                    cache.get("roncli.com:youtube:playlist:" + id + ":info", function(info) {
+                        if (info) {
+                            result.info = info;
+                            callback(null, result);
+                            return;
+                        }
+
+                        failureCallback();
+                    });
                     return;
                 }
 
@@ -108,6 +119,45 @@ module.exports.getLatestPlaylist = function(id, callback) {
                         error: "Playlist does not exist.",
                         status: 400
                     });
+                });
+            });
+        });
+    });
+};
+
+/**
+ * Gets video info from the cache.
+ * @param {string} id The video ID to use.
+ * @param {function} callback The callback function.
+ */
+module.exports.getVideoInfo = function(id, callback) {
+    "use strict";
+
+    var getVideoInfo = function(failureCallback) {
+        cache.get("roncli.com:youtube:video:" + id, function(info) {
+            if (info) {
+                callback(null, {
+                    channelTitle: info.snippet.channelTitle,
+                    title: info.snippet.title
+                });
+                return;
+            }
+
+            failureCallback();
+        });
+    };
+
+    getVideoInfo(function() {
+        youtube.cacheVideoInfo(false, id, function(err) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            getVideoInfo(function() {
+                callback({
+                    error: "Video does not exist.",
+                    status: 400
                 });
             });
         });

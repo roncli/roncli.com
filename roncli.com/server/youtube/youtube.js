@@ -14,6 +14,9 @@ var config = require("../privateConfig").google,
     cachePlaylist = function(playlistId, callback) {
         "use strict";
 
+        var playlistDeferred = new Deferred(),
+            infoDeferred = new Deferred();
+
         // TODO: Loop through results past 50.
         youtube.playlistItems.list({
             part: "snippet",
@@ -26,7 +29,7 @@ var config = require("../privateConfig").google,
             if (err) {
                 console.log("Bad response from Google.");
                 console.log(err);
-                callback({
+                playlistDeferred.reject({
                     error: "Bad response from Google.",
                     status: 502
                 });
@@ -46,14 +49,90 @@ var config = require("../privateConfig").google,
             });
 
             cache.zadd("roncli.com:youtube:playlist:" + playlistId, videos, 86400, function() {
+                playlistDeferred.resolve(true);
+            });
+        });
+
+        youtube.playlists.list({
+            part: "snippet",
+            id: playlistId,
+            key: config.api_key
+        }, function(err, data) {
+            if (err) {
+                console.log("Bad response from Google.");
+                console.log(err);
+                infoDeferred.reject({
+                    error: "Bad response from Google.",
+                    status: 502
+                });
+                return;
+            }
+
+            if (!data || !data.items || !data.items[0]) {
+                infoDeferred.reject({
+                    error: "Invalid playlist ID.",
+                    status: 400
+                });
+                return;
+            }
+
+            cache.set("roncli.com:youtube:playlist:" + playlistId + ":info", data.items[0], 86400, function() {
+                infoDeferred.resolve(true);
+            });
+        });
+
+        all([playlistDeferred.promise, infoDeferred.promise]).then(
+            function() {
+                callback();
+            },
+
+            // If any of the functions error out, it will be handled here.
+            function(err) {
+                callback(err);
+            }
+        );
+    },
+
+    /**
+     * Caches video info from YouTube.
+     * @param {string} videoId The video ID to cache.
+     * @param {function} callback The callback function.
+     */
+    cacheVideoInfo = function(videoId, callback) {
+        "use strict";
+
+        youtube.videos.list({
+            part: "snippet",
+            id: videoId,
+            key: config.api_key
+        }, function(err, data) {
+            if (err) {
+                console.log("Bad response from Google.");
+                console.log(err);
+                callback({
+                    error: "Bad response from Google.",
+                    status: 502
+                });
+                return;
+            }
+
+            if (!data || !data.items || !data.items[0]) {
+                callback({
+                    error: "Invalid video ID.",
+                    status: 400
+                });
+                return;
+            }
+
+            cache.set("roncli.com:youtube:video:" + videoId, data.items[0], 86400, function() {
                 callback();
             });
         });
     };
 
 /**
- * Ensures that the posts are cached.
- * @param {boolean} force Forces the caching of posts.
+ * Ensures that a playlist are cached.
+ * @param {boolean} force Forces the caching of the playlist.
  * @param {string} playlistId The playlist ID to cache.
  * @param {function} callback The callback function.
  */
@@ -67,10 +146,40 @@ module.exports.cachePlaylist = function(force, playlistId, callback) {
 
     cache.keys("roncli.com:youtube:playlist:" + playlistId, function(keys) {
         if (keys && keys.length > 0) {
+            cache.keys("roncli.com:youtube:playlist:" + playlistId + ":info", function(keys) {
+                if (keys && keys.length > 0) {
+                    callback();
+                    return;
+                }
+
+                cachePlaylist(playlistId, callback);
+            });
+        }
+
+        cachePlaylist(playlistId, callback);
+    });
+};
+
+/**
+ * Ensures that a video is cached.
+ * @param {boolean} force Forces the caching of the video.
+ * @param {string} videoId The video ID to cache.
+ * @param {function} callback The callback function.
+ */
+module.exports.cacheVideoInfo = function(force, videoId, callback) {
+    "use strict";
+
+    if (force) {
+        cacheVideoInfo(videoId, callback);
+        return;
+    }
+
+    cache.keys("roncli.com:youtube:video:" + videoId, function(keys) {
+        if (keys && keys.length > 0) {
             callback();
             return;
         }
 
-        cachePlaylist(playlistId, callback);
+        cacheVideoInfo(videoId, callback);
     });
 };

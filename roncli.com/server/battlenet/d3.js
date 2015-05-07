@@ -117,7 +117,7 @@ var config = require("../privateConfig").battlenet,
                 function(err) {
                     callback(err);
                 }
-            )
+            );
         });
     },
 

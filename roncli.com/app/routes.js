@@ -48,6 +48,9 @@ module.exports = function(match) {
     // The gaming page.
     match(/^\/?gaming$/, "gaming#index");
 
+    // The playlist page.
+    match(/^\/?(playlist\/([\-a-zA-Z0-9_]+)\/[^\/]+)$/, "playlist#index");
+
     // The default route if none of the above match.
     match(/\/?(.*)/, "default#index");
 };
