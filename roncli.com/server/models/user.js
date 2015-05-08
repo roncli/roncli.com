@@ -156,6 +156,33 @@ module.exports.getNotifications = function(userId, callback) {
             }()));
         }
 
+        // Get YouTube comments to moderate.
+        if (roles.indexOf("SiteAdmin") !== -1) {
+            promises.push((function() {
+                var deferred = new Deferred();
+
+                db.query(
+                    "SELECT COUNT(CommentID) Comments FROM tblPlaylistComment WHERE ModeratedDate IS NULL",
+                    {},
+                    function(err, data) {
+                        if (err) {
+                            console.log("Database error in user.getNotifications while getting count of YouTube comments needing moderation.");
+                            console.log(err);
+                            deferred.reject({
+                                error: "There was a database error getting user notifications.  Please reload the page and try again.",
+                                status: 500
+                            });
+                            return;
+                        }
+
+                        deferred.resolve({youtube: data[0][0].Comments, admin: true});
+                    }
+                );
+
+                return deferred.promise;
+            }()));
+        }
+
         if (promises.length === 0) {
             callback(null, {});
             return;
