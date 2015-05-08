@@ -2365,7 +2365,7 @@ module.exports.getYoutubeCommentsToModerate = function(userId, callback) {
         }
 
         db.query(
-            "SELECT sc.CommentID, sc.Comment, sc.CrDate, u.Alias, sc.PlaylistURL FROM tblPlaylistComment sc INNER JOIN tblUser u ON sc.CrUserID = u.UserID WHERE sc.ModeratedDate IS NULL ORDER BY sc.CrDate",
+            "SELECT pc.CommentID, pc.Comment, pc.CrDate, u.Alias, pc.PlaylistID FROM tblPlaylistComment pc INNER JOIN tblUser u ON pc.CrUserID = u.UserID WHERE pc.ModeratedDate IS NULL ORDER BY pc.CrDate",
             {},
             function(err, data) {
                 if (err) {
@@ -2389,7 +2389,7 @@ module.exports.getYoutubeCommentsToModerate = function(userId, callback) {
                         published: comment.CrDate.getTime(),
                         content: comment.Comment,
                         author: comment.Alias,
-                        url: comment.PlaylistURL
+                        playlistId: comment.PlaylistID
                     };
                 }));
             }

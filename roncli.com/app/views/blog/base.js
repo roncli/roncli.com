@@ -11,7 +11,6 @@ module.exports = BaseView.extend({
     className: "blog_base_view",
 
     events: {
-        "click img.thumb": "thumbClick",
         "click a.blog-nav": "blogNav",
         "click #add-blog-comment": "addBlogComment",
         "click button.comment-reply": "commentReply"
@@ -62,12 +61,6 @@ module.exports = BaseView.extend({
         this.app.lastBlogNav = undefined;
 
         this.app.addPageScroller("#blog-categories-wrapper", {mouseWheel: true, scrollbars: true});
-    },
-
-    thumbClick: function(ev) {
-        "use strict";
-
-        window.open($(ev.target).attr("src"), "fullImage", "menubar=0,status=0,titlebar=0,toolbar=0");
     },
 
     blogNav: function(ev) {

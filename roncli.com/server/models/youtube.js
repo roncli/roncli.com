@@ -1,5 +1,11 @@
-var youtube = require("../youtube/youtube"),
+var Moment = require("moment"),
+    sanitizeHtml = require("sanitize-html"),
+    youtube = require("../youtube/youtube"),
     cache = require("../cache/cache"),
+    db = require("../database/database"),
+    promise = require("promised-io/promise"),
+    Deferred = promise.Deferred,
+    all = promise.all,
 
     /**
      * Determines if a playlist is allowed to be displayed on the site.
@@ -162,4 +168,165 @@ module.exports.getVideoInfo = function(id, callback) {
             });
         });
     });
+};
+
+/**
+ * Gets comments for a playlist via the playlist ID.
+ * @param {string} id The playlist ID.
+ * @param {function} callback The callback function.
+ */
+module.exports.getCommentsById = function(id, callback) {
+    "use strict";
+
+    isAllowed(id, function(allowed) {
+        if (!allowed) {
+            callback({
+                error: "Playlist not found.",
+                status: 404
+            });
+            return;
+        }
+
+        db.query(
+            "SELECT pc.CommentID, pc.Comment, pc.CrDate, u.Alias FROM tblPlaylistComment pc INNER JOIN tblUser u ON pc.CrUserID = u.UserID WHERE pc.PlaylistID = @playlistId AND pc.ModeratedDate IS NOT NULL ORDER BY pc.CrDate",
+            {playlistId: {type: db.VARCHAR(1024), value: id}},
+            function(err, data) {
+                var comments;
+
+                if (err) {
+                    console.log("Database error in youtube.getCommentsById.");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error retrieving playlist comments.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                if (data[0]) {
+                    comments = data[0].map(function(comment) {
+                        return {
+                            id: comment.CommentID,
+                            published: comment.CrDate.getTime(),
+                            content: comment.Comment,
+                            author: comment.Alias,
+                            playlistSource: "site"
+                        };
+                    });
+                }
+
+                callback(null, comments);
+            }
+        );
+    });
+};
+
+/**
+ * Posts a comment to a playlist page.
+ * @param {int} userId The User ID posting the comment.
+ * @param {string} id The playlist ID.
+ * @param {string} content The content of the post.
+ * @param {function} callback The callback function.
+ */
+module.exports.postComment = function(userId, id, content, callback) {
+    "use strict";
+
+    all(
+        /**
+         * Check to see if the user has posted a comment within the last 60 seconds to prevent spam.
+         */
+        (function() {
+            var deferred = new Deferred();
+
+            db.query(
+                "SELECT MAX(CrDate) LastComment FROM tblPlaylistComment WHERE CrUserID = @userId",
+                {userId: {type: db.INT, value: userId}},
+                function(err, data) {
+                    if (err) {
+                        console.log("Database error in youtube.postComment while checking the user's last comment time.");
+                        console.log(err);
+                        deferred.reject({
+                            error: "There was a database error posting a playlist comment.  Please reload the page and try again.",
+                            status: 500
+                        });
+                        return;
+                    }
+
+                    if (data[0] && data[0][0] && data[0][0].LastComment > new Moment().add(-1, "minute")) {
+                        deferred.reject({
+                            error: "You must wait a minute after posting a comment to post a new comment.",
+                            status: 400
+                        });
+                        return;
+                    }
+
+                    deferred.resolve(true);
+                }
+            );
+
+            return deferred.promise;
+        }()),
+
+        /**
+         * Ensure the playlist ID the user is posting to exists.
+         */
+        (function() {
+            var deferred = new Deferred();
+
+            isAllowed(id, function(allowed) {
+                if (!allowed) {
+                    deferred.reject({
+                        error: "Playlist not found.",
+                        status: 404
+                    });
+                    return;
+                }
+
+                deferred.resolve(true);
+            });
+
+            return deferred.promise;
+        }())
+    ).then(
+        /**
+         * Add the post to the database.
+         */
+        function() {
+            var attributes = sanitizeHtml.defaults.allowedAttributes;
+            attributes.p = ["style"];
+            attributes.span = ["style"];
+
+            content = sanitizeHtml(content, {
+                allowedTags: sanitizeHtml.defaults.allowedTags.concat(["h1", "h2", "u", "sup", "sub", "strike", "address", "span"]),
+                allowedAttributes: attributes
+            });
+
+            db.query(
+                "INSERT INTO tblPlaylistComment (PlaylistID, Comment, CrDate, CrUserID) VALUES (@playlistId, @content, GETUTCDATE(), @userId)",
+                {
+                    playlistId: {type: db.VARCHAR(1024), value: id},
+                    content: {type: db.TEXT, value: content},
+                    userId: {type: db.INT, value: userId}
+                },
+                function(err) {
+                    if (err) {
+                        console.log("Database error in youtube.postComment while posting a comment.");
+                        console.log(err);
+                        callback({
+                            error: "There was a database error posting a playlist comment.  Please reload the page and try again.",
+                            status: 500
+                        });
+                        return;
+                    }
+
+                    callback();
+                }
+            );
+        },
+
+        // If any of the functions error out, it will be handled here.
+        function(err) {
+            callback(err);
+        }
+    );
 };

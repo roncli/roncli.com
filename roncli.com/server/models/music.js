@@ -26,8 +26,6 @@ var Moment = require("moment"),
         });
     };
 
-
-
 /**
  * Forces the site to cache the songs, even if they are already cached.
  * @param {function} callback The callback function.

@@ -1,0 +1,24 @@
+{{#each comments}}
+    <div class="comment-post panel-body">
+        <div class="row">
+            <div class="comment-header col-xs-12">
+                <div class="comment-author text-success">{{attributes.author}}</div>
+                <div class="comment-date text-muted" data-published="{{{attributes.published}}}">Posted {{timestampToDate attributes.published}}</div>
+            </div>
+        </div>
+        <div class="comment-body">
+            {{{sanitize attributes.content}}}
+        </div>
+        <button class="btn btn-primary pull-right comment-reply">Reply</button>
+    </div>
+{{/each}}
+<div class="panel-body">
+    <h3 class="text-center">Add Your Comments</h3>
+    <div class="vertical-margin"><textarea class="tinymce"></textarea></div>
+    <button id="add-playlist-comment" class="btn-lg btn-primary center-block">Add Commment</button>
+    <div class="text-center small">Note: All posted comments are moderated.</div>
+    <div id="playlist-comment-server-error-list" class="panel panel-danger top-margin-only" hidden>
+        <div class="panel-heading">There was an error while posting your comment:</div>
+        <div id="playlist-comment-server-errors" class="panel-body"></div>
+    </div>
+</div>

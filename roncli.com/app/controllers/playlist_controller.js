@@ -28,6 +28,8 @@ module.exports = {
                 return;
             }
 
+            result.playlistId = params[1];
+
             if (app.req) {
                 result.meta = {
                     "og:description": result.playlist.attributes.info.snippet.description,

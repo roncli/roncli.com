@@ -5,10 +5,6 @@ var BaseView = require("rendr/shared/base/view"),
 module.exports = BaseView.extend({
     className: "home_index_view",
 
-    events: {
-        "click img.thumb": "thumbClick"
-    },
-
     postRender: function() {
         "use strict";
 
@@ -23,12 +19,6 @@ module.exports = BaseView.extend({
                 });
             });
         });
-    },
-
-    thumbClick: function(ev) {
-        "use strict";
-
-        window.open($(ev.target).attr("src"), "fullImage", "menubar=0,status=0,titlebar=0,toolbar=0");
     }
 });
 
