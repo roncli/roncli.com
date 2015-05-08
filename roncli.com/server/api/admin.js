@@ -146,6 +146,17 @@ module.exports.get = function(req, query, callback) {
                     break;
                 case "youtube":
                     switch (req.parsedPath[1]) {
+                        case "comments":
+                            admin.getYoutubeCommentsToModerate(userId, function(err, comments) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                callback(comments);
+                            });
+                            return;
                         case "playlist":
                             admin.getPlaylists(userId, function(err, playlists) {
                                 if (err) {
@@ -481,6 +492,30 @@ module.exports.post = function(req, query, callback) {
                             admin.clearYoutubeCaches(userId, function(err) {
                                 if (err) {
                                     console.log(err);
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                        case "approve-comment":
+                            admin.approveYoutubeComment(userId, req.body.commentId, function(err) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                        case "reject-comment":
+                            admin.rejectYoutubeComment(userId, req.body.commentId, function(err) {
+                                if (err) {
                                     req.res.status(err.status);
                                     callback(err);
                                     return;

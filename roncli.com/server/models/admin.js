@@ -2338,3 +2338,153 @@ module.exports.removePlaylist = function(userId, playlistId, callback) {
         });
     });
 };
+
+/**
+ * Return list of YouTube comments to moderate.
+ * @param {number} userId The user ID of the moderator.
+ * @param {function(null, object)|function(object)} callback The callback function.
+ */
+module.exports.getYoutubeCommentsToModerate = function(userId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while getting YouTube comments to moderate.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        db.query(
+            "SELECT sc.CommentID, sc.Comment, sc.CrDate, u.Alias, sc.PlaylistURL FROM tblPlaylistComment sc INNER JOIN tblUser u ON sc.CrUserID = u.UserID WHERE sc.ModeratedDate IS NULL ORDER BY sc.CrDate",
+            {},
+            function(err, data) {
+                if (err) {
+                    console.log("Database error in admin.getYoutubeCommentsToModerate");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while getting YouTube comments to moderate.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                if (!data[0]) {
+                    callback(null, {});
+                    return;
+                }
+
+                callback(null, data[0].map(function(comment) {
+                    return {
+                        id: comment.CommentID,
+                        published: comment.CrDate.getTime(),
+                        content: comment.Comment,
+                        author: comment.Alias,
+                        url: comment.PlaylistURL
+                    };
+                }));
+            }
+        );
+    });
+};
+
+/**
+ * Approves a YouTube comment.
+ * @param {number} userId The user ID of the moderator.
+ * @param {number} commentId The comment ID to approve.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.approveYoutubeComment = function(userId, commentId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while approving a YouTube comment.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        db.query(
+            "UPDATE tblPlaylistComment SET ModeratedDate = GETUTCDATE() WHERE CommentID = @id",
+            {id: {type: db.INT, value: commentId}},
+            function(err) {
+                if (err) {
+                    console.log("Database error in admin.approveYoutubeComment.");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while approving a YouTube comment.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                callback();
+            }
+        );
+    });
+};
+
+/**
+ * Rejects a YouTube comment.
+ * @param {number} userId The user ID of the moderator.
+ * @param {number} commentId The comment ID to reject.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.rejectYoutubeComment = function(userId, commentId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while rejecting a YouTube comment.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        db.query(
+            "DELETE FROM tblPlaylistComment WHERE CommentID = @id",
+            {id: {type: db.INT, value: commentId}},
+            function(err) {
+                if (err) {
+                    console.log("Database error in admin.approveYoutubeComment.");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while rejecting a YouTube comment.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                callback();
+            }
+        );
+    });
+};

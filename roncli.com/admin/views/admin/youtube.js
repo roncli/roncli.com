@@ -11,6 +11,9 @@ module.exports = BaseView.extend({
 
     events: {
         "click button#clear-caches": "clearCaches",
+        "click a.playlist-link": "openPlaylist",
+        "click button.approve-comment": "approveComment",
+        "click button.reject-comment": "rejectComment",
         "click button.delete-playlist": "deletePlaylist",
         "click button#add-playlist": "addPlaylist"
     },
@@ -51,6 +54,67 @@ module.exports = BaseView.extend({
                 view.showError(message);
 
                 clearCaches.prop("disabled", false);
+            }
+        });
+    },
+
+    openPlaylist: function(ev) {
+        "use strict";
+
+        // Open playlist in new window.
+        window.open($(ev.target).attr("href"), "_blank");
+
+        // Do not open post in current window!
+        return false;
+    },
+
+    approveComment: function(ev) {
+        "use strict";
+
+        this.moderateComment($(ev.target).closest(".comment-post"), "approve");
+    },
+
+    rejectComment: function(ev) {
+        "use strict";
+
+        this.moderateComment($(ev.target).closest(".comment-post"), "reject");
+    },
+
+    moderateComment: function(commentPost, action) {
+        "use strict";
+
+        var approveButton = commentPost.find(".approve-comment"),
+            rejectButton = commentPost.find(".reject-comment"),
+            admin = new Admin(),
+            view = this,
+            app = this.app;
+
+        approveButton.prop("disabled", true);
+        rejectButton.prop("disabled", true);
+
+        admin.fetch({
+            url: "/admin/youtube/" + action + "-comment",
+            data: JSON.stringify({commentId: commentPost.data("commentId")}),
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            success: function() {
+                $("<div></div>").html(app.templateAdapter.getTemplate("admin/youtube/" + action)).insertAfter(commentPost.find(".comment-actions"));
+                approveButton.remove();
+                rejectButton.remove();
+            },
+            error: function(xhr, error) {
+                var message;
+                if (error && error.body && error.body.error) {
+                    message = error.body.error;
+                } else {
+                    message = "There was a server error moderating the comment.  Please try again later.";
+                }
+
+                view.showError(message);
+
+                approveButton.prop("disabled", false);
+                rejectButton.prop("disabled", false);
             }
         });
     },
