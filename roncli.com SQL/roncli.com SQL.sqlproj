@@ -81,5 +81,6 @@
     <Build Include="Security\Users\web_roncli.sql" />
     <Build Include="Security\Logins\web_roncli.sql" />
     <Build Include="dbo\Tables\tblBlogComment.sql" />
+    <Build Include="dbo\Tables\tblPlaylistComment.sql" />
   </ItemGroup>
 </Project>
