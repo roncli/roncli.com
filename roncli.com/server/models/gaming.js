@@ -693,12 +693,16 @@ module.exports.getLatestLolRanked = function(callback) {
 };
 
 /**
- * Gets the Steam games
+ * Gets the Steam games.
  * @param {function} callback The callback function.
  */
 module.exports.getSteamGames = function(callback) {
     "use strict";
 
+    /**
+     * Gets the Steam games from the cache.
+     * @param {function} failureCallback The failure callback function.
+     */
     var getGames = function(failureCallback) {
         cache.zrevrange("roncli.com:steam:games", 0, -1, function(games) {
             if (!games || games.length === 0) {
@@ -711,7 +715,7 @@ module.exports.getSteamGames = function(callback) {
                     appId: game.appId,
                     name: game.name,
                     image: game.header,
-                    url: "/game/steam/" + game.appId + "/" + game.name.replace(/[^a-zA-Z0-9]/g, "-").replace(/-+/g, "-").replace(/^-/, "").replace(/-$/, "").toLowerCase()
+                    url: "/steam/" + game.appId + "/" + game.name.replace(/[^a-zA-Z0-9]/g, "-").replace(/-+/g, "-").replace(/^-/, "").replace(/-$/, "").toLowerCase()
                 };
             }));
         });
@@ -727,6 +731,87 @@ module.exports.getSteamGames = function(callback) {
             getGames(function() {
                 callback({
                     error: "Steam games do not exist.",
+                    status: 400
+                });
+            });
+        });
+    });
+};
+
+/**
+ * Gets data for a Steam game.
+ * @param {number} gameId The Steam game ID.
+ * @param {function} callback The callback function.
+ */
+module.exports.getSteamGame = function(gameId, callback) {
+    "use strict";
+
+    /**
+     * Gets the Steam game from the cache.
+     * @param {function} failureCallback The failure callback function.
+     */
+    var getGame = function(failureCallback) {
+        cache.hmget("roncli.com:steam:gameInfo", [gameId], function(games) {
+            var gameInfo;
+
+            if (!games || games.length === 0 || !games[0]) {
+                failureCallback();
+                return;
+            }
+
+            gameInfo = games[0];
+
+            cache.get("roncli.com:steam:game:" + gameId, function(game) {
+                var earnedAchievements = {};
+
+                if (!game) {
+                    failureCallback();
+                    return;
+                }
+
+                game.stats.achievements.forEach(function(achievement) {
+                    if (achievement.achieved) {
+                        earnedAchievements[achievement.name] = true;
+                    }
+                });
+
+                game.schema.availableGameStats.achievements.forEach(function(achievement) {
+                    if (earnedAchievements[achievement.name]) {
+                        achievement.achieved = true;
+                    }
+                });
+
+                callback(null, {
+                    name: gameInfo.name,
+                    playtimeTwoWeeks: gameInfo.playtimeTwoWeeks,
+                    playtimeForever: gameInfo.playtimeForever,
+                    achievements: {
+                        earned: game.schema.availableGameStats.achievements.filter(function(achievement) {
+                            return achievement.achieved;
+                        }).sort(function(a, b) {
+                            return a.displayName.localeCompare(b.displayName);
+                        }),
+                        unearned: game.schema.availableGameStats.achievements.filter(function(achievement) {
+                            return !achievement.achieved;
+                        }).sort(function(a, b) {
+                            return a.displayName.localeCompare(b.displayName);
+                        })
+                    }
+                });
+            });
+        });
+    };
+
+    getGame(function() {
+        steam.cacheGame(false, gameId, function(err) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            getGame(function() {
+                callback({
+                    error: "Steam game does not exist.",
                     status: 400
                 });
             });

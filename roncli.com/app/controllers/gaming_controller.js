@@ -86,5 +86,52 @@ module.exports = {
             }
             callback(err, result);
         });
+    },
+
+    /**
+     * The default game view.
+     * @param {object} params The parameters to use in the controller.
+     * @param {function((null | object), object=)} callback The callback to run upon completion of the controller running.
+     */
+    game: function(params, callback) {
+        "use strict";
+
+        var app = this.app;
+
+        app.fetch({
+            page: {model: "PageOptional", params: {url: "/" + params[0]}},
+            game: {model: "SteamGame", params: {gameId: params[1]}}
+        }, function(err, result) {
+            if (!err && result && result.page && result.page.attributes && result.page.attributes.error) {
+                err = result.page.attributes;
+            }
+
+            if (!err && result && result.game && result.game.attributes && result.game.attributes.error) {
+                err = result.game.attributes;
+            }
+
+            if (err) {
+                handleServerError(err, app, result, callback);
+                return;
+            }
+
+            if (app.req) {
+                result.meta = {
+                    "og:description": "roncli's game stats for " + result.game.attributes.name,
+                    "og:image": "http://" + app.req.headers.host + "/images/favicon.png",
+                    "og:site_name": "roncli.com",
+                    "og:title": result.game.attributes.name,
+                    "og:type": "website",
+                    "og:url": "http://" + app.req.headers.host + "/" + params[0],
+                    "twitter:card": "summary",
+                    "twitter:description": "roncli's game stats for " + result.game.attributes.name,
+                    "twitter:image": "http://" + app.req.headers.host + "/images/favicon.png",
+                    "twitter:site": "@roncli",
+                    "twitter:title": result.game.attributes.name,
+                    "twitter:url": "http://" + app.req.headers.host + "/" + params[0]
+                };
+            }
+            callback(err, result);
+        });
     }
 };

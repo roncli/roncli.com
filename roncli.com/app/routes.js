@@ -48,6 +48,9 @@ module.exports = function(match) {
     // The gaming page.
     match(/^\/?gaming$/, "gaming#index");
 
+    // Specific Steam game pages.
+    match(/^\/?((?:steam)\/([0-9]+)\/[^\/]+)$/, "gaming#game");
+
     // The playlist page.
     match(/^\/?(playlist\/([\-a-zA-Z0-9_]+)\/[^\/]+)$/, "playlist#index");
 
