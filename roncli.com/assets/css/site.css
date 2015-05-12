@@ -626,3 +626,25 @@ div.div-table > div {
 div.div-table > div > div {
     display: table-cell;
 }
+
+div.tooltip-hover {
+    position: relative;
+}
+
+div.tooltip-content {
+    position: absolute;
+    background-color: #ffffff;
+    border: solid 1px #191935;
+    color: #000000;
+    top: 54px;
+    left: -32px;
+    text-align: center;
+    width: 128px;
+    font-size: 12px;
+    display: none;
+    z-index: 1;
+}
+
+div.tooltip-hover:hover div.tooltip-content {
+    display: block;
+}

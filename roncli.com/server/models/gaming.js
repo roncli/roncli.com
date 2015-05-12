@@ -785,6 +785,7 @@ module.exports.getSteamGame = function(gameId, callback) {
                     name: gameInfo.name,
                     playtimeTwoWeeks: gameInfo.playtimeTwoWeeks,
                     playtimeForever: gameInfo.playtimeForever,
+                    header: gameInfo.header,
                     achievements: {
                         earned: game.schema.availableGameStats.achievements.filter(function(achievement) {
                             return achievement.achieved;

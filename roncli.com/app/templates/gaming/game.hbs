@@ -1,8 +1,40 @@
 <div class="col-xs-8">
     <div class="panel panel-primary">
         <div class="panel-heading text-center"><h3>{{game.attributes.name}}</h3></div>
-        <div class="panel-body">
-
+        <div class="panel-body" style="overflow: visible;">
+            <div class="text-center"><img src="{{game.attributes.header}}" style="max-width: 100%;" /></div>
+            <h4 class="text-center">Time played: <b>{{game.attributes.playtimeForever}}</b></h4>
+            {{#ifCond game.attributes.playtimeTwoWeeks "!==" "0 minutes"}}
+                <h4 class="text-center">Last 2 weeks: <b>{{game.attributes.playtimeTwoWeeks}}</b></h4>
+            {{/ifCond}}
+            {{#if game.attributes.achievements}}
+                {{#if game.attributes.achievements.earned}}
+                    <br />
+                    <h3 class="text-center">Earned Achievements</h3>
+                    {{#each game.attributes.achievements.earned}}
+                        <div class="tooltip-hover" style="display: inline-block;">
+                            <img src="{{icon}}" style="width: 64px; height: 64px;" />
+                            <div class="tooltip-content">
+                                <b>{{displayName}}</b><br/>{{description}}
+                            </div>
+                        </div>
+                    {{/each}}
+                    <br />
+                {{/if}}
+                {{#if game.attributes.achievements.unearned}}
+                    <br />
+                    <h3 class="text-center">Unearned Achievements</h3>
+                    {{#each game.attributes.achievements.unearned}}
+                        <div class="tooltip-hover" style="display: inline-block;">
+                            <img src="{{icongray}}" style="width: 64px; height: 64px;" />
+                            <div class="tooltip-content">
+                                <b>{{displayName}}</b><br />{{description}}
+                            </div>
+                        </div>
+                    {{/each}}
+                    <br />
+                {{/if}}
+            {{/if}}
         </div>
     </div>
     {{{page.attributes.page.content}}}
