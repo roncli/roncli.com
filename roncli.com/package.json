@@ -46,7 +46,7 @@
         "rss": "1.1.1",
         "sanitize-html": "1.6.1",
         "sortablejs": "1.1.1",
-        "steam-api": "git://github.com/DPr00f/steam-api-node.git#750aedfacac69f64f8bcf3b18d7692cd36d82720",
+        "steam-api": "git://github.com/DPr00f/steam-api-node.git#46b9354931c598f57fe2631cf3e2182c3aa1f9f1",
         "tumblr": "0.4.1",
         "twitter": "1.2.1",
         "underscore": "1.8.2"
