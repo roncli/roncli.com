@@ -203,7 +203,7 @@ module.exports.forceCacheChampions = function(callback) {
 };
 
 /**
- * Gets all of the WoW feed item.
+ * Gets all of the WoW feed items.
  * @param {function} callback The callback function.
  */
 module.exports.getWowFeed = function(callback) {
