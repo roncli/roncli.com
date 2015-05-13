@@ -648,3 +648,19 @@ div.tooltip-content {
 div.tooltip-hover:hover div.tooltip-content {
     display: block;
 }
+
+.dcl-gold {
+    color: #cc8800;
+}
+
+.dcl-silver {
+    color: #95a9ab;
+}
+
+.dcl-bronze {
+    color: #ac4117;
+}
+
+.dcl-unrated {
+    color: #7e0000;
+}

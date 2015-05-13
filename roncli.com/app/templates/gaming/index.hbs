@@ -160,14 +160,14 @@
             </div>
             <div style="clear: both;">
                 <h4 class="text-center" style="margin-top: 10px;">Match History</h4>
-                <div style="max-height:200px;overflow-x:hidden;overflow-y:auto;border:solid 1px #ccc;padding:1px 3px">
+                <div style="max-height: 200px; overflow-x: hidden; overflow-y: auto; border: solid 1px #ccc; padding: 1px 3px; ">
                     {{#each lol.attributes.games}}
                         <div class="div-table" style="margin-bottom: 5px;">
                             <div>
                                 <div style="padding-right: 5px; width: 20px; height: 20px; vertical-align: top;">
                                     {{#each ../lol.attributes.champions}}{{#ifCond @key "===" ../championId}}<div style="width: 20px; height: 20px; background-size: 20px 20px; background-image: url('{{image}}'); display: inline-block;"></div>{{/ifCond}}{{/each}}
                                 </div>
-                                <div style="vertical-align: top;">
+                                <div style="padding-right: 5px; vertical-align: top;">
                                     <div style="display: table; table-layout: fixed; width: 100%;">
                                         <a href="http://matchhistory.na.leagueoflegends.com/en/#match-details/NA1/{{matchId}}/203469552" target="_blank"><b>{{#each ../lol.attributes.champions}}{{#ifCond @key "===" ../championId}}{{name}}{{/ifCond}}{{/each}}</b></a> -
                                         {{#if winner}}<span class="text-success">Won</span>{{else}}<span class="text-danger">Lost</span>{{/if}} -
@@ -200,9 +200,59 @@
                 When Descent 3 was released, I joined the Wildcards Empire and earned their top pilot status in Descent and Descent 3, Death Squadron Elite.  I also played for Team X and Nightwing over the years.  I took over the Descent 3 Teams League in 2002 and ran it for several years, running the D3TL Tournament, which was a 16-team league that lasted 4-month in which everyone played 16 games.  Although 4 teams dropped out, it still remains the largest organized team tournament for Descent 3.  Most recently, I've joined the <a href="http://www.descentrangers.com" target="_blank">Descent Rangers</a> to help get active into playing again with the upcoming Descent: Underground title around the corner.<br /><br />
                 Because Descent and Descent 2 were released such a long time ago, there are some modifications that you need to make to get the game to work on modern systems.  After installing the games, either from media, on Steam, or on <a href="http://www.gog.com" target="_blank">gog.com</a>, you will need to visit <a href="http://www.dxx-rebirth.com/" target="_blank">dxx-rebirth.com</a> to get the latest source port that runs on modern machines.  You will also want to install the Retro package as part of the installation, or you can grab it from the <a href="http://www.descentrangers.com/WebContent/Index?key=Downloads" target="_blank">Descent Rangers</a> downloads section.
             </div>
-            <div style="clear: both; margin-top: 10px;">
-                <h3 class="text-center" style="clear: both;"><a href="/playlist/PLoqgd0t_KsN5hXZPYr9GjcGrDaj3Uq2A-/gaming-descent-dcl">Descent Champions Ladder Videos</a></h3>
+            <div style="clear: both;">
+                <h3 class="text-center" style="margin-top: 10px;">Descent Champions Ladder</h3>
                 The <a href="http://www.descentchampions.org" _blank>Descent Champions Ladder</a> is an active Descent league that ranks each player via a ladder system.  If you defeat a player higher than you, you take their spot.  Players are also rated based on performance, and you can get a litany of stats about their games.  I stream my DCL matches on <a href="http://twitch.tv/roncli" target="_blank">Twitch</a> and then move them to YouTube afterwards.  An average DCL game is about 20 minutes, but can vary depending on the size of the map and aggression of the players involved.<br/><br/>
+            </div>
+            <div>
+                <h4 class="text-center">Current Season</h4>
+                <div class="text-center">
+                    <span class="dcl-{{dcl.attributes.rating}}">{{titleCase dcl.attributes.rating}} #{{dcl.attributes.rank}}</span><br />
+                    <span class="dcl-gold">Vs. Gold: {{dcl.attributes.records.gold.wins}}-{{dcl.attributes.records.gold.losses}}</span><br />
+                    <span class="dcl-silver">Vs. Silver: {{dcl.attributes.records.silver.wins}}-{{dcl.attributes.records.silver.losses}}</span><br />
+                    <span class="dcl-bronze">Vs. Bronze: {{dcl.attributes.records.bronze.wins}}-{{dcl.attributes.records.bronze.losses}}</span><br />
+                    <span class="dcl-unrated">Vs. Unrated: {{dcl.attributes.records.unrated.wins}}-{{dcl.attributes.records.unrated.losses}}</span><br />
+                </div>
+            </div>
+            <div style="margin-top: 10px;">
+                <h4 class="text-center">Match History</h4>
+                <div style="max-height: 200px; overflow-x: hidden; overflow-y: auto; border: solid 1px #cccccc; padding: 1px 3px;">
+                    <div class="div-table" style="margin-bottom: 5px;">
+                        {{#each dcl.attributes.matches}}
+                            <div>
+                                <div style="padding-right: 5px; vertical-align: top;">
+                                    {{#ifCond pilot.score ">" opponent.score}}
+                                        <span class="text-success">Win</span>
+                                    {{else}}
+                                        <span class="text-danger">Loss</span>
+                                    {{/ifCond}}
+                                </div>
+                                <div style="padding-right: 5px; vertical-align: top;">
+                                    {{#ifCond pilot.score ">" opponent.score}}
+                                        <span class="dcl-{{pilot.rating}}">roncli (#{{pilot.rank}})</span> <b>{{pilot.score}}</b>, <span class="dcl-{{opponent.rating}}">{{opponent.name}} (#{{opponent.rank}})</span> <b>{{opponent.score}}</b>
+                                    {{else}}
+                                        <span class="dcl-{{opponent.rating}}">{{opponent.name}} (#{{opponent.rank}})</span> <b>{{opponent.score}}</b>, <span class="dcl-{{pilot.rating}}">roncli (#{{pilot.rank}})</span> <b>{{pilot.score}}</b>
+                                    {{/ifCond}}
+                                </div>
+                                <div style="padding-right: 5px; vertical-align: top;">
+                                    {{game}} {{map}}
+                                    {{#ifCond pilot.home "===" 1}}
+                                        - roncli's Home
+                                    {{/ifCond}}
+                                    {{#ifCond opponent.home "===" 1}}
+                                        - {{opponent.name}}'s Home
+                                    {{/ifCond}}
+                                </div>
+                                <div class="hidden-xs" style="padding-left: 5px; width: 1px; white-space: nowrap; vertical-align: top;">
+                                    {{{toTimeAgo date}}}
+                                </div>
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 10px;">
+                <h3 class="text-center" style="clear: both;"><a href="/playlist/PLoqgd0t_KsN5hXZPYr9GjcGrDaj3Uq2A-/gaming-descent-dcl">Descent Champions Ladder Videos</a></h3>
                 <h4 class="text-center" style="margin-bottom: 3px;">{{dclVideo.attributes.title}}</h4>
                 <div class="text-center">
                     <iframe src="https://www.youtube.com/embed/{{{dclVideo.attributes.id}}}?feature=oembed&amp;enablejsapi=1&amp;wmode=opaque" frameborder="0" allowfullscreen="" style="width: 100%; height: 200px;"></iframe><br />

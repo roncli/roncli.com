@@ -20,6 +20,7 @@ module.exports = {
             d3Video: {model: "Video", params: {playlistId: "PLoqgd0t_KsN7LEYsVepkfbn2xOiC5M5yY"}},
             lol: {model: "LeagueRanked", params: {}},
             lolVideo: {model: "Video", params: {playlistId: "PLoqgd0t_KsN5YU7YGjhofQ7DJTt8pV4OZ"}},
+            dcl: {model: "DclPilot", params: {}},
             dclVideo: {model: "Video", params: {playlistId: "PLoqgd0t_KsN5hXZPYr9GjcGrDaj3Uq2A-"}},
             steam: {collection: "SteamGames", params: {}}
         }, function(err, result) {
@@ -53,6 +54,10 @@ module.exports = {
 
             if (!err && result && result.lolVideo && result.lolVideo.attributes && result.lolVideo.attributes.error) {
                 err = result.lolVideo.attributes;
+            }
+
+            if (!err && result && result.dcl && result.dcl.attributes && result.dcl.attributes.error) {
+                err = result.dcl.attributes;
             }
 
             if (!err && result && result.dclVideo && result.dclVideo.attributes && result.dclVideo.attributes.error) {
