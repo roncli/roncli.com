@@ -289,7 +289,10 @@ module.exports.getLatestWowFeed = function(callback) {
             result.character = character;
 
             cache.zrevrange("roncli.com:battlenet:wow:feed", 0, 0, function(feedItem) {
-                // TODO: What if feedItem.length === 0?
+                if (feedItem && feedItem.length === 0) {
+                    callback(null, result);
+                    return;
+                }
 
                 getWowFeedItem(feedItem[0], function(err, item) {
                     if (err) {
