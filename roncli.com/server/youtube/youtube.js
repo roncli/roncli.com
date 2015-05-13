@@ -43,7 +43,9 @@ var config = require("../privateConfig").google,
                     score: timestamp,
                     value: {
                         id: video.snippet.resourceId.videoId,
-                        title: video.snippet.title
+                        title: video.snippet.title,
+                        publishedAt: new Date(video.snippet.publishedAt).getTime(),
+                        description: video.snippet.description
                     }
                 };
             });
