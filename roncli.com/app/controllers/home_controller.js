@@ -19,7 +19,8 @@ module.exports = {
             projects: {collection: "Project_GetFeatured", params: {count: 3}},
             wow: {model: "WarcraftFeed_GetLatest", params: {}},
             d3: {model: "DiabloProfile_GetMain", params: {}},
-            lol: {model: "LeagueRanked_GetLatest", params: {}}
+            lol: {model: "LeagueRanked_GetLatest", params: {}},
+            dcl: {model: "DclPilot_GetLatest", params: {}}
         }, function(err, result) {
             if (!err && result && result.blog && result.blog.attributes && result.blog.attributes.error) {
                 err = result.blog.attributes;
@@ -51,6 +52,10 @@ module.exports = {
 
             if (!err && result && result.lol && result.lol.attributes && result.lol.attributes.error) {
                 err = result.lol.attributes;
+            }
+
+            if (!err && result && result.dcl && result.dcl.attributes && result.dcl.attributes.error) {
+                err = result.dcl.attributes;
             }
 
             if (err) {

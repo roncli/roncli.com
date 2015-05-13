@@ -155,6 +155,28 @@
                             </div>
                         </div>
                     </div>
+                    <div>
+                        <div class="div-table" style="margin-bottom: 5px;">
+                            <div>
+                                <div class="hidden-sm" style="vertical-align: top; width: 55px;">
+                                    <div style="width: 50px; height: 50px; background-image: url('/images/descentLogo.png'); background-size: 50px 50px; display: inline-block;"></div>
+                                </div>
+                                <div style="vertical-align: top;">
+                                    <div class="text-center"><h4>Descent Champions Ladder</h4></div>
+                                    {{titleCase dcl.attributes.rating}} #{{dcl.attributes.rank}}<br />
+                                    <span style="color: #cc8800; white-space: nowrap;">Gold: {{dcl.attributes.records.gold.wins}}-{{dcl.attributes.records.gold.losses}}</span> <span style="color: #95a9ab; white-space: nowrap;">Silver: {{dcl.attributes.records.silver.wins}}-{{dcl.attributes.records.silver.losses}}</span>, <span style="color: #ac4117; white-space: nowrap;">Bronze: {{dcl.attributes.records.bronze.wins}}-{{dcl.attributes.records.bronze.losses}}</span>, <span style="color: #7e0000; white-space: nowrap;">Unrated: {{dcl.attributes.records.unrated.wins}}-{{dcl.attributes.records.unrated.losses}}</span><br />
+                                    Last game:
+                                    {{#ifCond dcl.attributes.match.pilot.score ">" dcl.attributes.match.opponent.score}}
+                                        <span class="text-success">roncli <b>{{dcl.attributes.match.pilot.score}}</b> - {{dcl.attributes.match.opponent.name}} <b>{{dcl.attributes.match.opponent.score}}</b></span>
+                                    {{else}}
+                                        <span class="text-danger">{{dcl.attributes.match.opponent.name}} <b>{{dcl.attributes.match.opponent.score}}</b>, roncli <b>{{dcl.attributes.match.pilot.score}}</b></span>
+                                    {{/ifCond}}
+                                    {{dcl.attributes.match.game}} {{dcl.attributes.match.map}}<br />
+                                    {{{toTimeAgo dcl.attributes.match.date}}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

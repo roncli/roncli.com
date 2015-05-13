@@ -266,6 +266,15 @@ module.exports = function(Handlebars) {
          */
         toLower: function(str) {
             return str.toLowerCase();
+        },
+
+        /**
+         * Turns a string to title case.
+         * @param {string} str The string to turn to lower case.
+         * @returns {string} The string in lower case.
+         */
+        titleCase: function(str) {
+            return str.substring(0, 1).toUpperCase() + str.substring(1);
         }
     };
 };
