@@ -13,117 +13,145 @@ var config = require("../privateConfig").google,
     cachePosts = function(callback) {
         "use strict";
 
-        // TODO: Loop through results past 500
-        blogger.posts.list({
-            blogId: config.blog_id,
-            maxResults: 500,
-            status: "live",
-            fields: "items(id,labels,published,title,url)",
-            key: config.api_key
-        }, function(err, data) {
-            var urlPattern = /^http:\/\/blog\.roncli\.com\/[0-9]{4}\/[0-9]{2}\/(.*)\.html$/,
-                posts, categories, categoryPosts, promises;
-
-            if (err) {
-                console.log("Bad response from Google.");
-                console.log(err);
-                callback({
-                    error: "Bad response from Google.",
-                    status: 502
-                });
-                return;
-            }
-
-            posts = data.items.map(function(post) {
-                var urlParsed = urlPattern.exec(post.url),
-                    timestamp = new Date(post.published).getTime();
-
-                return {
-                    score: timestamp,
-                    value: {
-                        blogSource: "blogger",
-                        id: post.id,
-                        categories: post.labels,
-                        published: timestamp,
-                        title: post.title,
-                        url: "/blogger/" + post.id + (urlParsed ? "/" + urlParsed[1] : "")
-                    }
+        var totalPosts = [],
+            postsDeferred = new Deferred(),
+            getPosts = function(pageToken) {
+                var options = {
+                    blogId: config.blog_id,
+                    maxResults: 500,
+                    status: "live",
+                    fields: "items(id,labels,published,title,url),nextPageToken",
+                    key: config.api_key
                 };
-            });
 
-            categories = {};
-            categoryPosts = {};
-            posts.forEach(function(post) {
-                if (post.value.categories) {
-                    post.value.categories.forEach(function(category) {
-                        categories[category] = 0;
-
-                        if (!categoryPosts.hasOwnProperty(category)) {
-                            categoryPosts[category] = [];
-                        }
-                        categoryPosts[category].push(post);
-                    });
+                if (pageToken) {
+                    options.pageToken = pageToken;
                 }
-            });
 
-            promises = [
-                (function() {
-                    var deferred = new Deferred();
+                blogger.posts.list(options, function(err, data) {
+                    if (err) {
+                        console.log("Bad response from Google.");
+                        console.log(err);
+                        postsDeferred.reject({
+                            error: "Bad response from Google.",
+                            status: 502
+                        });
+                        return;
+                    }
 
-                    cache.zadd("roncli.com:blogger:posts", posts, 86400, function() {
-                        deferred.resolve(true);
-                    });
+                    totalPosts = [].concat.apply([], [totalPosts, data.items]);
 
-                    return deferred.promise;
-                }()),
-                (function() {
-                    var deferred = new Deferred();
+                    if (data.nextPageToken) {
+                        getPosts(data.nextPageToken);
+                    } else {
+                        postsDeferred.resolve(true);
+                    }
+                });
+            };
 
-                    cache.hmset("roncli.com:blog:urls", posts.map(function(post) {
-                        return {
-                            key: post.value.url,
-                            value: post.value
-                        };
-                    }), 0, function() {
-                        deferred.resolve(true);
-                    });
+        getPosts();
 
-                    return deferred.promise;
-                }()),
-                (function() {
-                    var deferred = new Deferred();
+        postsDeferred.promise.then(
+            function() {
+                var urlPattern = /^http:\/\/blog\.roncli\.com\/[0-9]{4}\/[0-9]{2}\/(.*)\.html$/,
+                    posts, categories, categoryPosts, promises;
 
-                    cache.zadd("roncli.com:blogger:categories", Object.keys(categories).map(function(category) {
-                        return {
-                            score: -categoryPosts[category].length,
-                            value: category
-                        };
-                    }), 86400, function() {
-                        deferred.resolve(true);
-                    });
+                posts = totalPosts.map(function(post) {
+                    var urlParsed = urlPattern.exec(post.url),
+                        timestamp = new Date(post.published).getTime();
 
-                    return deferred.promise;
-                }())
-            ];
+                    return {
+                        score: timestamp,
+                        value: {
+                            blogSource: "blogger",
+                            id: post.id,
+                            categories: post.labels,
+                            published: timestamp,
+                            title: post.title,
+                            url: "/blogger/" + post.id + (urlParsed ? "/" + urlParsed[1] : "")
+                        }
+                    };
+                });
 
-            Object.keys(categories).forEach(function(category) {
-                promises.push(
+                categories = {};
+                categoryPosts = {};
+                posts.forEach(function(post) {
+                    if (post.value.categories) {
+                        post.value.categories.forEach(function(category) {
+                            categories[category] = 0;
+
+                            if (!categoryPosts.hasOwnProperty(category)) {
+                                categoryPosts[category] = [];
+                            }
+                            categoryPosts[category].push(post);
+                        });
+                    }
+                });
+
+                promises = [
                     (function() {
                         var deferred = new Deferred();
 
-                        cache.zadd("roncli.com:blogger:category:" + category, categoryPosts[category], 86400, function() {
+                        cache.zadd("roncli.com:blogger:posts", posts, 86400, function() {
+                            deferred.resolve(true);
+                        });
+
+                        return deferred.promise;
+                    }()),
+                    (function() {
+                        var deferred = new Deferred();
+
+                        cache.hmset("roncli.com:blog:urls", posts.map(function(post) {
+                            return {
+                                key: post.value.url,
+                                value: post.value
+                            };
+                        }), 0, function() {
+                            deferred.resolve(true);
+                        });
+
+                        return deferred.promise;
+                    }()),
+                    (function() {
+                        var deferred = new Deferred();
+
+                        cache.zadd("roncli.com:blogger:categories", Object.keys(categories).map(function(category) {
+                            return {
+                                score: -categoryPosts[category].length,
+                                value: category
+                            };
+                        }), 86400, function() {
                             deferred.resolve(true);
                         });
 
                         return deferred.promise;
                     }())
-                );
-            });
+                ];
 
-            all(promises).then(function() {
-                callback();
-            });
-        });
+                Object.keys(categories).forEach(function(category) {
+                    promises.push(
+                        (function() {
+                            var deferred = new Deferred();
+
+                            cache.zadd("roncli.com:blogger:category:" + category, categoryPosts[category], 86400, function() {
+                                deferred.resolve(true);
+                            });
+
+                            return deferred.promise;
+                        }())
+                    );
+                });
+
+                all(promises).then(function() {
+                    callback();
+                });
+            },
+
+            // If any of the functions error out, it will be handled here.
+            function(err) {
+                callback(err);
+            }
+        );
     };
 
 /**
