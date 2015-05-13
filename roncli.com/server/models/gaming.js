@@ -2,6 +2,7 @@ var wow = require("../battlenet/wow"),
     d3 = require("../battlenet/d3"),
     lol = require("../riot/lol"),
     steam = require("../steam/steam"),
+    dcl = require("../dcl/dcl"),
     cache = require("../cache/cache"),
     promise = require("promised-io/promise"),
     Deferred = promise.Deferred,
@@ -818,4 +819,49 @@ module.exports.getSteamGame = function(gameId, callback) {
             });
         });
     });
+};
+
+/**
+ * Gets pilot information from the DCL.
+ * @param {boolean} latest Whether to only get the latest match.
+ * @param {function} callback The callback function.
+ */
+module.exports.getDclPilot = function(latest, callback) {
+    "use strict";
+
+    /**
+     * Gets the DCL pilot from the cache.
+     * @param {function} failureCallback The failure callback function.
+     */
+    var getPilot = function(failureCallback) {
+        cache.get("roncli.com:dcl:pilot", function(pilot) {
+            if (!pilot || !pilot.name) {
+                failureCallback();
+                return;
+            }
+
+            if (latest) {
+                pilot.match = pilot.matches[0];
+                delete pilot.matches;
+            }
+
+            callback(null, pilot);
+        });
+    };
+
+    getPilot(function() {
+        dcl.cachePilot(false, function(err) {
+            if (err) {
+                callback(err);
+                return;
+            }
+
+            getPilot(function() {
+                callback({
+                    error: "DCL pilot does not exist.",
+                    status: 400
+                });
+            });
+        });
+    })
 };
