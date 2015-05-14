@@ -15,6 +15,11 @@ var config = require("../privateConfig").google,
 
         var totalPosts = [],
             postsDeferred = new Deferred(),
+
+            /**
+             * Gets the blog posts for a specific page.
+             * @param {string} [pageToken] The page token to retrieve.
+             */
             getPosts = function(pageToken) {
                 var options = {
                     blogId: config.blog_id,

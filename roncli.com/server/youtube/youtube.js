@@ -14,46 +14,66 @@ var config = require("../privateConfig").google,
     cachePlaylist = function(playlistId, callback) {
         "use strict";
 
-        var playlistDeferred = new Deferred(),
-            infoDeferred = new Deferred();
+        var totalVideos = [],
+            playlistDeferred = new Deferred(),
+            infoDeferred = new Deferred(),
 
-        // TODO: Loop through results past 50.
-        youtube.playlistItems.list({
-            part: "snippet",
-            maxResults: 50,
-            playlistId: playlistId,
-            key: config.api_key
-        }, function(err, data) {
-            var videos;
-
-            if (err) {
-                console.log("Bad response from Google.");
-                console.log(err);
-                playlistDeferred.reject({
-                    error: "Bad response from Google.",
-                    status: 502
-                });
-                return;
-            }
-
-            videos = data.items.map(function(video) {
-                var timestamp = new Date(video.snippet.publishedAt).getTime();
-
-                return {
-                    score: timestamp,
-                    value: {
-                        id: video.snippet.resourceId.videoId,
-                        title: video.snippet.title,
-                        publishedAt: new Date(video.snippet.publishedAt).getTime(),
-                        description: video.snippet.description
-                    }
+            /**
+             * Gets the playlist for a specific page.
+             * @param {string} [pageToken] The page token to retrieve.
+             */
+            getPlaylist = function(pageToken) {
+                var options = {
+                    part: "snippet",
+                    maxResults: 50,
+                    playlistId: playlistId,
+                    key: config.api_key
                 };
-            });
 
-            cache.zadd("roncli.com:youtube:playlist:" + playlistId, videos, 86400, function() {
-                playlistDeferred.resolve(true);
-            });
-        });
+                if (pageToken) {
+                    options.pageToken = pageToken;
+                }
+
+                youtube.playlistItems.list(options, function(err, data) {
+                    var videos;
+
+                    if (err) {
+                        console.log("Bad response from Google.");
+                        console.log(err);
+                        playlistDeferred.reject({
+                            error: "Bad response from Google.",
+                            status: 502
+                        });
+                        return;
+                    }
+
+                    totalVideos = [].concat([], [totalVideos, data.items]);
+
+                    if (data.nextPageToken) {
+                        getPlaylist(data.nextPageToken);
+                    } else {
+                        videos = totalVideos.map(function(video) {
+                            var timestamp = new Date(video.snippet.publishedAt).getTime();
+
+                            return {
+                                score: timestamp,
+                                value: {
+                                    id: video.snippet.resourceId.videoId,
+                                    title: video.snippet.title,
+                                    publishedAt: new Date(video.snippet.publishedAt).getTime(),
+                                    description: video.snippet.description
+                                }
+                            };
+                        });
+
+                        cache.zadd("roncli.com:youtube:playlist:" + playlistId, videos, 86400, function() {
+                            playlistDeferred.resolve(true);
+                        });
+                    }
+                });
+            };
+
+        getPlaylist();
 
         youtube.playlists.list({
             part: "snippet",
