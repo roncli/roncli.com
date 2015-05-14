@@ -44,8 +44,11 @@
     <Content Include="admin\templates\admin\pages\reject.hbs" />
     <Content Include="admin\templates\admin\project.hbs" />
     <Content Include="admin\templates\admin\youtube.hbs" />
+    <Content Include="admin\templates\admin\youtube\approve.hbs" />
     <Content Include="admin\templates\admin\youtube\cachesCleared.hbs" />
+    <Content Include="admin\templates\admin\youtube\comment.hbs" />
     <Content Include="admin\templates\admin\youtube\deleteConfirm.hbs" />
+    <Content Include="admin\templates\admin\youtube\reject.hbs" />
     <Content Include="app\templates\account\account.hbs" />
     <Content Include="app\templates\account\aliasChanged.hbs" />
     <Content Include="app\templates\account\changeAlias.hbs" />
@@ -77,6 +80,7 @@
     <Content Include="app\templates\coding\project.hbs" />
     <Content Include="app\templates\error\404.hbs" />
     <Content Include="app\templates\error\other.hbs" />
+    <Content Include="app\templates\gaming\game.hbs" />
     <Content Include="app\templates\gaming\index.hbs" />
     <Content Include="app\templates\home\index.hbs" />
     <Content Include="app\templates\media\addError.hbs" />
@@ -93,6 +97,9 @@
     <Content Include="app\templates\page\commentAwaitingModeration.hbs" />
     <Content Include="app\templates\page\commentLoadingError.hbs" />
     <Content Include="app\templates\page\index.hbs" />
+    <Content Include="app\templates\playlist\comment.hbs" />
+    <Content Include="app\templates\playlist\commentAwaitingModeration.hbs" />
+    <Content Include="app\templates\playlist\commentLoadingError.hbs" />
     <Content Include="app\templates\playlist\index.hbs" />
     <Content Include="app\templates\playlist\video.hbs" />
     <Content Include="app\templates\site\emailChange.hbs" />
@@ -127,6 +134,7 @@
     <Content Include="public\images\d3.png" />
     <Content Include="public\images\d3ros.png" />
     <Content Include="public\images\descent.png" />
+    <Content Include="public\images\descentLogo.png" />
     <Content Include="public\images\facebook%402x.png" />
     <Content Include="public\images\facebook.png" />
     <Content Include="public\images\favicon.ico" />
@@ -197,6 +205,7 @@
     <Compile Include="admin\collections\admin__projects.js" />
     <Compile Include="admin\collections\admin__project__get_featured.js" />
     <Compile Include="admin\collections\admin__project__get_unfeatured.js" />
+    <Compile Include="admin\collections\admin__youtube_comments.js" />
     <Compile Include="admin\controllers\admin_controller.js" />
     <Compile Include="admin\models\admin.js" />
     <Compile Include="admin\models\admin__blog_comment.js" />
@@ -207,6 +216,7 @@
     <Compile Include="admin\models\admin__page_comment.js" />
     <Compile Include="admin\models\admin__playlist.js" />
     <Compile Include="admin\models\admin__project.js" />
+    <Compile Include="admin\models\admin__youtube_comment.js" />
     <Compile Include="admin\models\user__get_notifications.js" />
     <Compile Include="admin\templates\adminTemplates.js" />
     <Compile Include="admin\views\admin\base.js" />
@@ -228,6 +238,7 @@
     <Compile Include="app\collections\event__get_latest.js" />
     <Compile Include="app\collections\files.js" />
     <Compile Include="app\collections\page_comments.js" />
+    <Compile Include="app\collections\playlist_comments.js" />
     <Compile Include="app\collections\projects.js" />
     <Compile Include="app\collections\project__get_featured.js" />
     <Compile Include="app\collections\song_comments.js" />
@@ -256,6 +267,8 @@
     <Compile Include="app\models\blog__get_latest.js" />
     <Compile Include="app\models\blog__get_latest_by_category.js" />
     <Compile Include="app\models\captcha.js" />
+    <Compile Include="app\models\dcl_pilot.js" />
+    <Compile Include="app\models\dcl_pilot__get_latest.js" />
     <Compile Include="app\models\diablo_profile.js" />
     <Compile Include="app\models\diablo_profile__get_main.js" />
     <Compile Include="app\models\event.js" />
@@ -266,6 +279,7 @@
     <Compile Include="app\models\page_comment.js" />
     <Compile Include="app\models\page_optional.js" />
     <Compile Include="app\models\playlist.js" />
+    <Compile Include="app\models\playlist_comment.js" />
     <Compile Include="app\models\project.js" />
     <Compile Include="app\models\song.js" />
     <Compile Include="app\models\song_comment.js" />
@@ -290,6 +304,7 @@
     <Compile Include="app\views\coding\project.js" />
     <Compile Include="app\views\error\404.js" />
     <Compile Include="app\views\error\other.js" />
+    <Compile Include="app\views\gaming\game.js" />
     <Compile Include="app\views\gaming\index.js" />
     <Compile Include="app\views\home\index.js" />
     <Compile Include="app\views\music\index.js" />
@@ -309,6 +324,7 @@
     <Compile Include="server\api\blog-comment.js" />
     <Compile Include="server\api\blog.js" />
     <Compile Include="server\api\captcha.js" />
+    <Compile Include="server\api\dcl-pilot.js" />
     <Compile Include="server\api\diablo-profile.js" />
     <Compile Include="server\api\event.js" />
     <Compile Include="server\api\file.js" />
@@ -316,6 +332,7 @@
     <Compile Include="server\api\page-comment.js" />
     <Compile Include="server\api\page-optional.js" />
     <Compile Include="server\api\page.js" />
+    <Compile Include="server\api\playlist-comment.js" />
     <Compile Include="server\api\playlist.js" />
     <Compile Include="server\api\project.js" />
     <Compile Include="server\api\song-comment.js" />
@@ -333,6 +350,7 @@
     <Compile Include="server\cache\cache.js" />
     <Compile Include="server\captcha\captchagen.js" />
     <Compile Include="server\database\database.js" />
+    <Compile Include="server\dcl\dcl.js" />
     <Compile Include="server\github\github.js" />
     <Compile Include="server\guid\guid.js" />
     <Compile Include="server\mail\mail.js" />
@@ -352,6 +370,7 @@
     <Compile Include="server\riot\lol.js" />
     <Compile Include="server\rss\blog.js" />
     <Compile Include="server\rss\coding.js" />
+    <Compile Include="server\rss\gaming.js" />
     <Compile Include="server\rss\music.js" />
     <Compile Include="server\rss\rss.js" />
     <Compile Include="server\soundcloud\soundcloud.js" />
@@ -423,6 +442,7 @@
     <Folder Include="server\cache\" />
     <Folder Include="server\captcha\" />
     <Folder Include="server\database\" />
+    <Folder Include="server\dcl\" />
     <Folder Include="server\github\" />
     <Folder Include="server\guid\" />
     <Folder Include="server\mail\" />
