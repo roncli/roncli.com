@@ -47,7 +47,7 @@ var config = require("../privateConfig").google,
                         return;
                     }
 
-                    totalVideos = [].concat([], [totalVideos, data.items]);
+                    totalVideos = [].concat.apply([], [totalVideos, data.items]);
 
                     if (data.nextPageToken) {
                         getPlaylist(data.nextPageToken);
