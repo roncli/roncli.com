@@ -23,7 +23,7 @@ module.exports.rss = function(req, res, callback) {
 
 
     cache.get(cacheKey, function(xml) {
-        var rssDeferred, wowFeedDeferred, lolMatchesDeferred, sixGamingDeferred, wowVideosDeferred, d3VideosDeferred, lolVideosDeferred, dclVideosDeferred;
+        var rssDeferred, wowFeedDeferred, lolMatchesDeferred, dclMatchesDeferred, sixGamingDeferred, wowVideosDeferred, d3VideosDeferred, lolVideosDeferred, dclVideosDeferred;
 
         if (xml) {
             callback(xml);
@@ -44,7 +44,7 @@ module.exports.rss = function(req, res, callback) {
         feed.custom_namespaces.openSearch = "http://a9.com/-/spec/opensearchrss/1.0/";
         feed.custom_elements.push({"openSearch:startIndex": startIndex.toString()});
         feed.custom_elements.push({"openSearch:itemsPerPage": "25"});
-        feed.categories = ["World of Warcraft Feed", "League of Legends Ranked Matches", "Six Gaming Podcast Highlights", "World of Warcraft Videos", "Diablo III Videos", "League of Legends Videos", "Descent Champions Ladder Videos"];
+        feed.categories = ["World of Warcraft Feed", "League of Legends Ranked Matches", "Descent Champions Ladder Matches", "Six Gaming Podcast Highlights", "World of Warcraft Videos", "Diablo III Videos", "League of Legends Videos", "Descent Champions Ladder Videos"];
 
         // See if we have the items cached already.
         rssDeferred = new Deferred();
@@ -59,6 +59,7 @@ module.exports.rss = function(req, res, callback) {
 
             wowFeedDeferred = new Deferred();
             lolMatchesDeferred = new Deferred();
+            dclMatchesDeferred = new Deferred();
             sixGamingDeferred = new Deferred();
             wowVideosDeferred = new Deferred();
             d3VideosDeferred = new Deferred();
@@ -140,6 +141,34 @@ module.exports.rss = function(req, res, callback) {
                 }
 
                 lolMatchesDeferred.resolve(true);
+            });
+
+            // Get DCL matches.
+            gaming.getDclPilot(false, function(err, pilot) {
+                if (err) {
+                    dclMatchesDeferred.reject(err);
+                    return;
+                }
+
+                if (pilot && pilot.matches) {
+                    pilot.matches.forEach(function(match) {
+                        var title = "Descent Champions League " + (match.pilot.score > match.opponent.score ? "Win: " + match.pilot.score + "-" + match.opponent.score : "Loss: " + match.opponent.score + "-" + match.pilot.score) + " vs. " + match.opponent.name + " in " + match.game + " " + match.map,
+                            description = (match.pilot.score > match.opponent.score ? "Win - roncli " + match.pilot.score + " - " + match.opponent.name + " " + match.opponent.score : "Loss - " + match.opponent.name + " " + match.opponent.score + " - roncli " + match.pilot.score) + "<br />Played in " + match.game + " " + match.map;
+
+                        feed.item({
+                            guid: "roncli.com:gaming:dclMatch:" + match.match,
+                            date: new Date(match.date),
+                            categories: ["Descent Champions Ladder Matches"],
+                            title: title,
+                            description: description,
+                            url: "http://roncli.com/gaming",
+                            author: "roncli@roncli.com (roncli)",
+                            custom_elements: [
+                                {"atom:updated": moment(new Date(match.date)).format()}
+                            ]
+                        });
+                    });
+                }
             });
 
             // Get Six Gaming highlight videos.
