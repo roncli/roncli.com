@@ -156,6 +156,11 @@ The following should be the contents of privateConfig.js:
 Version History
 ===============
 
+0.6
+---
+
+This version implements the gaming section, which makes calls to Battle.Net, Riot Games, Steam, and the DCL.  Also implemented is file uploading, and support for enumerating YouTube playlists.  Included is an RSS feed for the gaming page and an administration section.  Gaming pages also double as HTML pages, meaning that if you create a page with the same URL as a gaming page, that HTML will display on the page along with the rest of the page.
+
 0.5
 ---
 
@@ -193,11 +198,6 @@ This version introduces the bare bones of the website, including the layout, Twi
 
 Planned Versions
 ================
-
-0.6
----
-
-* Implement Gaming section with Battle.Net, Steam, and other gaming functionality.
 
 0.7
 ---
