@@ -284,6 +284,297 @@ module.exports.rejectBlogComment = function(userId, commentId, callback) {
 };
 
 /**
+ * Gets the available life features.
+ * @param {number} userId The user ID of the moderator.
+ * @param {function(null, object)|function(object)} callback The callback function.
+ */
+module.exports.getLifeFeatures = function(userId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while getting life features.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        all(
+            (function() {
+                var deferred = new Deferred();
+
+                db.query(
+                    "SELECT f.FeatureID, p.Title, p.PageURL FROM tblLifeFeature f INNER JOIN tblPage p ON f.PageID = p.PageID ORDER BY [Order]",
+                    {},
+                    function(err, data) {
+                        if (err) {
+                            console.log("Database error in admin.getLifeFeatures retrieving life features.");
+                            console.log(err);
+                            deferred.reject(err);
+                            return;
+                        }
+
+                        deferred.resolve(data[0].map(function(feature) {
+                            return {
+                                id: feature.FeatureID,
+                                title: feature.Title,
+                                url: feature.PageURL
+                            };
+                        }));
+                    }
+                );
+
+                return deferred.promise;
+            }()),
+            (function() {
+                var deferred = new Deferred();
+
+                db.query(
+                    "SELECT PageID, Title FROM tblPage WHERE PageID NOT IN (SELECT PageID FROM tblLifeFeature)",
+                    {},
+                    function(err, data) {
+                        if (err) {
+                            console.log("Database error in admin.getLifeFeatures retrieving available pages for life features.");
+                            console.log(err);
+                            deferred.reject(err);
+                            return;
+                        }
+
+                        deferred.resolve(data[0].map(function(page) {
+                            return {
+                                id: page.PageID,
+                                title: page.Title
+                            };
+                        }));
+                    }
+                );
+
+                return deferred.promise;
+            }())
+        ).then(
+            function(results) {
+                callback(null, {
+                    features: results[0],
+                    pageList: results[1]
+                });
+            },
+
+            // If any of the functions error out, it will be handled here.
+            function(err) {
+                callback(err);
+            }
+        );
+    });
+};
+
+/**
+ * Add a life feature.
+ * @param {number} userId The user ID of the moderator.
+ * @param {number} pageId The page ID to add.
+ * @param {function(null, object)|function(object)} callback The callback function.
+ */
+module.exports.addLifeFeature = function(userId, pageId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while adding a life feature.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        db.query(
+            "INSERT INTO tblLifeFeature (PageID, [Order], CrDate) SELECT p.PageID, f.Features + 1, GETUTCDATE() FROM tblPage p CROSS JOIN (SELECT COUNT(FeatureID) Features FROM tblLifeFeature) f WHERE p.PageID = @pageId AND p.PageID NOT IN (SELECT PageID FROM tblLifeFeature)",
+            {pageId: {type: db.INT, value: pageId}},
+            function(err) {
+                if (err) {
+                    console.log("Database error in admin.addLifeFeature.");
+                    console.log(err);
+                    callback(err);
+                    return;
+                }
+
+                callback();
+            }
+        );
+    });
+};
+
+/**
+ * Remove a life feature.
+ * @param {number} userId The user ID of the moderator.
+ * @param {number} featureId The feature ID to remove.
+ * @param {function(null, object)|function(object)} callback The callback function.
+ */
+module.exports.removeLifeFeature = function(userId, featureId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while removing a life feature.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        // Ensure the feature is valid.
+        db.query(
+            "SELECT COUNT(FeatureID) Features FROM tblLifeFeature WHERE FeatureID = @featureId",
+            {featureId: {type: db.INT, value: featureId}},
+            function(err, data) {
+                if (err) {
+                    console.log("Database error in admin.removeLifeFeature checking for a valid feature.");
+                    console.log(err);
+                    callback(err);
+                    return;
+                }
+
+                if (!(data && data[0] && data[0][0] && data[0][0].Features && data[0][0].Features > 0)) {
+                    callback({
+                        error: "The feature ID does not exist.",
+                        status: 400
+                    });
+                    return;
+                }
+
+                db.query(
+                    "UPDATE tblLifeFeature SET [Order] = [Order] - 1 WHERE [Order] > (SELECT f.[Order] FROM tblLifeFeature f WHERE f.FeatureId = @featureId);DELETE FROM tblLifeFeature WHERE FeatureID = @featureId",
+                    {featureId: {type: db.INT, value: featureId}},
+                    function(err) {
+                        if (err) {
+                            console.log("Database error in admin.removeLifeFeature removing a feature.");
+                            console.log(err);
+                            callback(err);
+                            return;
+                        }
+
+                        callback();
+                    }
+                );
+            }
+        );
+    });
+};
+
+/**
+ * Changes the order of the life features.
+ * @param {number} userId The user ID of the moderator.
+ * @param {int[]} order The order of featureIds.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.changeLifeFeatureOrder = function(userId, order, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        var variableNames = [],
+            variables = {};
+
+        if (err) {
+            callback({
+                error: "There was a database error while changing the life feature order.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        // Just bail if there are no features in the list.
+        if (order.length === 0) {
+            callback();
+            return;
+        }
+
+        // Ensure the features are valid.
+        order.forEach(function(featureId) {
+            variableNames.push("@feature" + featureId);
+            variables["feature" + featureId] = {type: db.INT, value: featureId};
+        });
+
+        db.query(
+            "SELECT COUNT(FeatureID) Features FROM tblLifeFeature WHERE FeatureID IN (" + variableNames.join(",") + ")",
+            variables,
+            function(err, data) {
+                var sql = [],
+                    sqlVariables = {};
+
+                if (err) {
+                    console.log("Database error in admin.changeLifeFeatureOrder checking for valid features.");
+                    console.log(err);
+                    callback(err);
+                    return;
+                }
+
+                if (!(data && data[0] && data[0][0] && data[0][0].Features && data[0][0].Features === order.length)) {
+                    callback({
+                        error: "Invalid features to reorder.  Please reload the page and try again",
+                        status: 400
+                    });
+                    return;
+                }
+
+                // Update order of features.
+                order.forEach(function(featureId, index) {
+                    sql.push("UPDATE tblLifeFeature SET [Order] = @order" + index + " WHERE FeatureID = @feature" + featureId);
+                    sqlVariables["order" + index] = {type: db.INT, value: index + 1};
+                    sqlVariables["feature" + featureId] = {type: db.INT, value: featureId};
+                });
+
+                db.query(
+                    sql.join(";"), sqlVariables, function(err) {
+                        if (err) {
+                            console.log("Database error updating feature order in admin.changeLifeFeatureOrder.");
+                            console.log(err);
+                            callback({
+                                error: "There was a database error while changing life feature order.  Please reload the page and try again.",
+                                status: 500
+                            });
+                            return;
+                        }
+
+                        callback();
+                    }
+                );
+            }
+        );
+    });
+};
+
+/**
  * Gets the child pages of a parent by URL.
  * @param {number} userId The user ID of the moderator.
  * @param {string} url The URL of the pages to get.

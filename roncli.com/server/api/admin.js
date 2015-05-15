@@ -90,6 +90,17 @@ module.exports.get = function(req, query, callback) {
                                 callback(comments);
                             });
                             return;
+                        case "life-features":
+                            admin.getLifeFeatures(userId, function(err, comments) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                callback(comments);
+                            });
+                            return;
                     }
                     break;
                 case "music":
@@ -308,6 +319,42 @@ module.exports.post = function(req, query, callback) {
                             return;
                         case "reject-comment":
                             admin.rejectPageComment(userId, req.body.commentId, function(err) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                        case "add-life-feature":
+                            admin.addLifeFeature(userId, req.body.pageId, function(err) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                        case "remove-life-feature":
+                            admin.removeLifeFeature(userId, req.body.featureId, function(err) {
+                                if (err) {
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                        case "change-life-feature-order":
+                            admin.changeLifeFeatureOrder(userId, req.body.order, function(err) {
                                 if (err) {
                                     req.res.status(err.status);
                                     callback(err);

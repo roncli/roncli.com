@@ -66,7 +66,6 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\tblEmailChangeAuthorization.sql" />
-    <Build Include="dbo\Tables\tblGame.sql" />
     <Build Include="dbo\Tables\tblLifeFeature.sql" />
     <Build Include="dbo\Tables\tblPage.sql" />
     <Build Include="dbo\Tables\tblPageComment.sql" />
