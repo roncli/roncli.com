@@ -46,9 +46,7 @@ To run the website on Windows, make sure you perform the following steps.
         npm install -msvs_version=2013
 
 7. Add /roncli.com/assets/js/publicConfig.js and /roncli.com/server/privateConfig.js.  See below for file contents.
-8. Apply the following patches:
-    - https://github.com/roncli/remapify/compare/roncli:master...issue-24-from-1.4.4 - This fixes a bug with the ```remapify``` module in order to use it with the latest versions of the ```grunt-browserify``` module.
-9. If using [iisnode](https://github.com/tjanczuk/iisnode):
+8. If using [iisnode](https://github.com/tjanczuk/iisnode):
     - Point an IIS application to the inner /roncli.com directory
     - Run ```grunt``` from the same directory when installing and after every time you change code.
     - Be sure to create the directory "logs" in the root of the application and give your application pool write permission.  For instance, if your application pool is ```roncli.com```, you'll give permissions to the account ```IIS AppPool\roncli.com```.
@@ -71,9 +69,7 @@ Other Installations
         npm install
 
 4. Add /roncli.com/assets/js/publicConfig.js and /roncli.com/server/privateConfig.js.  See below for file contents.
-5. Apply the following patches:
-    - https://github.com/roncli/remapify/compare/roncli:master...issue-24-from-1.4.4 - This fixes a bug with the ```remapify``` module in order to use it with the latest versions of the ```grunt-browserify``` module.
-6. Run the following command to compile and run the web server:
+5. Run the following command to compile and run the web server:
 
         grunt all
 
