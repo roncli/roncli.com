@@ -210,7 +210,7 @@ module.exports.forceCacheChampions = function(callback) {
 module.exports.getWowFeed = function(callback) {
     "use strict";
 
-    var result = {},
+    var result = {id: 1},
 
         /**
          * Gets the feed for the character from the cache.
@@ -279,7 +279,7 @@ module.exports.getWowFeed = function(callback) {
 module.exports.getLatestWowFeed = function(callback) {
     "use strict";
 
-    var result = {},
+    var result = {id: 1},
 
         /**
          * Gets the feed for the character from the cache.
@@ -551,6 +551,8 @@ module.exports.getLolRanked = function(callback) {
                     isHotStreak: ranked.entries[0].isHotStreak
                 };
 
+                result.id = ranked.entries[0].playerOrTeamId;
+
                 getHistory(function() {
                     failureCallback();
                 });
@@ -673,6 +675,8 @@ module.exports.getLatestLolRanked = function(callback) {
                     isHotStreak: ranked.entries[0].isHotStreak
                 };
 
+                result.id = ranked.entries[0].playerOrTeamId;
+
                 getHistory(function() {
                     failureCallback();
                 });
@@ -786,6 +790,7 @@ module.exports.getSteamGame = function(gameId, callback) {
                 });
 
                 callback(null, {
+                    id: gameId,
                     name: gameInfo.name,
                     playtimeTwoWeeks: gameInfo.playtimeTwoWeeks,
                     playtimeForever: gameInfo.playtimeForever,

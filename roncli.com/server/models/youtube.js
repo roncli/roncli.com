@@ -43,7 +43,7 @@ module.exports.getPlaylist = function(id, callback) {
          */
         var getPlaylist = function(failureCallback) {
             cache.zrevrange("roncli.com:youtube:playlist:" + id, 0, -1, function(videos) {
-                var result = {};
+                var result = {id: id};
 
                 if (videos && videos.length > 0) {
                     result.videos = videos;
@@ -143,6 +143,7 @@ module.exports.getVideoInfo = function(id, callback) {
         cache.get("roncli.com:youtube:video:" + id, function(info) {
             if (info) {
                 callback(null, {
+                    id: id,
                     channelTitle: info.snippet.channelTitle,
                     title: info.snippet.title
                 });

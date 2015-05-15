@@ -402,6 +402,7 @@ module.exports.getPost = function(post, callback) {
             all(promises).then(
                 function(categoryRanks) {
                     var postData = {
+                        id: post.blogSource + content[0].id,
                         post: content[0],
                         index: content[1],
                         categories: [],

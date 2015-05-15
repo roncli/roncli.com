@@ -78,7 +78,7 @@ module.exports = BaseView.extend({
             $("div.comments-unloaded").removeClass("comments-unloaded").addClass("comments");
 
             comments = new PlaylistComments();
-            comments.playlistId = view.options.playlistId;
+            comments.playlistId = view.options.playlist.attributes.id;
             comments.fetch({
                 success: function() {
                     if (view !== app.router.currentView) {
@@ -159,7 +159,7 @@ module.exports = BaseView.extend({
         comment.fetch({
             url: "/playlist-comment",
             data: JSON.stringify({
-                id: view.options.playlistId,
+                id: view.options.playlist.attributes.id,
                 content: content
             }),
             type: "POST",
