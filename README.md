@@ -152,6 +152,11 @@ The following should be the contents of privateConfig.js:
 Version History
 ===============
 
+0.7
+---
+
+This version implements the life section, which is essentially just a bunch of links to specific pages on the site.  Included is an administration section.
+
 0.6
 ---
 
@@ -195,15 +200,22 @@ This version introduces the bare bones of the website, including the layout, Twi
 Planned Versions
 ================
 
-0.7
----
-
-* Implement Life section.
-
 1.0
 ---
 
 * Cleanup and website launch.
+** Add Twitch to the front page - When I am live on twitch.tv, my Twitch feed will show up on the front page.
+** Add RSS to the front page - Essentially a combination of all of the RSS feeds on the site.
+** Update email to use GMail Markup - This will allow convenient buttons to do things such as complete site registration.
+** ronc.li redirect service - URL shortener for my own use.
+** jQuery Validation remote method - I am currently using a custom jQuery Validation method for remote validation, but jQuery Validation has its own, and I'd like to use that if possible.
+** Page transitions - Currently page transitions suck!  This should help improve them.
+** Bug fixes
+*** Font doesn't load right sometimes.
+*** Logging in from a cookie doesn't work sometimes.
+*** Allowed YouTube playlists on the site should be persisted to SQL, and not cached in redis.
+*** If images are wider than the screen, shrink them.
+*** Models aren't being cached by redis.
 
 License Details
 ===============
