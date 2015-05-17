@@ -313,7 +313,7 @@ module.exports.getLifeFeatures = function(userId, callback) {
                 var deferred = new Deferred();
 
                 db.query(
-                    "SELECT f.FeatureID, p.Title, p.PageURL FROM tblLifeFeature f INNER JOIN tblPage p ON f.PageID = p.PageID ORDER BY [Order]",
+                    "SELECT f.FeatureID, p.Title, p.PageURL FROM tblLifeFeature f INNER JOIN tblPage p ON f.PageID = p.PageID ORDER BY f.[Order]",
                     {},
                     function(err, data) {
                         if (err) {

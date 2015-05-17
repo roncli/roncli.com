@@ -409,3 +409,36 @@ module.exports.postComment = function(userId, pageId, content, callback) {
         }
     );
 };
+
+/**
+ * Gets the life features.
+ * @param {function} callback The callback function.
+ */
+module.exports.getLifeFeatures = function(callback) {
+    "use strict";
+
+    db.query(
+        "SELECT p.Title, p.PageURL FROM tblLifeFeature f INNER JOIN tblPage p ON f.PageID = p.PageID ORDER BY f.[Order]",
+        {},
+        function(err, data) {
+            if (err) {
+                console.log("Database error in page.getLifeFeatures.");
+                console.log(err);
+                callback({
+                    error: "There was a database error retrieving the life features.  Please reload the page and try again.",
+                    status: 500
+                });
+                return;
+            }
+
+            if (data && data[0]) {
+                callback(null, data[0].map(function(feature) {
+                    return {
+                        title: feature.Title,
+                        url: feature.PageURL
+                    };
+                }));
+            }
+        }
+    );
+};

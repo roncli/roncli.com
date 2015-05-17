@@ -180,6 +180,21 @@
                 </div>
             </div>
         </div>
+        <div class="col-sm-6">
+            <div class="btn-group-vertical home-panel">
+                <a class="btn btn-info" href="/coding">
+                    <div class="panel-heading panel-title text-center"><h3>Life</h3></div>
+                </a>
+                <div class="body">
+                    <div class="text-center">
+                        <h4>Featured Articles</h4>
+                        {{#each life.models}}
+                            <a href="{{attributes.url}}">{{attributes.title}}</a><br />
+                        {{/each}}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 <div class="col-sm-2 hidden-xs right-side">

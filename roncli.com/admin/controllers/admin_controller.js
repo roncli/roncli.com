@@ -64,6 +64,7 @@ module.exports = {
         var app = this.app;
 
         app.fetch({
+            life: {model: "Admin_LifeFeatures", params: {}},
             pages: {model: "Admin_Pages", params: {}},
             comments: {collection: "Admin_PageComments", params: {}}
         }, {readFromCache: false, writeToCache: false}, function(err, result) {
