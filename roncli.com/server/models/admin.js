@@ -2779,3 +2779,179 @@ module.exports.rejectYoutubeComment = function(userId, commentId, callback) {
         );
     });
 };
+
+/**
+ * Gets the list of redirects.
+ * @param {number} userId The user ID of the moderator.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.getRedirects = function(userId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while retrieving redirects.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        db.query(
+            "SELECT RedirectID, FromPath, ToURL FROM tblRedirect ORDER BY FromPath",
+            {},
+            function(err, data) {
+                if (err) {
+                    console.log("Database error in admin.getRedirects.");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while retrieving redirects.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                if (data && data[0]) {
+                    callback(null, data[0].map(function(row) {
+                        return {
+                            id: row.RedirectID,
+                            fromPath: row.FromPath,
+                            toUrl: row.ToURL
+                        };
+                    }));
+                } else {
+                    callback(null, []);
+                }
+            }
+        );
+    });
+};
+
+/**
+ * Add a redirects.
+ * @param {number} userId The user ID of the moderator.
+ * @param {string} fromPath The path to redirect from.
+ * @param {string} toUrl The URL to redirect to.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.addRedirect = function(userId, fromPath, toUrl, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while retrieving redirects.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        // Check if the From Path already exists.
+        db.query(
+            "SELECT COUNT(RedirectID) Redirects FROM tblRedirect WHERE FromPath = @fromPath",
+            {fromPath: {type: db.VARCHAR(256), value: fromPath}},
+            function(err, data) {
+                if (err) {
+                    console.log("Database error in admin.addRedirect while checking a from path.");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while adding a redirect.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                if (data && data[0] && data[0][0] && data[0][0].Redirects > 0) {
+                    callback({
+                        error: "The from path for this redirect already exists.",
+                        status: 400
+                    });
+                    return;
+                }
+
+                // Add the redirect.
+                db.query(
+                    "INSERT INTO tblRedirect (FromPath, ToURL, CrDate) VALUES (@fromPath, @toUrl, GETUTCDATE())",
+                    {
+                        fromPath: {type: db.VARCHAR(256), value: fromPath},
+                        toUrl: {type: db.VARCHAR(1024), value: toUrl}
+                    }, function(err) {
+                        if (err) {
+                            console.log("Database error in admin.addRedirect while adding the redirect.");
+                            console.log(err);
+                            callback({
+                                error: "There was a database error while adding a redirect.  Please reload the page and try again.",
+                                status: 500
+                            });
+                            return;
+                        }
+
+                        callback();
+                    }
+                );
+            }
+        );
+    });
+};
+
+/**
+ * Removes a redirect.
+ * @param {number} userId The user ID of the moderator.
+ * @param {number} redirectId The redirect ID to remove.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.removeRedirect = function(userId, redirectId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while removing a redirect.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        db.query(
+            "DELETE FROM tblRedirect WHERE RedirectID = @redirectId",
+            {redirectId: {type: db.INT, value: redirectId}},
+            function(err, data) {
+                if (err) {
+                    console.log("Database error in admin.removeRedirect.");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while removing a redirect.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                callback();
+            }
+        );
+    });
+};

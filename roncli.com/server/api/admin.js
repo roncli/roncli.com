@@ -58,6 +58,17 @@ module.exports.get = function(req, query, callback) {
                         callback(data);
                     });
                     return;
+                case "redirect":
+                    admin.getRedirects(userId, function(err, data) {
+                        if (err) {
+                            req.res.status(err.status);
+                            callback(err);
+                            return;
+                        }
+
+                        callback(data);
+                    });
+                    return;
             }
             break;
         case 2:
@@ -587,6 +598,36 @@ module.exports.post = function(req, query, callback) {
                             return;
                         case "delete-playlist":
                             admin.removePlaylist(userId, req.body.playlistId, function(err) {
+                                if (err) {
+                                    console.log(err);
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                    }
+                    break;
+                case "redirect":
+                    switch (req.parsedPath[1]) {
+                        case "add-redirect":
+                            admin.addRedirect(userId, req.body.fromPath, req.body.toUrl, function(err) {
+                                if (err) {
+                                    console.log(err);
+                                    req.res.status(err.status);
+                                    callback(err);
+                                    return;
+                                }
+
+                                req.res.status(204);
+                                callback();
+                            });
+                            return;
+                        case "remove-redirect":
+                            admin.removeRedirect(userId, req.body.redirectId, function(err) {
                                 if (err) {
                                     console.log(err);
                                     req.res.status(err.status);
