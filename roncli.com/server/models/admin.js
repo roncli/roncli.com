@@ -2939,7 +2939,7 @@ module.exports.removeRedirect = function(userId, redirectId, callback) {
         }
 
         db.query(
-            "DELETE FROM tblRedirect WHERE RedirectID = @redirectId",
+            "DELETE FROM tblRedirectHit WHERE RedirectID = @redirectId;DELETE FROM tblRedirect WHERE RedirectID = @redirectId",
             {redirectId: {type: db.INT, value: redirectId}},
             function(err) {
                 if (err) {

@@ -38,12 +38,32 @@ app.get("*", function(req, res) {
     var url = req.url;
 
     db.query(
-        "SELECT ToURL FROM tblRedirect WHERE FromPath = @path",
-        {path: {type: db.VARCHAR(255), value: url}},
+        "SELECT RedirectID, ToURL FROM tblRedirect WHERE FromPath = @path",
+        {path: {type: db.VARCHAR(256), value: url}},
         function(err, data) {
+            if (err) {
+                console.log("Error while looking up path.");
+                console.log(err);
+            }
+
             if (err || !data || !data[0] || !data[0][0] || !data[0][0].ToURL) {
                 res.redirect(301, "http://www.roncli.com" + url);
             } else {
+                db.query(
+                    "INSERT INTO tblRedirectHit (RedirectID, IP, Referrer, UserAgent) values (@redirectId, @ip, @referrer, @userAgent)",
+                    {
+                        redirectId: {type: db.INT, value: data[0][0].RedirectID},
+                        ip: {type: db.VARCHAR(15), value: req.connection.remoteAddress},
+                        referrer: {type: db.VARCHAR(256), value: req.headers.referer ? req.headers.referer.substring(0, 256) : null},
+                        userAgent: {type: db.VARCHAR(256), value: req.headers["user-agent"] ? req.headers["user-agent"].substring(0, 256) : null}
+                    },
+                    function(err) {
+                        if (err) {
+                            console.log("Error while recording hit.");
+                            console.log(err);
+                        }
+                    }
+                );
                 res.redirect(301, data[0][0].ToURL);
             }
         }
