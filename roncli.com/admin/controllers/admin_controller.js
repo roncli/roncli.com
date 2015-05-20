@@ -269,5 +269,31 @@ module.exports = {
             callback(err, result);
         });
 
+    },
+
+    /**
+     * The redirect admin view.
+     * @param {object} params The parameters to use in the controller.
+     * @param {function} callback The callback to run upon completion of the controller running.
+     */
+    redirect: function(params, callback) {
+        "use strict";
+
+        var app = this.app;
+
+        app.fetch({
+            redirects: {collection: "Admin_Redirects", params: {}}
+        }, {readFromCache: false, writeToCache: false}, function(err, result) {
+            if (!err && result && result.redirects && result.redirects.models && result.redirects.models[0] && result.redirects.models[0].attributes && result.redirects.models[0].attributes.error) {
+                err = result.redirects.models[0].attributes;
+            }
+
+            if (err) {
+                handleServerError(err, app, result, callback);
+                return;
+            }
+
+            callback(err, result);
+        });
     }
 };

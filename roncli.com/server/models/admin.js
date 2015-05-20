@@ -2862,6 +2862,8 @@ module.exports.addRedirect = function(userId, fromPath, toUrl, callback) {
             return;
         }
 
+        fromPath = fromPath.toLowerCase();
+
         // Check if the From Path already exists.
         db.query(
             "SELECT COUNT(RedirectID) Redirects FROM tblRedirect WHERE FromPath = @fromPath",
@@ -2939,7 +2941,7 @@ module.exports.removeRedirect = function(userId, redirectId, callback) {
         db.query(
             "DELETE FROM tblRedirect WHERE RedirectID = @redirectId",
             {redirectId: {type: db.INT, value: redirectId}},
-            function(err, data) {
+            function(err) {
                 if (err) {
                     console.log("Database error in admin.removeRedirect.");
                     console.log(err);

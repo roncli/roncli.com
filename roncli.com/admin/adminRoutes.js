@@ -34,4 +34,7 @@ module.exports = function(app) {
 
     // The YouTube admin page.
     app.router.route(/^\/?admin\/youtube$/, "admin#youtube");
+
+    // The redirect admin page.
+    app.router.route(/^\/?admin\/redirect$/, "admin#redirect");
 };
