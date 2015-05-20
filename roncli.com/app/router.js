@@ -46,8 +46,13 @@ Router.prototype.actionStart = function() {
         this.app.sortable = null;
     }
 
-    // Blur and move to the top.
+    // Blur, start transition, and move to the top.
     document.activeElement.blur();
+    if (this.loaded) {
+        $("section#content").html(this.app.templateAdapter.getTemplate("site/transition")());
+    } else {
+        this.loaded = true;
+    }
     $(window).scrollTop(0);
 };
 
