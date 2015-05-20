@@ -9,13 +9,13 @@ module.exports.post = function(req, query, callback) {
                 case "validate":
                     // Attempt to validate data.
                     if (req.body.response) {
-                        captcha.isCaptchaValid(req.session.captcha, req.body.response, function(err, valid) {
+                        captcha.isCaptchaValid(req.session.captcha, req.body.response, function(err, data) {
                             if (err) {
                                 req.res.status(err.status);
                                 callback(err);
                                 return;
                             }
-                            callback({valid: valid});
+                            callback(req.body.inverse ? !data : data);
                         });
                         return;
                     }

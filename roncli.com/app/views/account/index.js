@@ -1,8 +1,7 @@
 /*global bootbox*/
 var BaseView = require("rendr/shared/base/view"),
     $ = require("jquery"),
-    User = require("../../models/user"),
-    Captcha = require("../../models/captcha");
+    User = require("../../models/user");
 
 // Sets up the account view.
 module.exports = BaseView.extend({
@@ -69,15 +68,13 @@ module.exports = BaseView.extend({
             rules: {
                 "email-change-request-captcha": {
                     required: true,
-                    backbone: {
-                        model: Captcha,
-                        data: function() {
-                            return {
-                                response: $("#email-change-request-captcha").val()
-                            };
-                        },
-                        settings: {
-                            url: "/captcha/validate"
+                    remote: {
+                        url: "/captcha/validate",
+                        type: "POST",
+                        data: {
+                            response: function() {
+                                return $("#email-change-request-captcha").val();
+                            }
                         }
                     }
                 }
@@ -85,7 +82,7 @@ module.exports = BaseView.extend({
             messages: {
                 "email-change-request-captcha": {
                     required: "You must type in the characters as shown.",
-                    backbone: "The characters you typed do not match the image."
+                    remote: "The characters you typed do not match the image."
                 }
             },
             errorContainer: "#email-change-request-error-list",
@@ -176,15 +173,13 @@ module.exports = BaseView.extend({
                 },
                 "change-password-captcha": {
                     required: true,
-                    backbone: {
-                        model: Captcha,
-                        data: function() {
-                            return {
-                                response: $("#change-password-captcha").val()
-                            };
-                        },
-                        settings: {
-                            url: "/captcha/validate"
+                    remote: {
+                        url: "/api/-/captcha/validate",
+                        type: "POST",
+                        data: {
+                            response: function() {
+                                return $("#change-password-captcha").val();
+                            }
                         }
                     }
                 }
@@ -202,7 +197,7 @@ module.exports = BaseView.extend({
                 },
                 "change-password-captcha": {
                     required: "You must type in the characters as shown.",
-                    backbone: "The characters you typed do not match the image."
+                    remote: "The characters you typed do not match the image."
                 }
             },
             errorContainer: "#change-password-error-list",
@@ -284,16 +279,14 @@ module.exports = BaseView.extend({
                 "change-alias-alias": {
                     required: true,
                     minlength: 3,
-                    backbone: {
-                        model: User,
-                        inverse: true,
-                        data: function() {
-                            return {
-                                aliasExists: $("#change-alias-alias").val()
-                            };
-                        },
-                        settings: {
-                            url: "/user/validate"
+                    remote: {
+                        url: "/api/-/user/validate",
+                        type: "POST",
+                        data: {
+                            aliasExists: function() {
+                                return $("#change-alias-alias").val();
+                            },
+                            inverse: true
                         }
                     }
                 }
@@ -302,7 +295,7 @@ module.exports = BaseView.extend({
                 "change-alias-alias": {
                     required: "You must enter an alias.",
                     minlength: "Your alias must be at least 3 characters.",
-                    backbone: "The alias you entered is already in use."
+                    remote: "The alias you entered is already in use."
                 }
             },
             errorContainer: "#change-alias-error-list",

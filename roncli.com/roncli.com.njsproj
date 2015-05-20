@@ -259,7 +259,6 @@
     <Compile Include="app\controllers\playlist_controller.js" />
     <Compile Include="app\lib\handlebarsHelpers.js" />
     <Compile Include="app\lib\handleServerError.js" />
-    <Compile Include="app\lib\validationExtensions.js" />
     <Compile Include="app\models\base.js" />
     <Compile Include="app\models\blog_category.js" />
     <Compile Include="app\models\blog_comment.js" />

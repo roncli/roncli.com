@@ -87,7 +87,7 @@ module.exports.post = function(req, query, callback) {
                                 return;
                             }
 
-                            callback({valid: data});
+                            callback(req.body.inverse ? !data : data);
                         });
                         return;
                     }
@@ -101,7 +101,7 @@ module.exports.post = function(req, query, callback) {
                                 return;
                             }
 
-                            callback({valid: data});
+                            callback(req.body.inverse ? !data : data);
                         });
                         return;
                     }
@@ -115,7 +115,7 @@ module.exports.post = function(req, query, callback) {
                                 return;
                             }
 
-                            callback({valid: data});
+                            callback(req.body.inverse ? !data : data);
                         });
                         return;
                     }

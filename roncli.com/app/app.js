@@ -4,7 +4,6 @@ var BaseApp = require("rendr/shared/app"),
     $ = require("jquery"),
     moment = require("moment"),
     User = require("./models/user"),
-    Captcha = require("./models/captcha"),
     promise = require("promised-io/promise"),
     Deferred = promise.Deferred,
     all = promise.all;
@@ -317,16 +316,14 @@ module.exports = BaseApp.extend({
                         "register-email": {
                             required: true,
                             email: true,
-                            backbone: {
-                                model: User,
-                                inverse: true,
-                                data: function() {
-                                    return {
-                                        emailExists: $("#register-email").val()
-                                    };
-                                },
-                                settings: {
-                                    url: "/user/validate"
+                            remote: {
+                                url: "/api/-/user/validate",
+                                type: "POST",
+                                data: {
+                                    emailExists: function() {
+                                        return $("#register-email").val();
+                                    },
+                                    inverse: true
                                 }
                             }
                         },
@@ -340,44 +337,38 @@ module.exports = BaseApp.extend({
                         "register-alias": {
                             required: true,
                             minlength: 3,
-                            backbone: {
-                                model: User,
-                                inverse: true,
-                                data: function() {
-                                    return {
-                                        aliasExists: $("#register-alias").val()
-                                    };
-                                },
-                                settings: {
-                                    url: "/user/validate"
+                            remote: {
+                                url: "/api/-/user/validate",
+                                type: "POST",
+                                data: {
+                                    aliasExists: function() {
+                                        return $("#register-alias").val();
+                                    },
+                                    inverse: true
                                 }
                             }
                         },
                         "register-dob": {
                             required: true,
-                            backbone: {
-                                model: User,
-                                data: function() {
-                                    return {
-                                        coppaDob: $("#register-dob").val()
-                                    };
-                                },
-                                settings: {
-                                    url: "/user/validate"
+                            remote: {
+                                url: "/api/-/user/validate",
+                                type: "POST",
+                                data: {
+                                    coppaDob: function() {
+                                        return $("#register-dob").val();
+                                    }
                                 }
                             }
                         },
                         "register-captcha": {
                             required: true,
-                            backbone: {
-                                model: Captcha,
-                                data: function() {
-                                    return {
-                                        response: $("#register-captcha").val()
-                                    };
-                                },
-                                settings: {
-                                    url: "/captcha/validate"
+                            remote: {
+                                url: "/api/-/captcha/validate",
+                                type: "POST",
+                                data: {
+                                    response: function() {
+                                        return $("#register-captcha").val();
+                                    }
                                 }
                             }
                         }
@@ -386,7 +377,7 @@ module.exports = BaseApp.extend({
                         "register-email": {
                             required: "You must enter an email address.",
                             email: "The email address you entered is not valid.",
-                            backbone: "The email address you entered is already in use."
+                            remote: "The email address you entered is already in use."
                         },
                         "register-password": {
                             required: "You must enter a password.",
@@ -398,15 +389,15 @@ module.exports = BaseApp.extend({
                         "register-alias": {
                             required: "You must enter an alias.",
                             minlength: "Your alias must be at least 3 characters.",
-                            backbone: "The alias you entered is already in use."
+                            remote: "The alias you entered is already in use."
                         },
                         "register-dob": {
                             required: "You must enter a date of birth.",
-                            backbone: "You must be 13 years of age or older to register."
+                            remote: "You must be 13 years of age or older to register."
                         },
                         "register-captcha": {
                             required: "You must type in the characters as shown.",
-                            backbone: "The characters you typed do not match the image."
+                            remote: "The characters you typed do not match the image."
                         }
                     },
                     errorContainer: "#register-error-list",
@@ -419,15 +410,13 @@ module.exports = BaseApp.extend({
                         "forgot-password-email": {
                             required: true,
                             email: true,
-                            backbone: {
-                                model: User,
-                                data: function() {
-                                    return {
-                                        "emailExists": $("#forgot-password-email").val()
-                                    };
-                                },
-                                settings: {
-                                    url: "/user/validate"
+                            remote: {
+                                url: "/api/-/user/validate",
+                                type: "POST",
+                                data: {
+                                    emailExists: function() {
+                                        return $("#forgot-password-email").val();
+                                    }
                                 }
                             }
                         }
@@ -436,7 +425,7 @@ module.exports = BaseApp.extend({
                         "forgot-password-email": {
                             required: "You must enter your email address.",
                             email: "You must enter a valid email address.",
-                            backbone: "The email address you entered does not exist."
+                            remote: "The email address you entered does not exist."
                         }
                     },
                     errorContainer: "#forgot-password-error-list",
@@ -657,9 +646,6 @@ module.exports = BaseApp.extend({
             onScroll();
         });
 
-        // Setup jQuery validation extensions.
-        require("./lib/validationExtensions")();
-
         // Setup timeago.
         $.timeago.settings.strings.seconds = "a moment";
         $.timeago.settings.strings.minute = "a minute";
@@ -758,15 +744,13 @@ module.exports = BaseApp.extend({
                                     },
                                     "password-reset-captcha": {
                                         required: true,
-                                        backbone: {
-                                            model: Captcha,
-                                            data: function() {
-                                                return {
-                                                    response: $("#password-reset-captcha").val()
-                                                };
-                                            },
-                                            settings: {
-                                                url: "/captcha/validate"
+                                        remote: {
+                                            url: "/api/-/captcha/validate",
+                                            type: "POST",
+                                            data: {
+                                                response: function() {
+                                                    return $("#password-reset-captcha").val();
+                                                }
                                             }
                                         }
                                     }
@@ -781,7 +765,7 @@ module.exports = BaseApp.extend({
                                     },
                                     "password-reset-captcha": {
                                         required: "You must type in the characters as shown.",
-                                        backbone: "The characters you typed do not match the image."
+                                        remote: "The characters you typed do not match the image."
                                     }
                                 },
                                 errorContainer: "#password-reset-error-list",
