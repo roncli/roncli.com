@@ -76,7 +76,7 @@ app.get("*", function(req, res) {
 function start() {
     "use strict";
 
-    var port = process.env.PORT || 3030;
+    var port = process.env.PORT || 3031;
     app.listen(port);
     console.log("server pid %s listening on port %s in %s mode", process.pid, port, app.get("env"));
 }

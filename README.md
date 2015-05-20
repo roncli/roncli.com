@@ -46,15 +46,24 @@ To run the website on Windows, make sure you perform the following steps.
         npm install -msvs_version=2013
 
 7. Add /roncli.com/assets/js/publicConfig.js and /roncli.com/server/privateConfig.js.  See below for file contents.
-8. If using [iisnode](https://github.com/tjanczuk/iisnode):
+8. Install the node modules from the /ronc.li directory:
+
+        npm install
+
+9. If using [iisnode](https://github.com/tjanczuk/iisnode):
     - Point an IIS application to the inner /roncli.com directory
+    - Point another IIS application to the /ronc.li directory
     - Run ```grunt``` from the same directory when installing and after every time you change code.
-    - Be sure to create the directory "logs" in the root of the application and give your application pool write permission.  For instance, if your application pool is ```roncli.com```, you'll give permissions to the account ```IIS AppPool\roncli.com```.
+    - Be sure to create the directory "logs" in the root of both of the applications and give the application pools write permission.  For instance, if your application pool is ```roncli.com```, you'll give permissions to the account ```IIS AppPool\roncli.com```.
     - Don't forget to restart the application from within IIS after you run ```grunt```.
 
-    Otherwise, run using a standalone installation by running the following command to compile and run the web server:
-    
-        grunt all
+    Otherwise, run using a standalone installation by running the following command from within /roncli.com to compile and run the web server:
+
+            grunt all
+
+    If you also wish to run the ronc.li application, run the following command from /ronc.li to run the web server:
+
+            node index.js
 
 Other Installations
 ===================
@@ -68,10 +77,18 @@ Other Installations
 
         npm install
 
+4. Install the node modules from the /ronc.li directory:
+
+        npm install
+
 4. Add /roncli.com/assets/js/publicConfig.js and /roncli.com/server/privateConfig.js.  See below for file contents.
 5. Run the following command to compile and run the web server:
 
         grunt all
+
+    If you also wish to run the ronc.li application, run the following command from /ronc.li to run the web server:
+
+        node index.js
 
 publicConfig.js
 ===============
@@ -204,18 +221,18 @@ Planned Versions
 ---
 
 * Cleanup and website launch.
-** Add Twitch to the front page - When I am live on twitch.tv, my Twitch feed will show up on the front page.
-** Add RSS to the front page - Essentially a combination of all of the RSS feeds on the site.
-** Update email to use GMail Markup - This will allow convenient buttons to do things such as complete site registration.
-** ronc.li redirect service - URL shortener for my own use.
-** jQuery Validation remote method - I am currently using a custom jQuery Validation method for remote validation, but jQuery Validation has its own, and I'd like to use that if possible.
-** Page transitions - Currently page transitions suck!  This should help improve them.
-** Bug fixes
-*** Font doesn't load right sometimes.
-*** Logging in from a cookie doesn't work sometimes.
-*** Allowed YouTube playlists on the site should be persisted to SQL, and not cached in redis.
-*** If images are wider than the screen, shrink them.
-*** Models aren't being cached by redis.
+ * Add Twitch to the front page - When I am live on twitch.tv, my Twitch feed will show up on the front page.
+ * Add RSS to the front page - Essentially a combination of all of the RSS feeds on the site.
+ * Update email to use GMail Markup - This will allow convenient buttons to do things such as complete site registration.
+ * ronc.li redirect service - URL shortener for my own use.
+ * jQuery Validation remote method - I am currently using a custom jQuery Validation method for remote validation, but jQuery Validation has its own, and I'd like to use that if possible.
+ * Page transitions - Currently page transitions suck!  This should help improve them.
+ * Bug fixes
+   * Font doesn't load right sometimes.
+   * Logging in from a cookie doesn't work sometimes.
+   * Allowed YouTube playlists on the site should be persisted to SQL, and not cached in redis.
+   * If images are wider than the screen, shrink them.
+   * Models aren't being cached by redis.
 
 License Details
 ===============
