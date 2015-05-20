@@ -1,0 +1,28 @@
+{
+    "name": "ronc.li",
+    "version": "0.7.0",
+    "description": "Redirect service for roncli.com.",
+    "homepage": "https://github.com/roncli/roncli.com",
+    "bugs": {
+        "url": "https://github.com/roncli/roncli.com/issues",
+        "email": "roncli@roncli.com"
+    },
+    "license": "None",
+    "author": {
+        "name": "Ronald M. Clifford",
+        "email": "roncli@roncli.com",
+        "url": "http://www.roncli.com"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/roncli/roncli.com.git"
+    },
+    "dependencies": {
+        "express": "4.12.3",
+        "morgan": "1.5.3"
+    },
+    "engines": {
+        "node": ">=0.10.36"
+    },
+    "private": true
+}
