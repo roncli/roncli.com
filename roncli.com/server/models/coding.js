@@ -251,7 +251,8 @@ module.exports.getProject = function(url, callback) {
                 projectUrl: data[0][0].ProjectURL,
                 user: data[0][0].User,
                 repository: data[0][0].Repository,
-                description: data[0][0].Description
+                description: data[0][0].Description,
+                url: url
             };
 
             githubDeferred = new Deferred();

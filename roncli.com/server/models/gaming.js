@@ -6,7 +6,7 @@ var wow = require("../battlenet/wow"),
     cache = require("../cache/cache"),
     promise = require("promised-io/promise"),
     Deferred = promise.Deferred,
-    seq = promise.seq,
+    all = promise.all,
     classNames = {
         barbarian: "Barbarian",
         crusader: "Crusader",
@@ -242,9 +242,12 @@ module.exports.getWowFeed = function(callback) {
                     });
                 });
 
-                seq(fxs).then(
+                all(fxs).then(
                     function() {
-                        callback(null, result);
+                        result.feedItems.sort(function(a, b) {
+                            return b.timestamp - a.timestamp;
+                        });
+                        callback(null, [result]);
                     },
 
                     // If any of the functions error out, it will be handled here.
@@ -469,7 +472,7 @@ module.exports.getLolRanked = function(callback) {
                         };
                     });
 
-                    callback(null, result);
+                    callback(null, [result]);
                 });
             });
         },

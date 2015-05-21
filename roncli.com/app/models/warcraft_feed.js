@@ -1,7 +1,5 @@
 var Model = require("./base");
 
-module.exports = Model.extend({
-    url: "/warcraft-feed"
-});
+module.exports = Model.extend();
 
 module.exports.id = "WarcraftFeed";

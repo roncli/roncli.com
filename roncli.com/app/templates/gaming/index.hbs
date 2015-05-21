@@ -53,16 +53,16 @@
         <div class="panel-body">
             <div class="row">
                 <div class="col-md-6">
-                    <img src="{{{wow.attributes.character.profile}}}" style="width: 100%;" />
+                    <img src="{{{wow.models.0.attributes.character.profile}}}" style="width: 100%;" />
                 </div>
                 <div class="col-md-6">
                     <a href="http://us.battle.net/wow/en/character/senjin/Roncli/" target="_blank" style="font-size: 20px;">Roncli</a> <span style="font-size: 16px;">&lt;<a href="http://us.battle.net/wow/en/guild/senjin/For_Honor/" target="_blank">For Honor</a>&gt;</span><br />
                     <span style="color: #f48cba;">Human Paladin</span><br />
-                    {{{wow.attributes.character.achievementPoints}}} Achievement Points<br /><br />
+                    {{{wow.models.0.attributes.character.achievementPoints}}} Achievement Points<br /><br />
                     I have been playing <a href="http://www.worldofwarcraft.com" target="_blank">World of Warcraft</a> since November 2006, just before the first expansion Burning Crusade came out.  I ran the guild <a href="http://www.six-minutes.com" target="_blank">Six Minutes To Release</a> for just over 7 years up until February of 2015, which spawned the <a href="http://www.facebook.com/SixGamingGG" target="_blank">Six Gaming</a> brand.  I am currently raiding with the guild <a href="https://www.facebook.com/groups/ForHonor/" target="_blank">For Honor</a>.
                     <h4 class="text-center" style="margin-top: 10px;">Character Feed</h4>
                     <div style="max-height: 200px; overflow-x: hidden; overflow-y: auto; border: solid 1px #cccccc; padding: 1px 3px;">
-                        {{#each wow.attributes.feedItems}}
+                        {{#each wow.models.0.attributes.feedItems}}
                             <div class="div-table" style="margin-bottom: 5px;">
                                 <div>
                                     {{#ifCond type "!==" "BOSSKILL"}}
@@ -151,25 +151,25 @@
         <div class="panel-heading text-center"><h3>League of Legends</h3></div>
         <div class="panel-body">
             <div>
-                <div class="hidden-xs" style="width: 192px; height: 192px; background-image: url('/images/league/{{{toLower lol.attributes.ranked.tier}}}.png'); background-size: 192px 192px; float: left; margin-right: 3px;"></div>
+                <div class="hidden-xs" style="width: 192px; height: 192px; background-image: url('/images/league/{{{toLower lol.models.0.attributes.ranked.tier}}}.png'); background-size: 192px 192px; float: left; margin-right: 3px;"></div>
                 I've been playing <a href="http://www.leagueoflegends.com" target="_blank">League of Legends</a> since 2013, but did not get into playing ranked until the summer of 2014.  I'm pretty bad, so I started a series called Ron's Bronze Plays, where I play at least 3 games a week.  This airs on <a href="http://twitch.tv/roncli" target="_blank">Twitch</a> starting sometime around midnight Monday Eastern/9 PM Sunday Pacific, sometimes later.
                 <h3 class="text-center" style="margin-top: 10px;">Current Season</h3>
                 <div class="text-center">
-                    {{lol.attributes.ranked.tier}}{{#ifCond lol.attributes.ranked.division "!==" ""}} {{lol.attributes.ranked.division}}{{/ifCond}}, {{lol.attributes.ranked.leaguePoints}} League Points<br />{{lol.attributes.ranked.wins}} Win{{#ifCond lol.attributes.ranked.wins "!==" 1}}s{{/ifCond}}, {{lol.attributes.ranked.losses}} Loss{{#ifCond lol.attributes.ranked.losses "!==" 1}}es{{/ifCond}}
+                    {{lol.models.0.attributes.ranked.tier}}{{#ifCond lol.models.0.attributes.ranked.division "!==" ""}} {{lol.models.0.attributes.ranked.division}}{{/ifCond}}, {{lol.models.0.attributes.ranked.leaguePoints}} League Points<br />{{lol.models.0.attributes.ranked.wins}} Win{{#ifCond lol.models.0.attributes.ranked.wins "!==" 1}}s{{/ifCond}}, {{lol.models.0.attributes.ranked.losses}} Loss{{#ifCond lol.models.0.attributes.ranked.losses "!==" 1}}es{{/ifCond}}
                 </div>
             </div>
             <div style="clear: both;">
                 <h4 class="text-center" style="margin-top: 10px;">Match History</h4>
                 <div style="max-height: 200px; overflow-x: hidden; overflow-y: auto; border: solid 1px #ccc; padding: 1px 3px; ">
-                    {{#each lol.attributes.games}}
+                    {{#each lol.models.0.attributes.games}}
                         <div class="div-table" style="margin-bottom: 5px;">
                             <div>
                                 <div style="padding-right: 5px; width: 20px; height: 20px; vertical-align: top;">
-                                    {{#each ../lol.attributes.champions}}{{#ifCond @key "===" ../championId}}<div style="width: 20px; height: 20px; background-size: 20px 20px; background-image: url('{{image}}'); display: inline-block;"></div>{{/ifCond}}{{/each}}
+                                    {{#each ../lol.models.0.attributes.champions}}{{#ifCond @key "===" ../championId}}<div style="width: 20px; height: 20px; background-size: 20px 20px; background-image: url('{{image}}'); display: inline-block;"></div>{{/ifCond}}{{/each}}
                                 </div>
                                 <div style="padding-right: 5px; vertical-align: top;">
                                     <div style="display: table; table-layout: fixed; width: 100%;">
-                                        <a href="http://matchhistory.na.leagueoflegends.com/en/#match-details/NA1/{{matchId}}/203469552" target="_blank"><b>{{#each ../lol.attributes.champions}}{{#ifCond @key "===" ../championId}}{{name}}{{/ifCond}}{{/each}}</b></a> -
+                                        <a href="http://matchhistory.na.leagueoflegends.com/en/#match-details/NA1/{{matchId}}/203469552" target="_blank"><b>{{#each ../lol.models.0.attributes.champions}}{{#ifCond @key "===" ../championId}}{{name}}{{/ifCond}}{{/each}}</b></a> -
                                         {{#if winner}}<span class="text-success">Won</span>{{else}}<span class="text-danger">Lost</span>{{/if}} -
                                         {{matchDuration.minutes}}:{{matchDuration.seconds}} - {{kills}}/{{deaths}}/{{assists}} - {{goldPerMinute}} GPM<br />
                                     </div>

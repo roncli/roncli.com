@@ -14,11 +14,11 @@ module.exports = {
         app.fetch({
             page: {model: "PageOptional", params: {url: "/gaming"}},
             sixGamingPodcast: {model: "Video", params: {playlistId: "PLzcYb51h4me8-Jq9mOk6Vk1MLodmhRZ6K"}},
-            wow: {model: "WarcraftFeed", params: {}},
+            wow: {collection: "WarcraftFeedData", params: {}},
             wowVideo: {model: "Video", params: {playlistId: "PLoqgd0t_KsN4SzIkVVyPVt7UuT3d6Rr7G"}},
             d3: {collection: "DiabloProfiles", params: {}},
             d3Video: {model: "Video", params: {playlistId: "PLoqgd0t_KsN7LEYsVepkfbn2xOiC5M5yY"}},
-            lol: {model: "LeagueRanked", params: {}},
+            lol: {collection: "LeagueRankedData", params: {}},
             lolVideo: {model: "Video", params: {playlistId: "PLoqgd0t_KsN5YU7YGjhofQ7DJTt8pV4OZ"}},
             dcl: {collection: "DclPilotData", params: {}},
             dclVideo: {model: "Video", params: {playlistId: "PLoqgd0t_KsN5hXZPYr9GjcGrDaj3Uq2A-"}},
@@ -32,8 +32,8 @@ module.exports = {
                 err = result.sixGamingPodcast.attributes;
             }
 
-            if (!err && result && result.wow && result.wow.attributes && result.wow.attributes.error) {
-                err = result.wow.attributes;
+            if (!err && result && result.wow && result.wow.models && result.wow.models[0] && result.wow.models[0].attributes && result.wow.models[0].attributes.error) {
+                err = result.wow.models[0].attributes;
             }
 
             if (!err && result && result.wowVideo && result.wowVideo.attributes && result.wowVideo.attributes.error) {
@@ -48,8 +48,8 @@ module.exports = {
                 err = result.d3Video.attributes;
             }
 
-            if (!err && result && result.lol && result.lol.attributes && result.lol.attributes.error) {
-                err = result.lol.attributes;
+            if (!err && result && result.lol && result.lol.models && result.lol.models[0] && result.lol.models[0].attributes && result.lol.models[0].attributes.error) {
+                err = result.lol.models[0].attributes;
             }
 
             if (!err && result && result.lolVideo && result.lolVideo.attributes && result.lolVideo.attributes.error) {
