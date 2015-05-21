@@ -23,18 +23,6 @@ module.exports = BaseView.extend({
             rssText = $("div.rss-text"),
             rssLink = $("a.rss-link");
 
-        $("div.blog img").each(function() {
-            var image = $(this);
-            image.load(function() {
-                var width = this.width;
-                $("<img />").attr("src", $(this).attr("src")).load(function() {
-                    if (width !== this.width) {
-                        image.addClass("thumb").attr("title", "Click to view full image in a new window");
-                    }
-                });
-            });
-        });
-
         switch (this.name) {
             case "blog/url":
                 if (!this.app.lastBlogNav) {
@@ -72,6 +60,10 @@ module.exports = BaseView.extend({
     onScroll: function() {
         "use strict";
 
+        if (this !== this.app.router.currentView) {
+            return;
+        }
+
         var windowTop = $(window).scrollTop(),
             windowBottom = windowTop + $(window).height(),
             commentsUnloaded = $("div.comments-unloaded"),
@@ -89,7 +81,7 @@ module.exports = BaseView.extend({
         var view = this,
             app = this.app;
 
-        if (this.options.blog && this.options.blog.attributes && this.options.blog.attributes.post && this.options.blog.attributes.post.blogUrl) {
+        if (this.options.blog && this.options.blog.models && this.options.blog.models[0] && this.options.blog.models[0].attributes && this.options.blog.models[0].attributes.post && this.options.blog.models[0].attributes.post.blogUrl) {
             this.onScroll = null;
 
             // Delay 1s in case the user is rapidly moving through the pages.
@@ -103,7 +95,7 @@ module.exports = BaseView.extend({
                 $("div.comments-unloaded").removeClass("comments-unloaded").addClass("comments");
 
                 comments = new BlogComments();
-                comments.blogUrl = view.options.blog.get("post").blogUrl;
+                comments.blogUrl = view.options.blog.models[0].get("post").blogUrl;
                 comments.fetch({
                     success: function() {
                         if (view !== app.router.currentView) {
@@ -185,7 +177,7 @@ module.exports = BaseView.extend({
         comment.fetch({
             url: "/blog-comment",
             data: JSON.stringify({
-                url: this.options.blog.get("post").blogUrl,
+                url: this.options.blog.models[0].get("post").blogUrl,
                 content: content
             }),
             type: "POST",

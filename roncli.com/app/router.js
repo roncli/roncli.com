@@ -48,11 +48,8 @@ Router.prototype.actionStart = function() {
 
     // Blur, start transition, and move to the top.
     document.activeElement.blur();
-    if (this.loaded) {
-        $("section#content").html(this.app.templateAdapter.getTemplate("site/transition")());
-    } else {
-        this.loaded = true;
-    }
+    $("section#content").hide();
+    $("div#transition").removeClass("hidden");
     $(window).scrollTop(0);
 };
 
@@ -82,4 +79,8 @@ Router.prototype.actionEnd = function() {
     if (window._gaq) {
         _gaq.push(["_trackPageview"]);
     }
+
+    // End transition.
+    $("section#content").show();
+    $("div#transition").addClass("hidden");
 };

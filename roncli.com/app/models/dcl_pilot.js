@@ -1,7 +1,6 @@
 var Model = require("./base");
 
 module.exports = Model.extend({
-    url: "/dcl-pilot",
     idAttribute: "name"
 });
 

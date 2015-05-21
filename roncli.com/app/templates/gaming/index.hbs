@@ -207,18 +207,18 @@
             <div>
                 <h4 class="text-center">Current Season</h4>
                 <div class="text-center">
-                    <span class="dcl-{{dcl.attributes.rating}}">{{titleCase dcl.attributes.rating}} #{{dcl.attributes.rank}}</span><br />
-                    <span class="dcl-gold">Vs. Gold: {{dcl.attributes.records.gold.wins}}-{{dcl.attributes.records.gold.losses}}</span><br />
-                    <span class="dcl-silver">Vs. Silver: {{dcl.attributes.records.silver.wins}}-{{dcl.attributes.records.silver.losses}}</span><br />
-                    <span class="dcl-bronze">Vs. Bronze: {{dcl.attributes.records.bronze.wins}}-{{dcl.attributes.records.bronze.losses}}</span><br />
-                    <span class="dcl-unrated">Vs. Unrated: {{dcl.attributes.records.unrated.wins}}-{{dcl.attributes.records.unrated.losses}}</span><br />
+                    <span class="dcl-{{dcl.models.0.attributes.rating}}">{{titleCase dcl.models.0.attributes.rating}} #{{dcl.models.0.attributes.rank}}</span><br />
+                    <span class="dcl-gold">Vs. Gold: {{dcl.models.0.attributes.records.gold.wins}}-{{dcl.models.0.attributes.records.gold.losses}}</span><br />
+                    <span class="dcl-silver">Vs. Silver: {{dcl.models.0.attributes.records.silver.wins}}-{{dcl.models.0.attributes.records.silver.losses}}</span><br />
+                    <span class="dcl-bronze">Vs. Bronze: {{dcl.models.0.attributes.records.bronze.wins}}-{{dcl.models.0.attributes.records.bronze.losses}}</span><br />
+                    <span class="dcl-unrated">Vs. Unrated: {{dcl.models.0.attributes.records.unrated.wins}}-{{dcl.models.0.attributes.records.unrated.losses}}</span><br />
                 </div>
             </div>
             <div style="margin-top: 10px;">
                 <h4 class="text-center">Match History</h4>
                 <div style="max-height: 200px; overflow-x: hidden; overflow-y: auto; border: solid 1px #cccccc; padding: 1px 3px;">
                     <div class="div-table" style="margin-bottom: 5px;">
-                        {{#each dcl.attributes.matches}}
+                        {{#each dcl.models.0.attributes.matches}}
                             <div>
                                 <div style="padding-right: 5px; vertical-align: top;">
                                     {{#ifCond pilot.score ">" opponent.score}}
@@ -237,10 +237,10 @@
                                 <div style="padding-right: 5px; vertical-align: top;">
                                     {{game}} {{map}}
                                     {{#ifCond pilot.home "===" 1}}
-                                        - roncli's Home
+                                        (roncli's Home)
                                     {{/ifCond}}
                                     {{#ifCond opponent.home "===" 1}}
-                                        - {{opponent.name}}'s Home
+                                        ({{opponent.name}}'s Home)
                                     {{/ifCond}}
                                 </div>
                                 <div class="hidden-xs" style="padding-left: 5px; width: 1px; white-space: nowrap; vertical-align: top;">

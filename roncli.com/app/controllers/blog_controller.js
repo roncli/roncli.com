@@ -13,11 +13,11 @@ module.exports = {
         var app = this.app;
 
         app.fetch({
-            blog: {model: "Blog_GetLatest", params: {}},
+            blog: {collection: "Blog_GetLatest", params: {}},
             categories: {collection: "BlogCategories", params: {}}
         }, function(err, result) {
-            if (!err && result && result.blog && result.blog.attributes && result.blog.attributes.error) {
-                err = result.blog.attributes;
+            if (!err && result && result.blog && result.blog.models && result.blog.models[0] && result.blog.models[0].attributes && result.blog.models[0].attributes.error) {
+                err = result.blog.models[0].attributes;
             }
 
             if (!err && result && result.categories && result.categories.models && result.categories.models[0] && result.categories.models[0].attributes && result.categories.models[0].attributes.error) {
@@ -60,11 +60,11 @@ module.exports = {
         var app = this.app;
 
         app.fetch({
-            blog: {model: "Blog_GetLatestByCategory", params: {category: params[0]}},
+            blog: {collection: "Blog_GetLatestByCategory", params: {category: params[0]}},
             categories: {collection: "BlogCategories", params: {}}
         }, function(err, result) {
-            if (!err && result && result.blog && result.blog.attributes && result.blog.attributes.error) {
-                err = result.blog.attributes;
+            if (!err && result && result.blog && result.blog.models && result.blog.models[0] && result.blog.models[0].attributes && result.blog.models[0].attributes.error) {
+                err = result.blog.models[0].attributes;
             }
 
             if (!err && result && result.categories && result.categories.models && result.categories.models[0] && result.categories.models[0].attributes && result.categories.models[0].attributes.error) {
@@ -107,13 +107,13 @@ module.exports = {
         var app = this.app;
 
         app.fetch({
-            blog: {model: "Blog_GetFromUrl", params: {url: "/" + params[0]}},
+            blog: {collection: "Blog_GetFromUrl", params: {url: "/" + params[0]}},
             categories: {collection: "BlogCategories", params: {}}
         }, function(err, result) {
             var post, content;
 
-            if (!err && result && result.blog && result.blog.attributes && result.blog.attributes.error) {
-                err = result.blog.attributes;
+            if (!err && result && result.blog && result.blog.models && result.blog.models[0] && result.blog.models[0].attributes && result.blog.models[0].attributes.error) {
+                err = result.blog.models[0].attributes;
             }
 
             if (!err && result && result.categories && result.categories.models && result.categories.models[0] && result.categories.models[0].attributes && result.categories.models[0].attributes.error) {

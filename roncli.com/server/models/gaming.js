@@ -302,7 +302,7 @@ module.exports.getLatestWowFeed = function(callback) {
 
                     result.feedItem = item;
 
-                    callback(null, result);
+                    callback(null, [result]);
                 });
             });
         };
@@ -402,7 +402,7 @@ module.exports.getDiabloMain = function(callback) {
                 return;
             }
 
-            callback(null, {
+            callback(null, [{
                 seasonal: profile.seasonal,
                 hardcore: profile.hardcore,
                 paragonLevel: profile.hero.paragonLevel,
@@ -413,7 +413,7 @@ module.exports.getDiabloMain = function(callback) {
                 toughness: profile.heroData.stats.toughness,
                 healing: profile.heroData.stats.healing,
                 eliteKills: profile.heroData.kills.elites
-            });
+            }]);
         });
     };
 
@@ -607,7 +607,7 @@ module.exports.getLatestLolRanked = function(callback) {
                         image: "//ddragon.leagueoflegends.com/cdn/" + version + "/img/champion/" + champion.image.full
                     };
 
-                    callback(null, result);
+                    callback(null, [result]);
                 });
             });
         },
@@ -853,7 +853,7 @@ module.exports.getDclPilot = function(latest, callback) {
                 delete pilot.matches;
             }
 
-            callback(null, pilot);
+            callback(null, [pilot]);
         });
     };
 
@@ -871,5 +871,5 @@ module.exports.getDclPilot = function(latest, callback) {
                 });
             });
         });
-    })
+    });
 };

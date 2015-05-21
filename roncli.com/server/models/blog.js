@@ -144,7 +144,14 @@ module.exports.forceCachePosts = function(callback) {
 module.exports.getLatestPost = function(callback) {
     "use strict";
 
-    this.getPostByIndex(0, callback);
+    this.getPostByIndex(0, function(err, post) {
+        if (err) {
+            callback(err);
+            return;
+        }
+
+        callback(null, [post]);
+    });
 };
 
 /**
@@ -164,7 +171,14 @@ module.exports.getLatestPostByCategory = function(category, callback) {
         getPost = function(failureCallback) {
             cache.zrevrange("roncli.com:blog:category:" + category, 0, 0, function(post) {
                 if (post && post.length > 0) {
-                    Blog.getPost(post[0], callback);
+                    Blog.getPost(post[0], function(err, post) {
+                        if (err) {
+                            callback(err);
+                            return;
+                        }
+
+                        callback(null, [post]);
+                    });
                     return;
                 }
 
@@ -252,7 +266,7 @@ module.exports.getPostByUrl = function(url, callback) {
                     return;
                 }
 
-                callback(null, post);
+                callback(null, [post]);
             });
         };
 

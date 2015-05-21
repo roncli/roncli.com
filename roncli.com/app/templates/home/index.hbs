@@ -9,7 +9,7 @@
         <a class="btn btn-info" href="/blog">
             <div class="panel-heading panel-title text-center"><h1>Latest Blog Post</h1></div>
         </a>
-        {{partial "blog/post" post=blog.attributes.post header="default"}}
+        {{partial "blog/post" post=blog.models.0.attributes.post header="default"}}
     </div>
     <div class="row">
         <div class="col-sm-6">
@@ -101,27 +101,27 @@
                         <div class="div-table" style="margin-bottom: 5px;">
                             <div>
                                 <div class="hidden-sm" style="vertical-align: top; width: 55px;">
-                                    <div style="width: 50px; height: 50px; background-image: url('{{wow.attributes.character.thumbnail}}'); background-size: 50px 50px; display: inline-block;"></div>
+                                    <div style="width: 50px; height: 50px; background-image: url('{{wow.models.0.attributes.character.thumbnail}}'); background-size: 50px 50px; display: inline-block;"></div>
                                 </div>
                                 <div style="vertical-align: top;">
                                     <div class="text-center"><h4>World of Warcraft</h4></div>
-                                    <div>{{wow.attributes.character.achievementPoints}} achievement points</div>
-                                    {{#ifCond wow.attributes.feedItem.type "===" "BOSSKILL"}}
-                                        Defeated <b>{{wow.attributes.feedItem.boss}}</b>
+                                    <div>{{wow.models.0.attributes.character.achievementPoints}} achievement points</div>
+                                    {{#ifCond wow.models.0.attributes.feedItem.type "===" "BOSSKILL"}}
+                                        Defeated <b>{{wow.models.0.attributes.feedItem.boss}}</b>
                                     {{/ifCond}}
-                                    {{#ifCond wow.attributes.feedItem.type "===" "LOOT"}}
-                                        <div style="width: 20px; height: 20px; background-size: 20px 20px; background-image: url('http://us.media.blizzard.com/wow/icons/56/{{wow.attributes.feedItem.icon}}.jpg'); display: inline-block;"></div>
+                                    {{#ifCond wow.models.0.attributes.feedItem.type "===" "LOOT"}}
+                                        <div style="width: 20px; height: 20px; background-size: 20px 20px; background-image: url('http://us.media.blizzard.com/wow/icons/56/{{wow.models.0.attributes.feedItem.icon}}.jpg'); display: inline-block;"></div>
                                         <div style="display: inline-block;">
-                                            Looted <b>{{wow.attributes.feedItem.item}}</b>
+                                            Looted <b>{{wow.models.0.attributes.feedItem.item}}</b>
                                         </div>
                                     {{/ifCond}}
-                                    {{#ifCond wow.attributes.feedItem.type "===" "ACHIEVEMENT"}}
-                                        <div style="width: 20px; height: 20px; background-size: 20px 20px; background-image: url('http://us.media.blizzard.com/wow/icons/56/{{wow.attributes.feedItem.icon}}.jpg'); display: inline-block;"></div>
+                                    {{#ifCond wow.models.0.attributes.feedItem.type "===" "ACHIEVEMENT"}}
+                                        <div style="width: 20px; height: 20px; background-size: 20px 20px; background-image: url('http://us.media.blizzard.com/wow/icons/56/{{wow.models.0.attributes.feedItem.icon}}.jpg'); display: inline-block;"></div>
                                         <div style="display: inline-block;">
-                                            Earned <b>{{wow.attributes.feedItem.achievement}}</b>
+                                            Earned <b>{{wow.models.0.attributes.feedItem.achievement}}</b>
                                         </div>
                                     {{/ifCond}}<br />
-                                    {{{toTimeAgo wow.attributes.feedItem.timestamp}}}
+                                    {{{toTimeAgo wow.models.0.attributes.feedItem.timestamp}}}
                                 </div>
                             </div>
                         </div>
@@ -134,12 +134,12 @@
                                 </div>
                                 <div style="vertical-align: top;">
                                     <div class="text-center"><h4>Diablo III</h4></div>
-                                    {{#if d3.attributes.seasonal}}Seasonal {{/if}}
-                                    {{#if d3.attributes.hardcore}}Hardcore {{/if}}
-                                    {{d3.attributes.class}} <b>{{d3.attributes.name}}</b><br />
-                                    Paragon {{d3.attributes.paragonLevel}} - {{d3.attributes.damage}} Damage<br />
-                                    {{d3.attributes.eliteKills}} elite kills<br />
-                                    {{{toTimeAgo d3.attributes.lastUpdated}}}
+                                    {{#if d3.models.0.attributes.seasonal}}Seasonal {{/if}}
+                                    {{#if d3.models.0.attributes.hardcore}}Hardcore {{/if}}
+                                    {{d3.models.0.attributes.class}} <b>{{d3.models.0.attributes.name}}</b><br />
+                                    Paragon {{d3.models.0.attributes.paragonLevel}} - {{d3.models.0.attributes.damage}} Damage<br />
+                                    {{d3.models.0.attributes.eliteKills}} elite kills<br />
+                                    {{{toTimeAgo d3.models.0.attributes.lastUpdated}}}
                                 </div>
                             </div>
                         </div>
@@ -148,15 +148,15 @@
                         <div class="div-table" style="margin-bottom: 5px;">
                             <div>
                                 <div class="hidden-sm" style="vertical-align: top; width: 55px;">
-                                    <div style="width: 50px; height: 50px; background-image: url('{{lol.attributes.champion.image}}'); background-size: 50px 50px; display: inline-block;"></div>
+                                    <div style="width: 50px; height: 50px; background-image: url('{{lol.models.0.attributes.champion.image}}'); background-size: 50px 50px; display: inline-block;"></div>
                                 </div>
                                 <div style="vertical-align: top;">
                                     <div class="text-center"><h4>League of Legends</h4></div>
-                                    {{lol.attributes.ranked.tier}} {{lol.attributes.ranked.division}} {{lol.attributes.ranked.leaguePoints}} LP, {{lol.attributes.ranked.wins}}-{{lol.attributes.ranked.losses}}<br/>
-                                    Last game: {{#if lol.attributes.game.winner}}<span class="text-success">Won</span>{{else}}<span class="text-danger">Lost</span>{{/if}} -
-                                    {{lol.attributes.game.matchDuration.minutes}}:{{lol.attributes.game.matchDuration.seconds}}<br />
-                                    <b>{{lol.attributes.champion.name}}</b> - {{lol.attributes.game.kills}}/{{lol.attributes.game.deaths}}/{{lol.attributes.game.assists}} - {{lol.attributes.game.goldPerMinute}} GPM<br />
-                                    {{{toTimeAgo lol.attributes.game.matchCreation}}}
+                                    {{lol.models.0.attributes.ranked.tier}} {{lol.models.0.attributes.ranked.division}} {{lol.models.0.attributes.ranked.leaguePoints}} LP, {{lol.models.0.attributes.ranked.wins}}-{{lol.models.0.attributes.ranked.losses}}<br/>
+                                    Last game: {{#if lol.models.0.attributes.game.winner}}<span class="text-success">Won</span>{{else}}<span class="text-danger">Lost</span>{{/if}} -
+                                    {{lol.models.0.attributes.game.matchDuration.minutes}}:{{lol.models.0.attributes.game.matchDuration.seconds}}<br />
+                                    <b>{{lol.models.0.attributes.champion.name}}</b> - {{lol.models.0.attributes.game.kills}}/{{lol.models.0.attributes.game.deaths}}/{{lol.models.0.attributes.game.assists}} - {{lol.models.0.attributes.game.goldPerMinute}} GPM<br />
+                                    {{{toTimeAgo lol.models.0.attributes.game.matchCreation}}}
                                 </div>
                             </div>
                         </div>
@@ -169,16 +169,16 @@
                                 </div>
                                 <div style="vertical-align: top;">
                                     <div class="text-center"><h4>Descent Champions Ladder</h4></div>
-                                    <span class="dcl-{{dcl.attributes.rating}}">{{titleCase dcl.attributes.rating}} #{{dcl.attributes.rank}}</span><br />
-                                    <span class="dcl-gold" style="white-space: nowrap;">Gold: {{dcl.attributes.records.gold.wins}}-{{dcl.attributes.records.gold.losses}}</span> <span class="dcl-silver" style="white-space: nowrap;">Silver: {{dcl.attributes.records.silver.wins}}-{{dcl.attributes.records.silver.losses}}</span> <span class="dcl-bronze" style="white-space: nowrap;">Bronze: {{dcl.attributes.records.bronze.wins}}-{{dcl.attributes.records.bronze.losses}}</span> <span class="dcl-unrated" style="white-space: nowrap;">Unrated: {{dcl.attributes.records.unrated.wins}}-{{dcl.attributes.records.unrated.losses}}</span><br />
+                                    <span class="dcl-{{dcl.models.0.attributes.rating}}">{{titleCase dcl.models.0.attributes.rating}} #{{dcl.models.0.attributes.rank}}</span><br />
+                                    <span class="dcl-gold" style="white-space: nowrap;">Gold: {{dcl.models.0.attributes.records.gold.wins}}-{{dcl.models.0.attributes.records.gold.losses}}</span> <span class="dcl-silver" style="white-space: nowrap;">Silver: {{dcl.models.0.attributes.records.silver.wins}}-{{dcl.models.0.attributes.records.silver.losses}}</span> <span class="dcl-bronze" style="white-space: nowrap;">Bronze: {{dcl.models.0.attributes.records.bronze.wins}}-{{dcl.models.0.attributes.records.bronze.losses}}</span> <span class="dcl-unrated" style="white-space: nowrap;">Unrated: {{dcl.models.0.attributes.records.unrated.wins}}-{{dcl.models.0.attributes.records.unrated.losses}}</span><br />
                                     Last game:
-                                    {{#ifCond dcl.attributes.match.pilot.score ">" dcl.attributes.match.opponent.score}}
-                                        <span class="text-success">roncli <b>{{dcl.attributes.match.pilot.score}}</b> - {{dcl.attributes.match.opponent.name}} <b>{{dcl.attributes.match.opponent.score}}</b></span>
+                                    {{#ifCond dcl.models.0.attributes.match.pilot.score ">" dcl.models.0.attributes.match.opponent.score}}
+                                        <span class="text-success">roncli <b>{{dcl.models.0.attributes.match.pilot.score}}</b> - {{dcl.models.0.attributes.match.opponent.name}} <b>{{dcl.models.0.attributes.match.opponent.score}}</b></span>
                                     {{else}}
-                                        <span class="text-danger">{{dcl.attributes.match.opponent.name}} <b>{{dcl.attributes.match.opponent.score}}</b>, roncli <b>{{dcl.attributes.match.pilot.score}}</b></span>
+                                        <span class="text-danger">{{dcl.models.0.attributes.match.opponent.name}} <b>{{dcl.models.0.attributes.match.opponent.score}}</b>, roncli <b>{{dcl.models.0.attributes.match.pilot.score}}</b></span>
                                     {{/ifCond}}
-                                    {{dcl.attributes.match.game}} {{dcl.attributes.match.map}}<br />
-                                    {{{toTimeAgo dcl.attributes.match.date}}}
+                                    {{dcl.models.0.attributes.match.game}} {{dcl.models.0.attributes.match.map}}<br />
+                                    {{{toTimeAgo dcl.models.0.attributes.match.date}}}
                                 </div>
                             </div>
                         </div>
