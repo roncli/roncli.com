@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[tblEmailChangeAuthorization] (
-    [AuthorizationID]   INT              IDENTITY (1, 1) NOT NULL,
+    [AuthorizationID]   INT              NOT NULL IDENTITY,
     [UserID]            INT              NOT NULL,
     [AuthorizationCode] UNIQUEIDENTIFIER NOT NULL,
     [ExpirationDate]    DATETIME         NOT NULL,

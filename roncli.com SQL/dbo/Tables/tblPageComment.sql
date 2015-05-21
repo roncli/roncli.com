@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[tblPageComment] (
-    [CommentID]     INT      IDENTITY (1, 1) NOT NULL,
+    [CommentID]     INT      NOT NULL IDENTITY,
     [PageID]        INT      NOT NULL,
     [Comment]       TEXT     NOT NULL,
     [CrDate]        DATETIME CONSTRAINT [DF_tblPageComment_CrDate] DEFAULT (getutcdate()) NOT NULL,

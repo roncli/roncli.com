@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [dbo].[tblUserRole] (
-    [UserRoleID] INT IDENTITY (1, 1) NOT NULL,
+    [UserRoleID] INT NOT NULL IDENTITY,
     [UserID]     INT NOT NULL,
     [RoleID]     INT NOT NULL,
     CONSTRAINT [PK_tblUserRole] PRIMARY KEY CLUSTERED ([UserRoleID] ASC),
