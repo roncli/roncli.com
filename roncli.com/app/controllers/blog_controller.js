@@ -126,7 +126,7 @@ module.exports = {
             }
 
             if (app.req) {
-                post = result.blog.get("post");
+                post = result.blog.models[0].get("post");
 
                 switch (post.blogSource) {
                     case "blogger":

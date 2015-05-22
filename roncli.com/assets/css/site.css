@@ -6,6 +6,10 @@ ol {
     -webkit-padding-start: 0;
 }
 
+img {
+    max-width: 100%;
+}
+
 .site-wrapper {
     min-height: 100%;
     height: auto !important;
