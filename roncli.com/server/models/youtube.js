@@ -15,9 +15,23 @@ var Moment = require("moment"),
     isAllowed = function(id, callback) {
         "use strict";
 
-        cache.zrank("roncli.com:youtube:playlists", id, function(index) {
-            callback(index === 0 || (index && index > 0));
-        });
+        db.query(
+            "SELECT COUNT(PlaylistID) Playlists FROM tblAllowedPlaylist WHERE PlaylistID = @playlistId",
+            {playlistId: {type: db.VARCHAR(64), value: id}},
+            function(err, data) {
+                if (err) {
+                    console.log("Database error in youtube.isAllowed");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while checking for an allowed playlist.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                callback(!(!data || !data[0] || !data[0][0] || data[0][0].Playlists === 0));
+            }
+        );
     };
 
 /**

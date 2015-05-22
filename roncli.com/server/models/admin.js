@@ -2497,20 +2497,10 @@ module.exports.clearYoutubeCaches = function(userId, callback) {
             var deferred = new Deferred();
 
             cache.keys(key, function(keys) {
-                var index;
                 if (keys.length > 0) {
-                    index = keys.indexOf("roncli.com:youtube:playlists");
-
-                    if (index !== -1) {
-                        keys.splice(index, 1);
-                    }
-                    if (keys.length > 0) {
-                        cache.del(keys, function() {
-                            deferred.resolve();
-                        });
-                    } else {
+                    cache.del(keys, function() {
                         deferred.resolve();
-                    }
+                    });
                 } else {
                     deferred.resolve();
                 }
@@ -2534,7 +2524,6 @@ module.exports.getPlaylists = function(userId, callback) {
     "use strict";
 
     User.getUserRoles(userId, function(err, roles) {
-
         if (err) {
             callback({
                 error: "There was a database error while clearing gaming caches.  Please reload the page and try again.",
@@ -2551,16 +2540,29 @@ module.exports.getPlaylists = function(userId, callback) {
             return;
         }
 
-        cache.zrange("roncli.com:youtube:playlists", 0, -1, function(playlists) {
-            if (playlists && playlists.length > 0) {
-                callback(null, playlists.map(function(playlist) {
-                    return {playlistId: playlist};
-                }));
-                return;
-            }
+        db.query(
+            "SELECT PlaylistID FROM tblAllowedPlaylist",
+            {},
+            function(err, data) {
+                if (err) {
+                    console.log("Database error in admin.getPlaylists");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while getting allowed playlists.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
 
-            callback(null, []);
-        });
+                if (data && data[0]) {
+                    callback(null, data[0].map(function(playlist) {
+                        return {playlistId: playlist.PlaylistID};
+                    }));
+                } else {
+                    callback(null, []);
+                }
+            }
+        );
     });
 };
 
@@ -2574,7 +2576,6 @@ module.exports.addPlaylist = function(userId, playlistId, callback) {
     "use strict";
 
     User.getUserRoles(userId, function(err, roles) {
-
         if (err) {
             callback({
                 error: "There was a database error while clearing gaming caches.  Please reload the page and try again.",
@@ -2591,9 +2592,23 @@ module.exports.addPlaylist = function(userId, playlistId, callback) {
             return;
         }
 
-        cache.zadd("roncli.com:youtube:playlists", [{value: playlistId, score: 0}], 0, function() {
-            callback();
-        });
+        db.query(
+            "INSERT INTO tblAllowedPlaylist VALUES (@playlistId)",
+            {playlistId: {type: db.VARCHAR(64), value: playlistId}},
+            function(err) {
+                if (err) {
+                    console.log("Database error in admin.addPlaylist");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while adding an allowed playlist.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                callback();
+            }
+        );
     });
 };
 
@@ -2607,7 +2622,6 @@ module.exports.removePlaylist = function(userId, playlistId, callback) {
     "use strict";
 
     User.getUserRoles(userId, function(err, roles) {
-
         if (err) {
             callback({
                 error: "There was a database error while clearing gaming caches.  Please reload the page and try again.",
@@ -2624,9 +2638,23 @@ module.exports.removePlaylist = function(userId, playlistId, callback) {
             return;
         }
 
-        cache.zrem("roncli.com:youtube:playlists", [playlistId], function() {
-            callback();
-        });
+        db.query(
+            "DELETE FROM tblAllowedPlaylist WHERE PlaylistID = @playlistId",
+            {playlistId: {type: db.VARCHAR(64), value: playlistId}},
+            function(err) {
+                if (err) {
+                    console.log("Database error in admin.removePlaylist");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while removing an allowed playlist.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                callback();
+            }
+        );
     });
 };
 
