@@ -1,5 +1,5 @@
 <!doctype html>
-<html style="opacity: 0;">
+<html>
 <head>
     <style>html:not(.wf-active):not(wf-inactive) *{color: transparent !important}</style>
     <title>roncli.com</title>
@@ -23,7 +23,7 @@
     <script src="//w.soundcloud.com/player/api.js"></script>
     <script src="//www.youtube.com/iframe_api"></script>
 </head>
-<body style="background-color: transparent;">
+<body>
 <div class="site-wrapper">
     <div class="container">
         <div class="jumbotron text-center">
@@ -149,6 +149,6 @@
 </div>
 <script>!function(){var a=window.App=new(require("app/app"))({{jsonEscaped appData}})
 a.bootstrapData({{jsonEscaped bootstrappedData}}),a.start()}()</script>
-<script>window.App.loadFonts(window);</script>
+<script>window.App.loadFonts(window, document);</script>
 </body>
 </html>
