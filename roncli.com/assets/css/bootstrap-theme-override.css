@@ -20,6 +20,11 @@ h6,
     margin-bottom: 0;
 }
 
+pre {
+    word-break: inherit;
+    word-wrap: inherit;
+}
+
 .col-lg-1,
 .col-lg-10,
 .col-lg-11,

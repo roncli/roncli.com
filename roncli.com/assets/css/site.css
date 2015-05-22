@@ -668,3 +668,12 @@ div.tooltip-hover:hover div.tooltip-content {
 .dcl-unrated {
     color: #7e0000;
 }
+
+div.blog pre.code {
+    max-height: 200px;
+}
+
+div.blog span.media {
+    font-weight: bold;
+    color: #808080;
+}
