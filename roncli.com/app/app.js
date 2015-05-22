@@ -37,12 +37,22 @@ module.exports = BaseApp.extend({
                 if (app.fontsComplete) {
                     app.fontsComplete();
                     app.fontsComplete = null;
+                    $("html").hide();
+                    setTimeout(function() {
+                        $("html").show().css({opacity: 1});
+                        $("body").css({"background-color": ""});
+                    }, 1);
                 }
             },
             inactive: function() {
                 if (app.fontsComplete) {
                     app.fontsComplete();
                     app.fontsComplete = null;
+                    $("html").hide();
+                    setTimeout(function() {
+                        $("html").show().css({opacity: 1});
+                        $("body").css({"background-color": ""});
+                    }, 1);
                 }
             }
         };
