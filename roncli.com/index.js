@@ -27,17 +27,20 @@ var config = require("./server/privateConfig"),
 // Add morgan extensions.
 morganExtensions(morgan);
 
+// Remove powered by header.
+app.disable("x-powered-by");
+
 // Initialize middleware stack.
 app.use(compression());
 app.use(morgan(":colorstatus \x1b[30m\x1b[1m:method\x1b[0m :url\x1b[30m\x1b[1m:newline    Date :date[iso]    IP :remote-addr    Time :colorresponse ms"));
+app.use(express.static(path.join(__dirname, "public")));
+app.use("/files", express.static(path.join(__dirname, "files"), {redirect: false}));
 app.use(cookieParser(serverConfig.secret));
 app.use(session({
     secret: serverConfig.secret,
     resave: true,
     saveUninitialized: true
 }));
-app.use(express.static(path.join(__dirname, "public")));
-app.use("/files", express.static(path.join(__dirname, "files"), {redirect: false}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(multer({
@@ -65,14 +68,6 @@ app.use(multer({
         });
     }
 }));
-
-// Remove powered by header.
-app.use(function(req, res, next) {
-    "use strict";
-
-    res.removeHeader("X-Powered-By");
-    next();
-});
 
 // Setup domains.
 app.use(function(req, res, next) {

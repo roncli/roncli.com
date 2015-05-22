@@ -114,13 +114,7 @@ module.exports = BaseApp.extend({
                 });
             };
 
-        app.fontsCompleteFxs = [
-            function() {
-                // Start loading tweets.
-                loadTweets();
-                setInterval(loadTweets, 900000);
-            }
-        ];
+        app.fontsCompleteFxs = [];
 
         /**
          * Function to perform when fonts complete loading one way or another.
@@ -665,6 +659,14 @@ module.exports = BaseApp.extend({
                 app.trigger("logged-in", {error: "You are not logged in."});
                 logOutUser();
             }
+
+            // Load Tweets.
+            if ($("html").is(".wf-active,.wf-inactive")) {
+                loadTweets();
+            } else {
+                app.fontsCompleteFxs.push(loadTweets);
+            }
+            setInterval(loadTweets, 900000);
         });
 
         // Dialog boxes to show upon loading the site.

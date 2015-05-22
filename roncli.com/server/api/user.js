@@ -19,15 +19,12 @@ module.exports.get = function(req, query, callback) {
 
             // Attempt to log in the user from a cookie.
             if (req.cookies.login) {
-                console.log("Loading user from cookie.");
-                console.log(req.sessionID);
                 user.login(req.cookies.login.email, req.cookies.login.password, function(err, data) {
                     if (err) {
                         req.res.status(err.status);
                         callback(err);
                         return;
                     }
-                    console.log(data);
                     req.session.user = data;
 
                     callback(data);
@@ -42,7 +39,6 @@ module.exports.get = function(req, query, callback) {
             switch (req.parsedPath[0]) {
                 case "getNotifications":
                     if (userId === 0) {
-                        console.log(req.sessionID);
                         req.res.status(401);
                         callback({error: "You are not logged in."});
                         return;
@@ -123,7 +119,6 @@ module.exports.post = function(req, query, callback) {
                     break;
                 case "login":
                     user.login(req.body.email, req.body.password, function(err, data) {
-                        console.log(req);
                         if (err) {
                             req.res.status(err.status);
                             callback(err);
