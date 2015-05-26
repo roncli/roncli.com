@@ -22,41 +22,47 @@ module.exports = BaseView.extend({
     postRender: function() {
         "use strict";
 
-        var view = this;
+        var view = this,
+            app = this.app,
+            pageList = $("#page-list");
 
         $("#add-new-page").defaultButton("#add-page");
 
         // Setup sortable.
-        this.app.sortable = sortable.create($("#page-list")[0], {
-            store: {
-                get: function() {return [];},
-                set: function(sortable) {
-                    var admin = new Admin();
+        if (pageList.length > 0) {
+            app.sortable = sortable.create(pageList[0], {
+                store: {
+                    get: function() {
+                        return [];
+                    },
+                    set: function(sortable) {
+                        var admin = new Admin();
 
-                    admin.fetch({
-                        url: "/admin/pages/change-order",
-                        data: JSON.stringify({
-                            pageId: view.options.page.get("id"),
-                            order: sortable.toArray()
-                        }),
-                        type: "POST",
-                        contentType: "application/json",
-                        dataType: "json",
-                        error: function(xhr, error) {
-                            var message;
-                            if (error && error.body && error.body.error) {
-                                message = error.body.error;
-                            } else {
-                                message = "There was a server error ordering the pages.  Please try again later.";
+                        admin.fetch({
+                            url: "/admin/pages/change-order",
+                            data: JSON.stringify({
+                                pageId: view.options.page.get("id"),
+                                order: sortable.toArray()
+                            }),
+                            type: "POST",
+                            contentType: "application/json",
+                            dataType: "json",
+                            error: function(xhr, error) {
+                                var message;
+                                if (error && error.body && error.body.error) {
+                                    message = error.body.error;
+                                } else {
+                                    message = "There was a server error ordering the pages.  Please try again later.";
+                                }
+
+                                view.showError(message);
                             }
-
-                            view.showError(message);
-                        }
-                    });
-                }
-            },
-            filter: "button"
-        });
+                        });
+                    }
+                },
+                filter: "button"
+            });
+        }
     },
 
     deletePage: function(ev) {
