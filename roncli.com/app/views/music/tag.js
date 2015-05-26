@@ -5,6 +5,10 @@ var BaseView = require("rendr/shared/base/view"),
 module.exports = BaseView.extend({
     className: "music_tag_view",
 
+    events: {
+        "click button#add-all-to-media-player": "addAllToPlaylist"
+    },
+
     postRender: function() {
         "use strict";
 
@@ -14,6 +18,14 @@ module.exports = BaseView.extend({
         if ($("#children-pages-wrapper").length > 0) {
             this.app.addPageScroller("#children-pages-wrapper", {mouseWheel: true, scrollbars: true});
         }
+    },
+
+    addAllToPlaylist: function() {
+        "use strict";
+
+        $("button.add-song-to-media-player").each(function(index, button) {
+            $(button).click();
+        });
     }
 });
 
