@@ -2405,7 +2405,7 @@ module.exports.clearGamingCaches = function(userId, callback) {
             return;
         }
 
-        ["roncli.com:battlenet:*", "roncli.com:riot:*", "roncli.com:steam:*"].forEach(function(key) {
+        ["roncli.com:battlenet:*", "roncli.com:riot:*", "roncli.com:steam:*", "roncli.com:dcl:*"].forEach(function(key) {
             var deferred = new Deferred();
 
             cache.keys(key, function(keys) {
@@ -2454,6 +2454,15 @@ module.exports.clearGamingCaches = function(userId, callback) {
                     var deferred = new Deferred();
 
                     gaming.forceCacheChampions(function() {
+                        deferred.resolve(true);
+                    });
+
+                    return deferred.promise;
+                }()),
+                (function() {
+                    var deferred = new Deferred();
+
+                    gaming.forceCacheDcl(function() {
                         deferred.resolve(true);
                     });
 

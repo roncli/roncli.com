@@ -204,6 +204,16 @@ module.exports.forceCacheChampions = function(callback) {
 };
 
 /**
+ * Forces the site to cache the DCL data, even if it is already cached.
+ * @param {function} callback The callback function.
+ */
+module.exports.forceCacheDcl = function(callback) {
+    "use strict";
+
+    dcl.cachePilot(true, callback);
+};
+
+/**
  * Gets all of the WoW feed items.
  * @param {function} callback The callback function.
  */
