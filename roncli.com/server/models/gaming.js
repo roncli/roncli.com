@@ -235,7 +235,7 @@ module.exports.getWowFeed = function(callback) {
                 result.feedItems = [];
 
                 feedItems.forEach(function(feedItem) {
-                    fxs.push(function() {
+                    fxs.push((function() {
                         var deferred = new Deferred();
 
                         getWowFeedItem(feedItem, function(err, item) {
@@ -249,7 +249,7 @@ module.exports.getWowFeed = function(callback) {
                         });
 
                         return deferred.promise;
-                    });
+                    }()));
                 });
 
                 all(fxs).then(
