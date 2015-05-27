@@ -341,7 +341,7 @@ module.exports.getPost = function(post, callback) {
 
                         // If any of the functions error out, it will be handled here.
                         function(err) {
-                            callback(err);
+                            deferred.reject(err);
                         }
                     );
 
