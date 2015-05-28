@@ -6,7 +6,8 @@ module.exports = BaseView.extend({
     className: "music_tag_view",
 
     events: {
-        "click button#add-all-to-media-player": "addAllToPlaylist"
+        "click button#add-all-to-media-player": "addAllToPlaylist",
+        "click button.play-song": "playSong"
     },
 
     postRender: function() {
@@ -26,6 +27,15 @@ module.exports = BaseView.extend({
         $("button.add-song-to-media-player").each(function(index, button) {
             $(button).click();
         });
+    },
+
+    playSong: function(ev) {
+        "use strict";
+
+        var song = $(ev.target).closest("div.song");
+
+        $("#song-title").text(song.data("title"));
+        $("#song-player").empty().append(this.app.templateAdapter.getTemplate("music/song")({resolvedUrl: song.data("audio-url")}));
     }
 });
 

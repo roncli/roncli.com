@@ -2,29 +2,36 @@
     {{{page.attributes.page.content}}}
     <div class="panel panel-primary">
         <div class="panel-heading text-center"><h3>The Nightstalker's Latest Music</h3></div>
-    </div>
-    <div class="row">
-        {{#each songs.models}}
-            <div class="col-sm-6">
-                <div class="btn-group-vertical">
-                    <a class="btn btn-default" href="{{attributes.url}}">
-                        <div class="panel-heading panel-title text-center"><h4>{{attributes.title}}</h4></div>
-                    </a>
-                    <div class="body">
-                        <div class="music-soundcloud">
-                            {{partial "media/soundcloud" resolvedUrl=attributes.audioUrl autoplay=false visual=false}}
-                        </div><br />
-                        <div class="text-center">
-                            <button class="btn btn-xs btn-primary add-to-media-player" style="font-size: 12px;" data-source="soundcloud" data-url="{{attributes.audioUrl}}"><span class="glyphicon glyphicon-music"></span> Add To Playlist</button>
+        <div class="panel-body">
+            <div class="text-center"><button class="btn btn-primary navbar-btn" id="add-all-to-media-player"><span class="glyphicon glyphicon-plus"></span><span class="glyphicon glyphicon-music"></span> Add All To Playlist</button></div><br />
+            <div class="text-center" style="margin-bottom: 10px;">
+                <h4 class="text-center" style="margin-bottom: 3px;" id="song-title">{{songs.models.0.attributes.title}}</h4>
+                <div class="text-center" id="song-player">
+                    {{partial "music/song" resolvedUrl=songs.models.0.attributes.audioUrl}}
+                </div>
+            </div>
+            {{#each songs.models}}
+                <div class="navbar navbar-default song" data-audio-url="{{attributes.audioUrl}}" data-title="{{attributes.title}}" style="background-color: #eeeeee; border: solid 1px #cccccc;">
+                    <div class="container-fluid">
+                        <div class="navbar-left" style="margin-right: 20px;">
+                            <ul class="nav navbar-nav">
+                                <li class="navbar-text" style="font-size: 20px; padding: 10px 0;"><div><a href="{{attributes.url}}">{{attributes.title}}</a></div></li>
+                            </ul>
+                        </div>
+                        <div class="navbar-right" style="margin-right: 0;">
+                            <ul class="nav">
+                                <li>
+                                    <div>
+                                        <button class="btn btn-sm btn-primary navbar-btn play-song"><span class="glyphicon glyphicon-play"></span> Play</button>
+                                        <button class="btn btn-sm btn-primary navbar-btn add-to-media-player add-song-to-media-player" data-source="soundcloud" data-url="{{attributes.audioUrl}}"><span class="glyphicon glyphicon-music"></span> Add To Playlist</button>
+                                    </div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
-            </div>
-            {{#every 2 @index @last}}
-            </div>
-            <div class="row">
-            {{/every}}
-        {{/each}}
+            {{/each}}
+        </div>
     </div>
     <div class="panel panel-primary">
         <div class="panel-heading text-center"><h3>Discography</h3></div>
