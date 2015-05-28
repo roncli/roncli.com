@@ -2,7 +2,7 @@ html, body {
     height: 100%;
 }
 
-ol {
+ol.breadcrumb {
     -webkit-padding-start: 0;
 }
 
@@ -669,8 +669,14 @@ div.tooltip-hover:hover div.tooltip-content {
     color: #7e0000;
 }
 
-div.blog pre.code {
+pre.code {
     max-height: 200px;
+}
+
+pre.code.inline {
+    display: inline;
+    padding: 1px;
+    border: none;
 }
 
 div.blog span.media {
