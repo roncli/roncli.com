@@ -13,8 +13,12 @@ module.exports = BaseView.extend({
     postRender: function() {
         "use strict";
 
+        var app = this.app;
+
         if ($("#children-pages-wrapper").length > 0) {
-            this.app.addPageScroller("#children-pages-wrapper", {mouseWheel: true, scrollbars: true});
+            setTimeout(function() {
+                app.addPageScroller("#children-pages-wrapper", {mouseWheel: true, scrollbars: true});
+            }, 1);
         }
     },
 

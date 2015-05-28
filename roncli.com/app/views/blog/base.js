@@ -21,20 +21,21 @@ module.exports = BaseView.extend({
 
         var blogTopNav = $("#blog-top-nav"),
             rssText = $("div.rss-text"),
-            rssLink = $("a.rss-link");
+            rssLink = $("a.rss-link"),
+            app = this.app;
 
         switch (this.name) {
             case "blog/url":
-                if (!this.app.lastBlogNav) {
-                    this.app.lastBlogNav = "all";
+                if (!app.lastBlogNav) {
+                    app.lastBlogNav = "all";
                 }
 
-                if (["all", "blogsource"].indexOf(this.app.lastBlogNav) === -1) {
+                if (["all", "blogsource"].indexOf(app.lastBlogNav) === -1) {
                     rssText.html("Subscribe to this category:");
-                    rssLink.attr("href", rssLink.attr("href") + "?category=" + this.app.lastBlogNav);
+                    rssLink.attr("href", rssLink.attr("href") + "?category=" + app.lastBlogNav);
                 }
 
-                blogTopNav.html($("div.blog-nav-bottom[data-blog-nav=\"" + this.app.lastBlogNav + "\"]").html()).data("blog-nav", this.app.lastBlogNav);
+                blogTopNav.html($("div.blog-nav-bottom[data-blog-nav=\"" + app.lastBlogNav + "\"]").html()).data("blog-nav", app.lastBlogNav);
                 break;
             case "blog/index":
                 blogTopNav.html($("div.blog-nav-bottom[data-blog-nav=\"all\"]").html()).data("blog-nav", "all");
@@ -46,9 +47,11 @@ module.exports = BaseView.extend({
                 break;
         }
 
-        this.app.lastBlogNav = undefined;
+        app.lastBlogNav = undefined;
 
-        this.app.addPageScroller("#blog-categories-wrapper", {mouseWheel: true, scrollbars: true});
+        setTimeout(function() {
+            app.addPageScroller("#blog-categories-wrapper", {mouseWheel: true, scrollbars: true});
+        }, 1);
     },
 
     blogNav: function(ev) {
