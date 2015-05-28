@@ -106,21 +106,34 @@
                                 <div style="vertical-align: top;">
                                     <div class="text-center"><h4>World of Warcraft</h4></div>
                                     <div>{{wow.models.0.attributes.character.achievementPoints}} achievement points</div>
+
                                     {{#ifCond wow.models.0.attributes.feedItem.type "===" "BOSSKILL"}}
-                                        Defeated <b>{{wow.models.0.attributes.feedItem.boss}}</b>
+                                        Defeated <b>{{wow.models.0.attributes.feedItem.boss}}</b><br/>
                                     {{/ifCond}}
                                     {{#ifCond wow.models.0.attributes.feedItem.type "===" "LOOT"}}
-                                        <div style="width: 20px; height: 20px; background-size: 20px 20px; background-image: url('http://us.media.blizzard.com/wow/icons/56/{{wow.models.0.attributes.feedItem.icon}}.jpg'); display: inline-block;"></div>
-                                        <div style="display: inline-block;">
-                                            Looted <b>{{wow.models.0.attributes.feedItem.item}}</b>
+                                        <div class="div-table">
+                                            <div>
+                                                <div style="vertical-align: top; padding-right: 5px;">
+                                                    <div style="width: 20px; height: 20px; background-size: 20px 20px; background-image: url('http://us.media.blizzard.com/wow/icons/56/{{wow.models.0.attributes.feedItem.icon}}.jpg');"></div>
+                                                </div>
+                                                <div style="vertical-align: top;">
+                                                    Looted <b>{{wow.models.0.attributes.feedItem.item}}</b>
+                                                </div>
+                                            </div>
                                         </div>
                                     {{/ifCond}}
                                     {{#ifCond wow.models.0.attributes.feedItem.type "===" "ACHIEVEMENT"}}
-                                        <div style="width: 20px; height: 20px; background-size: 20px 20px; background-image: url('http://us.media.blizzard.com/wow/icons/56/{{wow.models.0.attributes.feedItem.icon}}.jpg'); display: inline-block;"></div>
-                                        <div style="display: inline-block;">
-                                            Earned <b>{{wow.models.0.attributes.feedItem.achievement}}</b>
+                                        <div class="div-table">
+                                            <div>
+                                                <div style="vertical-align: top; padding-right: 5px;">
+                                                    <div style="width: 20px; height: 20px; background-size: 20px 20px; background-image: url('http://us.media.blizzard.com/wow/icons/56/{{wow.models.0.attributes.feedItem.icon}}.jpg');"></div>
+                                                </div>
+                                                <div style="vertical-align: top;">
+                                                    Earned <b>{{wow.models.0.attributes.feedItem.achievement}}</b>
+                                                </div>
+                                            </div>
                                         </div>
-                                    {{/ifCond}}<br />
+                                    {{/ifCond}}
                                     {{{toTimeAgo wow.models.0.attributes.feedItem.timestamp}}}
                                 </div>
                             </div>
