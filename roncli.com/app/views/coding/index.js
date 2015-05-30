@@ -8,15 +8,16 @@ module.exports = BaseView.extend({
     postRender: function() {
         "use strict";
 
-        var app = this.app;
+        var app = this.app,
+            childrenWrapper = $("#children-pages-wrapper");
 
-        if ($("#children-pages-wrapper").length > 0) {
+        if (childrenWrapper.length > 0) {
             setTimeout(function() {
                 app.addPageScroller("#children-pages-wrapper", {mouseWheel: true, scrollbars: true});
+
+                $("div.children-pages").height(Math.min(childrenWrapper.height(), childrenWrapper.find("div.scroller").height()));
             }, 1);
         }
-
-        $("abbr.setTime").removeClass("setTime").timeago();
     }
 });
 
