@@ -55,8 +55,7 @@
                 <div class="text-left" style="color: #000000;">Experience the raw emotion of The Nightstalker with this collection of stripped down recordings.</div>
             </a>
         </div>
-    </div>
-    <div class="row">
+        <div class="clearfix hidden-xs"></div>
         <div class="col-sm-4" style="margin-bottom: 20px;">
             <a class="btn btn-default" href="/music/tag/Preview" style="white-space: normal; width: 100%;">
                 <div class="text-center text-success"><h4>Previews</h4></div>
@@ -81,25 +80,16 @@
     </div>
     <div class="row">
         {{#each tags.models}}
-            {{#ifCond attributes.tag "!==" "Classic"}}
-                {{#ifCond attributes.tag "!==" "Release"}}
-                    {{#ifCond attributes.tag "!==" "Stripped Down"}}
-                        {{#ifCond attributes.tag "!==" "Preview"}}
-                            {{#ifCond attributes.tag "!==" "Remake"}}
-                                {{#ifCond attributes.tag "!==" "B-Side"}}
-                                    <div class="col-sm-4" style="margin-bottom: 20px;">
-                                        <div class="btn-group-vertical">
-                                            <a class="btn btn-default" href="/music/tag/{{attributes.tag}}">
-                                                <div class="panel-heading panel-title text-center"><h4>{{attributes.tag}}</h4></div>
-                                            </a>
-                                        </div>
-                                    </div>
-                                {{/ifCond}}
-                            {{/ifCond}}
-                        {{/ifCond}}
-                    {{/ifCond}}
-                {{/ifCond}}
-            {{/ifCond}}
+            <div class="col-sm-4" style="margin-bottom: 20px;">
+                <div class="btn-group-vertical">
+                    <a class="btn btn-default" href="/music/tag/{{attributes.tag}}">
+                        <div class="panel-heading panel-title text-center"><h4>{{attributes.tag}}</h4></div>
+                    </a>
+                </div>
+            </div>
+            {{#every 3 @index @last}}
+                <div class="clearfix hidden-xs"></div>
+            {{/every}}
         {{/each}}
     </div>
 </div>

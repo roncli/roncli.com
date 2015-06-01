@@ -131,7 +131,9 @@ module.exports.getTags = function(callback) {
     var getCategories = function(failureCallback) {
         cache.zrange("roncli.com:soundcloud:tags", 0, -1, function(tags) {
             if (tags && tags.length > 0) {
-                callback(null, tags.map(function(tag, index) {
+                callback(null, tags.filter(function(tag) {
+                    return ["Classic", "Release", "Stripped Down", "Preview", "Remake", "B-Side"].indexOf(tag) === -1;
+                }).map(function(tag, index) {
                     return {id: index, tag: tag};
                 }));
                 return;

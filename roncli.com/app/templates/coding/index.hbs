@@ -11,6 +11,9 @@
                     <div class="text-left" style="color: #000000;">{{attributes.description}}</div>
                 </a>
             </div>
+            {{#every 3 @index @last}}
+                <div class="clearfix hidden-xs"></div>
+            {{/every}}
         {{/each}}
     </div>
     <div class="panel panel-primary">
