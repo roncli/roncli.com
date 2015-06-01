@@ -299,25 +299,50 @@ module.exports.getLatestWowFeed = function(callback) {
          * @param {object} character The character object.
          */
         getFeed = function(character) {
+            var deferred = new Deferred();
+
             result.character = character;
 
-            cache.zrevrange("roncli.com:battlenet:wow:feed", 0, 0, function(feedItem) {
-                if (feedItem && feedItem.length === 0) {
-                    callback(null, result);
-                    return;
+            cache.keys("roncli.com:battlenet:wow:feed", function(keys) {
+                if (keys.length > 0) {
+                    deferred.resolve();
+                } else {
+                    wow.cacheCharacter(true, function(err) {
+                        if (err) {
+                            deferred.reject(err);
+                            return;
+                        }
+
+                        deferred.resolve();
+                    });
                 }
-
-                getWowFeedItem(feedItem[0], function(err, item) {
-                    if (err) {
-                        callback(err);
-                        return;
-                    }
-
-                    result.feedItem = item;
-
-                    callback(null, [result]);
-                });
             });
+
+            deferred.then(
+                function() {
+                    cache.zrevrange("roncli.com:battlenet:wow:feed", 0, 0, function(feedItem) {
+                        if (feedItem && feedItem.length === 0) {
+                            callback(null, result);
+                            return;
+                        }
+
+                        getWowFeedItem(feedItem[0], function(err, item) {
+                            if (err) {
+                                callback(err);
+                                return;
+                            }
+
+                            result.feedItem = item;
+
+                            callback(null, [result]);
+                        });
+                    });
+                },
+                
+                function(err) {
+                    callback(err);
+                }
+            );
         };
 
     getWowCharacter(getFeed, function() {

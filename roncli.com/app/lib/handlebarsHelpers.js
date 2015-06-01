@@ -181,6 +181,9 @@ module.exports = function(Handlebars) {
          * @returns {string} The ABBR element to use with timeago.
          */
         toTimeAgo: function(timestamp) {
+            if (!timestamp) {
+                return "";
+            }
             var date = new Date(timestamp);
             return "<abbr class=\"setTime\" title=\"" + date.toISOString() + "\">" + (date.getMonth() + 1) + "/" + date.getDate() + "/" + date.getFullYear() + "</abbr>";
         },

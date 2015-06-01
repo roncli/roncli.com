@@ -297,6 +297,8 @@ module.exports.getPost = function(post, callback) {
 
     var postDeferred = new Deferred(),
         rankDeferred = new Deferred(),
+        categoriesDeferred = new Deferred(),
+        promises = [],
 
         /**
          * Get the index of the post from a key.
@@ -391,9 +393,44 @@ module.exports.getPost = function(post, callback) {
         });
     });
 
-    all(postDeferred.promise, rankDeferred.promise).then(
+    post.categories.forEach(function(category) {
+        promises.push(
+            (function() {
+                var deferred = new Deferred();
+
+                cache.keys("roncli.com:blog:category:" + category, function(keys) {
+                    if (keys.length > 0) {
+                        deferred.resolve();
+                    } else {
+                        cachePosts(true, function(err) {
+                            if (err) {
+                                deferred.reject(err);
+                                return;
+                            }
+
+                            deferred.resolve();
+                        });
+                    }
+                });
+
+                return deferred.promise;
+            }())
+        );
+    });
+
+    all(promises).then(
+        function() {
+            categoriesDeferred.resolve();
+        },
+
+        function(err) {
+            categoriesDeferred.reject(err);
+        }
+    );
+
+    all(postDeferred.promise, rankDeferred.promise, categoriesDeferred.promise).then(
         function(content) {
-            var promises = [],
+            var contentPromises = [],
                 sourceDeferred = new Deferred();
 
             content[0].blogUrl = post.url;
@@ -402,18 +439,26 @@ module.exports.getPost = function(post, callback) {
                 var deferred = new Deferred();
 
                 getIndex("roncli.com:blog:category:" + category, deferred, function() {
-                    deferred.resolve(null);
+                    console.log("Missing posts for category " + category);
+                    deferred.reject({
+                        error: "Missing posts for category.",
+                        status: 500
+                    });
                 });
 
-                promises.push(deferred.promise);
+                contentPromises.push(deferred.promise);
             });
 
             getIndex("roncli.com:" + post.blogSource + ":posts", sourceDeferred, function() {
-                sourceDeferred.resolve(null);
+                console.log("Missing posts for blog source " + post.blogSource);
+                sourceDeferred.reject({
+                    error: "Missing posts for blog source.",
+                    status: 500
+                });
             });
-            promises.push(sourceDeferred.promise);
+            contentPromises.push(sourceDeferred.promise);
 
-            all(promises).then(
+            all(contentPromises).then(
                 function(categoryRanks) {
                     var postData = {
                         id: post.blogSource + content[0].id,
