@@ -399,7 +399,7 @@ module.exports.getPost = function(post, callback) {
                 var deferred = new Deferred();
 
                 cache.keys("roncli.com:blog:category:" + category, function(keys) {
-                    if (keys.length > 0) {
+                    if (keys && keys.length > 0) {
                         deferred.resolve();
                     } else {
                         cachePosts(true, function(err) {
