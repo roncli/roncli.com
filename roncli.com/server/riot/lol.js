@@ -243,6 +243,7 @@ module.exports.cacheRanked = function(force, callback) {
 
                 cacheRanked(callback);
             });
+            return;
         }
 
         cacheRanked(callback);
