@@ -70,10 +70,18 @@ var Moment = require("moment"),
                                 };
 
                             cache.zrange("roncli.com:blog:categories", 0, -1, function(categories) {
+                                if (!categories) {
+                                    unionDeferred.reject({
+                                        error: "Error retrieving blog categories.",
+                                        status: 500
+                                    });
+                                }
+
                                 categories.forEach(function(category) {
                                     promises.push(cacheCategory(category));
                                 });
                             });
+                            
                             all(promises).then(
 
                                 function() {
