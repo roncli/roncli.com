@@ -27,6 +27,7 @@
     <Content Include="admin\templates\admin\error.hbs" />
     <Content Include="admin\templates\admin\files.hbs" />
     <Content Include="admin\templates\admin\files\deleteConfirm.hbs" />
+    <Content Include="admin\templates\admin\files\fileUploaded.hbs" />
     <Content Include="admin\templates\admin\gaming.hbs" />
     <Content Include="admin\templates\admin\gaming\cachesCleared.hbs" />
     <Content Include="admin\templates\admin\index.hbs" />
@@ -82,6 +83,7 @@
     <Content Include="app\templates\coding\project.hbs" />
     <Content Include="app\templates\error\404.hbs" />
     <Content Include="app\templates\error\other.hbs" />
+    <Content Include="app\templates\files\index.hbs" />
     <Content Include="app\templates\gaming\game.hbs" />
     <Content Include="app\templates\gaming\index.hbs" />
     <Content Include="app\templates\home\index.hbs" />
@@ -344,6 +346,7 @@
     <Compile Include="app\views\coding\project.js" />
     <Compile Include="app\views\error\404.js" />
     <Compile Include="app\views\error\other.js" />
+    <Compile Include="app\views\files\index.js" />
     <Compile Include="app\views\gaming\game.js" />
     <Compile Include="app\views\gaming\index.js" />
     <Compile Include="app\views\home\index.js" />
@@ -449,6 +452,7 @@
     <Folder Include="app\templates\blog\posts\" />
     <Folder Include="app\templates\coding\" />
     <Folder Include="app\templates\error\" />
+    <Folder Include="app\templates\files\" />
     <Folder Include="app\templates\gaming\" />
     <Folder Include="app\templates\home\" />
     <Folder Include="app\templates\media\" />
@@ -461,6 +465,7 @@
     <Folder Include="app\views\blog\" />
     <Folder Include="app\views\coding\" />
     <Folder Include="app\views\error\" />
+    <Folder Include="app\views\files\" />
     <Folder Include="app\views\gaming\" />
     <Folder Include="app\views\home\" />
     <Folder Include="app\views\music\" />
