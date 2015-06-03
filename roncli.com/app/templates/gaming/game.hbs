@@ -11,27 +11,23 @@
                 {{#if game.attributes.achievements.earned}}
                     <br />
                     <h3 class="text-center">Earned Achievements</h3>
-                    {{#each game.attributes.achievements.earned}}
-                        <div class="tooltip-hover" style="display: inline-block;">
-                            <img src="{{icon}}" style="width: 64px; height: 64px;" />
-                            <div class="tooltip-content">
-                                <b>{{displayName}}</b><br/>{{description}}
-                            </div>
+                    {{#each game.attributes.achievements.earned}}<div class="tooltip-hover" style="display: inline-block; margin-right: 5px; margin-bottom: 5px;">
+                        <img src="{{icon}}" style="width: 64px; height: 64px;" />
+                        <div class="tooltip-content">
+                            <b>{{displayName}}</b><br/>{{description}}
                         </div>
-                    {{/each}}
+                    </div>{{/each}}
                     <br />
                 {{/if}}
                 {{#if game.attributes.achievements.unearned}}
                     <br />
                     <h3 class="text-center">Unearned Achievements</h3>
-                    {{#each game.attributes.achievements.unearned}}
-                        <div class="tooltip-hover" style="display: inline-block;">
-                            <img src="{{icongray}}" style="width: 64px; height: 64px;" />
-                            <div class="tooltip-content">
-                                <b>{{displayName}}</b><br />{{description}}
-                            </div>
+                    {{#each game.attributes.achievements.unearned}}<div class="tooltip-hover" style="display: inline-block; margin-right: 5px; margin-bottom: 5px;">
+                        <img src="{{icongray}}" style="width: 64px; height: 64px;" />
+                        <div class="tooltip-content">
+                            <b>{{displayName}}</b><br />{{description}}
                         </div>
-                    {{/each}}
+                    </div>{{/each}}
                     <br />
                 {{/if}}
             {{/if}}
