@@ -177,6 +177,20 @@ module.exports = function(grunt) {
             target: {
                 src: ["index.js"]
             }
+        },
+
+        // Deployments.
+        copy: {
+            "deploy-to-dev": {
+                expand: true,
+                src: ["./**"],
+                dest: "c:\\inetpub\\roncli.com - dev"
+            },
+            deploy: {
+                expand: true,
+                src: ["./**"],
+                dest: "c:\\inetpub\\roncli.com"
+            }
         }
     });
 
@@ -186,10 +200,13 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-contrib-cssmin");
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-execute");
+    grunt.loadNpmTasks("grunt-contrib-copy");
 
     // Register tasks.
     grunt.registerTask("compile", ["handlebars", "browserify", "cssmin", "uglify"]);
     grunt.registerTask("run", ["execute"]);
+    grunt.registerTask("dev-deploy", ["compile", "copy:deploy-to-dev"]);
+    grunt.registerTask("deploy", ["compile", "copy:deploy"]);
     grunt.registerTask("all", ["compile", "run"]);
     grunt.registerTask("noop", []);
     grunt.registerTask("default", ["compile"]);
