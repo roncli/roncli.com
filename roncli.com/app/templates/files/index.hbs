@@ -1,0 +1,57 @@
+<div class="col-xs-8">
+    <div class="panel panel-primary">
+        <div class="panel-heading text-center">
+            <h3>Files</h3>
+        </div>
+        <div class="panel-body">
+            {{#ifCond files.models.length ">" 0}}
+                <div class="row" style="font-weight: bold;">
+                    <div class="col-xs-12 col-sm-4">
+                        Filename
+                    </div>
+                    <div class="hidden-xs col-sm-2">
+                        Size
+                    </div>
+                    <div class="hidden-xs col-sm-3">
+                        Created
+                    </div>
+                    <div class="hidden-xs col-sm-3">
+                        Modified
+                    </div>
+                </div>
+            {{/ifCond}}
+            {{#each files.models}}
+                <div class="row">
+                    <div class="col-xs-12 col-sm-4" style="overflow: hidden; text-overflow: ellipsis;">
+                        <a class="download-file" href="/files/{{attributes.file}}" target="_blank">{{attributes.file}}</a>
+                    </div>
+                    <div class="hidden-xs col-sm-2">
+                        {{formatBytes attributes.size}}
+                    </div>
+                    <div class="hidden-xs col-sm-3">
+                        {{timestampToDate attributes.created "M/D/YYYY h:mm:ss a"}}
+                    </div>
+                    <div class="hidden-xs col-sm-3">
+                        {{timestampToDate attributes.modified "M/D/YYYY h:mm:ss a"}}
+                    </div>
+                </div>
+            {{/each}}
+            {{#ifCond files.models.length "===" 0}}
+                <div class="text-center">There are no files available for download.</div>
+            {{/ifCond}}
+        </div>
+    </div>
+</div>
+<div class="col-sm-2 hidden-xs right-side">
+    <div class="panel panel-primary">
+        <div class="panel-heading panel-heading-small text-center">Files</div>
+        <ol class="breadcrumb">
+            <li><a href="/">Home</a></li>
+            <li class="active">Files</li>
+        </ol>
+        <div class="panel-body">
+            This is a collection of random files that I have uploaded to make easily available.  They range from useful to downright silly.  Download at your own risk!
+        </div>
+    </div>
+    {{partial "site/share"}}
+</div>
