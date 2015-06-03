@@ -35,7 +35,8 @@ app.use(function(req, res, next) {
 
 // Redirect.
 app.get("*", function(req, res) {
-    var url = req.url;
+    var url = req.url,
+        ip = req.connection.remoteAddress;
 
     db.query(
         "SELECT RedirectID, ToURL FROM tblRedirect WHERE FromPath = @path",
@@ -53,7 +54,7 @@ app.get("*", function(req, res) {
                     "INSERT INTO tblRedirectHit (RedirectID, IP, Referrer, UserAgent) values (@redirectId, @ip, @referrer, @userAgent)",
                     {
                         redirectId: {type: db.INT, value: data[0][0].RedirectID},
-                        ip: {type: db.VARCHAR(15), value: req.connection.remoteAddress},
+                        ip: {type: db.VARCHAR(15), value: ip},
                         referrer: {type: db.VARCHAR(256), value: req.headers.referer ? req.headers.referer.substring(0, 256) : null},
                         userAgent: {type: db.VARCHAR(256), value: req.headers["user-agent"] ? req.headers["user-agent"].substring(0, 256) : null}
                     },
