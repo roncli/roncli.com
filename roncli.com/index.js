@@ -30,9 +30,17 @@ morganExtensions(morgan);
 // Remove powered by header.
 app.disable("x-powered-by");
 
+// Get IP address.
+app.use(function(req, res, next) {
+    "use strict";
+
+    req.headers.ip = req.ip || req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+    next();
+});
+
 // Initialize middleware stack.
 app.use(compression());
-app.use(morgan(":colorstatus \x1b[30m\x1b[1m:method\x1b[0m :url\x1b[30m\x1b[1m:newline    Date :date[iso]    IP :remote-addr    Time :colorresponse ms"));
+app.use(morgan(":colorstatus \x1b[30m\x1b[1m:method\x1b[0m :url\x1b[30m\x1b[1m:newline    Date :date[iso]    IP :req[ip]    Time :colorresponse ms"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use("/files", express.static(path.join(__dirname, "files"), {redirect: false}));
 app.use(cookieParser(serverConfig.secret));
