@@ -49,7 +49,8 @@ div#logo {
 
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
     div#logo {
-        background: url("/images/roncliLogo@4x.png") 480px 80px;
+        background-image: url("/images/roncliLogo@4x.png");
+        background-size: 480px 80px;
     }
 }
 
@@ -63,7 +64,8 @@ div#logo {
 
 @media (max-width: 767px) and (-webkit-min-device-pixel-ratio: 1.5), (max-width: 767px) and (min-resolution: 1.5dppx) {
     div#logo {
-        background: url("/images/roncliLogo@2x.png") 240px 40px;
+        background-image: url("/images/roncliLogo@2x.png");
+        background-size: 240px 40px;
     }
 }
 
@@ -227,7 +229,8 @@ div.twitter-logo {
 
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
     div.twitter-logo {
-        background: url("/images/twitter/logo@2x.png") 80px 16px;
+        background-image: url("/images/twitter/logo@2x.png");
+        background-size: 80px 16px;
     }
 }
 
@@ -300,15 +303,18 @@ div.tweet a div.favorite {
 
 @media (-webkit-min-device-pixel-ratio: 1.5), (min-resolution: 1.5dppx) {
     div.tweet a div.reply {
-        background: url("/images/twitter/reply@2x.png") 16px 16px;
+        background-image: url("/images/twitter/reply@2x.png");
+        background-size: 16px 16px;
     }
 
     div.tweet a div.retweet {
-        background: url("/images/twitter/retweet@2x.png") 16px 16px;
+        background-image: url("/images/twitter/retweet@2x.png");
+        background-size: 16px 16px;
     }
 
     div.tweet a div.favorite {
-        background: url("/images/twitter/favorite@2x.png") 16px 16px;
+        background-image: url("/images/twitter/favorite@2x.png");
+        background-size: 16px 16px;
     }
 }
 
