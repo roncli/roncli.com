@@ -169,8 +169,17 @@ The following should be the contents of privateConfig.js:
 Version History
 ===============
 
+1.0.1 - 6/4/2015
+----------------
+
+This is a bug fix release.
+
+* Fixed some bugs with mobile development.
+* Fixed bugs with Steam games that have achievements, but I haven't achieved any yet.
+
 1.0 - 6/3/2015
 --------------
+
 This is the initial release of the roncli.com website!
 
 * Added Twitch to the front page - When I am live on twitch.tv, my Twitch feed will show up on the front page.

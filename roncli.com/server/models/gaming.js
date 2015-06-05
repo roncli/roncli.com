@@ -815,7 +815,7 @@ module.exports.getSteamGame = function(gameId, callback) {
                     return;
                 }
 
-                if (game.stats.achievements.length > 0) {
+                if (game.stats.achievements && game.stats.achievements.length > 0) {
                     game.stats.achievements.forEach(function(achievement) {
                         if (achievement.achieved) {
                             earnedAchievements[achievement.name] = true;
@@ -823,7 +823,7 @@ module.exports.getSteamGame = function(gameId, callback) {
                     });
                 }
 
-                if (game.schema.availableGameStats.achievements.length > 0) {
+                if (game.schema.availableGameStats.achievements && game.schema.availableGameStats.achievements.length > 0) {
                     game.schema.availableGameStats.achievements.forEach(function(achievement) {
                         if (earnedAchievements[achievement.name]) {
                             achievement.achieved = true;
