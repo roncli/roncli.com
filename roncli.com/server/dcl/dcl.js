@@ -29,6 +29,11 @@ var http = require("http"),
                     return;
                 }
 
+                // Fix dates
+                pilot.matches.forEach(function(match) {
+                    match.date = new Date(match.date).toISOString();
+                });
+
                 cache.set("roncli.com:dcl:pilot", pilot, 86400, function() {
                     callback();
                 });

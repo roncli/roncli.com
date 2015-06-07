@@ -637,7 +637,7 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
                                         console.log("Error sending validation email in user.register.");
                                         console.log(err);
                                         callback({
-                                            error: "There was an email error in user.register.  If you need help registering, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
+                                            error: "There was an email error registering your account.  If you need help registering, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
                                             status: 500
                                         });
                                         return;

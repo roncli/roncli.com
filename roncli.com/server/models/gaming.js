@@ -838,16 +838,16 @@ module.exports.getSteamGame = function(gameId, callback) {
                     playtimeForever: gameInfo.playtimeForever,
                     header: gameInfo.header,
                     achievements: {
-                        earned: game.schema.availableGameStats.achievements.filter(function(achievement) {
+                        earned: game.schema.availableGameStats.achievements ? game.schema.availableGameStats.achievements.filter(function(achievement) {
                             return achievement.achieved;
                         }).sort(function(a, b) {
                             return a.displayName.localeCompare(b.displayName);
-                        }),
-                        unearned: game.schema.availableGameStats.achievements.filter(function(achievement) {
+                        }) : [],
+                        unearned: game.schema.availableGameStats.achievements ? game.schema.availableGameStats.achievements.filter(function(achievement) {
                             return !achievement.achieved;
                         }).sort(function(a, b) {
                             return a.displayName.localeCompare(b.displayName);
-                        })
+                        }) : []
                     }
                 });
             });
