@@ -169,13 +169,14 @@ The following should be the contents of privateConfig.js:
 Version History
 ===============
 
-1.0.1 - 6/4/2015
+1.0.1 - 6/7/2015
 ----------------
 
 This is a bug fix release.
 
-* Fixed some bugs with mobile development.
+* Fixed some bugs with mobile.
 * Fixed bugs with Steam games that have achievements, but I haven't achieved any yet.
+
 
 1.0 - 6/3/2015
 --------------
