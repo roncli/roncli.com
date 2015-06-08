@@ -595,6 +595,12 @@ module.exports = BaseApp.extend({
             }
         });
 
+        // Handle links that should open in a new window.
+        $("section#content").on("click", "a.new-window", function(ev) {
+            window.open($(this).attr("href"), "_blank");
+            return false;
+        });
+
         // Show media player trigger.
         $("#media-player-trigger").show();
         $("#media-player-trigger-button").on("click", function() {

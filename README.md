@@ -169,6 +169,14 @@ The following should be the contents of privateConfig.js:
 Version History
 ===============
 
+1.0.2 - 6/7/2015
+----------------
+
+This is a bug fix release.
+
+* Fixed the way that files are downloaded from the /files directory so that they may be downloaded from other pages.
+* Added favicon.ico to the root for browsers that require it.
+
 1.0.1 - 6/7/2015
 ----------------
 
