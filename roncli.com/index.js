@@ -117,6 +117,13 @@ app.get("/images/captcha.png", function(req, res) {
     res.end(captcha.buffer());
 });
 
+// Permanent redirects for ModPlug, since we no longer host those files.
+app.get(/^\/modplug[\/.*]?/, function(req, res) {
+    "use strict";
+
+    res.redirect(301, "http://www.modplug.com");
+});
+
 // Add the rendr server.
 app.use(server.handle);
 
