@@ -124,6 +124,13 @@ app.get(/^\/modplug[\/.*]?/, function(req, res) {
     res.redirect(301, "http://www.modplug.com");
 });
 
+// Permanent redirect for old homepage.
+app.get("/tns.asp", function(req, res) {
+    "use strict";
+
+    res.redirect(301, "http://roncli.com");
+});
+
 // Add the rendr server.
 app.use(server.handle);
 
