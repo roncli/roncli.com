@@ -23,7 +23,7 @@ module.exports.rss = function(req, res, callback) {
 
 
     cache.get(cacheKey, function(xml) {
-        var rssDeferred, wowFeedDeferred, lolMatchesDeferred, dclMatchesDeferred, sixGamingDeferred, wowVideosDeferred, d3VideosDeferred, lolVideosDeferred, dclVideosDeferred;
+        var rssDeferred, wowFeedDeferred, dclMatchesDeferred, sixGamingDeferred, wowVideosDeferred, d3VideosDeferred, dclVideosDeferred;
 
         if (xml) {
             callback(xml);
@@ -44,7 +44,7 @@ module.exports.rss = function(req, res, callback) {
         feed.custom_namespaces.openSearch = "http://a9.com/-/spec/opensearchrss/1.0/";
         feed.custom_elements.push({"openSearch:startIndex": startIndex.toString()});
         feed.custom_elements.push({"openSearch:itemsPerPage": "25"});
-        feed.categories = ["World of Warcraft Feed", "League of Legends Ranked Matches", "Descent Champions Ladder Matches", "Six Gaming Podcast Highlights", "World of Warcraft Videos", "Diablo III Videos", "League of Legends Videos", "Descent Champions Ladder Videos"];
+        feed.categories = ["World of Warcraft Feed", "Descent Champions Ladder Matches", "Six Gaming Podcast Highlights", "World of Warcraft Videos", "Diablo III Videos", "Descent Champions Ladder Videos"];
 
         // See if we have the items cached already.
         rssDeferred = new Deferred();
@@ -58,12 +58,10 @@ module.exports.rss = function(req, res, callback) {
             }
 
             wowFeedDeferred = new Deferred();
-            lolMatchesDeferred = new Deferred();
             dclMatchesDeferred = new Deferred();
             sixGamingDeferred = new Deferred();
             wowVideosDeferred = new Deferred();
             d3VideosDeferred = new Deferred();
-            lolVideosDeferred = new Deferred();
             dclVideosDeferred = new Deferred();
 
             // Get the WoW feed.
@@ -111,36 +109,6 @@ module.exports.rss = function(req, res, callback) {
                 }
 
                 wowFeedDeferred.resolve(true);
-            });
-
-            // Get LoL matches.
-            gaming.getLolRanked(function(err, ranked) {
-                if (err) {
-                    lolMatchesDeferred.reject(err);
-                    return;
-                }
-
-                if (ranked && ranked.games) {
-                    ranked.games.forEach(function(match) {
-                        var title = "League of Legends Ranked " + (match.winner ? "Win" : "Loss") + ": " + ranked.champions[match.championId].name + " " + match.matchDuration.minutes + ":" + match.matchDuration.seconds + " " + match.kills + "/" + match.deaths + "/" + match.assists + " " + match.cs + " CS",
-                            description = (match.winner ? "Win" : "Loss") + " with " + ranked.champions[match.championId].name + "<br />" + match.matchDuration.minutes + ":" + match.matchDuration.seconds + "<br />" + match.kills + "/" + match.deaths + "/" + match.assists + " " + match.cs + " CS<br />" + match.goldPerMinute + " Gold per Minute";
-
-                        feed.item({
-                            guid: "roncli.com:gaming:lolRanked:" + match.matchId,
-                            date: new Date(match.matchCreation),
-                            categories: ["League of Legends Ranked Matches"],
-                            title: title,
-                            description: description,
-                            url: "http://roncli.com/gaming",
-                            author: "roncli@roncli.com (roncli)",
-                            custom_elements: [
-                                {"atom:updated": moment(new Date(match.matchCreation)).format()}
-                            ]
-                        });
-                    });
-                }
-
-                lolMatchesDeferred.resolve(true);
             });
 
             // Get DCL matches.
@@ -252,33 +220,6 @@ module.exports.rss = function(req, res, callback) {
                 d3VideosDeferred.resolve(true);
             });
 
-            // Get LoL videos.
-            youtube.getPlaylist("PLoqgd0t_KsN5YU7YGjhofQ7DJTt8pV4OZ", function(err, playlist) {
-                if (err) {
-                    lolVideosDeferred.reject(err);
-                    return;
-                }
-
-                if (playlist && playlist.videos) {
-                    playlist.videos.forEach(function(video) {
-                        feed.item({
-                            guid: "roncli.com:gaming:lolVideos:" + video.id,
-                            date: new Date(video.publishedAt),
-                            categories: ["League of Legends Videos"],
-                            title: video.title,
-                            description: video.description,
-                            url: "http://roncli.com/playlist/PLoqgd0t_KsN5YU7YGjhofQ7DJTt8pV4OZ/gaming-league-of-legends",
-                            author: "roncli@roncli.com (roncli)",
-                            custom_elements: [
-                                {"atom:updated": moment(new Date(video.publishedAt)).format()}
-                            ]
-                        });
-                    });
-                }
-
-                lolVideosDeferred.resolve(true);
-            });
-
             // Get DCL videos.
             youtube.getPlaylist("PLoqgd0t_KsN5hXZPYr9GjcGrDaj3Uq2A-", function(err, playlist) {
                 if (err) {
@@ -306,7 +247,7 @@ module.exports.rss = function(req, res, callback) {
                 dclVideosDeferred.resolve(true);
             });
 
-            all([wowFeedDeferred.promise, lolMatchesDeferred.promise, sixGamingDeferred.promise, wowVideosDeferred.promise, d3VideosDeferred.promise, lolVideosDeferred.promise, dclVideosDeferred.promise]).then(
+            all([wowFeedDeferred.promise, sixGamingDeferred.promise, wowVideosDeferred.promise, d3VideosDeferred.promise, dclVideosDeferred.promise]).then(
                 function() {
                     // Sort items.
                     feed.items.sort(function(a, b) {

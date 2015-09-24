@@ -18,8 +18,6 @@ module.exports = {
             wowVideo: {model: "Video", params: {playlistId: "PLoqgd0t_KsN4SzIkVVyPVt7UuT3d6Rr7G"}},
             d3: {collection: "DiabloProfiles", params: {}},
             d3Video: {model: "Video", params: {playlistId: "PLoqgd0t_KsN7LEYsVepkfbn2xOiC5M5yY"}},
-            lol: {collection: "LeagueRankedData", params: {}},
-            lolVideo: {model: "Video", params: {playlistId: "PLoqgd0t_KsN5YU7YGjhofQ7DJTt8pV4OZ"}},
             dcl: {collection: "DclPilotData", params: {}},
             dclVideo: {model: "Video", params: {playlistId: "PLoqgd0t_KsN5hXZPYr9GjcGrDaj3Uq2A-"}},
             steam: {collection: "SteamGames", params: {}}
@@ -46,14 +44,6 @@ module.exports = {
 
             if (!err && result && result.d3Video && result.d3Video.attributes && result.d3Video.attributes.error) {
                 err = result.d3Video.attributes;
-            }
-
-            if (!err && result && result.lol && result.lol.models && result.lol.models[0] && result.lol.models[0].attributes && result.lol.models[0].attributes.error) {
-                err = result.lol.models[0].attributes;
-            }
-
-            if (!err && result && result.lolVideo && result.lolVideo.attributes && result.lolVideo.attributes.error) {
-                err = result.lolVideo.attributes;
             }
 
             if (!err && result && result.dcl && result.dcl.models && result.dcl.models[0] && result.dcl.models[0].attributes && result.dcl.models[0].attributes.error) {

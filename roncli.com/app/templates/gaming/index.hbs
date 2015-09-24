@@ -17,10 +17,6 @@
                     <div style="vertical-align: middle;"><h3><a href="#diablo3">Diablo III</a></h3></div>
                 </div>
                 <div>
-                    <div style="vertical-align: middle; padding-right: 5px;"><img src="/images/icons/lol.png" style="width: 32px; height: 32px;"/></div>
-                    <div style="vertical-align: middle;"><h3><a href="#lol">League of Legends</a></h3></div>
-                </div>
-                <div>
                     <div style="vertical-align: middle; padding-right: 5px;"><img src="/images/icons/descent.png" style="width: 32px; height: 32px;"/></div>
                     <div style="vertical-align: middle;"><h3><a href="#descent">Descent</a></h3></div>
                 </div>
@@ -143,50 +139,6 @@
                 <h4 class="text-center" style="margin-bottom: 3px;">{{d3Video.attributes.title}}</h4>
                 <iframe src="https://www.youtube.com/embed/{{{d3Video.attributes.id}}}?feature=oembed&amp;enablejsapi=1&amp;wmode=opaque" frameborder="0" allowfullscreen="" style="width: 100%; height: 200px;"></iframe><br />
                 <button class="btn btn-primary add-to-media-player" data-source="youtube" data-url="https://www.youtube.com/watch?v={{{d3Video.attributes.id}}}"><span class="glyphicon glyphicon-music"></span> Add To Playlist</button>
-            </div>
-        </div>
-    </div>
-    <a name="lol"></a>
-    <div class="panel panel-primary">
-        <div class="panel-heading text-center"><h3>League of Legends</h3></div>
-        <div class="panel-body">
-            <div>
-                <div class="hidden-xs" style="width: 192px; height: 192px; background-image: url('/images/league/{{{toLower lol.models.0.attributes.ranked.tier}}}.png'); background-size: 192px 192px; float: left; margin-right: 3px;"></div>
-                I've been playing <a href="http://www.leagueoflegends.com" target="_blank">League of Legends</a> since 2013, but did not get into playing ranked until the summer of 2014.  I'm pretty bad, so I started a series called Ron's Bronze Plays, where I play at least 3 games a week.  This airs on <a href="http://twitch.tv/roncli" target="_blank">Twitch</a> starting sometime around midnight Monday Eastern/9 PM Sunday Pacific, sometimes later.
-                <h3 class="text-center" style="margin-top: 10px;">Current Season</h3>
-                <div class="text-center">
-                    {{lol.models.0.attributes.ranked.tier}}{{#ifCond lol.models.0.attributes.ranked.division "!==" ""}} {{lol.models.0.attributes.ranked.division}}{{/ifCond}}, {{lol.models.0.attributes.ranked.leaguePoints}} League Points<br />{{lol.models.0.attributes.ranked.wins}} Win{{#ifCond lol.models.0.attributes.ranked.wins "!==" 1}}s{{/ifCond}}, {{lol.models.0.attributes.ranked.losses}} Loss{{#ifCond lol.models.0.attributes.ranked.losses "!==" 1}}es{{/ifCond}}
-                </div>
-            </div>
-            <div style="clear: both;">
-                <h4 class="text-center" style="margin-top: 10px;">Match History</h4>
-                <div style="max-height: 200px; overflow-x: hidden; overflow-y: auto; border: solid 1px #ccc; padding: 1px 3px; ">
-                    {{#each lol.models.0.attributes.games}}
-                        <div class="div-table" style="margin-bottom: 5px;">
-                            <div>
-                                <div style="padding-right: 5px; width: 20px; height: 20px; vertical-align: top;">
-                                    {{#each ../lol.models.0.attributes.champions}}{{#ifCond @key "===" ../championId}}<div style="width: 20px; height: 20px; background-size: 20px 20px; background-image: url('{{image}}'); display: inline-block;"></div>{{/ifCond}}{{/each}}
-                                </div>
-                                <div style="padding-right: 5px; vertical-align: top;">
-                                    <div style="display: table; table-layout: fixed; width: 100%;">
-                                        <a href="http://matchhistory.na.leagueoflegends.com/en/#match-details/NA1/{{matchId}}/203469552" target="_blank"><b>{{#each ../lol.models.0.attributes.champions}}{{#ifCond @key "===" ../championId}}{{name}}{{/ifCond}}{{/each}}</b></a> -
-                                        {{#if winner}}<span class="text-success">Won</span>{{else}}<span class="text-danger">Lost</span>{{/if}} -
-                                        {{matchDuration.minutes}}:{{matchDuration.seconds}} - {{kills}}/{{deaths}}/{{assists}} - {{goldPerMinute}} GPM<br />
-                                    </div>
-                                </div>
-                                <div class="hidden-xs" style="padding-left: 5px; width: 1px; white-space: nowrap; vertical-align: top;">
-                                    {{{toTimeAgo matchCreation}}}
-                                </div>
-                            </div>
-                        </div>
-                    {{/each}}
-                </div>
-            </div>
-            <div class="text-center" style="margin-top: 10px;">
-                <h3 class="text-center" style="clear: both;"><a href="/playlist/PLoqgd0t_KsN5YU7YGjhofQ7DJTt8pV4OZ/gaming-league-of-legends">League of Legends Videos</a></h3>
-                <h4 class="text-center" style="margin-bottom: 3px;">{{lolVideo.attributes.title}}</h4>
-                <iframe src="https://www.youtube.com/embed/{{{lolVideo.attributes.id}}}?feature=oembed&amp;enablejsapi=1&amp;wmode=opaque" frameborder="0" allowfullscreen="" style="width: 100%; height: 200px;"></iframe><br />
-                <button class="btn btn-primary add-to-media-player" data-source="youtube" data-url="https://www.youtube.com/watch?v={{{lolVideo.attributes.id}}}"><span class="glyphicon glyphicon-music"></span> Add To Playlist</button>
             </div>
         </div>
     </div>

@@ -1,4 +1,5 @@
-var path = require("path"),
+var fs = require("fs"),
+    path = require("path"),
     remapify = require("remapify"),
     pjson = require("./package.json"),
     minifier = require("html-minifier"),
@@ -6,7 +7,7 @@ var path = require("path"),
     /**
      * Minify HTML content
      */
-    minifyHtml = function(content, file) {
+    minifyHtml = function(content) {
         "use strict";
 
         return minifier.minify(content, {
@@ -16,12 +17,14 @@ var path = require("path"),
             minifyJS: true,
             minifyCSS: true
         });
-    };
+    },
+    browserifyMainAliases = ["./node_modules/handlebars/runtime.js:handlebars", "rendr/shared/base/view"],
+    browserifyAdminExternals = ["jquery", "./node_modules/handlebars/runtime.js:handlebars", "rendr/shared/base/view", "app/collections/base", "app/models/base", "app/lib/handleServerError"];
 
-/**
- * Setup project configuration.
- * @param {object} grunt - The grunt object.
- */
+    /**
+     * Setup project configuration.
+     * @param {object} grunt - The grunt object.
+     */
 module.exports = function(grunt) {
     "use strict";
 
@@ -34,7 +37,7 @@ module.exports = function(grunt) {
         handlebars: {
             compile_main_templates: {
                 options: {
-                    namespace: false,
+                    namespace: "default",
                     commonjs: true,
                     processContent: minifyHtml,
 
@@ -61,7 +64,7 @@ module.exports = function(grunt) {
 
             compile_admin_templates: {
                 options: {
-                    namespace: false,
+                    namespace: "default",
                     commonjs: true,
                     processContent: minifyHtml,
 
@@ -83,7 +86,7 @@ module.exports = function(grunt) {
         browserify: {
             combine_main_js_files: {
                 options: {
-                    alias: ["./node_modules/handlebars/runtime.js:handlebars", "rendr/shared/base/view", "rendr/node_modules/backbone"],
+                    alias: browserifyMainAliases,
                     require: Object.keys(pjson.browser),
                     preBundleCB: function(b) {
                         b.on("remapify:files", function(file, expandedAliases) {
@@ -107,7 +110,7 @@ module.exports = function(grunt) {
 
             combine_admin_js_files: {
                 options: {
-                    external: ["jquery", "./node_modules/handlebars/runtime.js:handlebars", "rendr/shared/base/view", "app/collections/base", "app/models/base", "app/lib/handleServerError", "rendr/node_modules/backbone"],
+                    external: browserifyAdminExternals,
                     preBundleCB: function(b) {
                         b.on("remapify:files", function(file, expandedAliases) {
                             Object.keys(expandedAliases).forEach(function(key) {
@@ -201,6 +204,24 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks("grunt-contrib-uglify");
     grunt.loadNpmTasks("grunt-execute");
     grunt.loadNpmTasks("grunt-contrib-copy");
+
+    // Ensure the browserify task runs with the correct location for backbone.
+    grunt.registerTask("preBrowserify", function() {
+        var done = this.async();
+
+        fs.stat("./node_modules/rendr/node_modules/backbone", function(err) {
+            if (err) {
+                browserifyMainAliases.push("backbone:rendr/node_modules/backbone");
+                browserifyAdminExternals.push("backbone:rendr/node_modules/backbone");
+            } else {
+                browserifyMainAliases.push("rendr/node_modules/backbone");
+                browserifyAdminExternals.push("rendr/node_modules/backbone");
+            }
+
+            done();
+        });
+    });
+    grunt.task.run("preBrowserify");
 
     // Register tasks.
     grunt.registerTask("compile", ["handlebars", "browserify", "cssmin", "uglify"]);

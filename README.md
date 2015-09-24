@@ -34,7 +34,7 @@ Windows Installation
 To run the website on Windows, make sure you perform the following steps.
 
 1. Install [Python 2.7.x](https://www.python.org/downloads/).
-2. Download the all-in-one bundle for [GTK+ 2.x x86](http://www.gtk.org/download/win32.php) or [GTK+ 2.x x64](http://www.gtk.org/download/win64.php).
+2. Download the all-in-one bundle for [GTK+ 2.x x86](http://ftp.acc.umu.se/pub/gnome/binaries/win32/gtk+/2.24/gtk+-bundle_2.24.10-20120208_win32.zip) or [GTK+ 2.x x64](http://ftp.acc.umu.se/pub/gnome/binaries/win64/gtk+/2.22/gtk+-bundle_2.22.1-20101229_win64.zip).
 3. Unzip the GTK+ 2.x directory to c:\GTK.  It is important that the files are in this directory, as that is where the canvas npm package will be looking for it.
 4. Add the c:\GTK\bin\ directory to your system PATH.  (This may require a restart.)
 5. From an admin command prompt, install node-gyp and grunt-cli globally:
