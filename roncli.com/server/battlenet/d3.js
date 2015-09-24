@@ -20,12 +20,12 @@ var config = require("../privateConfig").battlenet,
                 heroesDeferred = new Deferred(),
                 levels, result, seasonalProfile, index, characterClass;
 
-            if (err) {
+            if (err || !profile || !profile.heroes) {
                 console.log("Bad response from Battle.Net while getting the career.");
                 console.log(err);
                 callback({
                     error: "Bad response from Battle.Net.",
-                    status: 502
+                    status: 200
                 });
                 return;
             }
@@ -84,12 +84,12 @@ var config = require("../privateConfig").battlenet,
                 tag: "roncli-1818",
                 hero: result.hero.id
             }, function(err, hero) {
-                if (err) {
+                if (err || !hero) {
                     console.log("Bad response from Battle.Net while getting the profile.");
                     console.log(err);
                     profileDeferred.reject({
                         error: "Bad response from Battle.Net.",
-                        status: 502
+                        status: 200
                     });
                     return;
                 }
@@ -133,12 +133,12 @@ var config = require("../privateConfig").battlenet,
             origin: "us",
             item: itemString
         }, function(err, item) {
-            if (err) {
+            if (err || !item) {
                 console.log("Bad response from Battle.Net while getting the item.");
                 console.log(err);
                 callback({
                     error: "Bad response from Battle.Net.",
-                    status: 502
+                    status: 200
                 });
                 return;
             }

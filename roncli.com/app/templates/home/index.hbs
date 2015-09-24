@@ -101,40 +101,48 @@
                         <div class="div-table" style="margin-bottom: 5px;">
                             <div>
                                 <div class="hidden-sm" style="vertical-align: top; width: 55px;">
-                                    <div style="width: 50px; height: 50px; background-image: url('{{wow.models.0.attributes.character.thumbnail}}'); background-size: 50px 50px; display: inline-block;"></div>
+                                    {{#if wowMissing}}
+                                        <div style="width: 50px; height: 50px; background-image: url('/images/wow.png'); background-size: 50px 50px; display: inline-block;"></div>
+                                    {{else}}
+                                        <div style="width: 50px; height: 50px; background-image: url('{{wow.models.0.attributes.character.thumbnail}}'); background-size: 50px 50px; display: inline-block;"></div>
+                                    {{/if}}
                                 </div>
                                 <div style="vertical-align: top;">
                                     <div class="text-center"><h4>World of Warcraft</h4></div>
-                                    <div>{{wow.models.0.attributes.character.achievementPoints}} achievement points</div>
+                                    {{#if wowMissing}}
+                                        World of Warcraft data is currently unavailable from Battle.Net.
+                                    {{else}}
+                                        <div>{{wow.models.0.attributes.character.achievementPoints}} achievement points</div>
 
-                                    {{#ifCond wow.models.0.attributes.feedItem.type "===" "BOSSKILL"}}
-                                        Defeated <b>{{wow.models.0.attributes.feedItem.boss}}</b><br/>
-                                    {{/ifCond}}
-                                    {{#ifCond wow.models.0.attributes.feedItem.type "===" "LOOT"}}
-                                        <div class="div-table">
-                                            <div>
-                                                <div style="vertical-align: top; padding-right: 5px;">
-                                                    <div style="width: 20px; height: 20px; background-size: 20px 20px; background-image: url('http://us.media.blizzard.com/wow/icons/56/{{wow.models.0.attributes.feedItem.icon}}.jpg');"></div>
-                                                </div>
-                                                <div style="vertical-align: top;">
-                                                    Looted <b>{{wow.models.0.attributes.feedItem.item}}</b>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    {{/ifCond}}
-                                    {{#ifCond wow.models.0.attributes.feedItem.type "===" "ACHIEVEMENT"}}
-                                        <div class="div-table">
-                                            <div>
-                                                <div style="vertical-align: top; padding-right: 5px;">
-                                                    <div style="width: 20px; height: 20px; background-size: 20px 20px; background-image: url('http://us.media.blizzard.com/wow/icons/56/{{wow.models.0.attributes.feedItem.icon}}.jpg');"></div>
-                                                </div>
-                                                <div style="vertical-align: top;">
-                                                    Earned <b>{{wow.models.0.attributes.feedItem.achievement}}</b>
+                                        {{#ifCond wow.models.0.attributes.feedItem.type "===" "BOSSKILL"}}
+                                            Defeated <b>{{wow.models.0.attributes.feedItem.boss}}</b><br/>
+                                        {{/ifCond}}
+                                        {{#ifCond wow.models.0.attributes.feedItem.type "===" "LOOT"}}
+                                            <div class="div-table">
+                                                <div>
+                                                    <div style="vertical-align: top; padding-right: 5px;">
+                                                        <div style="width: 20px; height: 20px; background-size: 20px 20px; background-image: url('http://us.media.blizzard.com/wow/icons/56/{{wow.models.0.attributes.feedItem.icon}}.jpg');"></div>
+                                                    </div>
+                                                    <div style="vertical-align: top;">
+                                                        Looted <b>{{wow.models.0.attributes.feedItem.item}}</b>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    {{/ifCond}}
-                                    {{{toTimeAgo wow.models.0.attributes.feedItem.timestamp}}}
+                                        {{/ifCond}}
+                                        {{#ifCond wow.models.0.attributes.feedItem.type "===" "ACHIEVEMENT"}}
+                                            <div class="div-table">
+                                                <div>
+                                                    <div style="vertical-align: top; padding-right: 5px;">
+                                                        <div style="width: 20px; height: 20px; background-size: 20px 20px; background-image: url('http://us.media.blizzard.com/wow/icons/56/{{wow.models.0.attributes.feedItem.icon}}.jpg');"></div>
+                                                    </div>
+                                                    <div style="vertical-align: top;">
+                                                        Earned <b>{{wow.models.0.attributes.feedItem.achievement}}</b>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {{/ifCond}}
+                                        {{{toTimeAgo wow.models.0.attributes.feedItem.timestamp}}}
+                                    {{/if}}
                                 </div>
                             </div>
                         </div>
@@ -147,12 +155,16 @@
                                 </div>
                                 <div style="vertical-align: top;">
                                     <div class="text-center"><h4>Diablo III</h4></div>
-                                    {{#if d3.models.0.attributes.seasonal}}Seasonal {{/if}}
-                                    {{#if d3.models.0.attributes.hardcore}}Hardcore {{/if}}
-                                    {{d3.models.0.attributes.class}} <b>{{d3.models.0.attributes.name}}</b><br />
-                                    Paragon {{d3.models.0.attributes.paragonLevel}} - {{d3.models.0.attributes.damage}} Damage<br />
-                                    {{d3.models.0.attributes.eliteKills}} elite kills<br />
-                                    {{{toTimeAgo d3.models.0.attributes.lastUpdated}}}
+                                    {{#if d3Missing}}
+                                        Diablo III data is currently unavailable from Battle.Net.
+                                    {{else}}
+                                        {{#if d3.models.0.attributes.seasonal}}Seasonal {{/if}}
+                                        {{#if d3.models.0.attributes.hardcore}}Hardcore {{/if}}
+                                        {{d3.models.0.attributes.class}} <b>{{d3.models.0.attributes.name}}</b><br/>
+                                        Paragon {{d3.models.0.attributes.paragonLevel}} - {{d3.models.0.attributes.damage}} Damage<br/>
+                                        {{d3.models.0.attributes.eliteKills}} elite kills<br/>
+                                        {{{toTimeAgo d3.models.0.attributes.lastUpdated}}}
+                                    {{/if}}
                                 </div>
                             </div>
                         </div>
@@ -165,16 +177,20 @@
                                 </div>
                                 <div style="vertical-align: top;">
                                     <div class="text-center"><h4>Descent Champions Ladder</h4></div>
-                                    <span class="dcl-{{dcl.models.0.attributes.rating}}">{{titleCase dcl.models.0.attributes.rating}} #{{dcl.models.0.attributes.rank}}</span><br />
-                                    <span class="dcl-gold" style="white-space: nowrap;">Gold: {{dcl.models.0.attributes.records.gold.wins}}-{{dcl.models.0.attributes.records.gold.losses}}</span> <span class="dcl-silver" style="white-space: nowrap;">Silver: {{dcl.models.0.attributes.records.silver.wins}}-{{dcl.models.0.attributes.records.silver.losses}}</span> <span class="dcl-bronze" style="white-space: nowrap;">Bronze: {{dcl.models.0.attributes.records.bronze.wins}}-{{dcl.models.0.attributes.records.bronze.losses}}</span> <span class="dcl-unrated" style="white-space: nowrap;">Unrated: {{dcl.models.0.attributes.records.unrated.wins}}-{{dcl.models.0.attributes.records.unrated.losses}}</span><br />
-                                    Last game:
-                                    {{#ifCond dcl.models.0.attributes.match.pilot.score ">" dcl.models.0.attributes.match.opponent.score}}
-                                        <span class="text-success">roncli <b>{{dcl.models.0.attributes.match.pilot.score}}</b> - {{dcl.models.0.attributes.match.opponent.name}} <b>{{dcl.models.0.attributes.match.opponent.score}}</b></span>
+                                    {{#if dclMissing}}
+                                        Descent Champions Ladder data is currently unavailable.
                                     {{else}}
-                                        <span class="text-danger">{{dcl.models.0.attributes.match.opponent.name}} <b>{{dcl.models.0.attributes.match.opponent.score}}</b>, roncli <b>{{dcl.models.0.attributes.match.pilot.score}}</b></span>
-                                    {{/ifCond}}
-                                    {{dcl.models.0.attributes.match.game}} {{dcl.models.0.attributes.match.map}}<br />
-                                    {{{toTimeAgo dcl.models.0.attributes.match.date}}}
+                                        <span class="dcl-{{dcl.models.0.attributes.rating}}">{{titleCase dcl.models.0.attributes.rating}} #{{dcl.models.0.attributes.rank}}</span><br/>
+                                        <span class="dcl-gold" style="white-space: nowrap;">Gold: {{dcl.models.0.attributes.records.gold.wins}}-{{dcl.models.0.attributes.records.gold.losses}}</span> <span class="dcl-silver" style="white-space: nowrap;">Silver: {{dcl.models.0.attributes.records.silver.wins}}-{{dcl.models.0.attributes.records.silver.losses}}</span> <span class="dcl-bronze" style="white-space: nowrap;">Bronze: {{dcl.models.0.attributes.records.bronze.wins}}-{{dcl.models.0.attributes.records.bronze.losses}}</span> <span class="dcl-unrated" style="white-space: nowrap;">Unrated: {{dcl.models.0.attributes.records.unrated.wins}}-{{dcl.models.0.attributes.records.unrated.losses}}</span><br/>
+                                        Last game:
+                                        {{#ifCond dcl.models.0.attributes.match.pilot.score ">" dcl.models.0.attributes.match.opponent.score}}
+                                            <span class="text-success">roncli <b>{{dcl.models.0.attributes.match.pilot.score}}</b> - {{dcl.models.0.attributes.match.opponent.name}} <b>{{dcl.models.0.attributes.match.opponent.score}}</b></span>
+                                        {{else}}
+                                            <span class="text-danger">{{dcl.models.0.attributes.match.opponent.name}} <b>{{dcl.models.0.attributes.match.opponent.score}}</b>, roncli <b>{{dcl.models.0.attributes.match.pilot.score}}</b></span>
+                                        {{/ifCond}}
+                                        {{dcl.models.0.attributes.match.game}} {{dcl.models.0.attributes.match.map}}<br/>
+                                        {{{toTimeAgo dcl.models.0.attributes.match.date}}}
+                                    {{/if}}
                                 </div>
                             </div>
                         </div>

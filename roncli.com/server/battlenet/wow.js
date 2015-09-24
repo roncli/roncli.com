@@ -20,12 +20,12 @@ var config = require("../privateConfig").battlenet,
         }, function(err, result) {
             var character, feed;
 
-            if (err) {
+            if (err || !result || !result.thumbnail) {
                 console.log("Bad response from Battle.Net while getting the character.");
                 console.log(err);
                 callback({
                     error: "Bad response from Battle.Net.",
-                    status: 502
+                    status: 200
                 });
                 return;
             }
@@ -86,12 +86,12 @@ var config = require("../privateConfig").battlenet,
                 origin: "us",
                 id: itemIdWithContext
             }, function(err, item) {
-                if (err) {
+                if (err || !item) {
                     console.log("Bad response from Battle.Net while getting the item.");
                     console.log(err);
                     callback({
                         error: "Bad response from Battle.Net.",
-                        status: 502
+                        status: 200
                     });
                     return;
                 }

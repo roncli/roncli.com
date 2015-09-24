@@ -47,57 +47,62 @@
     <div class="panel panel-primary">
         <div class="panel-heading text-center"><h3>World of Warcraft</h3></div>
         <div class="panel-body">
-            <div class="row">
-                <div class="col-md-6">
-                    <img src="{{{wow.models.0.attributes.character.profile}}}" style="width: 100%;" />
-                </div>
-                <div class="col-md-6">
-                    <a href="http://us.battle.net/wow/en/character/senjin/Roncli/" target="_blank" style="font-size: 20px;">Roncli</a> <span style="font-size: 16px;">&lt;<a href="http://us.battle.net/wow/en/guild/senjin/For_Honor/" target="_blank">For Honor</a>&gt;</span><br />
-                    <span style="color: #f48cba;">Human Paladin</span><br />
-                    {{{wow.models.0.attributes.character.achievementPoints}}} Achievement Points<br /><br />
-                    I have been playing <a href="http://www.worldofwarcraft.com" target="_blank">World of Warcraft</a> since November 2006, just before the first expansion Burning Crusade came out.  I ran the guild <a href="http://www.six-minutes.com" target="_blank">Six Minutes To Release</a> for just over 7 years up until February of 2015, which spawned the <a href="http://www.facebook.com/SixGamingGG" target="_blank">Six Gaming</a> brand.  I am currently raiding with the guild <a href="https://www.facebook.com/groups/ForHonor/" target="_blank">For Honor</a>.
-                    <h4 class="text-center" style="margin-top: 10px;">Character Feed</h4>
-                    <div style="max-height: 200px; overflow-x: hidden; overflow-y: auto; border: solid 1px #cccccc; padding: 1px 3px;">
-                        {{#each wow.models.0.attributes.feedItems}}
-                            <div class="div-table" style="margin-bottom: 5px;">
-                                <div>
-                                    {{#ifCond type "!==" "BOSSKILL"}}
-                                        <div style="padding-right: 5px; width: 20px; height: 20px; vertical-align: top;">
-                                            <div style="width: 20px; height: 20px; background-size: 20px 20px; background-image: url('http://us.media.blizzard.com/wow/icons/56/{{icon}}.jpg'); display: inline-block;"></div>
+            {{#if wowMissing}}
+                World of Warcraft data is currently unavailable from Battle.Net.
+            {{else}}
+                    <div class="row">
+                    <div class="col-md-6">
+                        <img src="{{{wow.models.0.attributes.character.profile}}}" style="width: 100%;" />
+                    </div>
+                    <div class="col-md-6">
+                        <a href="http://us.battle.net/wow/en/character/senjin/Roncli/" target="_blank" style="font-size: 20px;">Roncli</a> <span style="font-size: 16px;">&lt;<a href="http://us.battle.net/wow/en/guild/senjin/For_Honor/" target="_blank">For Honor</a>&gt;</span><br />
+                        <span style="color: #f48cba;">Human Paladin</span><br />
+                        {{{wow.models.0.attributes.character.achievementPoints}}} Achievement Points<br /><br />
+                        I have been playing <a href="http://www.worldofwarcraft.com" target="_blank">World of Warcraft</a> since November 2006, just before the first expansion Burning Crusade came out.  I ran the guild <a href="http://www.six-minutes.com" target="_blank">Six Minutes To Release</a> for just over 7 years up until February of 2015, which spawned the <a href="http://www.facebook.com/SixGamingGG" target="_blank">Six Gaming</a> brand.  I am currently raiding with the guild <a href="https://www.facebook.com/groups/ForHonor/" target="_blank">For Honor</a>.
+                        <h4 class="text-center" style="margin-top: 10px;">Character Feed</h4>
+                        <div style="max-height: 200px; overflow-x: hidden; overflow-y: auto; border: solid 1px #cccccc; padding: 1px 3px;">
+                            {{#each wow.models.0.attributes.feedItems}}
+                                <div class="div-table" style="margin-bottom: 5px;">
+                                    <div>
+                                        {{#ifCond type "!==" "BOSSKILL"}}
+                                            <div style="padding-right: 5px; width: 20px; height: 20px; vertical-align: top;">
+                                                <div style="width: 20px; height: 20px; background-size: 20px 20px; background-image: url('http://us.media.blizzard.com/wow/icons/56/{{icon}}.jpg'); display: inline-block;"></div>
+                                            </div>
+                                        {{/ifCond}}
+                                        <div style="vertical-align: top;">
+                                            <div style="display: table; table-layout: fixed; width: 100%;">
+                                                <span style="display: table-cell;">
+                                                    {{#ifCond type "===" "BOSSKILL"}}
+                                                        Defeated <b>{{boss}}</b>
+                                                    {{/ifCond}}
+                                                    {{#ifCond type "===" "LOOT"}}
+                                                        <div style="display: inline-block;">
+                                                            Looted <b>{{item}}</b>
+                                                        </div>
+                                                    {{/ifCond}}
+                                                    {{#ifCond type "===" "ACHIEVEMENT"}}
+                                                        <div style="display: inline-block;">
+                                                            Earned <b>{{achievement}}</b>
+                                                        </div>
+                                                    {{/ifCond}}
+                                                </span>
+                                            </div>
                                         </div>
-                                    {{/ifCond}}
-                                    <div style="vertical-align: top;">
-                                        <div style="display: table; table-layout: fixed; width: 100%;">
-                                            <span style="display: table-cell;">
-                                                {{#ifCond type "===" "BOSSKILL"}}
-                                                    Defeated <b>{{boss}}</b>
-                                                {{/ifCond}}
-                                                {{#ifCond type "===" "LOOT"}}
-                                                    <div style="display: inline-block;">
-                                                        Looted <b>{{item}}</b>
-                                                    </div>
-                                                {{/ifCond}}
-                                                {{#ifCond type "===" "ACHIEVEMENT"}}
-                                                    <div style="display: inline-block;">
-                                                        Earned <b>{{achievement}}</b>
-                                                    </div>
-                                                {{/ifCond}}
-                                            </span>
+                                        <div class="hidden-xs" style="padding-left: 5px; width: 1px; white-space: nowrap; vertical-align: top;">
+                                            {{{toTimeAgo timestamp}}}
                                         </div>
-                                    </div>
-                                    <div class="hidden-xs" style="padding-left: 5px; width: 1px; white-space: nowrap; vertical-align: top;">
-                                        {{{toTimeAgo timestamp}}}
                                     </div>
                                 </div>
-                            </div>
-                        {{/each}}
+                            {{/each}}
+                        </div>
                     </div>
                 </div>
-            </div>
+            {{/if}}
             <div class="text-center" style="margin-top: 10px;">
                 <h3 class="text-center" style="clear: both;"><a href="/playlist/PLoqgd0t_KsN4SzIkVVyPVt7UuT3d6Rr7G/gaming-world-of-warcraft">World of Warcraft Videos</a></h3>
                 <h4 class="text-center" style="margin-bottom: 3px;">{{wowVideo.attributes.title}}</h4>
-                <iframe src="https://www.youtube.com/embed/{{{wowVideo.attributes.id}}}?feature=oembed&amp;enablejsapi=1&amp;wmode=opaque" frameborder="0" allowfullscreen="" style="width: 100%; height: 200px;"></iframe><br />
+                <iframe src="https://www.youtube.com/embed/{{{wowVideo.attributes.id}}}?feature=oembed&amp;enablejsapi=1&amp;wmode=opaque" frameborder="0" allowfullscreen="" style="width: 100%; height: 200px;"></iframe>
+                <br/>
                 <button class="btn btn-primary add-to-media-player" data-source="youtube" data-url="https://www.youtube.com/watch?v={{{wowVideo.attributes.id}}}"><span class="glyphicon glyphicon-music"></span> Add To Playlist</button>
             </div>
         </div>
@@ -106,34 +111,38 @@
     <div class="panel panel-primary">
         <div class="panel-heading text-center"><h3>Diablo III</h3></div>
         <div class="panel-body">
-            <div>
-                <div class="hidden-xs" style="width: 320px; height: 169px; background-image: url('/images/d3ros.png'); background-size: 320px 169px; float: left; margin-right: 3px;"></div>
-                I've played <a href="http://www.diablo3.com/" target="_blank">Diablo III</a> since beta fairly regularly. I am the leader of the Six Gaming clan, which consists mostly of former Six Minutes To Release members and friends.
-            </div>
-            <div style="clear: both;">
-                <h4 class="text-center" style="margin-top: 10px;">Heroes</h4>
-                {{#each d3.models}}
-                    <div class="div-table" style="margin-bottom: 5px;">
-                        <div>
-                            <div style="vertical-align: top;">
-                                <div style="display: table; table-layout: fixed; width: 100%;">
-                                    <span style="display: table-cell;">
-                                        <a href="http://us.battle.net/d3/en/profile/roncli-1818/hero/{{attributes.id}}" target="_blank">
-                                            {{#if attributes.seasonal}}<span class="text-success"><b>Seasonal</b></span> {{/if}}
-                                            {{#if attributes.hardcore}}<span class="text-danger"><b>Hardcore</b></span> {{/if}}
-                                            {{attributes.class}} <b>{{attributes.name}}</b>
-                                        </a>
-                                        Paragon {{attributes.paragonLevel}}
-                                    </span>
+            {{#if d3Missing}}
+                Diablo III data is currently unavailable from Battle.Net.
+            {{else}}
+                <div>
+                    <div class="hidden-xs" style="width: 320px; height: 169px; background-image: url('/images/d3ros.png'); background-size: 320px 169px; float: left; margin-right: 3px;"></div>
+                    I've played <a href="http://www.diablo3.com/" target="_blank">Diablo III</a> since beta fairly regularly. I am the leader of the Six Gaming clan, which consists mostly of former Six Minutes To Release members and friends.
+                </div>
+                <div style="clear: both;">
+                    <h4 class="text-center" style="margin-top: 10px;">Heroes</h4>
+                    {{#each d3.models}}
+                        <div class="div-table" style="margin-bottom: 5px;">
+                            <div>
+                                <div style="vertical-align: top;">
+                                    <div style="display: table; table-layout: fixed; width: 100%;">
+                                        <span style="display: table-cell;">
+                                            <a href="http://us.battle.net/d3/en/profile/roncli-1818/hero/{{attributes.id}}" target="_blank">
+                                                {{#if attributes.seasonal}}<span class="text-success"><b>Seasonal</b></span> {{/if}}
+                                                {{#if attributes.hardcore}}<span class="text-danger"><b>Hardcore</b></span> {{/if}}
+                                                {{attributes.class}} <b>{{attributes.name}}</b>
+                                            </a>
+                                            Paragon {{attributes.paragonLevel}}
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="hidden-xs" style="padding-left: 5px; width: 1px; white-space: nowrap; vertical-align: top;">
+                                    {{{toTimeAgo attributes.lastUpdated}}}
                                 </div>
                             </div>
-                            <div class="hidden-xs" style="padding-left: 5px; width: 1px; white-space: nowrap; vertical-align: top;">
-                                {{{toTimeAgo attributes.lastUpdated}}}
-                            </div>
                         </div>
-                    </div>
-                {{/each}}
-            </div>
+                    {{/each}}
+                </div>
+            {{/if}}
             <div class="text-center" style="margin-top: 10px;">
                 <h3 class="text-center" style="clear: both;"><a href="/playlist/PLoqgd0t_KsN7LEYsVepkfbn2xOiC5M5yY/gaming-diablo-iii">Diablo III Videos</a></h3>
                 <h4 class="text-center" style="margin-bottom: 3px;">{{d3Video.attributes.title}}</h4>
@@ -156,53 +165,57 @@
                 <h3 class="text-center" style="margin-top: 10px;">Descent Champions Ladder</h3>
                 The <a href="http://www.descentchampions.org" _blank>Descent Champions Ladder</a> is an active Descent league that ranks each player via a ladder system.  If you defeat a player higher than you, you take their spot.  Players are also rated based on performance, and you can get a litany of stats about their games.  I stream my DCL matches on <a href="http://twitch.tv/roncli" target="_blank">Twitch</a> and then move them to YouTube afterwards.  An average DCL game is about 20 minutes, but can vary depending on the size of the map and aggression of the players involved.<br/><br/>
             </div>
-            <div>
-                <h4 class="text-center">Current Season</h4>
-                <div class="text-center">
-                    <span class="dcl-{{dcl.models.0.attributes.rating}}">{{titleCase dcl.models.0.attributes.rating}} #{{dcl.models.0.attributes.rank}}</span><br />
-                    <span class="dcl-gold">Vs. Gold: {{dcl.models.0.attributes.records.gold.wins}}-{{dcl.models.0.attributes.records.gold.losses}}</span><br />
-                    <span class="dcl-silver">Vs. Silver: {{dcl.models.0.attributes.records.silver.wins}}-{{dcl.models.0.attributes.records.silver.losses}}</span><br />
-                    <span class="dcl-bronze">Vs. Bronze: {{dcl.models.0.attributes.records.bronze.wins}}-{{dcl.models.0.attributes.records.bronze.losses}}</span><br />
-                    <span class="dcl-unrated">Vs. Unrated: {{dcl.models.0.attributes.records.unrated.wins}}-{{dcl.models.0.attributes.records.unrated.losses}}</span><br />
-                </div>
-            </div>
-            <div style="margin-top: 10px;">
-                <h4 class="text-center">Match History</h4>
-                <div style="max-height: 200px; overflow-x: hidden; overflow-y: auto; border: solid 1px #cccccc; padding: 1px 3px;">
-                    <div class="div-table" style="margin-bottom: 5px;">
-                        {{#each dcl.models.0.attributes.matches}}
-                            <div>
-                                <div style="padding-right: 5px; vertical-align: top;">
-                                    {{#ifCond pilot.score ">" opponent.score}}
-                                        <span class="text-success">Win</span>
-                                    {{else}}
-                                        <span class="text-danger">Loss</span>
-                                    {{/ifCond}}
-                                </div>
-                                <div style="padding-right: 5px; vertical-align: top;">
-                                    {{#ifCond pilot.score ">" opponent.score}}
-                                        <span class="dcl-{{pilot.rating}}">roncli (#{{pilot.rank}})</span> <b>{{pilot.score}}</b>, <span class="dcl-{{opponent.rating}}">{{opponent.name}} (#{{opponent.rank}})</span> <b>{{opponent.score}}</b>
-                                    {{else}}
-                                        <span class="dcl-{{opponent.rating}}">{{opponent.name}} (#{{opponent.rank}})</span> <b>{{opponent.score}}</b>, <span class="dcl-{{pilot.rating}}">roncli (#{{pilot.rank}})</span> <b>{{pilot.score}}</b>
-                                    {{/ifCond}}
-                                </div>
-                                <div style="padding-right: 5px; vertical-align: top;">
-                                    {{game}} {{map}}
-                                    {{#ifCond pilot.home "===" 1}}
-                                        (roncli's Home)
-                                    {{/ifCond}}
-                                    {{#ifCond opponent.home "===" 1}}
-                                        ({{opponent.name}}'s Home)
-                                    {{/ifCond}}
-                                </div>
-                                <div class="hidden-xs" style="padding-left: 5px; width: 1px; white-space: nowrap; vertical-align: top;">
-                                    {{{toTimeAgo date}}}
-                                </div>
-                            </div>
-                        {{/each}}
+            {{#if dclMissing}}
+                Descent Champions Ladder data is currently unavailable.
+            {{else}}
+                <div>
+                    <h4 class="text-center">Current Season</h4>
+                    <div class="text-center">
+                        <span class="dcl-{{dcl.models.0.attributes.rating}}">{{titleCase dcl.models.0.attributes.rating}} #{{dcl.models.0.attributes.rank}}</span><br />
+                        <span class="dcl-gold">Vs. Gold: {{dcl.models.0.attributes.records.gold.wins}}-{{dcl.models.0.attributes.records.gold.losses}}</span><br />
+                        <span class="dcl-silver">Vs. Silver: {{dcl.models.0.attributes.records.silver.wins}}-{{dcl.models.0.attributes.records.silver.losses}}</span><br />
+                        <span class="dcl-bronze">Vs. Bronze: {{dcl.models.0.attributes.records.bronze.wins}}-{{dcl.models.0.attributes.records.bronze.losses}}</span><br />
+                        <span class="dcl-unrated">Vs. Unrated: {{dcl.models.0.attributes.records.unrated.wins}}-{{dcl.models.0.attributes.records.unrated.losses}}</span><br />
                     </div>
                 </div>
-            </div>
+                <div style="margin-top: 10px;">
+                    <h4 class="text-center">Match History</h4>
+                    <div style="max-height: 200px; overflow-x: hidden; overflow-y: auto; border: solid 1px #cccccc; padding: 1px 3px;">
+                        <div class="div-table" style="margin-bottom: 5px;">
+                            {{#each dcl.models.0.attributes.matches}}
+                                <div>
+                                    <div style="padding-right: 5px; vertical-align: top;">
+                                        {{#ifCond pilot.score ">" opponent.score}}
+                                            <span class="text-success">Win</span>
+                                        {{else}}
+                                            <span class="text-danger">Loss</span>
+                                        {{/ifCond}}
+                                    </div>
+                                    <div style="padding-right: 5px; vertical-align: top;">
+                                        {{#ifCond pilot.score ">" opponent.score}}
+                                            <span class="dcl-{{pilot.rating}}">roncli (#{{pilot.rank}})</span> <b>{{pilot.score}}</b>, <span class="dcl-{{opponent.rating}}">{{opponent.name}} (#{{opponent.rank}})</span> <b>{{opponent.score}}</b>
+                                        {{else}}
+                                            <span class="dcl-{{opponent.rating}}">{{opponent.name}} (#{{opponent.rank}})</span> <b>{{opponent.score}}</b>, <span class="dcl-{{pilot.rating}}">roncli (#{{pilot.rank}})</span> <b>{{pilot.score}}</b>
+                                        {{/ifCond}}
+                                    </div>
+                                    <div style="padding-right: 5px; vertical-align: top;">
+                                        {{game}} {{map}}
+                                        {{#ifCond pilot.home "===" 1}}
+                                            (roncli's Home)
+                                        {{/ifCond}}
+                                        {{#ifCond opponent.home "===" 1}}
+                                            ({{opponent.name}}'s Home)
+                                        {{/ifCond}}
+                                    </div>
+                                    <div class="hidden-xs" style="padding-left: 5px; width: 1px; white-space: nowrap; vertical-align: top;">
+                                        {{{toTimeAgo date}}}
+                                    </div>
+                                </div>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+            {{/if}}
             <div style="margin-top: 10px;">
                 <h3 class="text-center" style="clear: both;"><a href="/playlist/PLoqgd0t_KsN5hXZPYr9GjcGrDaj3Uq2A-/gaming-descent-dcl">Descent Champions Ladder Videos</a></h3>
                 <h4 class="text-center" style="margin-bottom: 3px;">{{dclVideo.attributes.title}}</h4>
@@ -217,25 +230,29 @@
     <div class="panel panel-primary">
         <div class="panel-heading text-center"><h3>Steam Collection</h3></div>
     </div>
-    <div class="row">
-        {{#each steam.models}}
-            <div class="col-sm-4">
-                <div class="btn-group-vertical">
-                    <a class="btn btn-default" href="{{attributes.url}}">
-                        <div class="panel-heading panel-title text-center"><h4>{{attributes.name}}</h4></div>
-                    </a>
-                    <div class="body" style="padding: 0;">
-                        <a href="{{attributes.url}}">
-                            <img src="{{attributes.image}}" style="width: 100%;" />
+    {{#if steamMissing}}
+        Steam data is currently unavailable from Valve.
+    {{else}}
+        <div class="row">
+            {{#each steam.models}}
+                <div class="col-sm-4">
+                    <div class="btn-group-vertical">
+                        <a class="btn btn-default" href="{{attributes.url}}">
+                            <div class="panel-heading panel-title text-center"><h4>{{attributes.name}}</h4></div>
                         </a>
+                        <div class="body" style="padding: 0;">
+                            <a href="{{attributes.url}}">
+                                <img src="{{attributes.image}}" style="width: 100%;" />
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
-            {{#every 3 @index @last}}
-                <div class="clearfix hidden-xs"></div>
-            {{/every}}
-        {{/each}}
-    </div>
+                {{#every 3 @index @last}}
+                    <div class="clearfix hidden-xs"></div>
+                {{/every}}
+            {{/each}}
+        </div>
+    {{/if}}
 </div>
 <div class="col-sm-2 hidden-xs right-side">
     <div class="panel panel-primary">

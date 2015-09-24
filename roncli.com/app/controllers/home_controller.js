@@ -43,15 +43,15 @@ module.exports = {
             }
 
             if (!err && result && result.wow && result.wow.models && result.wow.models[0] && result.wow.models[0].attributes && result.wow.models[0].attributes.error) {
-                err = result.wow.models[0].attributes;
+                result.wowMissing = true;
             }
 
             if (!err && result && result.d3 && result.d3.models && result.d3.models[0] && result.d3.models[0].attributes && result.d3.models[0].attributes.error) {
-                err = result.d3.models[0].attributes;
+                result.d3Missing = true;
             }
 
             if (!err && result && result.dcl && result.dcl.models && result.dcl.models[0] && result.dcl.models[0].attributes && result.dcl.models[0].attributes.error) {
-                err = result.dcl.models[0].attributes;
+                result.dclMissing = true;
             }
 
             if (!err && result && result.life && result.life.models && result.life.models[0] && result.life.models[0].attributes && result.life.models[0].attributes.error) {
@@ -59,6 +59,7 @@ module.exports = {
             }
 
             if (err) {
+                console.log(err);
                 handleServerError(err, app, result, callback);
                 return;
             }

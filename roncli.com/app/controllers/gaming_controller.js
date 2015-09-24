@@ -31,7 +31,7 @@ module.exports = {
             }
 
             if (!err && result && result.wow && result.wow.models && result.wow.models[0] && result.wow.models[0].attributes && result.wow.models[0].attributes.error) {
-                err = result.wow.models[0].attributes;
+                result.wowMissing = true;
             }
 
             if (!err && result && result.wowVideo && result.wowVideo.attributes && result.wowVideo.attributes.error) {
@@ -39,7 +39,7 @@ module.exports = {
             }
 
             if (!err && result && result.d3 && result.d3.models && result.d3.models[0] && result.d3.models[0].attributes && result.d3.models[0].attributes.error) {
-                err = result.d3.models[0].attributes;
+                result.d3Missing = true;
             }
 
             if (!err && result && result.d3Video && result.d3Video.attributes && result.d3Video.attributes.error) {
@@ -47,7 +47,7 @@ module.exports = {
             }
 
             if (!err && result && result.dcl && result.dcl.models && result.dcl.models[0] && result.dcl.models[0].attributes && result.dcl.models[0].attributes.error) {
-                err = result.dcl.models[0].attributes;
+                result.dclMissing = true;
             }
 
             if (!err && result && result.dclVideo && result.dclVideo.attributes && result.dclVideo.attributes.error) {
@@ -55,7 +55,7 @@ module.exports = {
             }
 
             if (!err && result && result.steam && result.steam.models && result.steam.models[0] && result.steam.models[0].attributes && result.steam.models[0].attributes.error) {
-                err = result.steam.models[0].attributes;
+                result.steamMissing = true;
             }
 
             if (err) {
