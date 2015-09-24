@@ -158,9 +158,6 @@ The following should be the contents of privateConfig.js:
             battlenet: {
                 apikey: "(Your Battle.Net API key)"
             },
-            riot: {
-                apikey: "(Your Riot Games API key)"
-            },
             steam: {
                 apikey: "(Your Steam API key)"
             }
@@ -168,6 +165,14 @@ The following should be the contents of privateConfig.js:
 
 Version History
 ===============
+
+1.0.3 - 9/23/2015
+-----------------
+
+This is a bug fix release.
+
+* Removed League of Legends from the site.  The API changed and is not useful for the type of stats I wish to display.
+* Fixed issues with gaming APIs not loading that were preventing the home page from loading.
 
 1.0.2 - 6/7/2015
 ----------------
