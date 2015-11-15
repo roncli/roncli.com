@@ -255,6 +255,15 @@ This version introduces the bare bones of the website, including the layout, Twi
 Planned Versions
 ================
 
+1.0.4
+-----
+
+This is a bug fix release.
+
+* Updated DCL stats to show if a player is unranked as opposed to showing them in position 0.
+* Updated DCL YouTube playlist to show the Late 2015 season.
+* Upgraded file upload system for latest multer version.
+
 1.1
 ---
 

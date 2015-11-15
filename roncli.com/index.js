@@ -22,6 +22,29 @@ var config = require("./server/privateConfig"),
     server = rendr.createServer({
         dataAdapter: new ApiDataAdapter(),
         errorHandler: require("errorhandler")
+    }),
+    upload = multer({
+        storage: multer.diskStorage({
+            destination: function (req, file, cb) {
+                cb(null, filesConfig.path);
+            },
+            filename: function(req, file, cb) {
+                cb(null, file.originalname);
+            }
+        }),
+        fileFilter: function(req, file, cb) {
+            "use strict";
+
+            var userId = req.session.user ? req.session.user.id : 0;
+
+            if (userId === 0) {
+                cb(null, false);
+            }
+
+            User.getUserRoles(userId, function(err, roles) {
+                cb(null, !err && roles.indexOf("SiteAdmin") !== -1);
+            });
+        }
     });
 
 // Add morgan extensions.
@@ -51,31 +74,11 @@ app.use(session({
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(multer({
-    dest: filesConfig.path,
-    rename: function(field, file) {
-        "use strict";
+app.post("/api/-/admin/files/upload", upload.single("file0"), function(req, res, next) {
+    "use strict";
 
-        return file;
-    },
-    onFileUploadStart: function(file, req, res) {
-        "use strict";
-
-        var userId = req.session.user ? req.session.user.id : 0;
-
-        if (userId === 0) {
-            return false;
-        }
-
-        User.getUserRoles(userId, function(err, roles) {
-            if (err || roles.indexOf("SiteAdmin") === -1) {
-                req.pause();
-                res.status = 403;
-                res.end("You do not have access to this resource.");
-            }
-        });
-    }
-}));
+    next();
+});
 
 // Setup domains.
 app.use(function(req, res, next) {

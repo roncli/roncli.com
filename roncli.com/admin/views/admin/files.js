@@ -98,7 +98,12 @@ module.exports = BaseView.extend({
                 bootbox.dialog({
                     title: "File Uploaded",
                     message: app.templateAdapter.getTemplate("admin/files/fileUploaded")(),
-                    buttons: {ok: {label: "OK"}},
+                    buttons: {ok: {
+                        label: "OK",
+                        callback: function() {
+                            backbone.history.loadUrl(window.location.pathname);
+                        }
+                    }},
                     show: false
                 }).off("shown.bs.modal").modal("show");
 

@@ -42,6 +42,8 @@ module.exports.getUserRoles = function(userId, callback) {
             if (err) {
                 console.log("Database error in user.getUserRole.");
                 console.log(err);
+                callback(err);
+                return;
             }
 
             if (!data[0]) {

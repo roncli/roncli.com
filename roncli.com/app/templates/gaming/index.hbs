@@ -193,9 +193,9 @@
                                     </div>
                                     <div style="padding-right: 5px; vertical-align: top;">
                                         {{#ifCond pilot.score ">" opponent.score}}
-                                            <span class="dcl-{{pilot.rating}}">roncli (#{{pilot.rank}})</span> <b>{{pilot.score}}</b>, <span class="dcl-{{opponent.rating}}">{{opponent.name}} (#{{opponent.rank}})</span> <b>{{opponent.score}}</b>
+                                            <span class="dcl-{{pilot.rating}}">roncli ({{#if pilot.rank}}#{{pilot.rank}}{{else}}Unranked{{/if}})</span> <b>{{pilot.score}}</b>, <span class="dcl-{{opponent.rating}}">{{opponent.name}} ({{#if opponent.rank}}#{{opponent.rank}}{{else}}Unranked{{/if}})</span> <b>{{opponent.score}}</b>
                                         {{else}}
-                                            <span class="dcl-{{opponent.rating}}">{{opponent.name}} (#{{opponent.rank}})</span> <b>{{opponent.score}}</b>, <span class="dcl-{{pilot.rating}}">roncli (#{{pilot.rank}})</span> <b>{{pilot.score}}</b>
+                                            <span class="dcl-{{opponent.rating}}">{{opponent.name}} ({{#if opponent.rank}}#{{opponent.rank}}{{else}}Unranked{{/if}})</span> <b>{{opponent.score}}</b>, <span class="dcl-{{pilot.rating}}">roncli ({{#if pilot.rank}}#{{pilot.rank}}{{else}}Unranked{{/if}})</span> <b>{{pilot.score}}</b>
                                         {{/ifCond}}
                                     </div>
                                     <div style="padding-right: 5px; vertical-align: top;">

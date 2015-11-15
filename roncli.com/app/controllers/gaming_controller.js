@@ -19,7 +19,7 @@ module.exports = {
             d3: {collection: "DiabloProfiles", params: {}},
             d3Video: {model: "Video", params: {playlistId: "PLoqgd0t_KsN7LEYsVepkfbn2xOiC5M5yY"}},
             dcl: {collection: "DclPilotData", params: {}},
-            dclVideo: {model: "Video", params: {playlistId: "PLoqgd0t_KsN5hXZPYr9GjcGrDaj3Uq2A-"}},
+            dclVideo: {model: "Video", params: {playlistId: "PLoqgd0t_KsN61SR1pfYw7-IYKpjDn4LmJ"}},
             steam: {collection: "SteamGames", params: {}}
         }, function(err, result) {
             if (!err && result && result.page && result.page.attributes && result.page.attributes.error) {
