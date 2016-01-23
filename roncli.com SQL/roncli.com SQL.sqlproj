@@ -84,5 +84,6 @@
     <Build Include="dbo\Tables\tblRedirect.sql" />
     <Build Include="dbo\Tables\tblRedirectHit.sql" />
     <Build Include="dbo\Tables\tblAllowedPlaylist.sql" />
+    <Build Include="dbo\Tables\tblDCLPlaylist.sql" />
   </ItemGroup>
 </Project>

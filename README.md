@@ -261,8 +261,9 @@ Planned Versions
 This is a bug fix release.
 
 * Updated DCL stats to show if a player is unranked as opposed to showing them in position 0.
-* Updated DCL YouTube playlist to show the Late 2015 season.
 * Upgraded file upload system for latest multer version.
+* Updated DCL YouTube playlist to be configurable.
+* Fixed bug with Facebook meta tags not HTML encoding. 
 
 1.1
 ---

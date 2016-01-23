@@ -15,7 +15,9 @@ module.exports = BaseView.extend({
         "click button.approve-comment": "approveComment",
         "click button.reject-comment": "rejectComment",
         "click button.delete-playlist": "deletePlaylist",
-        "click button#add-playlist": "addPlaylist"
+        "click button#add-playlist": "addPlaylist",
+        "click button.delete-dcl-playlist": "deleteDCLPlaylist",
+        "click button#add-dcl-playlist": "addDCLPlaylist"
     },
 
     clearCaches: function() {
@@ -179,6 +181,87 @@ module.exports = BaseView.extend({
         admin.fetch({
             url: "/admin/youtube/add-playlist",
             data: JSON.stringify({playlistId: $("input#playlist-id").val()}),
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            success: function() {
+                backbone.history.loadUrl(window.location.pathname);
+            },
+            error: function(xhr, error) {
+                var message;
+                if (error && error.body && error.body.error) {
+                    message = error.body.error;
+                } else {
+                    message = "There was a server error adding the playlist.  Please try again later.";
+                }
+
+                view.showError(message);
+
+                addPlaylist.prop("disabled", false);
+            }
+        });
+    },
+
+    deleteDCLPlaylist: function(ev) {
+        "use strict";
+
+        var view = this,
+            app = this.app,
+            deletePlaylist = $(ev.target),
+            admin = new Admin();
+
+        bootbox.dialog({
+            title: "Delete DCL Playlist",
+            message: app.templateAdapter.getTemplate("admin/youtube/deleteConfirm")(),
+            buttons: {
+                yes: {
+                    label: "Yes",
+                    className: "btn-primary",
+                    callback: function() {
+                        deletePlaylist.prop("disabled", true);
+
+                        admin.fetch({
+                            url: "/admin/youtube/delete-dcl-playlist",
+                            data: JSON.stringify({playlistId: deletePlaylist.closest("div.playlist").data("playlist-id")}),
+                            type: "POST",
+                            contentType: "application/json",
+                            dataType: "json",
+                            success: function() {
+                                backbone.history.loadUrl(window.location.pathname);
+                            },
+                            error: function(xhr, error) {
+                                var message;
+                                if (error && error.body && error.body.error) {
+                                    message = error.body.error;
+                                } else {
+                                    message = "There was a server error deleting the playlist.  Please try again later.";
+                                }
+
+                                view.showError(message);
+
+                                deletePlaylist.prop("disabled", false);
+                            }
+                        });
+                    }
+                },
+                no: {label: "No"}
+            },
+            show: false
+        }).off("shown.bs.modal").modal("show");
+    },
+
+    addDCLPlaylist: function() {
+        "use strict";
+
+        var view = this,
+            addPlaylist = $("div#add-dcl-playlist"),
+            admin = new Admin();
+
+        addPlaylist.prop("disabled", true);
+
+        admin.fetch({
+            url: "/admin/youtube/add-dcl-playlist",
+            data: JSON.stringify({playlistId: $("input#dcl-playlist-id").val(), seasonEndDate: $("input#dcl-season-end-date").val()}),
             type: "POST",
             contentType: "application/json",
             dataType: "json",

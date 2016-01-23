@@ -1,6 +1,7 @@
 var moment = require("moment"),
     sanitizeHtml = require("sanitize-html"),
-    pjson = require("../../package.json");
+    pjson = require("../../package.json"),
+    _ = require("underscore");
 
 /**
  * Helpers for handlebars rendering.
@@ -23,12 +24,12 @@ module.exports = function(Handlebars) {
             if (values instanceof Array) {
                 tags = [];
                 values.forEach(function(value) {
-                    tags.push("<meta name=\"" + key + "\" content=\"" + value + "\"/>");
+                    tags.push("<meta name=\"" + key + "\" content=\"" + _.escape(value) + "\"/>");
                 });
                 return tags.join("");
             }
 
-            return "<meta name=\"" + key + "\" content=\"" + values + "\"/>";
+            return "<meta name=\"" + key + "\" content=\"" + _.escape(values) + "\"/>";
         },
 
         /**

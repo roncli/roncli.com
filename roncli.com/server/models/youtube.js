@@ -16,7 +16,7 @@ var Moment = require("moment"),
         "use strict";
 
         db.query(
-            "SELECT COUNT(PlaylistID) Playlists FROM tblAllowedPlaylist WHERE PlaylistID = @playlistId",
+            "SELECT COUNT(PlaylistID) Playlists FROM (SELECT PlaylistID FROM tblAllowedPlaylist WHERE PlaylistID = @playlistId UNION SELECT PlaylistID FROM tblDCLPlaylist WHERE PlaylistID = @playlistId) p",
             {playlistId: {type: db.VARCHAR(64), value: id}},
             function(err, data) {
                 if (err) {
@@ -29,7 +29,7 @@ var Moment = require("moment"),
                     return;
                 }
 
-                callback(!(!data || !data[0] || !data[0][0] || data[0][0].Playlists === 0));
+                callback(null, !(!data || !data[0] || !data[0][0] || data[0][0].Playlists === 0));
             }
         );
     };
@@ -42,7 +42,12 @@ var Moment = require("moment"),
 module.exports.getPlaylist = function(id, callback) {
     "use strict";
 
-    isAllowed(id, function(allowed) {
+    isAllowed(id, function(err, allowed) {
+        if (err) {
+            callback(err);
+            return;
+        }
+
         if (!allowed) {
             callback({
                 error: "Playlist not found.",
@@ -103,7 +108,12 @@ module.exports.getPlaylist = function(id, callback) {
 module.exports.getLatestPlaylist = function(id, callback) {
     "use strict";
 
-    isAllowed(id, function(allowed) {
+    isAllowed(id, function(err, allowed) {
+        if (err) {
+            callback(err);
+            return;
+        }
+
         if (!allowed) {
             callback({
                 error: "Playlist not found.",
@@ -142,6 +152,69 @@ module.exports.getLatestPlaylist = function(id, callback) {
                 });
             });
         });
+    });
+};
+
+/**
+ * Gets the latest DCL playlist from the cache.
+ * @param {function} callback The callback function.
+ */
+module.exports.getLatestDCLPlaylist = function(callback) {
+    "use strict";
+
+    var youtube = this,
+        result = {},
+
+        getPlaylist = function(failureCallback) {
+            cache.get("roncli.com:youtube:dcl:latest", function(playlistId) {
+                if (playlistId) {
+                    result.playlistId = playlistId;
+                    youtube.getLatestPlaylist(playlistId, function(err, video) {
+                        if (err) {
+                            callback(err);
+                            return;
+                        }
+                        result.video = video;
+                        callback(null, result);
+                    });
+                    return;
+                }
+
+                failureCallback();
+            });
+        };
+
+    getPlaylist(function() {
+        db.query(
+            "SELECT TOP 1 PlaylistID FROM tblDCLPlaylist ORDER BY SeasonEndDate DESC", {},
+            function(err, data) {
+                if (err) {
+                    console.log("Database error in youtube.getLatestDCLPlaylist");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while getting the latest DCL playlist.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                if (data[0] && data[0][0]) {
+                    cache.set("roncli.com:youtube:dcl:latest", data[0][0].PlaylistID, 86400, function() {
+                        getPlaylist(function() {
+                            callback({
+                                error: "There are no DCL playlists available.",
+                                status: 500
+                            });
+                        });
+                    });
+                } else {
+                    callback({
+                        error: "There are no DCL playlists available.",
+                        status: 500
+                    });
+                }
+            }
+        );
     });
 };
 
@@ -193,7 +266,12 @@ module.exports.getVideoInfo = function(id, callback) {
 module.exports.getCommentsById = function(id, callback) {
     "use strict";
 
-    isAllowed(id, function(allowed) {
+    isAllowed(id, function(err, allowed) {
+        if (err) {
+            callback(err);
+            return;
+        }
+
         if (!allowed) {
             callback({
                 error: "Playlist not found.",
@@ -288,7 +366,12 @@ module.exports.postComment = function(userId, id, content, callback) {
         (function() {
             var deferred = new Deferred();
 
-            isAllowed(id, function(allowed) {
+            isAllowed(id, function(err, allowed) {
+                if (err) {
+                    callback(err);
+                    return;
+                }
+
                 if (!allowed) {
                     deferred.reject({
                         error: "Playlist not found.",

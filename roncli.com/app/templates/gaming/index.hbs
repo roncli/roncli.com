@@ -217,11 +217,11 @@
                 </div>
             {{/if}}
             <div style="margin-top: 10px;">
-                <h3 class="text-center" style="clear: both;"><a href="/playlist/PLoqgd0t_KsN5hXZPYr9GjcGrDaj3Uq2A-/gaming-descent-dcl">Descent Champions Ladder Videos</a></h3>
-                <h4 class="text-center" style="margin-bottom: 3px;">{{dclVideo.attributes.title}}</h4>
+                <h3 class="text-center" style="clear: both;"><a href="/playlist/{{dclVideo.attributes.playlistId}}/gaming-descent-dcl">Descent Champions Ladder Videos</a></h3>
+                <h4 class="text-center" style="margin-bottom: 3px;">{{dclVideo.attributes.video.title}}</h4>
                 <div class="text-center">
-                    <iframe src="https://www.youtube.com/embed/{{{dclVideo.attributes.id}}}?feature=oembed&amp;enablejsapi=1&amp;wmode=opaque" frameborder="0" allowfullscreen="" style="width: 100%; height: 200px;"></iframe><br />
-                    <button class="btn btn-primary add-to-media-player" data-source="youtube" data-url="https://www.youtube.com/watch?v={{{dclVideo.attributes.id}}}"><span class="glyphicon glyphicon-music"></span> Add To Playlist</button>
+                    <iframe src="https://www.youtube.com/embed/{{{dclVideo.attributes.video.id}}}?feature=oembed&amp;enablejsapi=1&amp;wmode=opaque" frameborder="0" allowfullscreen="" style="width: 100%; height: 200px;"></iframe><br />
+                    <button class="btn btn-primary add-to-media-player" data-source="youtube" data-url="https://www.youtube.com/watch?v={{{dclVideo.attributes.video.id}}}"><span class="glyphicon glyphicon-music"></span> Add To Playlist</button>
                 </div>
             </div>
         </div>

@@ -2470,7 +2470,7 @@ module.exports.clearYoutubeCaches = function(userId, callback) {
 
         if (err) {
             callback({
-                error: "There was a database error while clearing gaming caches.  Please reload the page and try again.",
+                error: "There was a database error while clearing YouTube caches.  Please reload the page and try again.",
                 status: 500
             });
             return;
@@ -2517,7 +2517,7 @@ module.exports.getPlaylists = function(userId, callback) {
     User.getUserRoles(userId, function(err, roles) {
         if (err) {
             callback({
-                error: "There was a database error while clearing gaming caches.  Please reload the page and try again.",
+                error: "There was a database error while getting allowed playlists.  Please reload the page and try again.",
                 status: 500
             });
             return;
@@ -2569,7 +2569,7 @@ module.exports.addPlaylist = function(userId, playlistId, callback) {
     User.getUserRoles(userId, function(err, roles) {
         if (err) {
             callback({
-                error: "There was a database error while clearing gaming caches.  Please reload the page and try again.",
+                error: "There was a database error while adding an allowed playlist.  Please reload the page and try again.",
                 status: 500
             });
             return;
@@ -2615,7 +2615,7 @@ module.exports.removePlaylist = function(userId, playlistId, callback) {
     User.getUserRoles(userId, function(err, roles) {
         if (err) {
             callback({
-                error: "There was a database error while clearing gaming caches.  Please reload the page and try again.",
+                error: "There was a database error while removing an allowed playlist.  Please reload the page and try again.",
                 status: 500
             });
             return;
@@ -2638,6 +2638,153 @@ module.exports.removePlaylist = function(userId, playlistId, callback) {
                     console.log(err);
                     callback({
                         error: "There was a database error while removing an allowed playlist.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                callback();
+            }
+        );
+    });
+};
+
+/**
+ * Retrieves the DCL playlists
+ * @param {number} userId The user ID of the moderator.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.getDCLPlaylists = function(userId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while getting DCL playlists.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        db.query(
+            "SELECT PlaylistID, SeasonEndDate FROM tblDCLPlaylist",
+            {},
+            function(err, data) {
+                if (err) {
+                    console.log("Database error in admin.getDCLPlaylists");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while getting DCL playlists.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                if (data && data[0]) {
+                    callback(null, data[0].map(function(playlist) {
+                        return {playlistId: playlist.PlaylistID, seasonEndDate: playlist.SeasonEndDate.getTime()};
+                    }));
+                } else {
+                    callback(null, []);
+                }
+            }
+        );
+    });
+};
+
+/**
+ * Adds an item to the DCL playlists.
+ * @param {number} userId The user ID of the moderator.
+ * @param {string} playlistId The playlist ID to add.
+ * @param {string} seasonEndDate The end date of the season.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.addDCLPlaylist = function(userId, playlistId, seasonEndDate, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while adding a DCL playlist.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        db.query(
+            "INSERT INTO tblDCLPlaylist VALUES (@playlistId, @seasonEndDate)",
+            {
+                playlistId: {type: db.VARCHAR(64), value: playlistId},
+                seasonEndDate: {type: db.DATETIME, value: new Date(seasonEndDate)}
+            },
+            function(err) {
+                if (err) {
+                    console.log("Database error in admin.addDCLPlaylist");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while adding a DCL playlist.  Please reload the page and try again.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                callback();
+            }
+        );
+    });
+};
+
+/**
+ * Removes an item from the DCL playlists.
+ * @param {number} userId The user ID of the moderator.
+ * @param {string} playlistId The playlist ID to remove.
+ * @param {function()|function(object)} callback The callback function.
+ */
+module.exports.removeDCLPlaylist = function(userId, playlistId, callback) {
+    "use strict";
+
+    User.getUserRoles(userId, function(err, roles) {
+        if (err) {
+            callback({
+                error: "There was a database error while removing a DCL playlist.  Please reload the page and try again.",
+                status: 500
+            });
+            return;
+        }
+
+        if (roles.indexOf("SiteAdmin") === -1) {
+            callback({
+                error: "You do not have access to this resource.",
+                status: 403
+            });
+            return;
+        }
+
+        db.query(
+            "DELETE FROM tblDCLPlaylist WHERE PlaylistID = @playlistId",
+            {playlistId: {type: db.VARCHAR(64), value: playlistId}},
+            function(err) {
+                if (err) {
+                    console.log("Database error in admin.removeDCLPlaylist");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while removing a DCL playlist.  Please reload the page and try again.",
                         status: 500
                     });
                     return;

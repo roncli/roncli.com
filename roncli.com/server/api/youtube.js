@@ -16,6 +16,16 @@ module.exports.get = function(req, query, callback) {
                         callback(feed);
                     });
                     return;
+                case "get-latest-dcl-playlist":
+                    youtube.getLatestDCLPlaylist(function(err, data) {
+                        if (err) {
+                            req.res.status(err.status);
+                            callback(err);
+                            return;
+                        }
+                        callback(data);
+                    });
+                    return;
             }
             break;
     }
