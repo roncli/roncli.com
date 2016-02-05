@@ -162,14 +162,14 @@ module.exports.getLatestPlaylist = function(id, callback) {
 module.exports.getLatestDCLPlaylist = function(callback) {
     "use strict";
 
-    var youtube = this,
+    var model = this,
         result = {},
 
         getPlaylist = function(failureCallback) {
             cache.get("roncli.com:youtube:dcl:latest", function(playlistId) {
                 if (playlistId) {
                     result.playlistId = playlistId;
-                    youtube.getLatestPlaylist(playlistId, function(err, video) {
+                    model.getLatestPlaylist(playlistId, function(err, video) {
                         if (err) {
                             callback(err);
                             return;
@@ -201,6 +201,107 @@ module.exports.getLatestDCLPlaylist = function(callback) {
                 if (data[0] && data[0][0]) {
                     cache.set("roncli.com:youtube:dcl:latest", data[0][0].PlaylistID, 86400, function() {
                         getPlaylist(function() {
+                            callback({
+                                error: "There are no DCL playlists available.",
+                                status: 500
+                            });
+                        });
+                    });
+                } else {
+                    callback({
+                        error: "There are no DCL playlists available.",
+                        status: 500
+                    });
+                }
+            }
+        );
+    });
+};
+
+/**
+ * Gets a list of the DCL playlists.
+ * @param callback
+ */
+module.exports.getDCLPlaylists = function(callback) {
+    "use strict";
+
+    var model = this,
+        result = [],
+
+        getPlaylists = function(failureCallback) {
+            cache.get("roncli.com:youtube:dcl:playlists", function(playlists) {
+                var fxs = [],
+                    index, playlist;
+
+                if (playlists && playlists.length > 0) {
+                    for (index in playlists) {
+                        if (playlists.hasOwnProperty(index)) {
+                            playlist = playlists[index];
+                            fxs.push((function(playlist) {
+                                var deferred = new Deferred();
+
+                                model.getPlaylist(playlist.playlistId, function(err, data) {
+                                    if (err) {
+                                        deferred.reject(err);
+                                        return;
+                                    }
+                                    deferred.resolve(data);
+                                });
+
+                                return deferred.promise;
+                            })(playlist));
+                        }
+                    }
+
+                    all(fxs).then(
+                        function(results) {
+                            var index;
+
+                            for (index in playlists) {
+                                if (playlists.hasOwnProperty(index)) {
+                                    playlists[index].title = results[index].info.snippet.title;
+                                }
+                            }
+
+                            callback(null, playlists);
+                        },
+
+                        function(err) {
+                            callback(err);
+                        }
+                    );
+
+                    return;
+                }
+
+                failureCallback();
+            });
+        };
+
+    getPlaylists(function() {
+        db.query(
+            "SELECT PlaylistID, SeasonEndDate FROM tblDCLPlaylist ORDER BY SeasonEndDate DESC", {},
+            function(err, data) {
+                if (err) {
+                    console.log("Database error in youtube.getDCLPlaylists");
+                    console.log(err);
+                    callback({
+                        error: "There was a database error while getting DCL playlists.",
+                        status: 500
+                    });
+                    return;
+                }
+
+                if (data[0]) {
+                    var playlists = data[0].map(function(playlist) {
+                        return {
+                            playlistId: playlist.PlaylistID,
+                            seasonEndDate: new Date(playlist.SeasonEndDate).toISOString()
+                        };
+                    });
+
+                    cache.set("roncli.com:youtube:dcl:playlists", playlists, 86400, function() {
+                        getPlaylists(function() {
                             callback({
                                 error: "There are no DCL playlists available.",
                                 status: 500

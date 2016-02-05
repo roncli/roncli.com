@@ -20,6 +20,7 @@ module.exports = {
             d3Video: {model: "Video", params: {playlistId: "PLoqgd0t_KsN7LEYsVepkfbn2xOiC5M5yY"}},
             dcl: {collection: "DclPilotData", params: {}},
             dclVideo: {model: "DclLatestPlaylist", params: {}},
+            dclPlaylists: {collection: "DclPlaylists", params: {}},
             steam: {collection: "SteamGames", params: {}}
         }, function(err, result) {
             if (!err && result && result.page && result.page.attributes && result.page.attributes.error) {
@@ -52,6 +53,10 @@ module.exports = {
 
             if (!err && result && result.dclVideo && result.dclVideo.attributes && result.dclVideo.attributes.error) {
                 err = result.dclVideo.attributes;
+            }
+
+            if (!err && result && result.dclPlaylists && result.dclPlaylists.models && result.dclPlaylists.models[0] && result.dclPlaylists.models[0].attributes && result.dclPlaylists.models[0].attributes.error) {
+                result.dclPlaylistsMissing = true;
             }
 
             if (!err && result && result.steam && result.steam.models && result.steam.models[0] && result.steam.models[0].attributes && result.steam.models[0].attributes.error) {

@@ -26,6 +26,16 @@ module.exports.get = function(req, query, callback) {
                         callback(data);
                     });
                     return;
+                case "get-dcl-playlists":
+                    youtube.getDCLPlaylists(function(err, data) {
+                        if (err) {
+                            req.res.status(err.status);
+                            callback(err);
+                            return;
+                        }
+                        callback(data);
+                    });
+                    return;
             }
             break;
     }

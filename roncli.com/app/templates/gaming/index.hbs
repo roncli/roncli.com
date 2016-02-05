@@ -224,6 +224,19 @@
                     <button class="btn btn-primary add-to-media-player" data-source="youtube" data-url="https://www.youtube.com/watch?v={{{dclVideo.attributes.video.id}}}"><span class="glyphicon glyphicon-music"></span> Add To Playlist</button>
                 </div>
             </div>
+            {{#if dclPlaylistsMissing}}
+            {{else}}
+            <div style="margin-top: 10px;">
+                <h3 class="text-center" style="clear: both;">Descent Champions Ladder Videos by Season</h3>
+                <div class="text-center">
+                    {{#each dclPlaylists.models}}
+                        <div>
+                            <a href="/playlist/{{attributes.playlistId}}/gaming-descent-dcl">{{attributes.title}}</a>
+                        </div>
+                    {{/each}}
+                </div>
+            </div>
+            {{/if}}
         </div>
     </div>
     <a name="steam"></a>
