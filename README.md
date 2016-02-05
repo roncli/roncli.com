@@ -263,7 +263,8 @@ This is a bug fix release.
 * Updated DCL stats to show if a player is unranked as opposed to showing them in position 0.
 * Upgraded file upload system for latest multer version.
 * Updated DCL YouTube playlist to be configurable.
-* Fixed bug with Facebook meta tags not HTML encoding. 
+* Fixed bug with Facebook meta tags not HTML encoding.
+* Fixed bug with certain files being unable to be downloaded.
 
 1.1
 ---
