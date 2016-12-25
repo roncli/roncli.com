@@ -25,7 +25,7 @@ var config = require("../privateConfig").steam,
                         key: game.appId,
                         value: {
                             name: game.name,
-                            header: game.header,
+                            header: "http://cdn.akamai.steamstatic.com/steam/apps/" + game.appId + "/header.jpg",
                             playtimeTwoWeeks: game.playtimeTwoWeeksReadable,
                             playtimeForever: game.playtimeForeverReadable
                         }
