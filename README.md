@@ -166,6 +166,16 @@ The following should be the contents of privateConfig.js:
 Version History
 ===============
 
+1.0.5 - 12/25/2016
+------------------
+
+This is a bug fix release.
+
+* Fix bug with IE.
+* Remove Twitch player.
+* Add Diamond rank to DCL and remove DCL playlists.
+* Fix bug with Steam headers not displaying.
+
 1.0.4 - 2/7/2016
 ----------------
 
