@@ -659,6 +659,10 @@ div.tooltip-hover:hover div.tooltip-content {
     display: block;
 }
 
+.dcl-diamond {
+    color: black;
+}
+
 .dcl-gold {
     color: #cc8800;
 }

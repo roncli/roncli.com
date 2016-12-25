@@ -23,7 +23,7 @@ module.exports.rss = function(req, res, callback) {
 
 
     cache.get(cacheKey, function(xml) {
-        var rssDeferred, wowFeedDeferred, dclMatchesDeferred, sixGamingDeferred, wowVideosDeferred, d3VideosDeferred, dclVideosDeferred;
+        var rssDeferred, wowFeedDeferred, dclMatchesDeferred, sixGamingDeferred, wowVideosDeferred, d3VideosDeferred, descentVideosDeferred;
 
         if (xml) {
             callback(xml);
@@ -44,7 +44,7 @@ module.exports.rss = function(req, res, callback) {
         feed.custom_namespaces.openSearch = "http://a9.com/-/spec/opensearchrss/1.0/";
         feed.custom_elements.push({"openSearch:startIndex": startIndex.toString()});
         feed.custom_elements.push({"openSearch:itemsPerPage": "25"});
-        feed.categories = ["World of Warcraft Feed", "Descent Champions Ladder Matches", "Six Gaming Podcast Highlights", "World of Warcraft Videos", "Diablo III Videos", "Descent Champions Ladder Videos"];
+        feed.categories = ["World of Warcraft Feed", "Descent Champions Ladder Matches", "Six Gaming Podcast Highlights", "World of Warcraft Videos", "Diablo III Videos", "Descent Videos"];
 
         // See if we have the items cached already.
         rssDeferred = new Deferred();
@@ -62,7 +62,7 @@ module.exports.rss = function(req, res, callback) {
             sixGamingDeferred = new Deferred();
             wowVideosDeferred = new Deferred();
             d3VideosDeferred = new Deferred();
-            dclVideosDeferred = new Deferred();
+            descentVideosDeferred = new Deferred();
 
             // Get the WoW feed.
             gaming.getWowFeed(function(err, wowFeed) {
@@ -220,22 +220,22 @@ module.exports.rss = function(req, res, callback) {
                 d3VideosDeferred.resolve(true);
             });
 
-            // Get DCL videos.
-            youtube.getPlaylist("PLoqgd0t_KsN5hXZPYr9GjcGrDaj3Uq2A-", function(err, playlist) {
+            // Get Descent videos.
+            youtube.getPlaylist("PLoqgd0t_KsN5pPPi0xKz7NfByO4mJvi27", function(err, playlist) {
                 if (err) {
-                    dclVideosDeferred.reject(err);
+                    descentVideosDeferred.reject(err);
                     return;
                 }
 
                 if (playlist && playlist.videos) {
                     playlist.videos.forEach(function(video) {
                         feed.item({
-                            guid: "roncli.com:gaming:dclVideos:" + video.id,
+                            guid: "roncli.com:gaming:descentVideos:" + video.id,
                             date: new Date(video.publishedAt),
-                            categories: ["Descent Champions Ladder Videos"],
+                            categories: ["Descent Videos"],
                             title: video.title,
                             description: video.description,
-                            url: "http://roncli.com/playlist/PLoqgd0t_KsN5hXZPYr9GjcGrDaj3Uq2A-/gaming-descent-dcl",
+                            url: "http://roncli.com/playlist/PLoqgd0t_KsN5hXZPYr9GjcGrDaj3Uq2A-/gaming-descent",
                             author: "roncli@roncli.com (roncli)",
                             custom_elements: [
                                 {"atom:updated": moment(new Date(video.publishedAt)).format()}
@@ -244,10 +244,10 @@ module.exports.rss = function(req, res, callback) {
                     });
                 }
 
-                dclVideosDeferred.resolve(true);
+                descentVideosDeferred.resolve(true);
             });
 
-            all([wowFeedDeferred.promise, sixGamingDeferred.promise, wowVideosDeferred.promise, d3VideosDeferred.promise, dclVideosDeferred.promise]).then(
+            all([wowFeedDeferred.promise, sixGamingDeferred.promise, wowVideosDeferred.promise, d3VideosDeferred.promise, descentVideosDeferred.promise]).then(
                 function() {
                     // Sort items.
                     feed.items.sort(function(a, b) {

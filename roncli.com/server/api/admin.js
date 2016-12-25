@@ -190,17 +190,6 @@ module.exports.get = function(req, query, callback) {
                                 callback(playlists);
                             });
                             return;
-                        case "dcl-playlist":
-                            admin.getDCLPlaylists(userId, function(err, playlists) {
-                                if (err) {
-                                    req.res.status(err.status);
-                                    callback(err);
-                                    return;
-                                }
-
-                                callback(playlists);
-                            });
-                            return;
                     }
                     break;
             }
@@ -609,32 +598,6 @@ module.exports.post = function(req, query, callback) {
                             return;
                         case "delete-playlist":
                             admin.removePlaylist(userId, req.body.playlistId, function(err) {
-                                if (err) {
-                                    console.log(err);
-                                    req.res.status(err.status);
-                                    callback(err);
-                                    return;
-                                }
-
-                                req.res.status(204);
-                                callback();
-                            });
-                            return;
-                        case "add-dcl-playlist":
-                            admin.addDCLPlaylist(userId, req.body.playlistId, req.body.seasonEndDate, function(err) {
-                                if (err) {
-                                    console.log(err);
-                                    req.res.status(err.status);
-                                    callback(err);
-                                    return;
-                                }
-
-                                req.res.status(204);
-                                callback();
-                            });
-                            return;
-                        case "delete-dcl-playlist":
-                            admin.removeDCLPlaylist(userId, req.body.playlistId, function(err) {
                                 if (err) {
                                     console.log(err);
                                     req.res.status(err.status);

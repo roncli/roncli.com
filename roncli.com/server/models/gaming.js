@@ -11,6 +11,7 @@ var wow = require("../battlenet/wow"),
         crusader: "Crusader",
         "demon-hunter": "Demon Hunter",
         monk: "Monk",
+        necromancer: "Necromancer",
         "witch-doctor": "Witch Doctor",
         wizard: "Wizard"
     },

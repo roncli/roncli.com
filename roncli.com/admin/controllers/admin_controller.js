@@ -251,8 +251,7 @@ module.exports = {
 
         app.fetch({
             comments: {collection: "Admin_YoutubeComments", params: {}},
-            youtube: {collection: "Admin_Playlists", params: {}},
-            dclYoutube: {collection: "Admin_DclPlaylists", params: {}}
+            youtube: {collection: "Admin_Playlists", params: {}}
         }, {readFromCache: false, writeToCache: false}, function(err, result) {
             if (!err && result && result.comments && result.comments.models && result.comments.models[0] && result.comments.models[0].attributes && result.comments.models[0].attributes.error) {
                 err = result.comments.models[0].attributes;
@@ -260,10 +259,6 @@ module.exports = {
 
             if (!err && result && result.youtube && result.youtube.models && result.youtube.models[0] && result.youtube.models[0].attributes && result.youtube.models[0].attributes.error) {
                 err = result.youtube.models[0].attributes;
-            }
-
-            if (!err && result && result.dclYoutube && result.dclYoutube.models && result.dclYoutube.models[0] && result.dclYoutube.models[0].attributes && result.dclYoutube.models[0].attributes.error) {
-                err = result.dclYoutube.models[0].attributes;
             }
 
             if (err) {
