@@ -40,14 +40,16 @@ Router.prototype.actionStart = function() {
         scroller = null;
     }
 
-    // Destroy sorables.
+    // Destroy sortables.
     if (this.app.sortable) {
         this.app.sortable.destroy();
         this.app.sortable = null;
     }
 
     // Blur, start transition, and move to the top.
-    document.activeElement.blur();
+    if (document.activeElement) {
+        document.activeElement.blur();
+    }
     $("section#content").hide();
     $("div#transition").removeClass("hidden");
     $(window).scrollTop(0);
