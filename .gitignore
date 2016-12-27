@@ -271,5 +271,8 @@ publicConfig.js
 ### Node Tools for Visual Studio ###
 .ntvs_analysis.dat
 
+### SSDT ###
+*.jfm
+
 ### Files directory ###
 roncli.com/files/

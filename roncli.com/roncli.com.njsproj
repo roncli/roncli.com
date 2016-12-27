@@ -490,6 +490,33 @@
     <Folder Include="server\templates\email\validation\" />
     <Folder Include="server\tumblr\" />
     <Folder Include="server\youtube\" />
+    <Folder Include="typings\" />
+    <Folder Include="typings\globals\" />
+    <Folder Include="typings\globals\express-session\" />
+    <Folder Include="typings\globals\grunt\" />
+    <Folder Include="typings\globals\handlebars\" />
+    <Folder Include="typings\globals\iscroll\" />
+    <Folder Include="typings\globals\jquery\" />
+    <Folder Include="typings\globals\moment\" />
+    <Folder Include="typings\globals\nodemailer\" />
+    <Folder Include="typings\globals\node\" />
+    <Folder Include="typings\globals\twitter\" />
+    <Folder Include="typings\globals\underscore\" />
+    <Folder Include="typings\node\" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="typings\globals\express-session\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\grunt\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\handlebars\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\iscroll\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\jquery\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\moment\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\nodemailer\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\node\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\twitter\index.d.ts" />
+    <TypeScriptCompile Include="typings\globals\underscore\index.d.ts" />
+    <TypeScriptCompile Include="typings\index.d.ts" />
+    <TypeScriptCompile Include="typings\node\node.d.ts" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsTools.targets" />
