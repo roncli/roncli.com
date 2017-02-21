@@ -78,6 +78,7 @@ module.exports = BaseApp.extend({
             _ = require("underscore"),
             querystring = $.getParam(),
             body = $("body"),
+            loggingIn = false,
             scroller, logInUser, doLogout, logOutUser, attemptLogin, user,
 
             /**
@@ -218,6 +219,12 @@ module.exports = BaseApp.extend({
                 var today = moment().startOf("day"),
                     loginForm, loginTab, registerForm, registerTab, forgotPasswordForm, forgotPasswordTab;
 
+                if (loggingIn) {
+                    return;
+                }
+
+                loggingIn = true;
+
                 // Display the dialog box.
                 bootbox.dialog({
                     title: "Log In",
@@ -225,6 +232,8 @@ module.exports = BaseApp.extend({
                     show: false
                 }).off("shown.bs.modal").on("shown.bs.modal", function() {
                     $("#login-email").focus();
+                }).on("hidden.bs.modal", function() {
+                    loggingIn = false;
                 }).modal("show");
 
                 // Cache jQuery objects once the dialog box is shown.
