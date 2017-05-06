@@ -20,12 +20,13 @@ var config = require("../privateConfig").steam,
 
             games.forEach(function(game) {
                 if (game.appId !== 2430 && game.playtimeForever > 0) {
+                    game.header = "http://cdn.akamai.steamstatic.com/steam/apps/" + game.appId + "/header.jpg";
                     gamesToAdd.push(game);
                     gameInfo.push({
                         key: game.appId,
                         value: {
                             name: game.name,
-                            header: "http://cdn.akamai.steamstatic.com/steam/apps/" + game.appId + "/header.jpg",
+                            header: game.header,
                             playtimeTwoWeeks: game.playtimeTwoWeeksReadable,
                             playtimeForever: game.playtimeForeverReadable
                         }
