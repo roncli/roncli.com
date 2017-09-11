@@ -255,6 +255,7 @@ compiledTemplates.js
 adminTemplates.js
 admin.min.js
 site.min.js
+site.min.css
 */assets/js/admin.js
 */assets/js/site.js
 app.min.css
