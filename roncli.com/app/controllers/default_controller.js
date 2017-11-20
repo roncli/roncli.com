@@ -28,7 +28,7 @@ module.exports = {
             // This matched a page.
             if (app.req) {
                 page = result.page.get("page");
-                content = page.content.replace("\n", " ").replace("\r", " ").replace(/<style[^>]*>.*?<\/style>/g, " ").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+                content = page.content.replace("\n", " ").replace("\r", " ").replace(/<style[^>]*>[\s\S]*?<\/style>/gi, " ").replace(/<h[1-6][^>]*>[\s\S]*?<\/h[1-6]>/gi, " ").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
                 if (content.length > 200) {
                     content = content.substr(0, 197).trim() + "...";
                 }
