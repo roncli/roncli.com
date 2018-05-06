@@ -39,18 +39,18 @@ module.exports.getUserRoles = function(userId, callback) {
         "SELECT r.Role from tblRole r INNER JOIN tblUserRole ur ON r.RoleID = ur.RoleID WHERE ur.UserID = @userId",
         {userId: {type: db.INT, value: userId}},
         function(err, data) {
-            if (err) {
+            if (err || !data || !data.recordsets || !data.recordsets[0]) {
                 console.log("Database error in user.getUserRole.");
                 console.log(err);
                 callback(err);
                 return;
             }
 
-            if (!data[0]) {
+            if (!data.recordsets[0]) {
                 callback(null, {});
             }
 
-            callback(null, data[0].map(function(role) {
+            callback(null, data.recordsets[0].map(function(role) {
                 return role.Role;
             }));
         }
@@ -86,7 +86,7 @@ module.exports.getNotifications = function(userId, callback) {
                     "SELECT COUNT(CommentID) Comments FROM tblBlogComment WHERE ModeratedDate IS NULL",
                     {},
                     function(err, data) {
-                        if (err) {
+                        if (err || !data || !data.recordsets || !data.recordsets[0] || !data.recordsets[0][0]) {
                             console.log("Database error in user.getNotifications while getting count of blog comments needing moderation.");
                             console.log(err);
                             deferred.reject({
@@ -96,7 +96,7 @@ module.exports.getNotifications = function(userId, callback) {
                             return;
                         }
 
-                        deferred.resolve({blog: data[0][0].Comments, admin: true});
+                        deferred.resolve({blog: data.recordsets[0][0].Comments, admin: true});
                     }
                 );
 
@@ -113,7 +113,7 @@ module.exports.getNotifications = function(userId, callback) {
                     "SELECT COUNT(CommentID) Comments FROM tblPageComment WHERE ModeratedDate IS NULL",
                     {},
                     function(err, data) {
-                        if (err) {
+                        if (err || !data || !data.recordsets || !data.recordsets[0] || !data.recordsets[0][0]) {
                             console.log("Database error in user.getNotifications while getting count of page comments needing moderation.");
                             console.log(err);
                             deferred.reject({
@@ -123,7 +123,7 @@ module.exports.getNotifications = function(userId, callback) {
                             return;
                         }
 
-                        deferred.resolve({pages: data[0][0].Comments, admin: true});
+                        deferred.resolve({pages: data.recordsets[0][0].Comments, admin: true});
                     }
                 );
 
@@ -140,7 +140,7 @@ module.exports.getNotifications = function(userId, callback) {
                     "SELECT COUNT(CommentID) Comments FROM tblSongComment WHERE ModeratedDate IS NULL",
                     {},
                     function(err, data) {
-                        if (err) {
+                        if (err || !data || !data.recordsets || !data.recordsets[0] || !data.recordsets[0][0]) {
                             console.log("Database error in user.getNotifications while getting count of song comments needing moderation.");
                             console.log(err);
                             deferred.reject({
@@ -150,7 +150,7 @@ module.exports.getNotifications = function(userId, callback) {
                             return;
                         }
 
-                        deferred.resolve({music: data[0][0].Comments, admin: true});
+                        deferred.resolve({music: data.recordsets[0][0].Comments, admin: true});
                     }
                 );
 
@@ -167,7 +167,7 @@ module.exports.getNotifications = function(userId, callback) {
                     "SELECT COUNT(CommentID) Comments FROM tblPlaylistComment WHERE ModeratedDate IS NULL",
                     {},
                     function(err, data) {
-                        if (err) {
+                        if (err || !data || !data.recordsets || !data.recordsets[0] || !data.recordsets[0][0]) {
                             console.log("Database error in user.getNotifications while getting count of YouTube comments needing moderation.");
                             console.log(err);
                             deferred.reject({
@@ -177,7 +177,7 @@ module.exports.getNotifications = function(userId, callback) {
                             return;
                         }
 
-                        deferred.resolve({youtube: data[0][0].Comments, admin: true});
+                        deferred.resolve({youtube: data.recordsets[0][0].Comments, admin: true});
                     }
                 );
 
@@ -257,7 +257,7 @@ module.exports.aliasExists = function(alias, userId, callback) {
             userId: {type: db.INT, value: userId}
         },
         function(err, data) {
-            if (err) {
+            if (err || !data || !data.recordsets || !data.recordsets[0]) {
                 console.log("Database error in user.aliasExists.");
                 console.log(err);
                 callback({
@@ -267,7 +267,7 @@ module.exports.aliasExists = function(alias, userId, callback) {
                 return;
             }
 
-            callback(null, data[0] && data[0].length > 0);
+            callback(null, data.recordsets[0] && data.recordsets[0].length > 0);
         }
     );
 };
@@ -288,7 +288,7 @@ module.exports.emailExists = function(email, userId, callback) {
             userId: {type: db.INT, value: userId}
         },
         function(err, data) {
-            if (err) {
+            if (err || !data || !data.recordsets || !data.recordsets[0]) {
                 console.log("Database error in user.emailExists.");
                 console.log(err);
                 callback({
@@ -298,7 +298,7 @@ module.exports.emailExists = function(email, userId, callback) {
                 return;
             }
 
-            callback(null, data[0] && data[0].length > 0);
+            callback(null, data.recordsets[0] && data.recordsets[0].length > 0);
         }
     );
 };
@@ -320,7 +320,7 @@ module.exports.login = function(email, password, callback) {
         function(err, data) {
             var user;
 
-            if (err) {
+            if (err || !data || !data.recordsets || !data.recordsets[0]) {
                 console.log("Database error in user.login while checking for valid credentials.");
                 console.log(err);
                 callback({
@@ -330,7 +330,7 @@ module.exports.login = function(email, password, callback) {
                 return;
             }
 
-            if (!data[0] || data[0].length === 0) {
+            if (!data.recordsets[0] || data.recordsets[0].length === 0) {
                 callback({
                     error: "Invalid email address or password.",
                     status: 401
@@ -338,7 +338,7 @@ module.exports.login = function(email, password, callback) {
                 return;
             }
 
-            user = data[0][0];
+            user = data.recordsets[0][0];
 
             if (!user.Validated) {
                 callback(null, {validated: false});
@@ -613,7 +613,7 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
                                 validationCode: {type: db.UNIQUEIDENTIFIER, value: validationCode}
                             },
                             function(err, data) {
-                                if (err) {
+                                if (err || !data || !data.recordsets || !data.recordsets[0]) {
                                     console.log("Database error in user.register.");
                                     console.log(err);
                                     callback({
@@ -623,7 +623,7 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
                                     return;
                                 }
 
-                                if (!data[0] || data[0].length === 0) {
+                                if (!data.recordsets[0] || data.recordsets[0].length === 0) {
                                     console.log("Newly created user not found in the database.");
                                     console.log(email);
                                     callback({
@@ -634,7 +634,7 @@ module.exports.register = function(email, password, alias, dob, captchaData, cap
                                 }
 
                                 // Send validation email.
-                                User.sendValidationEmail(data[0][0].UserID, email, alias, validationCode, function(err) {
+                                User.sendValidationEmail(data.recordsets[0][0].UserID, email, alias, validationCode, function(err) {
                                     if (err) {
                                         console.log("Error sending validation email in user.register.");
                                         console.log(err);
@@ -683,7 +683,7 @@ module.exports.validateAccount = function(userId, validationCode, callback) {
             validationCode: {type: db.UNIQUEIDENTIFIER, value: validationCode}
         },
         function(err, data) {
-            if (err) {
+            if (err || !data || !data.recordsets || !data.recordsets[0]) {
                 console.log("Database error retrieving user in user.validateAccount.");
                 console.log(err);
                 callback({
@@ -693,7 +693,7 @@ module.exports.validateAccount = function(userId, validationCode, callback) {
                 return;
             }
 
-            if (!data[0] || data[0].length === 0) {
+            if (!data.recordsets[0] || data.recordsets[0].length === 0) {
                 console.log("Validation information not found in the database.");
                 console.log(userId, validationCode);
                 callback({
@@ -765,7 +765,7 @@ module.exports.forgotPassword = function(email, callback) {
             function(err, data) {
                 var user;
 
-                if (err) {
+                if (err || !data || !data.recordsets || !data.recordsets[0]) {
                     console.log("Database error retrieving user in user.forgotPassword.");
                     console.log(err);
                     callback({
@@ -775,7 +775,7 @@ module.exports.forgotPassword = function(email, callback) {
                     return;
                 }
 
-                if (!data[0] || data[0].length === 0) {
+                if (!data.recordsets[0] || data.recordsets[0].length === 0) {
                     console.log("Confirmed user not found in the database.");
                     console.log(email);
                     callback({
@@ -785,7 +785,7 @@ module.exports.forgotPassword = function(email, callback) {
                     return;
                 }
 
-                user = data[0][0];
+                user = data.recordsets[0][0];
 
                 if (user.Validated) {
                     // Get whether the user already has an active reset password request.
@@ -795,7 +795,7 @@ module.exports.forgotPassword = function(email, callback) {
                         function(err, data) {
                             var authorizationCode;
 
-                            if (err) {
+                            if (err || !data || !data.recordsets || !data.recordsets[0] || !data.recordsets[0][0]) {
                                 console.log("Database error checking for existing authorizations in user.forgotPassword.");
                                 console.log(err);
                                 callback({
@@ -805,17 +805,7 @@ module.exports.forgotPassword = function(email, callback) {
                                 return;
                             }
 
-                            if (!data[0] || data[0].length === 0) {
-                                console.log("Missing authorization counts in database in user.forgotPassword.");
-                                console.log(data);
-                                callback({
-                                    error: "There was a database error requesting reset password authorization.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
-                                    status: 500
-                                });
-                                return;
-                            }
-
-                            if (data[0][0].Requests > 0) {
+                            if (data.recordsets[0][0].Requests > 0) {
                                 callback({
                                     error: "You have requested a reset password request too recently.  Please try again later.",
                                     status: 403
@@ -861,7 +851,7 @@ module.exports.forgotPassword = function(email, callback) {
                     );
                 } else {
                     // User requires validation, resend validation email.
-                    User.sendValidationEmail(data[0][0].UserID, email, data[0][0].Alias, data[0][0].ValidationCode, function(err) {
+                    User.sendValidationEmail(data.recordsets[0][0].UserID, email, data.recordsets[0][0].Alias, data.recordsets[0][0].ValidationCode, function(err) {
                         if (err) {
                             console.log("Error sending validation email in user.forgotPassword.");
                             console.log(err);
@@ -908,7 +898,7 @@ module.exports.passwordResetRequest = function(userId, authorizationCode, callba
                 return;
             }
 
-            if (!data[0] || data[0].length === 0 || !data[0][0] || data[0][0].length === 0) {
+            if (!data || !data.recordsets || !data.recordsets[0] || data.recordsets[0].length === 0 || !data.recordsets[0][0] || data.recordsets[0][0].length === 0) {
                 console.log("Missing authorization counts in database in user.passwordResetRequest.");
                 console.log(err);
                 callback({
@@ -918,7 +908,7 @@ module.exports.passwordResetRequest = function(userId, authorizationCode, callba
                 return;
             }
 
-            if (data[0][0].Requests === 0) {
+            if (data.recordsets[0][0].Requests === 0) {
                 callback({
                     error: "The request to reset your password is not valid.  If you need help resetting your password, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
                     status: 400
@@ -1098,7 +1088,7 @@ module.exports.changeEmail = function(userId, password, captchaData, captchaResp
                     return;
                 }
 
-                if (!data[0] || data[0].length === 0) {
+                if (!data || !data.recordsets || !data.recordsets[0] || data.recordsets[0].length === 0) {
                     callback({
                         error: "Invalid user.  Please reload the page and try again.",
                         status: 401
@@ -1106,7 +1096,7 @@ module.exports.changeEmail = function(userId, password, captchaData, captchaResp
                     return;
                 }
 
-                user = data[0][0];
+                user = data.recordsets[0][0];
 
                 if (!user.Validated) {
                     callback({
@@ -1142,7 +1132,7 @@ module.exports.changeEmail = function(userId, password, captchaData, captchaResp
                                 return;
                             }
 
-                            if (!data[0] || data[0].length === 0) {
+                            if (!data || !data.recordsets || !data.recordsets[0] || data.recordsets[0].length === 0) {
                                 console.log("Missing authorization counts in database in user.changeEmail.");
                                 console.log(data);
                                 callback({
@@ -1152,7 +1142,7 @@ module.exports.changeEmail = function(userId, password, captchaData, captchaResp
                                 return;
                             }
 
-                            if (data[0][0].Requests > 0) {
+                            if (data.recordsets[0][0].Requests > 0) {
                                 callback({
                                     error: "You have requested an email change request too recently.  Please try again later.",
                                     status: 403
@@ -1231,7 +1221,7 @@ module.exports.emailChangeRequest = function(userId, authorizationCode, callback
                 return;
             }
 
-            if (!data[0] || data[0].length === 0 || !data[0][0] || data[0][0].length === 0) {
+            if (!data || !data.recordsets || !data.recordsets[0] || data.recordsets[0].length === 0 || !data.recordsets[0][0] || data.recordsets[0][0].length === 0) {
                 console.log("Missing authorization counts in database in user.emailChangeRequest.");
                 console.log(err);
                 callback({
@@ -1241,7 +1231,7 @@ module.exports.emailChangeRequest = function(userId, authorizationCode, callback
                 return;
             }
 
-            if (data[0][0].Requests === 0) {
+            if (data.recordsets[0][0].Requests === 0) {
                 callback({
                     error: "The request to change your email address is not valid.  If you need help changing your email address, please contact <a href=\"mailto:roncli@roncli.com\">roncli</a>.",
                     status: 400
@@ -1345,7 +1335,7 @@ module.exports.emailChange = function(userId, authorizationCode, password, newEm
                         return;
                     }
 
-                    if (!data[0] || data[0].length === 0 || !data[0][0] || data[0][0].length === 0) {
+                    if (!data || !data.recordsets || !data.recordsets[0] || data.recordsets[0].length === 0 || !data.recordsets[0][0] || data.recordsets[0][0].length === 0) {
                         console.log("Missing user data in database in user.emailChange.");
                         console.log(err);
                         callback({
@@ -1355,10 +1345,10 @@ module.exports.emailChange = function(userId, authorizationCode, password, newEm
                         return;
                     }
 
-                    getHashedPassword(password, data[0][0].Salt, function(hashedPassword) {
+                    getHashedPassword(password, data.recordsets[0][0].Salt, function(hashedPassword) {
                         var validationCode;
 
-                        if (hashedPassword !== data[0][0].PasswordHash) {
+                        if (hashedPassword !== data.recordsets[0][0].PasswordHash) {
                             callback({
                                 error: "Invalid password.",
                                 status: 401
@@ -1389,7 +1379,7 @@ module.exports.emailChange = function(userId, authorizationCode, password, newEm
                                 }
 
                                 // Send validation email.
-                                User.sendValidationEmail(userId, newEmail, data[0][0].Alias, validationCode, function(err) {
+                                User.sendValidationEmail(userId, newEmail, data.recordsets[0][0].Alias, validationCode, function(err) {
                                     if (err) {
                                         console.log("Error sending validation email in user.emailChange.");
                                         console.log(err);
@@ -1460,7 +1450,7 @@ module.exports.changePassword = function(userId, oldPassword, newPassword, captc
                     return;
                 }
 
-                if (!data[0] || data[0].length === 0 || !data[0][0] || data[0][0].length === 0) {
+                if (!data || !data.recordsets || !data.recordsets[0] || data.recordsets[0].length === 0 || !data.recordsets[0][0] || data.recordsets[0][0].length === 0) {
                     console.log("Missing user data in database in user.emailChange.");
                     console.log(err);
                     callback({
@@ -1471,7 +1461,7 @@ module.exports.changePassword = function(userId, oldPassword, newPassword, captc
                 }
 
                 // Check that we're validated.
-                if (!data[0][0].Validated) {
+                if (!data.recordsets[0][0].Validated) {
                     callback({
                         error: "This account is not yet validated.  Please reload the page and try again.",
                         status: 401
@@ -1480,10 +1470,10 @@ module.exports.changePassword = function(userId, oldPassword, newPassword, captc
                 }
 
                 // Check the password.
-                getHashedPassword(oldPassword, data[0][0].Salt, function(hashedPassword) {
+                getHashedPassword(oldPassword, data.recordsets[0][0].Salt, function(hashedPassword) {
                     var salt;
 
-                    if (hashedPassword !== data[0][0].PasswordHash) {
+                    if (hashedPassword !== data.recordsets[0][0].PasswordHash) {
                         callback({
                             error: "The current password is incorrect.",
                             status: 401

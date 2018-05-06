@@ -1,5 +1,5 @@
 var config = require("../privateConfig").google,
-    google = require("googleapis"),
+    google = require("googleapis").google,
     youtube = google.youtube("v3"),
     cache = require("../cache/cache"),
     promise = require("promised-io/promise"),
@@ -47,10 +47,10 @@ var config = require("../privateConfig").google,
                         return;
                     }
 
-                    totalVideos = [].concat.apply([], [totalVideos, data.items]);
+                    totalVideos = [].concat.apply([], [totalVideos, data.data.items]);
 
-                    if (data.nextPageToken) {
-                        getPlaylist(data.nextPageToken);
+                    if (data.data.nextPageToken) {
+                        getPlaylist(data.data.nextPageToken);
                     } else {
                         videos = totalVideos.map(function(video) {
                             var timestamp = new Date(video.snippet.publishedAt).getTime();
@@ -90,7 +90,7 @@ var config = require("../privateConfig").google,
                 return;
             }
 
-            if (!data || !data.items || !data.items[0]) {
+            if (!data || !data.data || !data.data.items || !data.data.items[0]) {
                 infoDeferred.reject({
                     error: "Invalid playlist ID.",
                     status: 400
@@ -98,7 +98,7 @@ var config = require("../privateConfig").google,
                 return;
             }
 
-            cache.set("roncli.com:youtube:playlist:" + playlistId + ":info", data.items[0], 86400, function() {
+            cache.set("roncli.com:youtube:playlist:" + playlistId + ":info", data.data.items[0], 86400, function() {
                 infoDeferred.resolve(true);
             });
         });
@@ -138,7 +138,7 @@ var config = require("../privateConfig").google,
                 return;
             }
 
-            if (!data || !data.items || !data.items[0]) {
+            if (!data || !data.data || !data.data.items || !data.data.items[0]) {
                 callback({
                     error: "Invalid video ID.",
                     status: 400
@@ -146,7 +146,7 @@ var config = require("../privateConfig").google,
                 return;
             }
 
-            cache.set("roncli.com:youtube:video:" + videoId, data.items[0], 86400, function() {
+            cache.set("roncli.com:youtube:video:" + videoId, data.data.items[0], 86400, function() {
                 callback();
             });
         });

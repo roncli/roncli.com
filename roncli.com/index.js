@@ -3,7 +3,6 @@ var config = require("./server/privateConfig"),
     serverConfig = config.server,
     filesConfig = config.files,
     express = require("express"),
-    domain = require("domain"),
     path = require("path"),
     moment = require("moment"),
     rendr = require("rendr"),
@@ -78,27 +77,6 @@ app.post("/api/-/admin/files/upload", upload.single("file0"), function(req, res,
     "use strict";
 
     next();
-});
-
-// Setup domains.
-app.use(function(req, res, next) {
-    "use strict";
-
-    var d = domain.create();
-    d.add(req);
-    d.add(res);
-
-    res.on("close", function() {
-        d.dispose();
-    });
-
-    d.on("error", function(err) {
-        console.log("Domain error");
-        console.log(err);
-        next(err);
-    });
-
-    d.run(next);
 });
 
 // Setup RSS route.

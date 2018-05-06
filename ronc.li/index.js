@@ -1,7 +1,6 @@
 /// <reference path="typings/node/node.d.ts"/>
 var express = require("express"),
     app = express(),
-    domain = require("domain"),
     morgan = require("morgan"),
     morganExtensions = require("../roncli.com/server/morgan/morgan-extensions"),
     db = require("../roncli.com/server/database/database");
@@ -20,27 +19,6 @@ app.use(function(req, res, next) {
 // Initialize middleware stack.
 app.use(morgan(":colorstatus \x1b[30m\x1b[1m:method\x1b[0m :url\x1b[30m\x1b[1m:newline    Date :date[iso]    IP :req[ip]    Time :colorresponse ms"));
 
-// Setup domains.
-app.use(function(req, res, next) {
-    "use strict";
-
-    var d = domain.create();
-    d.add(req);
-    d.add(res);
-
-    res.on("close", function() {
-        d.dispose();
-    });
-
-    d.on("error", function(err) {
-        console.log("Domain error");
-        console.log(err);
-        next(err);
-    });
-
-    d.run(next);
-});
-
 // Redirect.
 app.get("*", function(req, res) {
     var url = req.url;
@@ -54,13 +32,13 @@ app.get("*", function(req, res) {
                 console.log(err);
             }
 
-            if (err || !data || !data[0] || !data[0][0] || !data[0][0].ToURL) {
+            if (err || !data || !data.recordsets || !data.recordsets[0] || !data.recordsets[0][0] || !data.recordsets[0][0].ToURL) {
                 res.redirect(301, "http://www.roncli.com" + url);
             } else {
                 db.query(
                     "INSERT INTO tblRedirectHit (RedirectID, IP, Referrer, UserAgent) values (@redirectId, @ip, @referrer, @userAgent)",
                     {
-                        redirectId: {type: db.INT, value: data[0][0].RedirectID},
+                        redirectId: {type: db.INT, value: data.recordsets[0][0].RedirectID},
                         ip: {type: db.VARCHAR(15), value: req.headers.ip},
                         referrer: {type: db.VARCHAR(256), value: req.headers.referer ? req.headers.referer.substring(0, 256) : null},
                         userAgent: {type: db.VARCHAR(256), value: req.headers["user-agent"] ? req.headers["user-agent"].substring(0, 256) : null}
@@ -72,7 +50,7 @@ app.get("*", function(req, res) {
                         }
                     }
                 );
-                res.redirect(301, data[0][0].ToURL);
+                res.redirect(301, data.recordsets[0][0].ToURL);
             }
         }
     )

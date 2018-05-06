@@ -38,13 +38,13 @@ var User = require("./user"),
                     return;
                 }
 
-                if (!data || !data[0] || data[0].length === 0) {
+                if (!data || !data.recordsets || !data.recordsets[0] || data.recordsets[0].length === 0) {
                     callback(null, []);
                     return;
                 }
 
                 callback(null,
-                    data[0].map(function(page) {
+                    data.recordsets[0].map(function(page) {
                         return {
                             id: page.PageID,
                             url: page.PageURL,
@@ -79,7 +79,7 @@ var User = require("./user"),
                     return;
                 }
 
-                callback(null, data && data[0] && data[0][0] && data[0][0].Pages && data[0][0].Pages > 0);
+                callback(null, data && data.recordsets && data.recordsets[0] && data.recordsets[0][0] && data.recordsets[0][0].Pages && data.recordsets[0][0].Pages > 0);
             }
         );
     };
@@ -123,12 +123,12 @@ module.exports.getBlogCommentsToModerate = function(userId, callback) {
                     return;
                 }
 
-                if (!data[0]) {
+                if (!data || !data.recordsets || !data.recordsets[0]) {
                     callback(null, {});
                     return;
                 }
 
-                callback(null, data[0].map(function(comment) {
+                callback(null, data.recordsets[0].map(function(comment) {
                     return {
                         id: comment.CommentID,
                         published: comment.CrDate.getTime(),
@@ -316,14 +316,14 @@ module.exports.getLifeFeatures = function(userId, callback) {
                     "SELECT f.FeatureID, p.Title, p.PageURL FROM tblLifeFeature f INNER JOIN tblPage p ON f.PageID = p.PageID ORDER BY f.[Order]",
                     {},
                     function(err, data) {
-                        if (err) {
+                        if (err || !data || !data.recordsets || !data.recordsets[0]) {
                             console.log("Database error in admin.getLifeFeatures retrieving life features.");
                             console.log(err);
                             deferred.reject(err);
                             return;
                         }
 
-                        deferred.resolve(data[0].map(function(feature) {
+                        deferred.resolve(data.recordsets[0].map(function(feature) {
                             return {
                                 id: feature.FeatureID,
                                 title: feature.Title,
@@ -342,14 +342,14 @@ module.exports.getLifeFeatures = function(userId, callback) {
                     "SELECT PageID, Title FROM tblPage WHERE PageID NOT IN (SELECT PageID FROM tblLifeFeature)",
                     {},
                     function(err, data) {
-                        if (err) {
+                        if (err || !data || !data.recordsets || !data.recordsets[0]) {
                             console.log("Database error in admin.getLifeFeatures retrieving available pages for life features.");
                             console.log(err);
                             deferred.reject(err);
                             return;
                         }
 
-                        deferred.resolve(data[0].map(function(page) {
+                        deferred.resolve(data.recordsets[0].map(function(page) {
                             return {
                                 id: page.PageID,
                                 title: page.Title
@@ -457,7 +457,7 @@ module.exports.removeLifeFeature = function(userId, featureId, callback) {
                     return;
                 }
 
-                if (!(data && data[0] && data[0][0] && data[0][0].Features && data[0][0].Features > 0)) {
+                if (!(data && data.recordsets && data.recordsets[0] && data.recordsets[0][0] && data.recordsets[0][0].Features && data.recordsets[0][0].Features > 0)) {
                     callback({
                         error: "The feature ID does not exist.",
                         status: 400
@@ -539,7 +539,7 @@ module.exports.changeLifeFeatureOrder = function(userId, order, callback) {
                     return;
                 }
 
-                if (!(data && data[0] && data[0][0] && data[0][0].Features && data[0][0].Features === order.length)) {
+                if (!(data && data.recordsets && data.recordsets[0] && data.recordsets[0][0] && data.recordsets[0][0].Features && data.recordsets[0][0].Features === order.length)) {
                     callback({
                         error: "Invalid features to reorder.  Please reload the page and try again",
                         status: 400
@@ -625,14 +625,14 @@ module.exports.getPagesByParentUrl = function(userId, url, callback) {
                     "SELECT PageID, Title FROM tblPage WHERE ParentPageID IS NOT NULL ORDER BY Title",
                     {},
                     function(err, data) {
-                        if (err) {
+                        if (err || !data || !data.recordsets || !data.recordsets[0]) {
                             console.log("Database error in admin.getPagesByParentUrl.");
                             console.log(err);
                             deferred.reject(err);
                             return;
                         }
 
-                        deferred.resolve(data[0].map(function(page) {
+                        deferred.resolve(data.recordsets[0].map(function(page) {
                             return {
                                 id: page.PageID,
                                 title: page.Title
@@ -723,17 +723,17 @@ module.exports.getPageByUrl = function(userId, url, callback) {
                             return;
                         }
 
-                        if (!data || !data[0] || data[0].length === 0) {
+                        if (!data || !data.recordsets || !data.recordsets[0] || data.recordsets[0].length === 0) {
                             deferred.resolve(null);
                             return;
                         }
 
                         deferred.resolve({
-                            id: data[0][0].PageID,
-                            parentPageId: data[0][0].ParentPageID,
-                            title: data[0][0].Title,
-                            shortTitle: data[0][0].ShortTitle,
-                            content: data[0][0].PageData
+                            id: data.recordsets[0][0].PageID,
+                            parentPageId: data.recordsets[0][0].ParentPageID,
+                            title: data.recordsets[0][0].Title,
+                            shortTitle: data.recordsets[0][0].ShortTitle,
+                            content: data.recordsets[0][0].PageData
                         });
                     }
                 );
@@ -788,11 +788,11 @@ module.exports.getPageByUrl = function(userId, url, callback) {
                                 return;
                             }
 
-                            if (!data || !data[0] || data[0].length === 0) {
-                                data = [[]];
+                            if (!data || !data.recordsets || !data.recordsets[0] || data.recordsets[0].length === 0) {
+                                data = {recordsets: [[]]};
                             }
 
-                            results[1].pageList = data[0].map(function(page) {
+                            results[1].pageList = data.recordsets[0].map(function(page) {
                                 return {
                                     id: page.PageID,
                                     title: page.Title
@@ -937,7 +937,7 @@ module.exports.updatePage = function(userId, pageId, url, title, shortTitle, con
                     return;
                 }
 
-                if (!data || !data[0] || !data[0][0] || !data[0][0].Pages || data[0][0].Pages === 0) {
+                if (!data || !data.recordsets[0] || !data.recordsets[0] || !data.recordsets[0][0] || !data.recordsets[0][0].Pages || data.recordsets[0][0].Pages === 0) {
                     callback({
                         error: "Page ID does not exist.",
                         status: 400
@@ -1084,7 +1084,7 @@ module.exports.movePage = function(userId, pageId, newParentPageId, callback) {
                     return;
                 }
 
-                if (!data || !data[0] || !data[0][0] || data[0][0].Pages !== 1 + (newParentPageId ? 1 : 0)) {
+                if (!data || !data.recordsets[0] || !data.recordsets[0] || !data.recordsets[0][0] || data.recordsets[0][0].Pages !== 1 + (newParentPageId ? 1 : 0)) {
                     callback({
                         error: "Invalid page to move.  Please reload the page and try again.",
                         status: 400
@@ -1240,7 +1240,7 @@ module.exports.changePageOrder = function(userId, parentPageId, order, callback)
                     return;
                 }
 
-                if (!data || !data[0] || !data[0][0] || data[0][0].Pages !== order.length) {
+                if (!data || !data.recordsets || !data.recordsets[0] || !data.recordsets[0][0] || data.recordsets[0][0].Pages !== order.length) {
                     callback({
                         error: "Invalid pages to reorder.  Please reload the page and try again.",
                         status: 400
@@ -1314,12 +1314,12 @@ module.exports.getPageCommentsToModerate = function(userId, callback) {
                     return;
                 }
 
-                if (!data[0]) {
+                if (!data || !data.recordsets || !data.recordsets[0]) {
                     callback(null, {});
                     return;
                 }
 
-                callback(null, data[0].map(function(comment) {
+                callback(null, data.recordsets[0].map(function(comment) {
                     return {
                         id: comment.CommentID,
                         published: comment.CrDate.getTime(),
@@ -1646,12 +1646,12 @@ module.exports.getSongCommentsToModerate = function(userId, callback) {
                     return;
                 }
 
-                if (!data[0]) {
+                if (!data || !data.recordsets || !data.recordsets[0]) {
                     callback(null, {});
                     return;
                 }
 
-                callback(null, data[0].map(function(comment) {
+                callback(null, data.recordsets[0].map(function(comment) {
                     return {
                         id: comment.CommentID,
                         published: comment.CrDate.getTime(),
@@ -1888,7 +1888,7 @@ module.exports.addProject = function(userId, url, title, projectUrl, user, repos
                     return;
                 }
 
-                if (data && data[0] && data[0][0] && data[0][0].Projects > 0) {
+                if (data && data.recordsets && data.recordsets[0] && data.recordsets[0][0] && data.recordsets[0][0].Projects > 0) {
                     callback({
                         error: "Project URL already exists.",
                         status: 400
@@ -2012,7 +2012,7 @@ module.exports.getProjectByUrl = function(userId, url, callback) {
                     return;
                 }
 
-                if (!data || !data[0] || data[0].length === 0) {
+                if (!data || !data.recordsets || !data.recordsets[0] || data.recordsets[0].length === 0) {
                     callback({
                         error: "Project not found.",
                         status: 404
@@ -2021,13 +2021,13 @@ module.exports.getProjectByUrl = function(userId, url, callback) {
                 }
 
                 callback(null, {
-                    id: data[0][0].ProjectID,
-                    url: data[0][0].URL,
-                    title: data[0][0].Title,
-                    projectUrl: data[0][0].ProjectURL,
-                    user: data[0][0].User,
-                    repository: data[0][0].Repository,
-                    description: data[0][0].Description
+                    id: data.recordsets[0][0].ProjectID,
+                    url: data.recordsets[0][0].URL,
+                    title: data.recordsets[0][0].Title,
+                    projectUrl: data.recordsets[0][0].ProjectURL,
+                    user: data.recordsets[0][0].User,
+                    repository: data.recordsets[0][0].Repository,
+                    description: data.recordsets[0][0].Description
                 });
             }
         );
@@ -2096,7 +2096,7 @@ module.exports.updateProject = function(userId, projectId, url, title, projectUr
                     return;
                 }
 
-                if (data && data[0] && data[0][0] && data[0][0].Projects > 0) {
+                if (data && data.recordsets && data.recordsets[0] && data.recordsets[0][0] && data.recordsets[0][0].Projects > 0) {
                     callback({
                         error: "Project URL already exists.",
                         status: 400
@@ -2210,11 +2210,11 @@ module.exports.getUnfeaturedProjects = function(userId, callback) {
                     return;
                 }
 
-                if (!data || !data[0]) {
+                if (!data || !data.recordsets || !data.recordsets[0]) {
                     callback(null, []);
                 }
 
-                callback(null, data[0].map(function(project) {
+                callback(null, data.recordsets[0].map(function(project) {
                     return {
                         id: project.ProjectID,
                         title: project.Title
@@ -2266,7 +2266,7 @@ module.exports.featureProject = function(userId, projectId, callback) {
                     return;
                 }
 
-                if (data && data[0] && data[0][0] && data[0][0].Projects > 0) {
+                if (data && data.recordsets && data.recordsets[0] && data.recordsets[0][0] && data.recordsets[0][0].Projects > 0) {
                     callback({
                         error: "Project already featured.",
                         status: 400
@@ -2545,8 +2545,8 @@ module.exports.getPlaylists = function(userId, callback) {
                     return;
                 }
 
-                if (data && data[0]) {
-                    callback(null, data[0].map(function(playlist) {
+                if (data && data.recordsets && data.recordsets[0]) {
+                    callback(null, data.recordsets[0].map(function(playlist) {
                         return {playlistId: playlist.PlaylistID};
                     }));
                 } else {
@@ -2688,12 +2688,12 @@ module.exports.getYoutubeCommentsToModerate = function(userId, callback) {
                     return;
                 }
 
-                if (!data[0]) {
+                if (!data || !data.recordsets || !data.recordsets[0]) {
                     callback(null, {});
                     return;
                 }
 
-                callback(null, data[0].map(function(comment) {
+                callback(null, data.recordsets[0].map(function(comment) {
                     return {
                         id: comment.CommentID,
                         published: comment.CrDate.getTime(),
@@ -2838,8 +2838,8 @@ module.exports.getRedirects = function(userId, callback) {
                     return;
                 }
 
-                if (data && data[0]) {
-                    callback(null, data[0].map(function(row) {
+                if (data && data.recordsets && data.recordsets[0]) {
+                    callback(null, data.recordsets[0].map(function(row) {
                         return {
                             id: row.RedirectID,
                             fromPath: row.FromPath,
@@ -2898,7 +2898,7 @@ module.exports.addRedirect = function(userId, fromPath, toUrl, callback) {
                     return;
                 }
 
-                if (data && data[0] && data[0][0] && data[0][0].Redirects > 0) {
+                if (data && data.recordsets && data.recordsets[0] && data.recordsets[0][0] && data.recordsets[0][0].Redirects > 0) {
                     callback({
                         error: "The from path for this redirect already exists.",
                         status: 400

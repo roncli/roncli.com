@@ -166,6 +166,19 @@ The following should be the contents of privateConfig.js:
 Version History
 ===============
 
+1.0.6 - 5/6/2018
+----------------
+
+This is a bug fix release.
+
+* Upgrade node.js to version 10.0.0, and upgrade all packages to their current versions.
+* Fix bug with dates in GitHub projects.
+* Upgrade grunt-contrib-uglify to get gzipped size information on build.
+* Fix bug with double clicking login.
+* Fix bug with using wrong Steam server for CDN.
+* Fix bug with style element showing in CSS previews.
+* Fix ignored tags for the default controller.
+
 1.0.5 - 12/25/2016
 ------------------
 

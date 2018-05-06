@@ -29,7 +29,7 @@ var Moment = require("moment"),
                     return;
                 }
 
-                callback(null, !(!data || !data[0] || !data[0][0] || data[0][0].Playlists === 0));
+                callback(null, !(!data || !data.recordsets || !data.recordsets[0] || !data.recordsets[0][0] || data.recordsets[0][0].Playlists === 0));
             }
         );
     };
@@ -233,8 +233,8 @@ module.exports.getCommentsById = function(id, callback) {
                     return;
                 }
 
-                if (data[0]) {
-                    comments = data[0].map(function(comment) {
+                if (data && data.recordsets && data.recordsets[0]) {
+                    comments = data.recordsets[0].map(function(comment) {
                         return {
                             id: comment.CommentID,
                             published: comment.CrDate.getTime(),
@@ -282,7 +282,7 @@ module.exports.postComment = function(userId, id, content, callback) {
                         return;
                     }
 
-                    if (data[0] && data[0][0] && data[0][0].LastComment > new Moment().add(-1, "minute")) {
+                    if (data && data.recordsets && data.recordsets[0] && data.recordsets[0][0] && data.recordsets[0][0].LastComment > new Moment().add(-1, "minute")) {
                         deferred.reject({
                             error: "You must wait a minute after posting a comment to post a new comment.",
                             status: 400

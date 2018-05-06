@@ -1,5 +1,5 @@
 var config = require("../privateConfig").google,
-    google = require("googleapis"),
+    google = require("googleapis").google,
     blogger = google.blogger("v3"),
     cache = require("../cache/cache"),
     promise = require("promised-io/promise"),
@@ -44,10 +44,10 @@ var config = require("../privateConfig").google,
                         return;
                     }
 
-                    totalPosts = [].concat.apply([], [totalPosts, data.items]);
+                    totalPosts = [].concat.apply([], [totalPosts, data.data.items]);
 
-                    if (data.nextPageToken) {
-                        getPosts(data.nextPageToken);
+                    if (data.data.nextPageToken) {
+                        getPosts(data.data.nextPageToken);
                     } else {
                         postsDeferred.resolve(true);
                     }
@@ -329,7 +329,7 @@ module.exports.post = function(id, callback) {
                     fields: "id,published,title,content",
                     key: config.api_key
                 }, function(err, post) {
-                    if (err || !post) {
+                    if (err || !post || !post.data) {
                         console.log("Bad response from Blogger.");
                         console.log(err);
                         deferred.reject({
@@ -339,11 +339,11 @@ module.exports.post = function(id, callback) {
                         return;
                     }
 
-                    post.published = new Date(post.published).getTime();
+                    post.data.published = new Date(post.published).getTime();
 
-                    cache.set("roncli.com:blogger:post:" + id, post, 86400);
+                    cache.set("roncli.com:blogger:post:" + id, post.data, 86400);
 
-                    deferred.resolve(post);
+                    deferred.resolve(post.data);
                 });
             });
 
@@ -365,26 +365,26 @@ module.exports.post = function(id, callback) {
                                 return;
                             }
 
-                            if (!comments.items) {
+                            if (!comments.data || !comments.data.items) {
                                 cache.set("roncli.com:blogger:post:comments:" + id, postComments, 86400);
                                 deferred.resolve(postComments);
                                 return;
                             }
 
-                            comments.items.forEach(function(comment) {
+                            comments.data.items.forEach(function(comment) {
                                 comment.published = new Date(comment.published).getTime();
                                 comment.blogSource = "blogger";
                             });
 
-                            postComments = postComments.concat(comments.items);
+                            postComments = postComments.concat(comments.data.items);
 
-                            if (!comments.nextPageToken) {
+                            if (!comments.data.nextPageToken) {
                                 cache.set("roncli.com:blogger:post:comments:" + id, postComments, 86400);
                                 deferred.resolve(postComments);
                                 return;
                             }
 
-                            params.pageToken = comments.nextPageToken;
+                            params.pageToken = comments.data.nextPageToken;
                             getComments(params);
                         }
                     );

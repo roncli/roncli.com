@@ -18,8 +18,8 @@
         "url": "https://github.com/roncli/roncli.com.git"
     },
     "dependencies": {
-        "express": "4.13.3",
-        "morgan": "1.6.1"
+        "express": "4.16.3",
+        "morgan": "1.9.0"
     },
     "devDependencies": {
         "grunt": "0.4.5",

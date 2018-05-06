@@ -31,7 +31,7 @@ module.exports.getPage = function(url, callback) {
                 return;
             }
 
-            if (!data || !data[0] || data[0].length === 0) {
+            if (!data || !data.recordsets || !data.recordsets[0] || data.recordsets[0].length === 0) {
                 callback({
                     error: "The page does not exist.",
                     status: 404
@@ -39,8 +39,8 @@ module.exports.getPage = function(url, callback) {
                 return;
             }
 
-            pageId = data[0][0].PageID;
-            parentPageId = data[0][0].ParentPageID;
+            pageId = data.recordsets[0][0].PageID;
+            parentPageId = data.recordsets[0][0].ParentPageID;
 
             all(
                 // Get the parents.
@@ -82,12 +82,12 @@ module.exports.getPage = function(url, callback) {
                                 return;
                             }
 
-                            if (!data || !data[0] || data[0].length <= 1) {
+                            if (!data || !data.recordsets || !data.recordsets[0] || data.recordsets[0].length <= 1) {
                                 deferred.resolve(null);
                                 return;
                             }
 
-                            deferred.resolve(data[0].map(function(page) {
+                            deferred.resolve(data.recordsets[0].map(function(page) {
                                 return {
                                     id: page.PageID,
                                     url: page.PageURL,
@@ -118,12 +118,12 @@ module.exports.getPage = function(url, callback) {
                                 return;
                             }
 
-                            if (!data || !data[0] || data[0].length === 0) {
+                            if (!data || !data.recordsets || !data.recordsets[0] || data.recordsets[0].length === 0) {
                                 deferred.resolve(null);
                                 return;
                             }
 
-                            deferred.resolve(data[0].map(function(page) {
+                            deferred.resolve(data.recordsets[0].map(function(page) {
                                 return {
                                     id: page.PageID,
                                     url: page.PageURL,
@@ -141,9 +141,9 @@ module.exports.getPage = function(url, callback) {
                         id: pageId,
                         page: {
                             id: pageId,
-                            title: data[0][0].Title,
-                            shortTitle: data[0][0].ShortTitle,
-                            content: data[0][0].PageData
+                            title: data.recordsets[0][0].Title,
+                            shortTitle: data.recordsets[0][0].ShortTitle,
+                            content: data.recordsets[0][0].PageData
                         },
                         parents: results[0],
                         siblings: results[1],
@@ -192,17 +192,17 @@ module.exports.getParents = function(pageId, callback) {
                         return;
                     }
 
-                    if (!data || !data[0] || data[0].length === 0) {
+                    if (!data || !data.recordsets || !data.recordsets[0] || data.recordsets[0].length === 0) {
                         callback(null, parents);
                         return;
                     }
 
-                    parentPageId = data[0][0].ParentPageID;
+                    parentPageId = data.recordsets[0][0].ParentPageID;
 
                     parents.unshift({
-                        id: data[0][0].PageID,
-                        url: data[0][0].PageURL,
-                        shortTitle: data[0][0].ShortTitle || data[0][0].Title
+                        id: data.recordsets[0][0].PageID,
+                        url: data.recordsets[0][0].PageURL,
+                        shortTitle: data.recordsets[0][0].ShortTitle || data.recordsets[0][0].Title
                     });
 
                     if (parentPageId) {
@@ -243,7 +243,7 @@ module.exports.getCommentsByPageId = function(pageId, callback) {
                 return;
             }
 
-            if (!data || !data[0] || !data[0][0] || data[0][0] === 0) {
+            if (!data || !data.recordsets || !data.recordsets[0] || !data.recordsets[0][0] || data.recordsets[0][0] === 0) {
                 callback({
                     error: "Page not found.",
                     status: 404
@@ -256,7 +256,7 @@ module.exports.getCommentsByPageId = function(pageId, callback) {
                 "SELECT pc.CommentID, pc.Comment, pc.CrDate, u.Alias FROM tblPageComment pc INNER JOIN tblUser u ON pc.CrUserID = u.UserID WHERE pc.PageID = @pageId AND pc.ModeratedDate IS NOT NULL ORDER BY pc.CrDate",
                 {pageId: {type: db.INT, value: pageId}},
                 function(err, data) {
-                    if (err) {
+                    if (err || !data || !data.recordsets || !data.recordsets[0]) {
                         console.log("Database error getting comments in page.getCommentsByPageId.");
                         console.log(err);
                         callback({
@@ -266,8 +266,8 @@ module.exports.getCommentsByPageId = function(pageId, callback) {
                         return;
                     }
 
-                    if (data[0]) {
-                        comments = comments.concat(data[0].map(function(comment) {
+                    if (data.recordsets[0]) {
+                        comments = comments.concat(data.recordsets[0].map(function(comment) {
                             return {
                                 id: comment.CommentID,
                                 published: comment.CrDate.getTime(),
@@ -307,7 +307,7 @@ module.exports.postComment = function(userId, pageId, content, callback) {
                 "SELECT MAX(CrDate) LastComment FROM tblPageComment WHERE CrUserID = @userId",
                 {userId: {type: db.INT, value: userId}},
                 function(err, data) {
-                    if (err) {
+                    if (err || !data || !data.recordsets || !data.recordsets[0]) {
                         console.log("Database error in page.postComment while checking the user's last comment time.");
                         console.log(err);
                         deferred.reject({
@@ -317,7 +317,7 @@ module.exports.postComment = function(userId, pageId, content, callback) {
                         return;
                     }
 
-                    if (data[0] && data[0][0] && data[0][0].LastComment > new Moment().add(-1, "minute")) {
+                    if (data.recordsets[0] && data.recordsets[0][0] && data.recordsets[0][0].LastComment > new Moment().add(-1, "minute")) {
                         deferred.reject({
                             error: "You must wait a minute after posting a comment to post a new comment.",
                             status: 400
@@ -352,7 +352,7 @@ module.exports.postComment = function(userId, pageId, content, callback) {
                         return;
                     }
 
-                    if (!data || !data[0] || !data[0][0] || data[0][0] === 0) {
+                    if (!data || !data.recordsets || !data.recordsets[0] || !data.recordsets[0][0] || data.recordsets[0][0] === 0) {
                         deferred.reject({
                             error: "Page not found.",
                             status: 404
@@ -431,8 +431,8 @@ module.exports.getLifeFeatures = function(callback) {
                 return;
             }
 
-            if (data && data[0]) {
-                callback(null, data[0].map(function(feature) {
+            if (data && data.recordsets && data.recordsets[0]) {
+                callback(null, data.recordsets[0].map(function(feature) {
                     return {
                         title: feature.Title,
                         url: feature.PageURL

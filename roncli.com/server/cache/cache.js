@@ -8,7 +8,7 @@ var config = require("../privateConfig").redis,
             errorCallback = function(err) {
                 console.log("Error while connecting to redis");
                 console.log(err);
-                client.end();
+                client.quit();
                 if (typeof callback === "function") {
                     callback(err);
                     callback = null;
@@ -19,7 +19,7 @@ var config = require("../privateConfig").redis,
             if (err) {
                 console.log("Error sending password");
                 console.log(err);
-                client.end();
+                client.quit();
                 if (typeof callback === "function") {
                     callback(err);
                     callback = null;
@@ -56,7 +56,7 @@ module.exports.del = function(keys, callback) {
         client.on("error", function(err) {
             console.log("Error deleting cache using del", keys);
             console.log(err);
-            client.end();
+            client.quit();
             if (typeof callback === "function") {
                 callback();
                 callback = null;
@@ -69,7 +69,7 @@ module.exports.del = function(keys, callback) {
                 console.log(err);
             }
 
-            client.end();
+            client.quit();
 
             if (typeof callback === "function") {
                 callback();
@@ -99,7 +99,7 @@ module.exports.get = function(key, callback) {
         client.on("error", function(err) {
             console.log("Error retrieving cache using get", key);
             console.log(err);
-            client.end();
+            client.quit();
             if (typeof callback === "function") {
                 callback();
                 callback = null;
@@ -107,7 +107,7 @@ module.exports.get = function(key, callback) {
         });
 
         client.get(key, function(err, data) {
-            client.end();
+            client.quit();
 
             if (err) {
                 console.log("Error retrieving cache using get", key);
@@ -146,13 +146,13 @@ module.exports.hexists = function(key, field, callback) {
         client.on("error", function(err) {
             console.log("Error retrieving cache using hexists", key, field);
             console.log(err);
-            client.end();
+            client.quit();
             callback(false);
             callback = null;
         });
 
         client.hexists(key, field, function(err, data) {
-            client.end();
+            client.quit();
 
             if (err) {
                 console.log("Error retrieving cache using hexists", key, field);
@@ -191,7 +191,7 @@ module.exports.hget = function(key, field, callback) {
         client.on("error", function(err) {
             console.log("Error retrieving cache using hget", key, field);
             console.log(err);
-            client.end();
+            client.quit();
             if (typeof callback === "function") {
                 callback();
                 callback = null;
@@ -199,7 +199,7 @@ module.exports.hget = function(key, field, callback) {
         });
 
         client.hget(key, field, function(err, data) {
-            client.end();
+            client.quit();
 
             if (err) {
                 console.log("Error retrieving cache using hget", key, field);
@@ -239,7 +239,7 @@ module.exports.hgetall = function(key, callback) {
         client.on("error", function(err) {
             console.log("Error retrieving cache using hgetall", key);
             console.log(err);
-            client.end();
+            client.quit();
             if (typeof callback === "function") {
                 callback();
                 callback = null;
@@ -249,7 +249,7 @@ module.exports.hgetall = function(key, callback) {
         client.hgetall(key, function(err, data) {
             var index;
 
-            client.end();
+            client.quit();
 
             if (err) {
                 console.log("Error retrieving cache using hgetall", key);
@@ -297,7 +297,7 @@ module.exports.hmget = function(key, fields, callback) {
         client.on("error", function(err) {
             console.log("Error retrieving cache using hmget", key);
             console.log(err);
-            client.end();
+            client.quit();
             if (typeof callback === "function") {
                 callback();
                 callback = null;
@@ -309,7 +309,7 @@ module.exports.hmget = function(key, fields, callback) {
         client.hmget(values, function(err, data) {
             var index;
 
-            client.end();
+            client.quit();
 
             if (err) {
                 console.log("Error retrieving cache using hmget", key);
@@ -358,7 +358,7 @@ module.exports.hmset = function(key, keyValuePairs, expiration, callback) {
         client.on("error", function(err) {
             console.log("Error setting cache using hmset", key, keyValuePairs);
             console.log(err);
-            client.end();
+            client.quit();
             if (typeof callback === "function") {
                 callback();
                 callback = null;
@@ -381,7 +381,7 @@ module.exports.hmset = function(key, keyValuePairs, expiration, callback) {
                 }
             }
 
-            client.end();
+            client.quit();
 
             if (typeof callback === "function") {
                 callback();
@@ -411,7 +411,7 @@ module.exports.keys = function(key, callback) {
         client.on("error", function(err) {
             console.log("Error getting cache using keys", key);
             console.log(err);
-            client.end();
+            client.quit();
             if (typeof callback === "function") {
                 callback();
                 callback = null;
@@ -419,7 +419,7 @@ module.exports.keys = function(key, callback) {
         });
 
         client.keys(key, function(err, keys) {
-            client.end();
+            client.quit();
 
             if (err) {
                 console.log("Error getting cache using keys", key);
@@ -460,7 +460,7 @@ module.exports.set = function(key, value, expiration, callback) {
         client.on("error", function(err) {
             console.log("Error setting cache using set", key, value);
             console.log(err);
-            client.end();
+            client.quit();
             if (typeof callback === "function") {
                 callback();
                 callback = null;
@@ -473,7 +473,7 @@ module.exports.set = function(key, value, expiration, callback) {
             parameters.push(expiration);
         }
         client.set(parameters, function(err) {
-            client.end();
+            client.quit();
 
             if (err) {
                 console.log("Error setting cache using set", key, value);
@@ -512,7 +512,7 @@ module.exports.zadd = function(key, valueScorePairs, expiration, callback) {
         client.on("error", function(err) {
             console.log("Error setting cache using zadd", key, valueScorePairs);
             console.log(err);
-            client.end();
+            client.quit();
             if (typeof callback === "function") {
                 callback();
                 callback = null;
@@ -534,7 +534,7 @@ module.exports.zadd = function(key, valueScorePairs, expiration, callback) {
             if (expiration > 0) {
                 client.expire(key, expiration);
             }
-            client.end();
+            client.quit();
 
             if (typeof callback === "function") {
                 callback();
@@ -564,7 +564,7 @@ module.exports.zcard = function(key, callback) {
         client.on("error", function(err) {
             console.log("Error retrieving cache using zcard", key);
             console.log(err);
-            client.end();
+            client.quit();
             if (typeof callback === "function") {
                 callback();
                 callback = null;
@@ -572,7 +572,7 @@ module.exports.zcard = function(key, callback) {
         });
 
         client.zcard(key, function(err, data) {
-            client.end();
+            client.quit();
 
             if (err) {
                 console.log("Error retrieving cache using zcard", key);
@@ -614,7 +614,7 @@ module.exports.zrange = function(key, start, end, callback) {
         client.on("error", function(err) {
             console.log("Error retrieving cache using zrange", key, start, end);
             console.log(err);
-            client.end();
+            client.quit();
             if (typeof callback === "function") {
                 callback();
                 callback = null;
@@ -622,7 +622,7 @@ module.exports.zrange = function(key, start, end, callback) {
         });
 
         client.zrange(key, start, end, function(err, data) {
-            client.end();
+            client.quit();
 
             if (err) {
                 console.log("Error retrieving cache using zrange", key, start, end);
@@ -665,7 +665,7 @@ module.exports.zrank = function(key, value, callback) {
         client.on("error", function(err) {
             console.log("Error retrieving index using zrank", key, value);
             console.log(err);
-            client.end();
+            client.quit();
             if (typeof callback === "function") {
                 callback();
                 callback = null;
@@ -673,7 +673,7 @@ module.exports.zrank = function(key, value, callback) {
         });
 
         client.zrank(key, JSON.stringify(value), function(err, index) {
-            client.end();
+            client.quit();
 
             if (err) {
                 console.log("Error retrieving index using zrank", key, value);
@@ -716,7 +716,7 @@ module.exports.zrem = function(key, values, callback) {
         client.on("error", function(err) {
             console.log("Error updating cache using zrem", key, values);
             console.log(err);
-            client.end();
+            client.quit();
             if (typeof callback === "function") {
                 callback();
                 callback = null;
@@ -730,7 +730,7 @@ module.exports.zrem = function(key, values, callback) {
         });
 
         client.zrem(keys, function(err) {
-            client.end();
+            client.quit();
 
             if (err) {
                 console.log("Error updating cache using zrem", key, values);
@@ -767,7 +767,7 @@ module.exports.zrevrange = function(key, start, end, callback) {
         client.on("error", function(err) {
             console.log("Error retrieving cache using zrevrange", key, start, end);
             console.log(err);
-            client.end();
+            client.quit();
             if (typeof callback === "function") {
                 callback();
                 callback = null;
@@ -775,7 +775,7 @@ module.exports.zrevrange = function(key, start, end, callback) {
         });
 
         client.zrevrange(key, start, end, function(err, data) {
-            client.end();
+            client.quit();
 
             if (err) {
                 console.log("Error retrieving cache using zrevrange", key, start, end);
@@ -818,7 +818,7 @@ module.exports.zrevrank = function(key, value, callback) {
         client.on("error", function(err) {
             console.log("Error retrieving cache using zrevrank", key, value);
             console.log(err);
-            client.end();
+            client.quit();
             if (typeof callback === "function") {
                 callback();
                 callback = null;
@@ -826,7 +826,7 @@ module.exports.zrevrank = function(key, value, callback) {
         });
 
         client.zrevrank(key, JSON.stringify(value), function(err, data) {
-            client.end();
+            client.quit();
 
             if (err) {
                 console.log("Error retrieving cache using zrevrank", key, value);
@@ -867,7 +867,7 @@ module.exports.zunionstore = function(key, keys, expiration, callback) {
         client.on("error", function(err) {
             console.log("Error setting cache using zunionstore", key, keys);
             console.log(err);
-            client.end();
+            client.quit();
             if (typeof callback === "function") {
                 callback();
                 callback = null;
@@ -887,7 +887,7 @@ module.exports.zunionstore = function(key, keys, expiration, callback) {
                 }
             }
 
-            client.end();
+            client.quit();
 
             if (typeof callback === "function") {
                 callback();

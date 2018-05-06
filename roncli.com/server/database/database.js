@@ -5,7 +5,7 @@ var config = require("../privateConfig").database,
 module.exports.query = function(sqlStr, params, callback) {
     "use strict";
 
-    var conn = new sql.Connection(config, function(err) {
+    var conn = new sql.ConnectionPool(config, function(err) {
         var ps;
 
         if (err) {

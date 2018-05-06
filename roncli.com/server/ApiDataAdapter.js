@@ -1,8 +1,7 @@
 /// <reference path="../typings/node/node.d.ts"/>
 var DataAdapter = require("rendr/server/data_adapter"),
     fs = require("fs"),
-    util = require("util"),
-    domain = require("domain");
+    util = require("util");
 
 /**
  * Creates an instance of the API Data Adapter.
@@ -42,8 +41,7 @@ ApiDataAdapter.prototype.request = function(req, api, options, callback) {
 
     // Check to ensure the API being requested exists.
     fs.exists(filename.replace(".", __dirname), function(exists) {
-        var parentDomain = process.domain,
-            script, method, d;
+        var script, method;
 
         if (exists) {
             // Check to ensure the method on the API exists.
@@ -51,29 +49,11 @@ ApiDataAdapter.prototype.request = function(req, api, options, callback) {
             method = api.method.toLowerCase();
 
             if (typeof script[method] === "function") {
-                // Call the API from within a domain.
+                // Call the API.
                 req.parsedPath = path.slice(2);
 
-                d = domain.create();
-
-                d.once("error", function(err) {
-                    try {
-                        console.log("Unknown server error.");
-                        console.log(err);
-                        console.log(err.stack);
-                        req.res.status(500);
-                        callback(null, req.res, {error: "Unknown server error."});
-                    } catch (err2) {
-                        console.log("Error sending 500.");
-                        console.log(err2);
-                    }
-                    parentDomain.emit("error", err);
-                });
-
-                d.run(function() {
-                    script[method](req, api.query, function(json) {
-                        callback(null, req.res, json);
-                    });
+                script[method](req, api.query, function(json) {
+                    callback(null, req.res, json);
                 });
             } else {
                 // Return a 405 when the method is not allowed.

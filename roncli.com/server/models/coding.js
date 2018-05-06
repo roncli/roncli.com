@@ -46,8 +46,8 @@ module.exports.getLatestEvents = function(count, callback) {
                             return;
                         }
 
-                        if (data && data[0] && data[0].length > 0) {
-                            data[0].forEach(function(project) {
+                        if (data && data.recordsets && data.recordsets[0] && data.recordsets[0].length > 0) {
+                            data.recordsets[0].forEach(function(project) {
                                 projects[project.User + "/" + project.Repository] = project.URL;
                             });
 
@@ -104,11 +104,11 @@ module.exports.getFeaturedProjectList = function(callback) {
                 return;
             }
 
-            if (!data || !data[0]) {
+            if (!data || !data.recordsets || !data.recordsets[0]) {
                 callback(null, []);
             }
 
-            callback(null, data[0].map(function(project) {
+            callback(null, data.recordsets[0].map(function(project) {
                 return {
                     id: project.ProjectID,
                     title: project.Title,
@@ -169,11 +169,11 @@ module.exports.getProjectList = function(callback) {
                 return;
             }
 
-            if (!data || !data[0]) {
+            if (!data || !data.recordsets || !data.recordsets[0]) {
                 callback(null, []);
             }
 
-            callback(null, data[0].map(function(project) {
+            callback(null, data.recordsets[0].map(function(project) {
                 return {
                     id: project.ProjectID,
                     title: project.Title,
@@ -237,7 +237,7 @@ module.exports.getProject = function(url, callback) {
                 return;
             }
 
-            if (!data || !data[0] || data[0].length === 0) {
+            if (!data || !data.recordsets || !data.recordsets[0] || data.recordsets[0].length === 0) {
                 callback({
                     error: "Project does not exist.",
                     status: 404
@@ -246,12 +246,12 @@ module.exports.getProject = function(url, callback) {
             }
 
             project = {
-                id: data[0][0].ProjectID,
-                title: data[0][0].Title,
-                projectUrl: data[0][0].ProjectURL,
-                user: data[0][0].User,
-                repository: data[0][0].Repository,
-                description: data[0][0].Description,
+                id: data.recordsets[0][0].ProjectID,
+                title: data.recordsets[0][0].Title,
+                projectUrl: data.recordsets[0][0].ProjectURL,
+                user: data.recordsets[0][0].User,
+                repository: data.recordsets[0][0].Repository,
+                description: data.recordsets[0][0].Description,
                 url: url
             };
 

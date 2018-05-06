@@ -276,7 +276,7 @@ module.exports.getCommentsByUrl = function(url, callback) {
             function(err, data) {
                 var comments;
 
-                if (err) {
+                if (err || !data || !data.recordsets || !data.recordsets[0]) {
                     console.log("Database error in music.getCommentsByUrl.");
                     console.log(err);
                     callback({
@@ -286,8 +286,8 @@ module.exports.getCommentsByUrl = function(url, callback) {
                     return;
                 }
 
-                if (data[0]) {
-                    comments = data[0].map(function(comment) {
+                if (data.recordsets[0]) {
+                    comments = data.recordsets[0].map(function(comment) {
                         return {
                             id: comment.CommentID,
                             published: comment.CrDate.getTime(),
@@ -341,7 +341,7 @@ module.exports.postComment = function(userId, url, content, callback) {
                 "SELECT MAX(CrDate) LastComment FROM tblSongComment WHERE CrUserID = @userId",
                 {userId: {type: db.INT, value: userId}},
                 function(err, data) {
-                    if (err) {
+                    if (err || !data || !data.recordsets || !data.recordsets[0]) {
                         console.log("Database error in music.postComment while checking the user's last comment time.");
                         console.log(err);
                         deferred.reject({
@@ -351,7 +351,7 @@ module.exports.postComment = function(userId, url, content, callback) {
                         return;
                     }
 
-                    if (data[0] && data[0][0] && data[0][0].LastComment > new Moment().add(-1, "minute")) {
+                    if (data.recordsets[0] && data.recordsets[0][0] && data.recordsets[0][0].LastComment > new Moment().add(-1, "minute")) {
                         deferred.reject({
                             error: "You must wait a minute after posting a comment to post a new comment.",
                             status: 400

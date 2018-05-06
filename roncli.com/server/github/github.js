@@ -1,5 +1,5 @@
 var config = require("../privateConfig").github,
-    Github = require("github"),
+    Github = require("@octokit/rest"),
     cache = require("../cache/cache"),
     promise = require("promised-io/promise"),
     Deferred = promise.Deferred,
@@ -27,7 +27,7 @@ var config = require("../privateConfig").github,
              */
             getEvents = function(link) {
                 var processEvents = function(err, events) {
-                    var meta, releaseEvents, pushEvents, allEvents;
+                    var releaseEvents, pushEvents, allEvents;
 
                     if (err) {
                         console.log("Bad response from GitHub while getting events.");
@@ -39,13 +39,10 @@ var config = require("../privateConfig").github,
                         return;
                     }
 
-                    meta = events.meta;
-                    delete events.meta;
+                    totalEvents = [].concat.apply([], [totalEvents, events.data]);
 
-                    totalEvents = [].concat.apply([], [totalEvents, events]);
-
-                    if (client.hasNextPage(meta.link)) {
-                        getEvents(meta.link);
+                    if (client.hasNextPage(events)) {
+                        getEvents(events);
                         return;
                     }
 
@@ -101,7 +98,7 @@ var config = require("../privateConfig").github,
                 if (link) {
                     client.getNextPage(link, processEvents);
                 } else {
-                    client.events.getFromUser({user: "roncli", per_page: 100}, processEvents);
+                    client.activity.getEventsForUser({username: "roncli", per_page: 100}, processEvents);
                 }
             };
 
@@ -121,7 +118,7 @@ var config = require("../privateConfig").github,
             commitsDeferred = new Deferred(),
             releasesDeferred = new Deferred();
 
-        client.repos.get({user: user, repo: repository}, function(err, repo) {
+        client.repos.get({owner: user, repo: repository}, function(err, repo) {
             if (err) {
                 console.log("Bad response from GitHub while getting a repository.");
                 console.log(err);
@@ -133,18 +130,18 @@ var config = require("../privateConfig").github,
             }
 
             repositoryDeferred.resolve({
-                user: repo.owner.login,
-                repository: repo.name,
-                url: repo.html_url,
-                description: repo.description,
-                created: new Date(repo.created_at).getTime(),
-                updated: new Date(repo.updated_at).getTime(),
-                gitUrl: repo.git_url,
-                language: repo.language
+                user: repo.data.owner.login,
+                repository: repo.data.name,
+                url: repo.data.html_url,
+                description: repo.data.description,
+                created: new Date(repo.data.created_at).getTime(),
+                updated: new Date(repo.data.updated_at).getTime(),
+                gitUrl: repo.data.git_url,
+                language: repo.data.language
             });
         });
 
-        client.repos.getCommits({user: user, repo: repository, per_page: 100}, function(err, commits) {
+        client.repos.getCommits({owner: user, repo: repository, per_page: 100}, function(err, commits) {
             if (err) {
                 console.log("Bad response from GitHub while getting commits for a repository.");
                 console.log(err);
@@ -155,7 +152,7 @@ var config = require("../privateConfig").github,
                 return;
             }
 
-            commitsDeferred.resolve(commits.map(function(commit) {
+            commitsDeferred.resolve(commits.data.map(function(commit) {
                 var date = new Date(commit.commit.author.date).getTime();
                 return {
                     score: date,
@@ -170,7 +167,7 @@ var config = require("../privateConfig").github,
             }));
         });
 
-        client.releases.listReleases({owner: user, repo: repository, per_page: 100}, function(err, releases) {
+        client.repos.getReleases({owner: user, repo: repository, per_page: 100}, function(err, releases) {
             if (err) {
                 console.log("Bad response from GitHub while getting releases for a repository.");
                 console.log(err);
@@ -181,7 +178,7 @@ var config = require("../privateConfig").github,
                 return;
             }
 
-            releasesDeferred.resolve(releases.filter(function(release) {
+            releasesDeferred.resolve(releases.data.filter(function(release) {
                 return !release.draft;
             }).map(function(release) {
                 var date = new Date(release.created_at).getTime();
