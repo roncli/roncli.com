@@ -41,16 +41,20 @@ To run the website on Windows, make sure you perform the following steps.
 
         npm install -g node-gyp grunt-cli
 
-6. Install the node modules from the /roncli.com directory:
+6. Install the windows build tools globally:
 
-        npm install -msvs_version=2013
+        npm install -g --production windows-build-tools
 
-7. Add /roncli.com/assets/js/publicConfig.js and /roncli.com/server/privateConfig.js.  See below for file contents.
-8. Install the node modules from the /ronc.li directory:
+7. Install the node modules from the /roncli.com directory:
 
         npm install
 
-9. If using [iisnode](https://github.com/tjanczuk/iisnode):
+8. Add /roncli.com/assets/js/publicConfig.js and /roncli.com/server/privateConfig.js.  See below for file contents.
+9. Install the node modules from the /ronc.li directory:
+
+        npm install
+
+10. If using [iisnode](https://github.com/tjanczuk/iisnode):
     - Point an IIS application to the inner /roncli.com directory
     - Point another IIS application to the /ronc.li directory
     - Run ```grunt``` from the same directory when installing and after every time you change code.
