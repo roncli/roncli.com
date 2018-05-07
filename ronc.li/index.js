@@ -1,4 +1,3 @@
-/// <reference path="typings/node/node.d.ts"/>
 var express = require("express"),
     app = express(),
     morgan = require("morgan"),
@@ -25,8 +24,8 @@ app.get("*", function(req, res) {
 
     db.query(
         "SELECT RedirectID, ToURL FROM tblRedirect WHERE FromPath = @path",
-        {path: {type: db.VARCHAR(256), value: url}},
-        function(err, data) {
+        { path: { type: db.VARCHAR(256), value: url } },
+        function (err, data) {
             if (err) {
                 console.log("Error while looking up path.");
                 console.log(err);
@@ -38,12 +37,12 @@ app.get("*", function(req, res) {
                 db.query(
                     "INSERT INTO tblRedirectHit (RedirectID, IP, Referrer, UserAgent) values (@redirectId, @ip, @referrer, @userAgent)",
                     {
-                        redirectId: {type: db.INT, value: data.recordsets[0][0].RedirectID},
-                        ip: {type: db.VARCHAR(15), value: req.headers.ip},
-                        referrer: {type: db.VARCHAR(256), value: req.headers.referer ? req.headers.referer.substring(0, 256) : null},
-                        userAgent: {type: db.VARCHAR(256), value: req.headers["user-agent"] ? req.headers["user-agent"].substring(0, 256) : null}
+                        redirectId: { type: db.INT, value: data.recordsets[0][0].RedirectID },
+                        ip: { type: db.VARCHAR(15), value: req.headers.ip },
+                        referrer: { type: db.VARCHAR(256), value: req.headers.referer ? req.headers.referer.substring(0, 256) : null },
+                        userAgent: { type: db.VARCHAR(256), value: req.headers["user-agent"] ? req.headers["user-agent"].substring(0, 256) : null }
                     },
-                    function(err) {
+                    function (err) {
                         if (err) {
                             console.log("Error while recording hit.");
                             console.log(err);
@@ -53,7 +52,7 @@ app.get("*", function(req, res) {
                 res.redirect(301, data.recordsets[0][0].ToURL);
             }
         }
-    )
+    );
 });
 
 /**
@@ -68,7 +67,7 @@ function start() {
 }
 
 // Only start server if this script is executed, and not called via require.
-if (require.main && (require.main === module || (/interceptor\.js$/.test(require.main.filename) && require.main.children[0] === module))) {
+if (require.main && (require.main === module || /interceptor\.js$/.test(require.main.filename) && require.main.children[0] === module)) {
     start();
 } else {
     console.error("You can only load this website if it is the main script that is executed, or if it is loaded through iisnode.  If iisnode is installed in a non-standard location, you will need to modify the location in the index.js file.");

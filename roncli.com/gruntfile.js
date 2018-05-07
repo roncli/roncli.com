@@ -6,6 +6,8 @@ var fs = require("fs"),
 
     /**
      * Minify HTML content
+     * @param {string} content The content to minify.
+     * @returns {string} The minified content.
      */
     minifyHtml = function(content) {
         "use strict";
@@ -23,7 +25,7 @@ var fs = require("fs"),
 
     /**
      * Setup project configuration.
-     * @param {object} grunt - The grunt object.
+     * @param {object} grunt The grunt object.
      */
 module.exports = function(grunt) {
     "use strict";
@@ -43,7 +45,8 @@ module.exports = function(grunt) {
 
                     /**
                      * Returns the require path for the file.
-                     * @param {string} filename - The filename of the template to process.
+                     * @param {string} filename The filename of the template to process.
+                     * @returns {string} The require path for the file.
                      */
                     processName: function(filename) {
                         return filename.replace("app/templates/", "").replace(".hbs", "");
@@ -55,7 +58,8 @@ module.exports = function(grunt) {
 
                 /**
                  * Exclude files that begin with two underscores.
-                 * @param {string} filepath - The filename to filter.
+                 * @param {string} filepath The filename to filter.
+                 * @returns {bool} Returns true if the filename does not contain two underscores.
                  */
                 filter: function(filepath) {
                     return path.basename(filepath).slice(0, 2) !== "__";
@@ -70,7 +74,8 @@ module.exports = function(grunt) {
 
                     /**
                      * Returns the require path for the file.
-                     * @param {string} filename - The filename of the template to process.
+                     * @param {string} filename The filename of the template to process.
+                     * @returns {string} The require path for the file.
                      */
                     processName: function(filename) {
                         return filename.replace("admin/templates/", "").replace(".hbs", "");

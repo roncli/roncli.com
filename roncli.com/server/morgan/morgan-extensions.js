@@ -1,4 +1,3 @@
-/// <reference path="../../typings/node/node.d.ts"/>
 module.exports = function(morgan) {
     "use strict";
 
