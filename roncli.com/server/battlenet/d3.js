@@ -63,13 +63,11 @@ var config = require("../privateConfig").battlenet,
             }
 
             // Get the class that has the most play time this season.
-            for (index in seasonalProfile.timePlayed) {
-                if (seasonalProfile.timePlayed.hasOwnProperty(index)) {
-                    if (seasonalProfile.timePlayed[index] === 1) {
-                        characterClass = index;
-                    }
-                }
-            }
+            characterClass = Object.keys(seasonalProfile.timePlayed).map(function(c) {
+                return {class: c, timePlayed: seasonalProfile.timePlayed[c]};
+            }).sort(function(a, b) {
+                return b.timePlayed - a.timePlayed;
+            })[0].class;
 
             // Get the most recent hero played that matches the seasonal, hardcore, and class values.
             result.hero = profile.heroes.filter(function(hero) {

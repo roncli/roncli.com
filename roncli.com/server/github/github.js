@@ -51,7 +51,7 @@ var config = require("../privateConfig").github,
                     });
 
                     pushEvents = totalEvents.filter(function(event) {
-                        return event.type === "PushEvent";
+                        return event.type === "PushEvent" && event.payload.commits.length > 0;
                     });
 
 
