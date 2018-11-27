@@ -1,5 +1,5 @@
-var config = require("../privateConfig").battlenet,
-    bnet = require("battlenet-api")(config.apikey),
+var blizzhub = require("./blizzhub"),
+    wow = require("blizzhub/lib/wow"),
     cache = require("../cache/cache"),
     promise = require("promised-io/promise"),
     Deferred = promise.Deferred,
@@ -12,63 +12,76 @@ var config = require("../privateConfig").battlenet,
     cacheCharacter = function(callback) {
         "use strict";
 
-        bnet.wow.character.aggregate({
-            origin: "us",
-            realm: "sen'jin",
-            name: "Roncli",
-            fields: ["feed"]
-        }, function(err, result) {
-            var character, feed;
+        blizzhub.getToken(function(err, token) {
+            var wowCharacter;
 
-            if (err || !result || !result.thumbnail) {
+            if (err || !token) {
+                callback(err);
+                return;
+            }
+
+            wowCharacter = new wow.CharacterProfile(token);
+
+            wowCharacter.getCharacterProfile("us", "sen'jin", "Roncli", "en_US", "feed").then(function(resultJson) {
+                var result = JSON.parse(resultJson),
+                    character, feed;
+
+                if (!result || !result.thumbnail) {
+                    console.log("Bad response from Battle.Net while getting the character, no result found.");
+                    callback({
+                        error: "Bad response from Battle.Net.",
+                        status: 200
+                    });
+                    return;
+                }
+    
+                character = {
+                    achievementPoints: result.achievementPoints,
+                    thumbnail: "https://render-us.worldofwarcraft.com/character/" + result.thumbnail,
+                    profile: "https://render-us.worldofwarcraft.com/character/" + result.thumbnail.replace("avatar.jpg", "profilemain.jpg")
+                };
+    
+                feed = result.feed.filter(function(item) {
+                    return ["ACHIEVEMENT", "BOSSKILL", "LOOT"].indexOf(item.type) !== -1;
+                }).map(function(item) {
+                    return {
+                        score: item.timestamp,
+                        value: item
+                    };
+                });
+    
+                all(
+                    (function() {
+                        var deferred = new Deferred();
+    
+                        cache.set("roncli.com:battlenet:wow:character", character, 86400, function() {
+                            deferred.resolve(true);
+                        });
+    
+                        return deferred.promise;
+                    }()),
+    
+                    (function() {
+                        var deferred = new Deferred();
+    
+                        cache.del(["roncli.com:battlenet:wow:feed"], function() {
+                            cache.zadd("roncli.com:battlenet:wow:feed", feed, 86400, function() {
+                                deferred.resolve(true);
+                            });
+                        });
+    
+                        return deferred.promise;
+                    }())
+                ).then(function() {
+                    callback();
+                });
+            }).catch(function(err) {
                 console.log("Bad response from Battle.Net while getting the character.");
                 console.log(err);
                 callback({
                     error: "Bad response from Battle.Net.",
                     status: 200
                 });
-                return;
-            }
-
-            character = {
-                achievementPoints: result.achievementPoints,
-                thumbnail: "http://us.battle.net/static-render/us/" + result.thumbnail,
-                profile: "http://us.battle.net/static-render/us/" + result.thumbnail.replace("avatar.jpg", "profilemain.jpg")
-            };
-
-            feed = result.feed.filter(function(item) {
-                return ["ACHIEVEMENT", "BOSSKILL", "LOOT"].indexOf(item.type) !== -1;
-            }).map(function(item) {
-                return {
-                    score: item.timestamp,
-                    value: item
-                };
-            });
-
-            all(
-                (function() {
-                    var deferred = new Deferred();
-
-                    cache.set("roncli.com:battlenet:wow:character", character, 86400, function() {
-                        deferred.resolve(true);
-                    });
-
-                    return deferred.promise;
-                }()),
-
-                (function() {
-                    var deferred = new Deferred();
-
-                    cache.del(["roncli.com:battlenet:wow:feed"], function() {
-                        cache.zadd("roncli.com:battlenet:wow:feed", feed, 86400, function() {
-                            deferred.resolve(true);
-                        });
-                    });
-
-                    return deferred.promise;
-                }())
-            ).then(function() {
-                callback();
             });
         });
     },
@@ -82,28 +95,45 @@ var config = require("../privateConfig").battlenet,
         "use strict";
 
         var getItem = function(itemIdWithContext, callback) {
-            bnet.wow.item.item({
-                origin: "us",
-                id: itemIdWithContext
-            }, function(err, item) {
-                if (err || !item) {
+            blizzhub.getToken(function(err, token) {
+                var wowItem;
+
+                if (err || !token) {
+                    callback(err);
+                    return;
+                }
+
+                wowItem = new wow.Item(token);
+
+                wowItem.getItem("us", itemIdWithContext, "en_US").then(function(itemJson) {
+                    var item = JSON.parse(itemJson);
+
+                    if (!item) {
+                        console.log("Bad response from Battle.Net while getting the item, no item found.");
+                        console.log(err);
+                        callback({
+                            error: "Bad response from Battle.Net.",
+                            status: 200
+                        });
+                        return;
+                    }
+    
+                    if (item.name) {
+                        callback(null, item);
+                        return;
+                    }
+    
+                    if (item.availableContexts && item.availableContexts.length > 0) {
+                        getItem(itemIdWithContext + "/" + item.availableContexts[0], callback);
+                    }
+                }).catch(function(err) {
                     console.log("Bad response from Battle.Net while getting the item.");
                     console.log(err);
                     callback({
                         error: "Bad response from Battle.Net.",
                         status: 200
                     });
-                    return;
-                }
-
-                if (item.name) {
-                    callback(null, item);
-                    return;
-                }
-
-                if (item.availableContexts && item.availableContexts.length > 0) {
-                    getItem(itemIdWithContext + "/" + item.availableContexts[0], callback);
-                }
+                });
             });
         };
 

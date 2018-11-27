@@ -18,7 +18,7 @@
         "url": "https://github.com/roncli/roncli.com.git"
     },
     "dependencies": {
-        "battlenet-api": "0.13.0",
+        "blizzhub": "1.0.9",
         "body-parser": "1.18.2",
         "captchagen": "1.1.0",
         "compression": "1.7.2",
