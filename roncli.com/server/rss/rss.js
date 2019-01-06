@@ -1,5 +1,4 @@
-var fs = require("fs"),
-    domain = require("domain");
+var fs = require("fs");
 
 /**
  * Process request for an RSS feed.
@@ -16,18 +15,18 @@ module.exports = function(req, res) {
 
     // Check to ensure the RSS being requested exists.
     fs.exists(filename.replace(".", __dirname), function(exists) {
-        var parentDomain = process.domain,
-            script, d;
+        var script;
 
         if (exists) {
             // Check to ensure the method on the API exists.
             script = require(filename);
 
             if (typeof(script.rss) === "function") {
-                // Call the RSS from within a domain.
-                d = domain.create();
-
-                d.once("error", function(err) {
+                try {
+                    script.rss(req, res, function(xml) {
+                        res.send(xml);
+                    });
+                } catch (err) {
                     try {
                         console.log("Unknown server error.");
                         console.log(err);
@@ -38,14 +37,7 @@ module.exports = function(req, res) {
                         console.log("Error sending 500.");
                         console.log(err2);
                     }
-                    parentDomain.emit("error", err);
-                });
-
-                d.run(function() {
-                    script.rss(req, res, function(xml) {
-                        res.send(xml);
-                    });
-                });
+                }
             } else {
                 // Return a 404 when the RSS is not found.
                 res.status(404);
