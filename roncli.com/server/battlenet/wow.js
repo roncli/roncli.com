@@ -1,5 +1,5 @@
 var blizzhub = require("./blizzhub"),
-    wow = require("blizzhub/lib/wow"),
+    wow = require("blizzhub/lib").Wow,
     cache = require("../cache/cache"),
     promise = require("promised-io/promise"),
     Deferred = promise.Deferred,
