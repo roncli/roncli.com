@@ -170,6 +170,19 @@ The following should be the contents of privateConfig.js:
 Version History
 ===============
 
+1.0.7 - 1/8/2019
+----------------
+
+This is a bug fix release.
+
+* Upgrades to many packages to address security issues.
+* Replaced battlenet-api with blizzhub to comply with upcoming Battle.Net API requirements.
+* Fixed various GitHub issues.
+* Removed Node.js domains.
+* Fix bug with error labels not on their own line.
+* Fix bug with missing blog data crashing the front page.
+* Fix bug with improperly cached data not getting refetched.
+
 1.0.6 - 5/6/2018
 ----------------
 
