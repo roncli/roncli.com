@@ -60,7 +60,7 @@ module.exports.getLatestSongs = function(count, callback) {
     };
 
     getSongs(function() {
-        soundcloud.cacheTracks(false, function(err) {
+        soundcloud.cacheTracks(true, function(err) {
             if (err) {
                 callback(err);
                 return;
@@ -101,7 +101,7 @@ module.exports.getLatestSongsByTag = function(tag, count, callback) {
     };
 
     getSongs(function() {
-        soundcloud.cacheTracks(false, function(err) {
+        soundcloud.cacheTracks(true, function(err) {
             if (err) {
                 callback(err);
                 return;
@@ -144,7 +144,7 @@ module.exports.getTags = function(callback) {
     };
 
     getCategories(function() {
-        soundcloud.cacheTracks(false, function(err) {
+        soundcloud.cacheTracks(true, function(err) {
             if (err) {
                 callback(err);
                 return;
@@ -185,7 +185,7 @@ module.exports.getSongsByTag = function(tag, callback) {
     };
 
     getSongs(function() {
-        soundcloud.cacheTracks(false, function(err) {
+        soundcloud.cacheTracks(true, function(err) {
             if (err) {
                 callback(err);
                 return;
@@ -242,7 +242,7 @@ module.exports.getSongByUrl = function(url, callback) {
     };
 
     getSongFromUrl(url, getSong, function() {
-        soundcloud.cacheTracks(false, function(err) {
+        soundcloud.cacheTracks(true, function(err) {
             if (err) {
                 callback(err);
                 return;
@@ -304,7 +304,7 @@ module.exports.getCommentsByUrl = function(url, callback) {
     };
 
     getSongFromUrl(url, getComments, function() {
-        soundcloud.cacheTracks(false, function(err) {
+        soundcloud.cacheTracks(true, function(err) {
             if (err) {
                 callback(err);
                 return;
@@ -376,7 +376,7 @@ module.exports.postComment = function(userId, url, content, callback) {
                 };
 
             getSongFromUrl(url, resolve, function() {
-                soundcloud.cacheTracks(false, function(err) {
+                soundcloud.cacheTracks(true, function(err) {
                     if (err) {
                         callback(err);
                         return;

@@ -195,7 +195,7 @@ module.exports.getLatestPostByCategory = function(category, callback) {
         };
 
     getPost(function() {
-        cachePosts(false, function(err) {
+        cachePosts(true, function(err) {
             if (err) {
                 callback(err);
                 return;
@@ -237,7 +237,7 @@ module.exports.getPostByIndex = function(index, callback) {
         };
 
     getPost(function() {
-        cachePosts(false, function(err) {
+        cachePosts(true, function(err) {
             if (err) {
                 callback(err);
                 return;
@@ -279,7 +279,7 @@ module.exports.getPostByUrl = function(url, callback) {
         };
 
     getPostFromUrl(url, getPost, function() {
-        cachePosts(false, function(err) {
+        cachePosts(true, function(err) {
             if (err) {
                 callback(err);
                 return;
@@ -386,7 +386,7 @@ module.exports.getPost = function(post, callback) {
     }
 
     getIndex("roncli.com:blog:posts", rankDeferred, function() {
-        cachePosts(false, function(err) {
+        cachePosts(true, function(err) {
             if (err) {
                 rankDeferred.reject(err);
                 return;
@@ -530,7 +530,7 @@ module.exports.getCategories = function(callback) {
     };
 
     getCategories(function() {
-        cachePosts(false, function(err) {
+        cachePosts(true, function(err) {
             if (err) {
                 callback(err);
                 return;
@@ -632,7 +632,7 @@ module.exports.getCommentsByUrl = function(url, callback) {
     };
 
     getPostFromUrl(url, getComments, function() {
-        cachePosts(false, function(err) {
+        cachePosts(true, function(err) {
             if (err) {
                 callback(err);
                 return;
@@ -704,7 +704,7 @@ module.exports.postComment = function(userId, url, content, callback) {
                 };
 
             getPostFromUrl(url, resolve, function() {
-                cachePosts(false, function(err) {
+                cachePosts(true, function(err) {
                     if (err) {
                         callback(err);
                         return;

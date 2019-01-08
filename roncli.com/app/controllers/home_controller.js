@@ -23,7 +23,7 @@ module.exports = {
             life: {collection: "LifeFeatures", params: {}}
         }, function(err, result) {
             if (!err && result && result.blog && result.blog.models && result.blog.models[0] && result.blog.models[0].attributes && result.blog.models[0].attributes.error) {
-                err = result.blog.models[0].attributes;
+                result.blogMissing = true;
             }
 
             if (!err && result && result.songs && result.songs.models && result.songs.models[0] && result.songs.models[0].attributes && result.songs.models[0].attributes.error) {

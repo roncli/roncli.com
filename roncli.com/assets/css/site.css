@@ -693,3 +693,7 @@ div.blog span.media {
     font-weight: bold;
     color: #808080;
 }
+
+label.error {
+    display: block;
+}

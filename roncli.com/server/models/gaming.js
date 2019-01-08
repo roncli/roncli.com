@@ -201,7 +201,7 @@ module.exports.getWowFeed = function(callback) {
         };
 
     getWowCharacter(getFeed, function() {
-        wow.cacheCharacter(false, function(err) {
+        wow.cacheCharacter(true, function(err) {
             if (err) {
                 callback(err);
                 return;
@@ -278,7 +278,7 @@ module.exports.getLatestWowFeed = function(callback) {
         };
 
     getWowCharacter(getFeed, function() {
-        wow.cacheCharacter(false, function(err) {
+        wow.cacheCharacter(true, function(err) {
             if (err) {
                 callback(err);
                 return;
@@ -338,7 +338,7 @@ module.exports.getDiabloHeroes = function(callback) {
     };
 
     getHeroes(function() {
-        d3.cacheProfile(false, function(err) {
+        d3.cacheProfile(true, function(err) {
             if (err) {
                 callback(err);
                 return;
@@ -388,7 +388,7 @@ module.exports.getDiabloMain = function(callback) {
     };
 
     getProfile(function() {
-        d3.cacheProfile(false, function(err) {
+        d3.cacheProfile(true, function(err) {
             if (err) {
                 callback(err);
                 return;
@@ -434,7 +434,7 @@ module.exports.getSteamGames = function(callback) {
     };
 
     getGames(function() {
-        steam.cacheGames(false, function(err) {
+        steam.cacheGames(true, function(err) {
             if (err) {
                 callback(err);
                 return;
@@ -566,7 +566,7 @@ module.exports.getDclPilot = function(latest, callback) {
     };
 
     getPilot(function() {
-        dcl.cachePilot(false, function(err) {
+        dcl.cachePilot(true, function(err) {
             if (err) {
                 callback(err);
                 return;

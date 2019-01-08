@@ -23,28 +23,12 @@ var config = require("../privateConfig").github,
 
             /**
              * Gets the events from GitHub.
-             * @param {object} [link] The link object to determine the page to retrieve.  If not passed, gets the first page.
              */
-            getEvents = function(link) {
-                var processEvents = function(err, events) {
+            getEvents = function() {
+                var processEvents = function(events) {
                     var releaseEvents, pushEvents, allEvents;
 
-                    if (err) {
-                        console.log("Bad response from GitHub while getting events.");
-                        console.log(err);
-                        callback({
-                            error: "Bad response from GitHub.",
-                            status: 502
-                        });
-                        return;
-                    }
-
-                    totalEvents = [].concat.apply([], [totalEvents, events.data]);
-
-                    if (client.hasNextPage(events)) {
-                        getEvents(events);
-                        return;
-                    }
+                    totalEvents = [].concat.apply([], [totalEvents, events]);
 
                     releaseEvents = totalEvents.filter(function(event) {
                         return event.type === "ReleaseEvent" && event.payload.action === "published" && !event.payload.release.draft;
@@ -95,11 +79,17 @@ var config = require("../privateConfig").github,
                     });
                 };
 
-                if (link) {
-                    client.getNextPage(link, processEvents);
-                } else {
-                    client.activity.getEventsForUser({username: "roncli", per_page: 100}, processEvents);
-                }
+                var options = client.activity.listEventsForUser.endpoint.merge({username: "roncli", per_page: 100});
+
+                client.paginate(options).then(processEvents).catch(function(err) {
+                    console.log("Bad response from GitHub while listing events for user.");
+                    console.log(err);
+                    callback({
+                        error: "Bad response from GitHub.",
+                        status: 502
+                    });
+                    return;
+                });
             };
 
         getEvents();
@@ -118,17 +108,7 @@ var config = require("../privateConfig").github,
             commitsDeferred = new Deferred(),
             releasesDeferred = new Deferred();
 
-        client.repos.get({owner: user, repo: repository}, function(err, repo) {
-            if (err) {
-                console.log("Bad response from GitHub while getting a repository.");
-                console.log(err);
-                repositoryDeferred.reject({
-                    error: "Bad response from GitHub.",
-                    status: 502
-                });
-                return;
-            }
-
+        client.repos.get({owner: user, repo: repository}).then(function(repo) {
             repositoryDeferred.resolve({
                 user: repo.data.owner.login,
                 repository: repo.data.name,
@@ -139,19 +119,17 @@ var config = require("../privateConfig").github,
                 gitUrl: repo.data.git_url,
                 language: repo.data.language
             });
+        }).catch(function(err) {
+            console.log("Bad response from GitHub while getting a repository.");
+            console.log(err);
+            repositoryDeferred.reject({
+                error: "Bad response from GitHub.",
+                status: 502
+            });
+            return;
         });
 
-        client.repos.getCommits({owner: user, repo: repository, per_page: 100}, function(err, commits) {
-            if (err) {
-                console.log("Bad response from GitHub while getting commits for a repository.");
-                console.log(err);
-                commitsDeferred.reject({
-                    error: "Bad response from GitHub.",
-                    status: 502
-                });
-                return;
-            }
-
+        client.repos.listCommits({owner: user, repo: repository, per_page: 100}).then(function(commits) {
             commitsDeferred.resolve(commits.data.map(function(commit) {
                 var date = new Date(commit.commit.author.date).getTime();
                 return {
@@ -165,19 +143,17 @@ var config = require("../privateConfig").github,
                     }
                 };
             }));
+        }).catch(function(err) {
+            console.log("Bad response from GitHub while getting commits for a repository.");
+            console.log(err);
+            commitsDeferred.reject({
+                error: "Bad response from GitHub.",
+                status: 502
+            });
+            return;
         });
 
-        client.repos.getReleases({owner: user, repo: repository, per_page: 100}, function(err, releases) {
-            if (err) {
-                console.log("Bad response from GitHub while getting releases for a repository.");
-                console.log(err);
-                releasesDeferred.reject({
-                    error: "Bad response from GitHub.",
-                    status: 502
-                });
-                return;
-            }
-
+        client.repos.listReleases({owner: user, repo: repository, per_page: 100}).then(function(releases) {
             releasesDeferred.resolve(releases.data.filter(function(release) {
                 return !release.draft;
             }).map(function(release) {
@@ -194,6 +170,14 @@ var config = require("../privateConfig").github,
                     }
                 };
             }));
+        }).catch(function(err) {
+            console.log("Bad response from GitHub while getting releases for a repository.");
+            console.log(err);
+            releasesDeferred.reject({
+                error: "Bad response from GitHub.",
+                status: 502
+            });
+            return;
         });
 
         all([repositoryDeferred.promise, commitsDeferred.promise, releasesDeferred.promise]).then(

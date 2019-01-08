@@ -18,7 +18,7 @@
         "url": "https://github.com/roncli/roncli.com.git"
     },
     "dependencies": {
-        "blizzhub": "1.0.14",
+        "blizzhub": "1.0.15",
         "body-parser": "1.18.3",
         "captchagen": "1.2.0",
         "compression": "1.7.3",
@@ -48,7 +48,7 @@
         "tumblr": "0.4.1",
         "twitter": "1.7.1",
         "underscore": "1.9.1",
-        "@octokit/rest": "16.3.2"
+        "@octokit/rest": "16.6.0"
     },
     "devDependencies": {
         "grunt": "1.0.3",

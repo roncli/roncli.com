@@ -67,7 +67,7 @@ module.exports.getLatestEvents = function(count, callback) {
     };
 
     getEvents(function() {
-        github.cacheEvents(false, function(err) {
+        github.cacheEvents(true, function(err) {
             if (err) {
                 callback(err);
                 return;
