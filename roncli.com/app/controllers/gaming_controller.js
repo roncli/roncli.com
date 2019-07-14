@@ -66,17 +66,17 @@ module.exports = {
             if (app.req) {
                 result.meta = {
                     "og:description": "Games roncli plays.",
-                    "og:image": "http://" + app.req.headers.host + "/images/favicon.png",
+                    "og:image": app.req.protocol + "://" + app.req.headers.host + "/images/favicon.png",
                     "og:site_name": "roncli.com",
                     "og:title": "roncli Gaming",
                     "og:type": "website",
-                    "og:url": "http://" + app.req.headers.host + "/gaming",
+                    "og:url": app.req.protocol + "://" + app.req.headers.host + "/gaming",
                     "twitter:card": "summary",
                     "twitter:description": "Games roncli plays",
-                    "twitter:image": "http://" + app.req.headers.host + "/images/favicon.png",
+                    "twitter:image": app.req.protocol + "://" + app.req.headers.host + "/images/favicon.png",
                     "twitter:site": "@roncli",
                     "twitter:title": "roncli Gaming",
-                    "twitter:url": "http://" + app.req.headers.host + "/gaming"
+                    "twitter:url": app.req.protocol + "://" + app.req.headers.host + "/gaming"
                 };
             }
             callback(err, result);
@@ -113,17 +113,17 @@ module.exports = {
             if (app.req) {
                 result.meta = {
                     "og:description": "roncli's game stats for " + result.game.attributes.name,
-                    "og:image": "http://" + app.req.headers.host + "/images/favicon.png",
+                    "og:image": app.req.protocol + "://" + app.req.headers.host + "/images/favicon.png",
                     "og:site_name": "roncli.com",
                     "og:title": result.game.attributes.name,
                     "og:type": "website",
-                    "og:url": "http://" + app.req.headers.host + "/" + params[0],
+                    "og:url": app.req.protocol + "://" + app.req.headers.host + "/" + params[0],
                     "twitter:card": "summary",
                     "twitter:description": "roncli's game stats for " + result.game.attributes.name,
-                    "twitter:image": "http://" + app.req.headers.host + "/images/favicon.png",
+                    "twitter:image": app.req.protocol + "://" + app.req.headers.host + "/images/favicon.png",
                     "twitter:site": "@roncli",
                     "twitter:title": result.game.attributes.name,
-                    "twitter:url": "http://" + app.req.headers.host + "/" + params[0]
+                    "twitter:url": app.req.protocol + "://" + app.req.headers.host + "/" + params[0]
                 };
             }
             callback(err, result);

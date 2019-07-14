@@ -1,7 +1,7 @@
 roncli.com
 ==========
 
-This is the source repository for the [roncli.com](http://www.roncli.com) website.  This website is written in [node.js](http://nodejs.org) using the [rendr](https://github.com/rendrjs/rendr) library.
+This is the source repository for the [roncli.com](https://roncli.com) website.  This website is written in [node.js](https://nodejs.org) using the [rendr](https://github.com/rendrjs/rendr) library.
 
 Projects
 ========
@@ -15,7 +15,7 @@ The second is the Node project itself, which is developed via PhpStorm.  I do ha
 Requirements
 ============
 
-Be sure to have [Visual Studio 2013](http://www.visualstudio.com) with [Node.js Tools for Visual Studio](http://nodejstools.codeplex.com). and node.js 0.10.36 or later installed with npm.
+Be sure to have [Visual Studio 2013](https://www.visualstudio.com) with [Node.js Tools for Visual Studio](https://nodejstools.codeplex.com). and node.js 0.10.36 or later installed with npm.
 
 Database Setup
 ==============
@@ -34,27 +34,21 @@ Windows Installation
 To run the website on Windows, make sure you perform the following steps.
 
 1. Install [Python 2.7.x](https://www.python.org/downloads/).
-2. Download the all-in-one bundle for [GTK+ 2.x x86](http://ftp.acc.umu.se/pub/gnome/binaries/win32/gtk+/2.24/gtk+-bundle_2.24.10-20120208_win32.zip) or [GTK+ 2.x x64](http://ftp.acc.umu.se/pub/gnome/binaries/win64/gtk+/2.22/gtk+-bundle_2.22.1-20101229_win64.zip).
-3. Unzip the GTK+ 2.x directory to c:\GTK.  It is important that the files are in this directory, as that is where the canvas npm package will be looking for it.
-4. Add the c:\GTK\bin\ directory to your system PATH.  (This may require a restart.)
-5. From an admin command prompt, install node-gyp and grunt-cli globally:
+2. Add the c:\GTK\bin\ directory to your system PATH.  (This may require a restart.)
+3. From an admin command prompt, install grunt-cli globally:
 
-        npm install -g node-gyp grunt-cli
+        npm install -g grunt-cli
 
-6. Install the windows build tools globally:
-
-        npm install -g --production windows-build-tools
-
-7. Install the node modules from the /roncli.com directory:
+4. Install the node modules from the /roncli.com directory:
 
         npm install
 
-8. Add /roncli.com/assets/js/publicConfig.js and /roncli.com/server/privateConfig.js.  See below for file contents.
-9. Install the node modules from the /ronc.li directory:
+5. Add /roncli.com/assets/js/publicConfig.js and /roncli.com/server/privateConfig.js.  See below for file contents.
+6. Install the node modules from the /ronc.li directory:
 
         npm install
 
-10. If using [iisnode](https://github.com/tjanczuk/iisnode):
+7. If using [iisnode](https://github.com/tjanczuk/iisnode):
     - Point an IIS application to the inner /roncli.com directory
     - Point another IIS application to the /ronc.li directory
     - Run ```grunt``` from the same directory when installing and after every time you change code.
@@ -169,6 +163,16 @@ The following should be the contents of privateConfig.js:
 
 Version History
 ===============
+
+1.0.8 - 7/13/2019
+-----------------
+
+This release sets up the website to work over SSL, removes references to Google Plus, and replaces the captcha system with one that requires less of a setup on Windows.
+
+* Most URLs changed from http to https.
+* Replace captchagen with svg-captcha.
+* Removed references to Google Plus.
+* Replaced Internet Explorer with Edge as a recommended browser.
 
 1.0.7 - 1/8/2019
 ----------------
@@ -309,6 +313,7 @@ Planned Versions
 1.1
 ---
 
+* Remove Visual Studio projects.
 * Allow for a directory structure in the files section.
 * Add résumé page.
 
@@ -317,6 +322,4 @@ License Details
 
 All original code is released without license.  This means that you may not distribute the code without the express written consent of the author.
 
-Because the code resides on GitHub, you are permitted via GitHub's [Terms of Service](http://help.github.com/articles/github-terms-of-service) to view and fork this repository.
-
-©2014-2015 Ronald M. Clifford
+Because the code resides on GitHub, you are permitted via GitHub's [Terms of Service](https://help.github.com/articles/github-terms-of-service) to view and fork this repository.

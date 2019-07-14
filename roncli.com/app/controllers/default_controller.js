@@ -34,20 +34,20 @@ module.exports = {
                 }
 
                 result.meta = {
-                    "article:author": "http://www.facebook.com/roncli",
-                    "article:publisher": "http://www.facebook.com/roncli",
+                    "article:author": "https://www.facebook.com/roncli",
+                    "article:publisher": "https://www.facebook.com/roncli",
                     "og:description": content,
-                    "og:image": "http://" + app.req.headers.host + "/images/favicon.png",
+                    "og:image": app.req.protocol + "://" + app.req.headers.host + "/images/favicon.png",
                     "og:site_name": "roncli.com",
                     "og:title": page.title,
                     "og:type": "article",
-                    "og:url": "http://" + app.req.headers.host + "/" + params[0],
+                    "og:url": app.req.protocol + "://" + app.req.headers.host + "/" + params[0],
                     "twitter:card": "summary",
                     "twitter:description": content,
-                    "twitter:image": "http://" + app.req.headers.host + "/images/favicon.png",
+                    "twitter:image": app.req.protocol + "://" + app.req.headers.host + "/images/favicon.png",
                     "twitter:site": "@roncli",
                     "twitter:title": page.title,
-                    "twitter:url": "http://" + app.req.headers.host + "/" + params[0]
+                    "twitter:url": app.req.protocol + "://" + app.req.headers.host + "/" + params[0]
                 };
             }
 

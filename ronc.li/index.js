@@ -18,6 +18,9 @@ app.use(function(req, res, next) {
 // Initialize middleware stack.
 app.use(morgan(":colorstatus \x1b[30m\x1b[1m:method\x1b[0m :url\x1b[30m\x1b[1m:newline    Date :date[iso]    IP :req[ip]    Time :colorresponse ms"));
 
+// Web server routes.
+app.use(express.static("public"));
+
 // Redirect.
 app.get("*", function(req, res) {
     var url = req.url;
@@ -32,7 +35,7 @@ app.get("*", function(req, res) {
             }
 
             if (err || !data || !data.recordsets || !data.recordsets[0] || !data.recordsets[0][0] || !data.recordsets[0][0].ToURL) {
-                res.redirect(301, "http://www.roncli.com" + url);
+                res.redirect(301, req.protocol + "://roncli.com" + url);
             } else {
                 db.query(
                     "INSERT INTO tblRedirectHit (RedirectID, IP, Referrer, UserAgent) values (@redirectId, @ip, @referrer, @userAgent)",

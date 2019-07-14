@@ -36,17 +36,17 @@ module.exports = {
             if (app.req) {
                 result.meta = {
                     "og:description": "This is the home of roncli, The Nightstalker.  Listen to all of The Nightstalker's releases here.",
-                    "og:image": "http://" + app.req.headers.host + "/images/favicon.png",
+                    "og:image": app.req.protocol + "://" + app.req.headers.host + "/images/favicon.png",
                     "og:site_name": "roncli.com",
                     "og:title": "The Home of The Nightstalker",
                     "og:type": "website",
-                    "og:url": "http://" + app.req.headers.host + "/music",
+                    "og:url": app.req.protocol + "://" + app.req.headers.host + "/music",
                     "twitter:card": "summary",
                     "twitter:description": "This is the home of roncli, The Nightstalker.  Listen to all of The Nightstalker's releases here.",
-                    "twitter:image": "http://" + app.req.headers.host + "/images/favicon.png",
+                    "twitter:image": app.req.protocol + "://" + app.req.headers.host + "/images/favicon.png",
                     "twitter:site": "@roncli",
                     "twitter:title": "The Home of The Nightstalker",
-                    "twitter:url": "http://" + app.req.headers.host + "/music"
+                    "twitter:url": app.req.protocol + "://" + app.req.headers.host + "/music"
                 };
             }
             callback(err, result);
@@ -83,17 +83,17 @@ module.exports = {
             if (app.req) {
                 result.meta = {
                     "og:description": "This is the music of The Nightstalker with the " + decodeURIComponent(params[0]) + " tag.",
-                    "og:image": "http://" + app.req.headers.host + "/images/favicon.png",
+                    "og:image": app.req.protocol + "://" + app.req.headers.host + "/images/favicon.png",
                     "og:site_name": "roncli.com",
                     "og:title": "The Home of The Nightstalker - " + decodeURIComponent(params[0]),
                     "og:type": "website",
-                    "og:url": "http://" + app.req.headers.host + "/music/tag/" + decodeURIComponent(params[0]),
+                    "og:url": app.req.protocol + "://" + app.req.headers.host + "/music/tag/" + decodeURIComponent(params[0]),
                     "twitter:card": "summary",
                     "twitter:description": "This is the music of The Nightstalker with the " + decodeURIComponent(params[0]) + " tag.",
-                    "twitter:image": "http://" + app.req.headers.host + "/images/favicon.png",
+                    "twitter:image": app.req.protocol + "://" + app.req.headers.host + "/images/favicon.png",
                     "twitter:site": "@roncli",
                     "twitter:title": "The Home of The Nightstalker - " + decodeURIComponent(params[0]),
-                    "twitter:url": "http://" + app.req.headers.host + "/music/tag/" + decodeURIComponent(params[0])
+                    "twitter:url": app.req.protocol + "://" + app.req.headers.host + "/music/tag/" + decodeURIComponent(params[0])
                 };
             }
             result.tag = params[0];
@@ -144,8 +144,8 @@ module.exports = {
                     "og:site_name": "roncli.com",
                     "og:title": result.song.attributes.title,
                     "og:type": "soundcloud:sound",
-                    "og:url": "http://" + app.req.headers.host + "/" + params[0],
-                    "og:video": "http://player.soundcloud.com/player.swf?url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F" + result.song.attributes.id + "&auto_play=false&show_artwork=true&visual=true&color=3b5998&origin=facebook",
+                    "og:url": app.req.protocol + "://" + app.req.headers.host + "/" + params[0],
+                    "og:video": "https://player.soundcloud.com/player.swf?url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F" + result.song.attributes.id + "&auto_play=false&show_artwork=true&visual=true&color=3b5998&origin=facebook",
                     "og:video:height": "98",
                     "og:video:type": "application/x-shockwave-flash",
                     "og:video:width": "460",
@@ -163,7 +163,7 @@ module.exports = {
                     "twitter:player:width": "435",
                     "twitter:site": "@roncli",
                     "twitter:title": result.song.attributes.title,
-                    "twitter:url": "http://" + app.req.headers.host + "/" + params[0]
+                    "twitter:url": app.req.protocol + "://" + app.req.headers.host + "/" + params[0]
                 };
             }
             callback(err, result);

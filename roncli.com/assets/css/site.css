@@ -340,10 +340,6 @@ div.tweets div.hr {
     background-image: url("/images/facebook.png");
 }
 
-.bookmark-gplus {
-    background-image: url("/images/gplus.png");
-}
-
 .bookmark-rss {
     background-image: url("/images/rss.png");
 }
@@ -363,10 +359,6 @@ div.tweets div.hr {
 
     .bookmark-facebook {
         background-image: url("/images/facebook@2x.png");
-    }
-
-    .bookmark-gplus {
-        background-image: url("/images/gplus@2x.png");
     }
 
     .bookmark-rss {

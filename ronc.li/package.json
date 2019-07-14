@@ -1,6 +1,6 @@
 {
     "name": "ronc.li",
-    "version": "1.0.7",
+    "version": "1.0.8",
     "description": "Redirect service for roncli.com.",
     "homepage": "https://github.com/roncli/roncli.com",
     "bugs": {
@@ -11,7 +11,7 @@
     "author": {
         "name": "Ronald M. Clifford",
         "email": "roncli@roncli.com",
-        "url": "http://www.roncli.com"
+        "url": "https://roncli.com"
     },
     "repository": {
         "type": "git",

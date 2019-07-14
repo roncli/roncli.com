@@ -36,17 +36,17 @@ module.exports = {
             if (app.req) {
                 result.meta = {
                     "og:description": "Discover roncli's many coding projects.  See recent code commits, project releases, and more.",
-                    "og:image": "http://" + app.req.headers.host + "/images/favicon.png",
+                    "og:image": app.req.protocol + "://" + app.req.headers.host + "/images/favicon.png",
                     "og:site_name": "roncli.com",
                     "og:title": "roncli.com Coding Projects",
                     "og:type": "website",
-                    "og:url": "http://" + app.req.headers.host + "/coding",
+                    "og:url": app.req.protocol + "://" + app.req.headers.host + "/coding",
                     "twitter:card": "summary",
                     "twitter:description": "Discover roncli's many coding projects.  See recent code commits, project releases, and more.",
-                    "twitter:image": "http://" + app.req.headers.host + "/images/favicon.png",
+                    "twitter:image": app.req.protocol + "://" + app.req.headers.host + "/images/favicon.png",
                     "twitter:site": "@roncli",
                     "twitter:title": "roncli.com Coding Projects",
-                    "twitter:url": "http://" + app.req.headers.host + "/coding"
+                    "twitter:url": app.req.protocol + "://" + app.req.headers.host + "/coding"
                 };
             }
             callback(err, result);
@@ -90,17 +90,17 @@ module.exports = {
 
                 result.meta = {
                     "og:description": content,
-                    "og:image": "http://" + app.req.headers.host + "/images/favicon.png",
+                    "og:image": app.req.protocol + "://" + app.req.headers.host + "/images/favicon.png",
                     "og:site_name": "roncli.com",
                     "og:title": result.project.attributes.title,
                     "og:type": "website",
-                    "og:url": "http://" + app.req.headers.host + "/" + params[0],
+                    "og:url": app.req.protocol + "://" + app.req.headers.host + "/" + params[0],
                     "twitter:card": "summary",
                     "twitter:description": content,
-                    "twitter:image": "http://" + app.req.headers.host + "/images/favicon.png",
+                    "twitter:image": app.req.protocol + "://" + app.req.headers.host + "/images/favicon.png",
                     "twitter:site": "@roncli",
                     "twitter:title": result.project.attributes.title,
-                    "twitter:url": "http://" + app.req.headers.host + "/" + params[0]
+                    "twitter:url": app.req.protocol + "://" + app.req.headers.host + "/" + params[0]
                 };
             }
             callback(err, result);

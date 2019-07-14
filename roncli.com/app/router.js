@@ -74,8 +74,7 @@ Router.prototype.actionEnd = function() {
     // Update sharing URLs.
     sharing.find("a.facebook-share").attr("href", "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(window.location.href));
     sharing.find("a.twitter-share").attr("href", "https://twitter.com/home?status=" + encodeURIComponent(window.location.href));
-    sharing.find("a.gplus-share").attr("href", "https://plus.google.com/share?url=" + encodeURIComponent(window.location.href));
-    sharing.find("a.tumblr-share").attr("href", "http://www.tumblr.com/share/link?url=" + encodeURIComponent(window.location.href));
+    sharing.find("a.tumblr-share").attr("href", "https://www.tumblr.com/share/link?url=" + encodeURIComponent(window.location.href));
 
     // Tracks a page view with Google Analytics.
     if (window._gaq) {

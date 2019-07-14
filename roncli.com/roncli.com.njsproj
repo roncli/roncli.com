@@ -166,8 +166,6 @@
     <Content Include="public\images\facebook.png" />
     <Content Include="public\images\favicon.ico" />
     <Content Include="public\images\favicon.png" />
-    <Content Include="public\images\gplus%402x.png" />
-    <Content Include="public\images\gplus.png" />
     <Content Include="public\images\icons\descent.png" />
     <Content Include="public\images\icons\diablo3.png" />
     <Content Include="public\images\icons\lol.png" />

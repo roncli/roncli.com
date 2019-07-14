@@ -31,17 +31,17 @@ module.exports = {
             if (app.req) {
                 result.meta = {
                     "og:description": result.playlist.attributes.info.snippet.description,
-                    "og:image": "http://" + app.req.headers.host + "/images/favicon.png",
+                    "og:image": app.req.protocol + "://" + app.req.headers.host + "/images/favicon.png",
                     "og:site_name": "roncli.com",
                     "og:title": result.playlist.attributes.info.snippet.title,
                     "og:type": "website",
-                    "og:url": "http://" + app.req.headers.host + "/" + params[0],
+                    "og:url": app.req.protocol + "://" + app.req.headers.host + "/" + params[0],
                     "twitter:card": "summary",
                     "twitter:description": result.playlist.attributes.info.snippet.description,
-                    "twitter:image": "http://" + app.req.headers.host + "/images/favicon.png",
+                    "twitter:image": app.req.protocol + "://" + app.req.headers.host + "/images/favicon.png",
                     "twitter:site": "@roncli",
                     "twitter:title": result.playlist.attributes.info.snippet.title,
-                    "twitter:url": "http://" + app.req.headers.host + "/" + params[0]
+                    "twitter:url": app.req.protocol + "://" + app.req.headers.host + "/" + params[0]
                 };
             }
             callback(err, result);

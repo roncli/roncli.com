@@ -28,9 +28,9 @@ module.exports.rss = function(req, res, callback) {
         feed.title = "roncli.com Coding";
         feed.description = "Commits and releases for roncli's projects.";
         feed.generator = "roncli.com";
-        feed.feed_url = "http://roncli.com/coding.rss";
-        feed.site_url = "http://roncli.com/coding";
-        feed.image_url = "http://roncli.com/images/roncliSmall.png";
+        feed.feed_url = "https://roncli.com/coding.rss";
+        feed.site_url = "https://roncli.com/coding";
+        feed.image_url = "https://roncli.com/images/roncliSmall.png";
         feed.managingEditor = "roncli@roncli.com (Ronald M. Clifford)";
         feed.webMaster = "roncli@roncli.com (Ronald M. Clifford)";
         feed.copyright = (new Date()).getFullYear().toString() + " Ronald M. Clifford";
@@ -42,7 +42,7 @@ module.exports.rss = function(req, res, callback) {
 
         // Get the latest events.
         coding.getLatestEvents(0, function(err, events) {
-            var base = "http://roncli.com/coding.rss",
+            var base = "https://roncli.com/coding.rss",
                 count, lastStart;
 
             if (err) {
@@ -94,7 +94,7 @@ module.exports.rss = function(req, res, callback) {
                     categories: [event.type],
                     title: title,
                     description: event.message,
-                    url: "http://roncli.com/coding",
+                    url: "https://roncli.com/coding",
                     author: "roncli@roncli.com (roncli)",
                     custom_elements: [
                         {"atom:updated": moment(new Date(event.published)).format()}

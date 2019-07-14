@@ -1029,7 +1029,7 @@ module.exports = BaseApp.extend({
 
                 $.ajax({
                     dataType: "json",
-                    url: "http://" + window.location.host + "/api/-/youtube/get-video-info?videoId=" + media.videoId,
+                    url: window.location.protocol + "//" + window.location.host + "/api/-/youtube/get-video-info?videoId=" + media.videoId,
                     success: function(data) {
                         media.title = data.channelTitle + " - " + data.title;
                         deferred.resolve();

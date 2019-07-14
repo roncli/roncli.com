@@ -5,7 +5,7 @@ var config = require("./server/privateConfig"),
     path = require("path"),
     moment = require("moment"),
     rendr = require("rendr"),
-    captchagen = require("./server/captcha/captchagen"),
+    svgCaptcha = require("svg-captcha"),
     compression = require("compression"),
     morgan = require("morgan"),
     morganExtensions = require("./server/morgan/morgan-extensions"),
@@ -72,8 +72,13 @@ app.use(session({
 }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-app.post("/api/-/admin/files/upload", upload.single("file0"), function(req, res, next) {
+app.post("/api/-/admin/files/upload", function(req, res, next) {
     "use strict";
+
+    // 30 minute timeout.
+    res.setTimeout(1800000);
+
+    upload.single("file0")(req, res, next);
 
     next();
 });
@@ -89,26 +94,26 @@ app.get("*.rss", function(req, res) {
 app.get("/images/captcha.png", function(req, res) {
     "use strict";
 
-    var captcha = captchagen();
+    var captcha = svgCaptcha.create();
 
-    req.session.captcha = {text: captcha.text(), expires: moment().add(5, "minutes")};
+    req.session.captcha = {text: captcha.text, expires: moment().add(5, "minutes")};
 
-    res.writeHead(200, {"Content-Type": "image/png", "Cache-Control": "no-store"});
-    res.end(captcha.buffer());
+    res.writeHead(200, {"Content-Type": "image/svg+xml", "Cache-Control": "no-store"});
+    res.end(captcha.data);
 });
 
 // Permanent redirects for ModPlug, since we no longer host those files.
 app.get(/^\/modplug[\/.*]?/, function(req, res) {
     "use strict";
 
-    res.redirect(301, "http://www.modplug.com");
+    res.redirect(301, "https://www.modplug.com");
 });
 
 // Permanent redirect for old homepage.
 app.get("/tns.asp", function(req, res) {
     "use strict";
 
-    res.redirect(301, "http://roncli.com");
+    res.redirect(301, "https://roncli.com");
 });
 
 // Add the rendr server.

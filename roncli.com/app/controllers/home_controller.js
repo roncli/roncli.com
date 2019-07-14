@@ -67,17 +67,17 @@ module.exports = {
             if (app.req) {
                 result.meta = {
                     "og:description": "This is the homepage of Ronald M. Clifford.",
-                    "og:image": "http://" + app.req.headers.host + "/images/favicon.png",
+                    "og:image": app.req.protocol + "://" + app.req.headers.host + "/images/favicon.png",
                     "og:site_name": "roncli.com",
                     "og:title": "The roncli.com Website",
                     "og:type": "website",
-                    "og:url": "http://" + app.req.headers.host,
+                    "og:url": app.req.protocol + "://" + app.req.headers.host,
                     "twitter:card": "summary",
                     "twitter:description": "This is the homepage of Ronald M. Clifford.",
-                    "twitter:image": "http://" + app.req.headers.host + "/images/favicon.png",
+                    "twitter:image": app.req.protocol + "://" + app.req.headers.host + "/images/favicon.png",
                     "twitter:site": "@roncli",
                     "twitter:title": "The roncli.com Website",
-                    "twitter:url": "http://" + app.req.headers.host
+                    "twitter:url": app.req.protocol + "://" + app.req.headers.host
                 };
             }
             callback(err, result);

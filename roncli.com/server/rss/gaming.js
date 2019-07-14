@@ -33,9 +33,9 @@ module.exports.rss = function(req, res, callback) {
         feed.title = "roncli Gaming";
         feed.description = "The latest videos and gaming updates from roncli.";
         feed.generator = "roncli.com";
-        feed.feed_url = "http://roncli.com/gaming.rss";
-        feed.site_url = "http://roncli.com/gaming";
-        feed.image_url = "http://roncli.com/images/roncliSmall.png";
+        feed.feed_url = "https://roncli.com/gaming.rss";
+        feed.site_url = "https://roncli.com/gaming";
+        feed.image_url = "https://roncli.com/images/roncliSmall.png";
         feed.managingEditor = "roncli@roncli.com (Ronald M. Clifford)";
         feed.webMaster = "roncli@roncli.com (Ronald M. Clifford)";
         feed.copyright = (new Date()).getFullYear().toString() + " Ronald M. Clifford";
@@ -99,7 +99,7 @@ module.exports.rss = function(req, res, callback) {
                             categories: ["World of Warcraft Feed"],
                             title: title,
                             description: description,
-                            url: "http://roncli.com/gaming",
+                            url: "https://roncli.com/gaming",
                             author: "roncli@roncli.com (roncli)",
                             custom_elements: [
                                 {"atom:updated": moment(new Date(item.timestamp)).format()}
@@ -129,7 +129,7 @@ module.exports.rss = function(req, res, callback) {
                             categories: ["Descent Champions Ladder Matches"],
                             title: title,
                             description: description,
-                            url: "http://roncli.com/gaming",
+                            url: "https://roncli.com/gaming",
                             author: "roncli@roncli.com (roncli)",
                             custom_elements: [
                                 {"atom:updated": moment(new Date(match.date)).format()}
@@ -154,7 +154,7 @@ module.exports.rss = function(req, res, callback) {
                             categories: ["Six Gaming Podcast Highlights"],
                             title: video.title,
                             description: video.description,
-                            url: "http://roncli.com/playlist/PLzcYb51h4me8-Jq9mOk6Vk1MLodmhRZ6K/six-gaming-podcast-highlights",
+                            url: "https://roncli.com/playlist/PLzcYb51h4me8-Jq9mOk6Vk1MLodmhRZ6K/six-gaming-podcast-highlights",
                             author: "roncli@roncli.com (roncli)",
                             custom_elements: [
                                 {"atom:updated": moment(new Date(video.publishedAt)).format()}
@@ -181,7 +181,7 @@ module.exports.rss = function(req, res, callback) {
                             categories: ["World of Warcraft Videos"],
                             title: video.title,
                             description: video.description,
-                            url: "http://roncli.com/playlist/PLoqgd0t_KsN4SzIkVVyPVt7UuT3d6Rr7G/gaming-world-of-warcraft",
+                            url: "https://roncli.com/playlist/PLoqgd0t_KsN4SzIkVVyPVt7UuT3d6Rr7G/gaming-world-of-warcraft",
                             author: "roncli@roncli.com (roncli)",
                             custom_elements: [
                                 {"atom:updated": moment(new Date(video.publishedAt)).format()}
@@ -208,7 +208,7 @@ module.exports.rss = function(req, res, callback) {
                             categories: ["Diablo III Videos"],
                             title: video.title,
                             description: video.description,
-                            url: "http://roncli.com/playlist/PLoqgd0t_KsN7LEYsVepkfbn2xOiC5M5yY/gaming-diablo-iii",
+                            url: "https://roncli.com/playlist/PLoqgd0t_KsN7LEYsVepkfbn2xOiC5M5yY/gaming-diablo-iii",
                             author: "roncli@roncli.com (roncli)",
                             custom_elements: [
                                 {"atom:updated": moment(new Date(video.publishedAt)).format()}
@@ -235,7 +235,7 @@ module.exports.rss = function(req, res, callback) {
                             categories: ["Descent Videos"],
                             title: video.title,
                             description: video.description,
-                            url: "http://roncli.com/playlist/PLoqgd0t_KsN5hXZPYr9GjcGrDaj3Uq2A-/gaming-descent",
+                            url: "https://roncli.com/playlist/PLoqgd0t_KsN5hXZPYr9GjcGrDaj3Uq2A-/gaming-descent",
                             author: "roncli@roncli.com (roncli)",
                             custom_elements: [
                                 {"atom:updated": moment(new Date(video.publishedAt)).format()}
@@ -270,7 +270,7 @@ module.exports.rss = function(req, res, callback) {
         rssDeferred.promise.then(
             function() {
                 var count = feed.items.length,
-                    base = "http://roncli.com/gaming.rss",
+                    base = "https://roncli.com/gaming.rss",
                     lastStart = Math.floor((count - 1) / 25) * 25 + 1;
 
                 feed.custom_elements.push({"openSearch:totalResults": count});

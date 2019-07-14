@@ -29,9 +29,9 @@ module.exports.rss = function(req, res, callback) {
         feed.title = "The Home of The Nightstalker";
         feed.description = "The music of roncli, The Nightstalker";
         feed.generator = "roncli.com";
-        feed.feed_url = "http://roncli.com/music.rss";
-        feed.site_url = "http://roncli.com/music";
-        feed.image_url = "http://roncli.com/images/roncliSmall.png";
+        feed.feed_url = "https://roncli.com/music.rss";
+        feed.site_url = "https://roncli.com/music";
+        feed.image_url = "https://roncli.com/images/roncliSmall.png";
         feed.managingEditor = "roncli@roncli.com (Ronald M. Clifford)";
         feed.webMaster = "roncli@roncli.com (Ronald M. Clifford)";
         feed.copyright = (new Date()).getFullYear().toString() + " Ronald M. Clifford";
@@ -67,7 +67,7 @@ module.exports.rss = function(req, res, callback) {
                     var deferred = new Deferred();
 
                     cache.zcard(key, function(count) {
-                        var base = "http://roncli.com/music.rss",
+                        var base = "https://roncli.com/music.rss",
                             query = "?",
                             lastStart = Math.floor((count - 1) / 25) * 25 + 1;
 
@@ -134,7 +134,7 @@ module.exports.rss = function(req, res, callback) {
                                         categories: [].concat.apply([], [[song.genre], song.tag_list.length === 0 ? [] : song.tag_list.replace(/"[^"]+"|( )/g, function(match, group) {return group ? "||" : match;}).replace(/"/g, "").split("||")]),
                                         title: song.title,
                                         description: content,
-                                        url: "http://roncli.com" + song.songUrl,
+                                        url: "https://roncli.com" + song.songUrl,
                                         author: "roncli@roncli.com (roncli)",
                                         custom_elements: [
                                             {"atom:updated": moment(new Date(song.published)).format()}

@@ -26,17 +26,17 @@ module.exports = {
             if (app.req) {
                 result.meta = {
                     "og:description": "Files on roncli.com.",
-                    "og:image": "http://" + app.req.headers.host + "/images/favicon.png",
+                    "og:image": app.req.protocol + "://" + app.req.headers.host + "/images/favicon.png",
                     "og:site_name": "roncli.com",
                     "og:title": "roncli.com Files",
                     "og:type": "website",
-                    "og:url": "http://" + app.req.headers.host + "/files",
+                    "og:url": app.req.protocol + "://" + app.req.headers.host + "/files",
                     "twitter:card": "summary",
                     "twitter:description": "Files on roncli.com.",
-                    "twitter:image": "http://" + app.req.headers.host + "/images/favicon.png",
+                    "twitter:image": app.req.protocol + "://" + app.req.headers.host + "/images/favicon.png",
                     "twitter:site": "@roncli",
                     "twitter:title": "roncli.com Files",
-                    "twitter:url": "http://" + app.req.headers.host + "/files"
+                    "twitter:url": app.req.protocol + "://" + app.req.headers.host + "/files"
                 };
             }
             callback(err, result);

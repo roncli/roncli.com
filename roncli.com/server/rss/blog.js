@@ -29,9 +29,9 @@ module.exports.rss = function(req, res, callback) {
         feed.title = "roncli.com Blog";
         feed.description = "The blog of roncli";
         feed.generator = "roncli.com";
-        feed.feed_url = "http://roncli.com/blog.rss";
-        feed.site_url = "http://roncli.com/blog";
-        feed.image_url = "http://roncli.com/images/roncliSmall.png";
+        feed.feed_url = "https://roncli.com/blog.rss";
+        feed.site_url = "https://roncli.com/blog";
+        feed.image_url = "https://roncli.com/images/roncliSmall.png";
         feed.managingEditor = "roncli@roncli.com (Ronald M. Clifford)";
         feed.webMaster = "roncli@roncli.com (Ronald M. Clifford)";
         feed.copyright = (new Date()).getFullYear().toString() + " Ronald M. Clifford";
@@ -67,7 +67,7 @@ module.exports.rss = function(req, res, callback) {
                     var deferred = new Deferred();
 
                     cache.zcard(key, function(count) {
-                        var base = "http://roncli.com/blog.rss",
+                        var base = "https://roncli.com/blog.rss",
                             query = "?",
                             lastStart = Math.floor((count - 1) / 25) * 25 + 1;
 
@@ -155,7 +155,7 @@ module.exports.rss = function(req, res, callback) {
                                         categories: post.post.categories,
                                         title: post.post.blogTitle,
                                         description: content,
-                                        url: "http://roncli.com" + post.blogUrl,
+                                        url: "https://roncli.com" + post.blogUrl,
                                         author: "roncli@roncli.com (roncli)",
                                         custom_elements: [
                                             {"atom:updated": moment(new Date(post.post.published)).format()}

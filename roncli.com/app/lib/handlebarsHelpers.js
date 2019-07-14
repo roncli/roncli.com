@@ -136,7 +136,7 @@ module.exports = function(Handlebars) {
          * @returns {string} The Twitter profile of the user.
          */
         toTwitterProfileUrl: function(user) {
-            return "http://twitter.com/" + user;
+            return "https://twitter.com/" + user;
         },
 
         /**
@@ -146,7 +146,7 @@ module.exports = function(Handlebars) {
          * @returns {string} The permanent URL of the tweet.
          */
         toTwitterPermanentUrl: function(user, id) {
-            return "http://twitter.com/" + user + "/status/" + id;
+            return "https://twitter.com/" + user + "/status/" + id;
         },
 
         /**
@@ -155,7 +155,7 @@ module.exports = function(Handlebars) {
          * @returns {string} The URL to use to reply to a tweet.
          */
         toTwitterReplyUrl: function(id) {
-            return "http://twitter.com/intent/tweet?in_reply_to=" + id;
+            return "https://twitter.com/intent/tweet?in_reply_to=" + id;
         },
 
         /**
@@ -164,7 +164,7 @@ module.exports = function(Handlebars) {
          * @returns {string} The URL to use to retweet a tweet.
          */
         toTwitterRetweetUrl: function(id) {
-            return "http://twitter.com/intent/retweet?tweet_id=" + id;
+            return "https://twitter.com/intent/retweet?tweet_id=" + id;
         },
 
         /**
@@ -173,7 +173,7 @@ module.exports = function(Handlebars) {
          * @returns {string} The URL to use to favorite a tweet.
          */
         toTwitterFavoriteUrl: function(id) {
-            return "http://twitter.com/intent/favorite?tweet_id=" + id;
+            return "https://twitter.com/intent/favorite?tweet_id=" + id;
         },
 
         /**
