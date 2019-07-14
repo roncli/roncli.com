@@ -45,7 +45,7 @@ module.exports.getTweets = function(callback) {
                 return {
                     id: tweet.id_str,
                     timestamp: new Date(tweet.created_at),
-                    avatarUrl: tweet.retweeted_status ? tweet.retweeted_status.user.profile_image_url : tweet.user.profile_image_url,
+                    avatarUrl: tweet.retweeted_status ? (tweet.retweeted_status.user.profile_image_url_https ? tweet.retweeted_status.user.profile_image_url_https : tweet.retweeted_status.user.profile_image_url) : (tweet.user.profile_image_url_https ? tweet.user.profile_image_url_https : tweet.user.profile_image_url),
                     user: tweet.retweeted_status ? tweet.retweeted_status.user.screen_name : tweet.user.screen_name,
                     html: (tweet.retweeted_status ? tweet.retweeted_status.text : tweet.text)
                         .replace(/(.*?)((([hH][tT][tT][pP][sS]?|[fF][tT][pP]):\/\/)?([\w\.\-]+(:[\w\.&%\$\-]+)*@)?((([^\s\(\)<>\\"\.\[\],@;:]+)(\.[^\s\(\)<>\\"\.\[\],@;:]+)*(\.[a-zA-Z]{2,4}))|((([01]?\d{1,2}|2[0-4]\d|25[0-5])\.){3}([01]?\d{1,2}|2[0-4]\d|25[0-5])))(\b:(6553[0-5]|655[0-2]\d|65[0-4]\d{2}|6[0-4]\d{3}|[1-5]\d{4}|[1-9]\d{0,3}|0)\b)?((\/[^\/][\w\.,\?'\\\/\+&%\$#=~_\-@]*)*[^\.,\?"'\(\)\[\]!;<>{}\s\x7F-\xFF])?)(.*?)/g, "$1<a target=\"_blank\" href=\"$2\">$2</a>$20")
