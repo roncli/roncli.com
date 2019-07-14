@@ -155,6 +155,7 @@
     <Content Include="public\images\blogger%402x.png" />
     <Content Include="public\images\blogger.png" />
     <Content Include="public\images\browsers\chrome.png" />
+    <Content Include="public\images\browsers\edge.png" />
     <Content Include="public\images\browsers\firefox.png" />
     <Content Include="public\images\browsers\ie.png" />
     <Content Include="public\images\browsers\safari.png" />
