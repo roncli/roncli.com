@@ -28,7 +28,7 @@
         "googleapis": "36.0.0",
         "handlebars": "4.0.12",
         "iscroll": "5.2.0",
-        "jquery": "3.3.1",
+        "jquery": "3.4.1",
         "moment": "2.23.0",
         "morgan": "1.9.1",
         "mssql": "4.3.0",
