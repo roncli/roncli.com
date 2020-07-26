@@ -24,7 +24,7 @@ var http = require("http"),
                     console.log(err);
                     callback({
                         error: "Bad response from DCL.",
-                        status: 502
+                        status: 200
                     });
                     return;
                 }
@@ -43,7 +43,7 @@ var http = require("http"),
             console.log(err);
             callback({
                 error: "Bad response from DCL.",
-                status: 502
+                status: 200
             });
         });
     };
