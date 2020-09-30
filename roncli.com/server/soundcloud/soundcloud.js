@@ -18,10 +18,14 @@ var config = require("../privateConfig").soundcloud,
 
             /**
              * Gets the tracks from SoundCloud.
-             * @param {number} offset The offset to start at.
+             * @param {string} [href] The next href.
              */
-            getTracks = function(offset) {
-                soundcloud.get("/users/7641/tracks?linked_partitioning=1&limit=" + limit + (offset > 0 ? "&offset=" + offset : ""), function(err, data) {
+            getTracks = function(href) {
+                let url = "/users/7641/tracks?linked_partitioning=true&page_size=" + limit;
+                if (href) {
+                    url = href.substring(26);
+                }
+                soundcloud.get(url, function(err, data) {
                     var tracks, tags, tagTracks, promises, fxs;
 
                     if (err) {
@@ -38,9 +42,9 @@ var config = require("../privateConfig").soundcloud,
                         totalTracks = [].concat.apply([], [totalTracks, data.collection]);
                     }
 
-                    if (data && data.next_href) {
+                    if (data && data.collection && data.collection.length > 0 && data.next_href && data.next_href.startsWith("https://api.soundcloud.com")) {
                         // There are more tracks, retrieve them.
-                        getTracks(offset + limit);
+                        getTracks(data.next_href);
                     } else {
                         // There are no more tracks, cache what was received.
                         totalTracks.forEach(function(track) {
@@ -157,7 +161,7 @@ var config = require("../privateConfig").soundcloud,
                 });
             };
 
-        getTracks(0);
+        getTracks();
     };
 
 // Initialize soundcloud.
