@@ -174,7 +174,14 @@ module.exports = function(grunt) {
                     report: "gzip"
                 },
                 files: {
-                    "public/js/site.min.js": ["assets/js/site.js", "assets/js/loadJQuery.js", "assets/js/publicConfig.js", "assets/js/jquery-defaultButton-1.2.0.min.js", "assets/js/jquery-getParam.min.js"],
+                    "public/js/site.min.js": [
+                        "assets/js/site.js",
+                        "assets/js/loadJQuery.js",
+                        "assets/js/publicConfig.js",
+                        "assets/js/jquery-defaultButton-1.2.0.min.js",
+                        "assets/js/jquery-getParam.min.js",
+                        "assets/js/tinymce.min.js"
+                    ],
                     "public/js/admin.min.js": ["assets/js/admin.js"]
                 }
             }
