@@ -322,4 +322,4 @@ License Details
 
 All original code is released without license.  This means that you may not distribute the code without the express written consent of the author.
 
-Because the code resides on GitHub, you are permitted via GitHub's [Terms of Service](https://help.github.com/articles/github-terms-of-service) to view and fork this repository.
+Because the code resides on GitHub, you are permitted via GitHub's [Terms of Service](https://docs.github.com/en/github/site-policy/github-terms-of-service) to view and fork this repository.
