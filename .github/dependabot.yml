@@ -1,0 +1,45 @@
+version: 2
+updates:
+  - package-ecosystem: "docker"
+    directory: /certbot/
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "docker"
+    directory: /db/
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "docker"
+    directory: /logging/
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "docker"
+    directory: /nginx/
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "docker"
+    directory: /node-ronc-li/
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "docker"
+    directory: /node-roncli-com/
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "docker"
+    directory: /redis/
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "npm"
+    directory: /logging/
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "npm"
+    directory: /node-ronc-li/
+    schedule:
+      interval: "daily"
+  - package-ecosystem: "npm"
+    directory: /node-roncli-com/
+    schedule:
+      interval: "daily"
+    ignore:
+      # This is not the npm versin of node-redis, so we ignore it.
+      - dependency-name: "node-redis"

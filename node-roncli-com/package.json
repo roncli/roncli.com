@@ -1,0 +1,65 @@
+{
+    "name": "roncli.com-node-roncli-com",
+    "version": "2.0.0-phase.1",
+    "description": "The website for roncli.com.",
+    "homepage": "https://github.com/roncli/roncli.com",
+    "bugs": {
+        "url": "https://github.com/roncli/roncli.com/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/roncli/roncli.com"
+    },
+    "main": "index.js",
+    "author": {
+        "name": "Ronald M. Clifford",
+        "email": "roncli@roncli.com",
+        "url": "https://roncli.com"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "@editorjs/editorjs": "2.22.2",
+        "@editorjs/quote": "2.4.0",
+        "@fontsource/archivo-narrow": "4.5.0",
+        "@octokit/auth-oauth-app": "4.3.0",
+        "@octokit/rest": "18.11.3",
+        "@root/request": "1.7.0",
+        "@xivapi/js": "roncli/xivapi-js#1e23375482e9a8db1d977ac510f65d2888dae2fb",
+        "blizzard.js": "4.1.1",
+        "bootstrap-icons": "1.5.0",
+        "compression": "1.7.4",
+        "connect-redis": "6.0.0",
+        "cookie-parser": "1.4.5",
+        "editorjs-parser": "1.5.3",
+        "express": "4.17.1",
+        "express-session": "1.17.2",
+        "googleapis": "87.0.0",
+        "hot-router": "1.0.0-beta.8",
+        "html-minifier-terser": "6.0.2",
+        "monaco-editor": "0.28.1",
+        "mongodb": "4.1.2",
+        "multer": "1.4.3",
+        "node-application-insights-logger": "roncli/node-application-insights-logger#v1.0.4",
+        "node-minify": "roncli/node-minify#v1.1.0",
+        "node-redis": "roncli/node-redis#v0.1.5",
+        "nodemailer": "6.6.5",
+        "pbkdf2": "3.1.2",
+        "sanitize-html": "2.5.1",
+        "sortablejs": "1.14.0",
+        "svg-captcha": "1.4.0",
+        "timeago.js": "4.0.2",
+        "tumblr.js": "3.0.0"
+    },
+    "devDependencies": {
+        "@babel/core": "7.15.5",
+        "@babel/eslint-parser": "7.15.7",
+        "@types/cookie-parser": "1.4.2",
+        "@types/express": "4.17.13",
+        "@types/express-session": "1.17.4",
+        "@types/html-minifier-terser": "6.0.0",
+        "@types/multer": "1.4.7",
+        "@types/nodemailer": "6.4.4",
+        "@types/pbkdf2": "3.1.0",
+        "@types/sortablejs": "1.10.7"
+    }
+}

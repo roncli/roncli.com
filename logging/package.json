@@ -1,0 +1,31 @@
+{
+    "name": "roncli.com-logging",
+    "version": "2.0.0-phase.1",
+    "description": "gelf logging for roncli.com.",
+    "homepage": "https://github.com/roncli/roncli.com",
+    "bugs": {
+        "url": "https://github.com/roncli/roncli.com/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/roncli/roncli.com"
+    },
+    "main": "index.js",
+    "author": {
+        "name": "Ronald M. Clifford",
+        "email": "roncli@roncli.com",
+        "url": "https://roncli.com"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "applicationinsights": "2.1.8",
+        "dockerode": "3.3.1",
+        "graygelf": "2.0.0"
+    },
+    "devDependencies": {
+        "@babel/core": "7.15.5",
+        "@babel/eslint-parser": "7.15.7",
+        "@types/dockerode": "3.2.7",
+        "@types/node": "16.10.2"
+    }
+}

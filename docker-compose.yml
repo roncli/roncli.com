@@ -1,0 +1,273 @@
+version: "3.7"
+
+services:
+
+  # logging:
+  #   container_name: roncli-logging
+  #   build: ./logging
+  #   ports:
+  #     - "12201:12201/udp"
+  #   environment:
+  #     PORT: 12201
+  #     APPINSIGHTS_PERFORMANCE_METRICS: 0
+  #     APPINSIGHTS_INSTRUMENTATIONKEY: /run/secrets/APPINSIGHTS_INSTRUMENTATIONKEY
+  #     APPLICATION: roncli.com
+  #   secrets:
+  #     - APPINSIGHTS_INSTRUMENTATIONKEY
+  #   restart: always
+  #   entrypoint: /var/logging/start.sh
+
+  db:
+    container_name: roncli-db
+    build: ./db
+    # depends_on:
+    #   - logging
+    networks:
+      - roncli.com-network
+    ports:
+      - "27017:27017"
+    # logging:
+    #   driver: "gelf"
+    #   options:
+    #     gelf-address: "udp://localhost:12201"
+    environment:
+      DB_FILES_URI: /run/secrets/DB_FILES_URI
+      DB_FILES_USERNAME: /run/secrets/DB_FILES_USERNAME
+      DB_FILES_PASSWORD: /run/secrets/DB_FILES_PASSWORD
+      MONGO_INITDB_DATABASE: roncli
+      MONGO_INITDB_ROOT_USERNAME_FILE: /run/secrets/MONGO_INITDB_ROOT_USERNAME_FILE
+      MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/MONGO_INITDB_ROOT_PASSWORD_FILE
+      USE_AZURE_FILE_STORAGE: 1
+      WEB_RONCLI_PASSWORD_FILE: /run/secrets/WEB_RONCLI_PASSWORD_FILE
+    # volumes:
+    #   - /mnt/mongodb:/data/db:rw
+    secrets:
+      - DB_FILES_URI
+      - DB_FILES_USERNAME
+      - DB_FILES_PASSWORD
+      - MONGO_INITDB_ROOT_USERNAME_FILE
+      - MONGO_INITDB_ROOT_PASSWORD_FILE
+      - WEB_RONCLI_PASSWORD_FILE
+    restart: always
+    entrypoint: /var/mongo/start.sh
+    privileged: true
+
+  redis:
+    container_name: roncli-redis
+    build: ./redis
+    # depends_on:
+    #   - logging
+    networks:
+      - roncli.com-network
+    ports:
+      - "6379:6379"
+    # logging:
+    #   driver: "gelf"
+    #   options:
+    #     gelf-address: "udp://localhost:12201"
+    environment:
+      REDIS_PASSWORD_FILE: /run/secrets/REDIS_PASSWORD_FILE
+      REDIS_PORT: 6379
+    secrets:
+      - REDIS_PASSWORD_FILE
+    restart: always
+    entrypoint: /var/redis/start.sh
+    privileged: true
+
+  node-roncli-com:
+    container_name: roncli-node-roncli-com
+    build:
+      context: ./node-roncli-com
+      args:
+        USE_AZURE_FILE_STORAGE: 1
+    depends_on:
+      # - logging
+      - db
+      - redis
+    networks:
+      - roncli.com-network
+    # logging:
+    #   driver: "gelf"
+    #   options:
+    #     gelf-address: "udp://localhost:12201"
+    environment:
+      APPINSIGHTS_INSTRUMENTATIONKEY: /run/secrets/APPINSIGHTS_INSTRUMENTATIONKEY
+      BLIZZARD_CLIENT_ID_FILE: /run/secrets/BLIZZARD_CLIENT_ID_FILE
+      BLIZZARD_CLIENT_SECRET_FILE: /run/secrets/BLIZZARD_CLIENT_SECRET_FILE
+      BLOGGER_BLOG_ID: 10934322
+      COOKIE_SECRET_FILE: /run/secrets/COOKIE_SECRET_FILE
+      ENCRYPTION_KEY_FILE: /run/secrets/ENCRYPTION_KEY_FILE
+      FILES_URI: /run/secrets/FILES_URI
+      FILES_USERNAME: /run/secrets/FILES_USERNAME
+      FILES_PASSWORD: /run/secrets/FILES_PASSWORD
+      GITHUB_CLIENT_ID_FILE: /run/secrets/GITHUB_CLIENT_ID_FILE
+      GITHUB_CLIENT_SECRET_FILE: /run/secrets/GITHUB_CLIENT_SECRET_FILE
+      GOOGLE_API_KEY_FILE: /run/secrets/GOOGLE_API_KEY_FILE
+      MINIFY_CACHE: 1
+      MINIFY_ENABLED: 1
+      NODE_ENV: production
+      PORT: 3030
+      REDIS_PASSWORD_FILE: /run/secrets/REDIS_PASSWORD_FILE
+      REDIS_PORT: 6379
+      REDIS_PREFIX: roncli
+      SMTP_HOST: smtp.gmail.com
+      SMTP_PORT: 465
+      SMTP_USERNAME: roncli@gmail.com
+      SMTP_PASSWORD_FILE: /run/secrets/SMTP_PASSWORD_FILE
+      SOUNDCLOUD_CLIENT_ID_FILE: /run/secrets/SOUNDCLOUD_CLIENT_ID_FILE
+      SOUNDCLOUD_CLIENT_SECRET_FILE: /run/secrets/SOUNDCLOUD_CLIENT_SECRET_FILE
+      TUMBLR_CONSUMER_KEY_FILE: /run/secrets/TUMBLR_CONSUMER_KEY_FILE
+      TUMBLR_CONSUMER_SECRET_FILE: /run/secrets/TUMBLR_CONSUMER_SECRET_FILE
+      TUMBLR_URL: roncli.tumblr.com
+      USE_AZURE_FILE_STORAGE: 1
+      WEB_RONCLI_PASSWORD_FILE: /run/secrets/WEB_RONCLI_PASSWORD_FILE
+      XIVAPI_API_KEY_FILE: /run/secrets/XIVAPI_API_KEY_FILE
+    secrets:
+      - APPINSIGHTS_INSTRUMENTATIONKEY
+      - BLIZZARD_CLIENT_ID_FILE
+      - BLIZZARD_CLIENT_SECRET_FILE
+      - COOKIE_SECRET_FILE
+      - ENCRYPTION_KEY_FILE
+      - FILES_URI
+      - FILES_USERNAME
+      - FILES_PASSWORD
+      - GITHUB_CLIENT_ID_FILE
+      - GITHUB_CLIENT_SECRET_FILE
+      - GOOGLE_API_KEY_FILE
+      - REDIS_PASSWORD_FILE
+      - SMTP_PASSWORD_FILE
+      - SOUNDCLOUD_CLIENT_ID_FILE
+      - SOUNDCLOUD_CLIENT_SECRET_FILE
+      - TUMBLR_CONSUMER_KEY_FILE
+      - TUMBLR_CONSUMER_SECRET_FILE
+      - WEB_RONCLI_PASSWORD_FILE
+      - XIVAPI_API_KEY_FILE
+    restart: always
+    entrypoint: /var/www/start.sh
+    privileged: true
+
+  # node-ronc-li:
+  #   container_name: roncli-node-ronc-li
+  #   build: ./node-ronc-li
+  #   depends_on:
+  #     - logging
+  #     - db
+  #     - redis
+  #   networks:
+  #     - roncli.com-network
+  #   logging:
+  #     driver: "gelf"
+  #     options:
+  #       gelf-address: "udp://localhost:12201"
+  #   environment:
+  #     APPINSIGHTS_INSTRUMENTATIONKEY: /run/secrets/APPINSIGHTS_INSTRUMENTATIONKEY
+  #     NODE_ENV: production
+  #     PORT: 3031
+  #     WEB_RONCLI_PASSWORD_FILE: /run/secrets/WEB_RONCLI_PASSWORD_FILE
+  #   secrets:
+  #     - APPINSIGHTS_INSTRUMENTATIONKEY
+  #     - WEB_RONCLI_PASSWORD_FILE
+  #   restart: always
+  #   entrypoint: /var/www/start.sh
+  #   privileged: true
+
+  nginx:
+    container_name: roncli-nginx
+    build: ./nginx
+    depends_on:
+      - node-roncli-com
+      # - node-ronc-li
+      # - logging
+    networks:
+      - roncli.com-network
+    ports:
+      - "80:80"
+      - "443:443"
+    # logging:
+    #   driver: "gelf"
+    #   options:
+    #     gelf-address: "udp://localhost:12201"
+    restart: always
+    volumes:
+      - certbot-conf:/etc/letsencrypt:rw
+      - certbot-work:/var/certbot/work:rw
+      - nginx-work:/var/nginx/work:rw
+    entrypoint: /var/nginx/start.sh
+
+  # certbot:
+  #   container_name: roncli-certbot
+  #   build: ./certbot
+  #   depends_on:
+  #     - nginx
+  #     - logging
+  #   logging:
+  #     driver: "gelf"
+  #     options:
+  #       gelf-address: "udp://localhost:12201"
+  #   environment:
+  #     DOMAIN: roncli.com,ronc.li
+  #     EMAIL: roncli@roncli.com
+  #   restart: always
+  #   volumes:
+  #     - certbot-conf:/etc/letsencrypt:rw
+  #     - certbot-work:/var/certbot/work:rw
+  #   entrypoint: /var/certbot/start.sh
+
+networks:
+  roncli.com-network:
+    driver: bridge
+
+volumes:
+  certbot-conf:
+  certbot-work:
+  nginx-work:
+
+secrets:
+  APPINSIGHTS_INSTRUMENTATIONKEY:
+    file: ./secrets/APPINSIGHTS_INSTRUMENTATIONKEY
+  BLIZZARD_CLIENT_ID_FILE:
+    file: ./secrets/BLIZZARD_CLIENT_ID_FILE
+  BLIZZARD_CLIENT_SECRET_FILE:
+    file: ./secrets/BLIZZARD_CLIENT_SECRET_FILE
+  COOKIE_SECRET_FILE:
+    file: ./secrets/COOKIE_SECRET_FILE
+  DB_FILES_URI:
+    file: ./secrets/DB_FILES_URI
+  DB_FILES_USERNAME:
+    file: ./secrets/DB_FILES_USERNAME
+  DB_FILES_PASSWORD:
+    file: ./secrets/DB_FILES_PASSWORD
+  ENCRYPTION_KEY_FILE:
+    file: ./secrets/ENCRYPTION_KEY_FILE
+  FILES_URI:
+    file: ./secrets/FILES_URI
+  FILES_USERNAME:
+    file: ./secrets/FILES_USERNAME
+  FILES_PASSWORD:
+    file: ./secrets/FILES_PASSWORD
+  GITHUB_CLIENT_ID_FILE:
+    file: ./secrets/GITHUB_CLIENT_ID_FILE
+  GITHUB_CLIENT_SECRET_FILE:
+    file: ./secrets/GITHUB_CLIENT_SECRET_FILE
+  GOOGLE_API_KEY_FILE:
+    file: ./secrets/GOOGLE_API_KEY_FILE
+  MONGO_INITDB_ROOT_PASSWORD_FILE:
+    file: ./secrets/MONGO_INITDB_ROOT_PASSWORD_FILE
+  MONGO_INITDB_ROOT_USERNAME_FILE:
+    file: ./secrets/MONGO_INITDB_ROOT_USERNAME_FILE
+  REDIS_PASSWORD_FILE:
+    file: ./secrets/REDIS_PASSWORD_FILE
+  SMTP_PASSWORD_FILE:
+    file: ./secrets/SMTP_PASSWORD_FILE
+  SOUNDCLOUD_CLIENT_ID_FILE:
+    file: ./secrets/SOUNDCLOUD_CLIENT_ID_FILE
+  SOUNDCLOUD_CLIENT_SECRET_FILE:
+    file: ./secrets/SOUNDCLOUD_CLIENT_SECRET_FILE
+  TUMBLR_CONSUMER_KEY_FILE:
+    file: ./secrets/TUMBLR_CONSUMER_KEY_FILE
+  TUMBLR_CONSUMER_SECRET_FILE:
+    file: ./secrets/TUMBLR_CONSUMER_SECRET_FILE
+  WEB_RONCLI_PASSWORD_FILE:
+    file: ./secrets/WEB_RONCLI_PASSWORD_FILE
+  XIVAPI_API_KEY_FILE:
+    file: ./secrets/XIVAPI_API_KEY_FILE

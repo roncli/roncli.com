@@ -1,0 +1,21 @@
+# Get Node LTS Alpine.
+FROM node:lts-alpine
+
+# Create /var/www directory.
+RUN mkdir -p /var/www
+
+# Copy package.json into /var/www directory.
+WORKDIR /var/www
+COPY ./package.json .
+
+# Run NPM install.
+RUN npm install --production --silent
+
+# Copy remaining files.
+COPY . .
+
+# Allow start script to run.
+RUN chmod +x /var/www/*.sh
+
+# Expose port 3031.
+EXPOSE 3031
