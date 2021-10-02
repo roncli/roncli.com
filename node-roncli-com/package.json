@@ -22,7 +22,7 @@
         "@editorjs/quote": "2.4.0",
         "@fontsource/archivo-narrow": "4.5.0",
         "@octokit/auth-oauth-app": "4.3.0",
-        "@octokit/rest": "18.11.3",
+        "@octokit/rest": "18.11.4",
         "@root/request": "1.7.0",
         "@xivapi/js": "roncli/xivapi-js#1e23375482e9a8db1d977ac510f65d2888dae2fb",
         "blizzard.js": "4.1.1",
