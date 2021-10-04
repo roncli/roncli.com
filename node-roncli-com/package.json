@@ -39,7 +39,7 @@
         "monaco-editor": "0.28.1",
         "mongodb": "4.1.2",
         "multer": "1.4.3",
-        "node-application-insights-logger": "roncli/node-application-insights-logger#v1.0.4",
+        "node-application-insights-logger": "roncli/node-application-insights-logger#v1.0.5",
         "node-minify": "roncli/node-minify#v1.1.0",
         "node-redis": "roncli/node-redis#v0.1.5",
         "nodemailer": "6.6.5",
