@@ -42,7 +42,7 @@
         "node-application-insights-logger": "roncli/node-application-insights-logger#v1.0.5",
         "node-minify": "roncli/node-minify#v1.1.1",
         "node-redis": "roncli/node-redis#v0.1.5",
-        "nodemailer": "6.6.5",
+        "nodemailer": "6.7.0",
         "pbkdf2": "3.1.2",
         "sanitize-html": "2.5.1",
         "sortablejs": "1.14.0",
