@@ -125,6 +125,9 @@ class SPA {
             // Run timeago on the new page.
             SPA.runTimeago();
 
+            // Run Twitter widgets on the new page.
+            window.twttr.widgets.load();
+
             // Update share buttons.
             let share = /** @type {HTMLAnchorElement} */(document.getElementById("share-facebook")); // eslint-disable-line no-extra-parens
             share.href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(`https://${window.location.host}${path}`)}`;
