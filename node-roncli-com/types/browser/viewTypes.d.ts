@@ -78,6 +78,31 @@ declare namespace ViewTypes {
         }[]
     }
 
+    type BlogPostViewParameters = {
+        title: BlogTypes.Title
+        content: any
+        mainNav: {
+            prev: BlogTypes.Title
+            next: BlogTypes.Title
+        }
+        categoryNavs: {
+            [x: string]: {
+                prev: BlogTypes.Title
+                next: BlogTypes.Title
+            }
+        }
+        category: string
+    }
+
+    type BlogPostViewInfoParameters = {
+        title: BlogTypes.Title
+        category: string
+        categories: {
+            category: string
+            posts: number
+        }[]
+    }
+
     type BlogViewParameters = {
         titles: BlogTypes.Title[]
         categories: {

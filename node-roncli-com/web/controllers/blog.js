@@ -95,16 +95,16 @@ class Blog extends RouterBase {
                 js: ["/js/blog.js"],
                 views: [
                     {
-                        name: "BlogView",
-                        path: "/views/blog.js"
-                    },
-                    {
                         name: "BlogTitlesView",
                         path: "/views/blog/titles.js"
                     },
                     {
                         name: "PaginationPageView",
                         path: "/views/pagination/page.js"
+                    },
+                    {
+                        name: "BlogView",
+                        path: "/views/blog.js"
                     }
                 ],
                 view: "BlogView",

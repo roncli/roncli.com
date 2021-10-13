@@ -37,64 +37,34 @@ class Tumblr {
      * @returns {string} The title.
      */
     static getTitleFromPost(post) {
-        if (post && post.layout && post.layout[0] && post.layout[0].type === "ask") {
-            return "(Q&A)";
+        // If it already has a title, just return it.
+        if (post.title) {
+            return post.title;
         }
 
-        if (post && post.content && post.content.length > 0) {
-            {
-                // Get titles of audio posts.
-                const content = post.content.find((c) => c.type === "audio");
-                if (content) {
-                    return content.title || "(Audio)";
-                }
-            }
-            {
-                // Get titles of chat posts.
-                const content = post.content.find((c) => c.type === "text" && c.subtype === "chat");
-                if (content) {
-                    return "(Chat)";
-                }
-            }
-            {
-                // Get titles of chat posts.
-                const content = post.content.find((c) => c.type === "image");
-                if (content) {
-                    return "(Image)";
-                }
-            }
-            {
-                // Get titles of chat posts.
-                const content = post.content.find((c) => c.type === "link");
-                if (content) {
-                    return content.title || "(Link)";
-                }
-            }
-            {
-                // Get titles of quote posts.
-                const content = post.content.find((c) => c.type === "text" && c.subtype === "quote");
-                if (content) {
-                    return "(Quote)";
-                }
-            }
-            {
-                // Get titles of text posts.
-                const content = post.content.find((c) => c.type === "text" && c.subtype === "heading1");
-                if (content) {
-                    return content.text || "(Post)";
-                }
-            }
-            {
-                // Get titles of quote posts.
-                const content = post.content.find((c) => c.type === "video");
-                if (content) {
-                    return "(Video)";
-                }
-            }
+        // If it has a track name, return it.
+        if (post.track_name) {
+            return post.track_name;
         }
 
-        // Use a generic title.
-        return "(Post)";
+        switch (post.type) {
+            case "answer":
+                return "(Q&A)";
+            case "audio":
+                return "(Audio)";
+            case "link":
+                return "(Link)";
+            case "photo":
+                return "(Image)";
+            case "quote":
+                return "(Quote)";
+            case "text":
+                return "(Text)";
+            case "video":
+                return "(Video)";
+            default:
+                return "(Post)";
+        }
     }
 
     //              #    ###                 #
@@ -110,7 +80,7 @@ class Tumblr {
      */
     static async getPosts() {
         const options = {
-            npf: true,
+            npf: false,
             "notes_info": false,
             "reblog_info": false,
             offset: 0

@@ -1,5 +1,5 @@
 /**
- * @typedef {import("../../../src/models/blog")} Blog
+ * @typedef {import("../../../types/node/blogTypes").Title} BlogTypes.Title
  */
 
 //  ####    ##                   ###                  #                    #     #   #    #
@@ -24,37 +24,38 @@ class BlogContentView {
     //  ###
     /**
      * Gets the rendered page template.
-     * @param {Blog} blog The data to render the page with.
+     * @param {BlogTypes.Title} title The blog title.
+     * @param {any} content The blog content.
      * @returns {string} An HTML string of the page.
      */
-    static get(blog) {
-        switch (blog.post.blogSource) {
+    static get(title, content) {
+        switch (title.blogSource) {
             case "blogger":
-                return BlogContentView.blogger(blog);
+                return BlogContentView.blogger(title, content);
             case "tumblr":
-                switch (blog.content.type) {
+                switch (content.type) {
                     case "answer":
-                        return BlogContentView.tumblrAnswer(blog);
+                        return BlogContentView.tumblrAnswer(title, content);
                     case "audio":
-                        switch (blog.content.audio_type) {
+                        switch (content.audio_type) {
                             case "soundcloud":
-                                return BlogContentView.tumblrSoundCloud(blog);
+                                return BlogContentView.tumblrSoundCloud(title, content);
                             case "tumblr":
-                                return BlogContentView.tumblrAudio(blog);
+                                return BlogContentView.tumblrAudio(title, content);
                         }
                         break;
                     case "link":
-                        return BlogContentView.tumblrLink(blog);
+                        return BlogContentView.tumblrLink(title, content);
                     case "photo":
-                        return BlogContentView.tumblrPhoto(blog);
+                        return BlogContentView.tumblrPhoto(title, content);
                     case "quote":
-                        return BlogContentView.tumblrQuote(blog);
+                        return BlogContentView.tumblrQuote(title, content);
                     case "text":
-                        return BlogContentView.tumblrText(blog);
+                        return BlogContentView.tumblrText(title, content);
                     case "video":
-                        switch (blog.content.video_type) {
+                        switch (content.video_type) {
                             case "youtube":
-                                return BlogContentView.tumblrYouTube(blog);
+                                return BlogContentView.tumblrYouTube(title, content);
                         }
                         break;
                 }
@@ -73,21 +74,22 @@ class BlogContentView {
     //                    ###   ###
     /**
      * Gets the rendered blog post.
-     * @param {Blog} blog The blog post.
+     * @param {BlogTypes.Title} title The blog title.
+     * @param {any} content The blog content.
      * @returns {string} An HTML string of the page.
      */
-    static blogger(blog) {
+    static blogger(title, content) {
         return /* html */`
             <div class="panel">
                 <div class="panel-title rounded-top">
-                    <h3>${BlogContentView.Encoding.htmlEncode(blog.post.title)}</h3>
-                    Posted <script>document.write(window.Time.formatDate(new Date(${blog.post.published})));</script><br />
-                    ${blog.post.categories.map((c) => /* html */`
+                    <h3>${BlogContentView.Encoding.htmlEncode(title.title)}</h3>
+                    Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
+                    ${title.categories.map((c) => /* html */`
                         <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(c)}">${BlogContentView.Encoding.htmlEncode(c)}</a>
                     `).join("")}
                 </div>
                 <div class="panel-body rounded-bottom">
-                    ${blog.content.content}
+                    ${content.content}
                 </div>
             </div>
         `;
@@ -101,21 +103,22 @@ class BlogContentView {
     //   ##   ###  #  #  ###   ###   #     #  #  #  #  ###    ####   ##   #
     /**
      * Gets the rendered blog post.
-     * @param {Blog} blog The blog post.
+     * @param {BlogTypes.Title} title The blog title.
+     * @param {any} content The blog content.
      * @returns {string} An HTML string of the page.
      */
-    static tumblrAnswer(blog) {
+    static tumblrAnswer(title, content) {
         return /* html */`
             <div class="panel">
                 <div class="panel-title rounded-top">
-                    Posted ${BlogContentView.Time.formatDate(new Date(blog.post.published))}<br />
-                    ${blog.post.categories.map((c) => /* html */`
+                    Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
+                    ${title.categories.map((c) => /* html */`
                         <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(c)}">${BlogContentView.Encoding.htmlEncode(c)}</a>
                     `).join("")}
                 </div>
                 <div class="panel-body rounded-bottom">
-                    <blockquote>${blog.content.question}</blockquote>
-                    ${blog.content.answer}
+                    <blockquote>${content.question}</blockquote>
+                    ${content.answer}
                 </div>
             </div>
         `;
@@ -129,25 +132,26 @@ class BlogContentView {
     //   ##   ###  #  #  ###   ###   #     #  #   ###   ###  ###    ##
     /**
      * Gets the rendered blog post.
-     * @param {Blog} blog The blog post.
+     * @param {BlogTypes.Title} title The blog title.
+     * @param {any} content The blog content.
      * @returns {string} An HTML string of the page.
      */
-    static tumblrAudio(blog) {
+    static tumblrAudio(title, content) {
         return /* html */`
             <div class="panel">
                 <div class="panel-title rounded-top">
-                    <h3>${BlogContentView.Encoding.htmlEncode(blog.content.track_name)}</h3>
-                    ${blog.content.artist ? /* html */`
-                        <h4>by ${blog.content.artist}</h4>
+                    <h3>${BlogContentView.Encoding.htmlEncode(content.track_name)}</h3>
+                    ${content.artist ? /* html */`
+                        <h4>by ${content.artist}</h4>
                     ` : ""}
-                    Posted ${BlogContentView.Time.formatDate(new Date(blog.post.published))}<br />
-                    ${blog.post.categories.map((c) => /* html */`
+                    Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
+                    ${title.categories.map((c) => /* html */`
                         <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(c)}">${BlogContentView.Encoding.htmlEncode(c)}</a>
                     `).join("")}
                 </div>
                 <div class="panel-body rounded-bottom">
-                    ${blog.content.embed}
-                    ${blog.content.caption}
+                    ${content.embed}
+                    ${content.caption}
                 </div>
             </div>
         `;
@@ -161,21 +165,22 @@ class BlogContentView {
     //   ##   ###  #  #  ###   ###   #     ####  ###   #  #  #  #
     /**
      * Gets the rendered blog post.
-     * @param {Blog} blog The blog post.
+     * @param {BlogTypes.Title} title The blog title.
+     * @param {any} content The blog content.
      * @returns {string} An HTML string of the page.
      */
-    static tumblrLink(blog) {
+    static tumblrLink(title, content) {
         return /* html */`
             <div class="panel">
                 <div class="panel-title rounded-top">
-                    Posted ${BlogContentView.Time.formatDate(new Date(blog.post.published))}<br />
-                    ${blog.post.categories.map((c) => /* html */`
+                    Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
+                    ${title.categories.map((c) => /* html */`
                         <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(c)}">${BlogContentView.Encoding.htmlEncode(c)}</a>
                     `).join("")}
                 </div>
                 <div class="panel-body rounded-bottom">
-                    <h3 class="link"><a href="${BlogContentView.Encoding.attributeEncode(blog.content.url)}">${BlogContentView.Encoding.htmlEncode(blog.content.title)}</a></h4>
-                    ${blog.content.description}
+                    <h3 class="link"><a href="${BlogContentView.Encoding.attributeEncode(content.url)}" target="_blank">${BlogContentView.Encoding.htmlEncode(content.title)}</a></h3>
+                    ${content.description}
                 </div>
             </div>
         `;
@@ -189,23 +194,26 @@ class BlogContentView {
     //   ##   ###  #  #  ###   ###   #     #     #  #   ##     ##   ##
     /**
      * Gets the rendered blog post.
-     * @param {Blog} blog The blog post.
+     * @param {BlogTypes.Title} title The blog title.
+     * @param {any} content The blog content.
      * @returns {string} An HTML string of the page.
      */
-    static tumblrPhoto(blog) {
+    static tumblrPhoto(title, content) {
         return /* html */`
             <div class="panel">
                 <div class="panel-title rounded-top">
-                    Posted ${BlogContentView.Time.formatDate(new Date(blog.post.published))}<br />
-                    ${blog.post.categories.map((c) => /* html */`
+                    Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
+                    ${title.categories.map((c) => /* html */`
                         <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(c)}">${BlogContentView.Encoding.htmlEncode(c)}</a>
                     `).join("")}
                 </div>
-                <div class="panel-body rounded-bottom">
-                    ${blog.content.photos.map((p) => /* html */`
+                <div class="panel-body">
+                    ${content.photos.map((p) => /* html */`
                         <img class="constrain-width" src="${BlogContentView.Encoding.attributeEncode(p.original_size.url)}" />
                     `).join("")}
-                    ${blog.content.caption}
+                </div>
+                <div class="panel-body rounded-bottom">
+                    ${content.caption}
                 </div>
             </div>
         `;
@@ -220,21 +228,22 @@ class BlogContentView {
     //                                        #
     /**
      * Gets the rendered blog post.
-     * @param {Blog} blog The blog post.
+     * @param {BlogTypes.Title} title The blog title.
+     * @param {any} content The blog content.
      * @returns {string} An HTML string of the page.
      */
-    static tumblrQuote(blog) {
+    static tumblrQuote(title, content) {
         return /* html */`
             <div class="panel">
                 <div class="panel-title rounded-top">
-                    Posted ${BlogContentView.Time.formatDate(new Date(blog.post.published))}<br />
-                    ${blog.post.categories.map((c) => /* html */`
+                    Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
+                    ${title.categories.map((c) => /* html */`
                         <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(c)}">${BlogContentView.Encoding.htmlEncode(c)}</a>
                     `).join("")}
                 </div>
                 <div class="panel-body rounded-bottom">
-                    <blockquote>${blog.content.text}</blockquote>
-                    ${blog.content.source}
+                    <blockquote>${content.text}</blockquote>
+                    ${content.source}
                 </div>
             </div>
         `;
@@ -248,23 +257,28 @@ class BlogContentView {
     //   ##   ###  #  #  ###   ###   #      ##    ##    ###  #  #   ###   ##   ###    ##    ###   ###
     /**
      * Gets the rendered blog post.
-     * @param {Blog} blog The blog post.
+     * @param {BlogTypes.Title} title The blog title.
+     * @param {any} content The blog content.
      * @returns {string} An HTML string of the page.
      */
-    static tumblrSoundCloud(blog) {
+    static tumblrSoundCloud(title, content) {
         return /* html */`
             <div class="panel">
                 <div class="panel-title rounded-top">
-                    <h3>${BlogContentView.Encoding.htmlEncode(blog.content.track_name)}</h3>
-                    Posted ${BlogContentView.Time.formatDate(new Date(blog.post.published))}<br />
-                    ${blog.post.categories.map((c) => /* html */`
+                    <h3>${BlogContentView.Encoding.htmlEncode(content.track_name)}</h3>
+                    Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
+                    ${title.categories.map((c) => /* html */`
                         <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(c)}">${BlogContentView.Encoding.htmlEncode(c)}</a>
                     `).join("")}
                 </div>
+                <div class="panel-body">
+                    ${content.embed}
+                    <div class="center">
+                        <button class="btn add-to-media-player" data-source="soundcloud" data-url="${BlogContentView.Encoding.attributeEncode(content.audio_url)}">🎵 Add To Playlist</button>
+                    </div>
+                </div>
                 <div class="panel-body rounded-bottom">
-                    ${blog.content.embed}
-                    <button class="btn add-to-media-player" data-source="soundcloud" data-url="${BlogContentView.Encoding.attributeEncode(blog.content.audio_url)}">🎵 Add To Playlist</button>
-                    ${blog.content.caption}
+                     ${content.caption}
                 </div>
             </div>
         `;
@@ -278,23 +292,24 @@ class BlogContentView {
     //   ##   ###  #  #  ###   ###   #      #     ##   #  #    ##
     /**
      * Gets the rendered blog post.
-     * @param {Blog} blog The blog post.
+     * @param {BlogTypes.Title} title The blog title.
+     * @param {any} content The blog content.
      * @returns {string} An HTML string of the page.
      */
-    static tumblrText(blog) {
+    static tumblrText(title, content) {
         return /* html */`
             <div class="panel">
                 <div class="panel-title rounded-top">
-                    ${blog.content.title ? /* html */`
-                        <h3>${BlogContentView.Encoding.htmlEncode(blog.content.title)}</h3>
+                    ${content.title ? /* html */`
+                        <h3>${BlogContentView.Encoding.htmlEncode(content.title)}</h3>
                     ` : ""}
-                    Posted ${BlogContentView.Time.formatDate(new Date(blog.post.published))}<br />
-                    ${blog.post.categories.map((c) => /* html */`
+                    Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
+                    ${title.categories.map((c) => /* html */`
                         <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(c)}">${BlogContentView.Encoding.htmlEncode(c)}</a>
                     `).join("")}
                 </div>
                 <div class="panel-body rounded-bottom">
-                    ${blog.content.body}
+                    ${content.body}
                 </div>
             </div>
         `;
@@ -308,22 +323,23 @@ class BlogContentView {
     //   ##   ###  #  #  ###   ###   #      #     ##    ###   #     ###  ###    ##
     /**
      * Gets the rendered blog post.
-     * @param {Blog} blog The blog post.
+     * @param {BlogTypes.Title} title The blog title.
+     * @param {any} content The blog content.
      * @returns {string} An HTML string of the page.
      */
-    static tumblrYouTube(blog) {
+    static tumblrYouTube(title, content) {
         return /* html */`
             <div class="panel">
                 <div class="panel-title rounded-top">
-                    Posted ${BlogContentView.Time.formatDate(new Date(blog.post.published))}<br />
-                    ${blog.post.categories.map((c) => /* html */`
+                    Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
+                    ${title.categories.map((c) => /* html */`
                         <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(c)}">${BlogContentView.Encoding.htmlEncode(c)}</a>
                     `).join("")}
                 </div>
                 <div class="panel-body rounded-bottom">
-                    ${blog.content.player[blog.content.player.length - 1].embed_code}
-                    <button class="btn add-to-media-player" data-source="youtube" data-url="${BlogContentView.Encoding.attributeEncode(blog.content.permalink_url)}">🎵 Add To Playlist</button>
-                    ${blog.content.caption}
+                    ${content.player[content.player.length - 1].embed_code}
+                    <button class="btn add-to-media-player" data-source="youtube" data-url="${BlogContentView.Encoding.attributeEncode(content.permalink_url)}">🎵 Add To Playlist</button>
+                    ${content.caption}
                 </div>
             </div>
         `;

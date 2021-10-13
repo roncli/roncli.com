@@ -385,7 +385,7 @@ class Blog {
 
                         const [prev, next] = await Promise.all([
                             (async () => {
-                                const prevTitle = await Blog.getTitles(rank + 1, 1);
+                                const prevTitle = await Blog.getTitlesByCategory(category, rank + 1, 1);
 
                                 if (!prevTitle) {
                                     return void 0;
@@ -398,11 +398,13 @@ class Blog {
                                     return void 0;
                                 }
 
-                                return (await Blog.getTitles(rank - 1, 1))[0];
+                                return (await Blog.getTitlesByCategory(category, rank - 1, 1))[0];
                             })()
                         ]);
 
-                        categories[category] = {prev, next};
+                        if (prev || next) {
+                            categories[category] = {prev, next};
+                        }
                     })()));
 
                     return categories;

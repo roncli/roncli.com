@@ -22,6 +22,7 @@ import AdminYouTubeView from "../../public/views/adminYouTube"
 import Blog from "../../public/js/blog"
 import BlogCategoryView from "../../public/views/blogCategory"
 import BlogContentView from "../../public/views/blog/content"
+import BlogPostView from "../../public/views/blogPost"
 import BlogTitlesView from "../../public/views/blog/titles"
 import BlogView from "../../public/views/blog"
 import ChangeEmail from "../../public/js/changeEmail"
@@ -84,6 +85,7 @@ declare global {
         AdminYouTubeView: typeof AdminYouTubeView
         Blog: typeof Blog
         BlogContentView: typeof BlogContentView
+        BlogPostView: typeof BlogPostView
         BlogTitlesView: typeof BlogTitlesView
         BlogView: typeof BlogView
         BlogCategoryView: typeof BlogCategoryView
@@ -119,6 +121,7 @@ declare global {
         SPA: typeof SPA
         Template: typeof Template
         Time: typeof Time
+        twttr: any
         UnauthorizedView: typeof UnauthorizedView
         UserView: typeof UserView
         YouTubeView: typeof YouTubeView

@@ -37,7 +37,7 @@ class BlogPost extends RouterBase {
     static get route() {
         const route = {...super.route};
 
-        route.path = "/:source(?:blogger|tumblr)/:id/:path";
+        route.path = "/:source((?:blogger|tumblr))/:id/:path";
 
         return route;
     }
@@ -67,7 +67,7 @@ class BlogPost extends RouterBase {
             }
         }
 
-        const path = `/${req.params.source}/${req.params.id}/${req.params.path}}`,
+        const path = `/${req.params.source}/${req.params.id}/${req.params.path}`,
             post = await Blog.getPostByUrl(path);
 
         if (!post) {
@@ -77,15 +77,17 @@ class BlogPost extends RouterBase {
 
         const [categories, comments] = await Promise.all([Blog.getCategories(), Comment.getByUrl(path, user)]);
 
-        comments.push(...post.comments.map((c) => new Comment({
-            _id: void 0,
-            url: path,
-            comment: c.content,
-            dateAdded: new Date(c.published),
-            userId: void 0,
-            username: c.author.displayName,
-            dateModerated: new Date(c.published)
-        })));
+        if (post.comments) {
+            comments.push(...post.comments.map((c) => new Comment({
+                _id: void 0,
+                url: path,
+                comment: c.content,
+                dateAdded: new Date(c.published),
+                userId: void 0,
+                username: c.author.displayName,
+                dateModerated: new Date(c.published)
+            })));
+        }
 
         comments.sort((a, b) => a.dateAdded.getTime() - b.dateAdded.getTime());
 
@@ -105,16 +107,19 @@ class BlogPost extends RouterBase {
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({
-                css: [],
+                css: ["/css/blogPost.css"],
                 js: [],
                 views: [
+                    {
+                        name: "BlogContentView",
+                        path: "/views/blog/content.js"
+                    },
                     {
                         name: "BlogPostView",
                         path: "/views/blogPost.js"
                     }
                 ],
                 view: "BlogPostView",
-                jsClass: "Blog",
                 comments,
                 data,
                 info
@@ -123,7 +128,10 @@ class BlogPost extends RouterBase {
             res.status(200).send(await Common.page(
                 "",
                 comments,
-                {},
+                {
+                    css: ["/css/blogPost.css"],
+                    js: ["/views/blog/content.js"]
+                },
                 BlogPostView.get(data),
                 BlogPostView.getInfo(info),
                 req,

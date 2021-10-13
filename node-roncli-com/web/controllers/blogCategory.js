@@ -109,16 +109,16 @@ class BlogCategory extends RouterBase {
                 js: ["/js/blog.js"],
                 views: [
                     {
-                        name: "BlogCategoryView",
-                        path: "/views/blog.js"
-                    },
-                    {
                         name: "BlogTitlesView",
                         path: "/views/blog/titles.js"
                     },
                     {
                         name: "PaginationPageView",
                         path: "/views/pagination/page.js"
+                    },
+                    {
+                        name: "BlogCategoryView",
+                        path: "/views/blogCategory.js"
                     }
                 ],
                 view: "BlogCategoryView",

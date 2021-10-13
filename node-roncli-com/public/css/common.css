@@ -14,7 +14,7 @@ body.fullscreen {
 #page-body {
     display: grid;
     gap: 8px;
-    grid-template-columns: auto 180px;
+    grid-template-columns: minmax(0, 1fr) 180px;
     grid-template-rows: auto auto min-content min-content min-content min-content 1fr;
 }
 
@@ -94,7 +94,7 @@ body.fullscreen {
     grid-column: 2;
     grid-row: 3;
     display: grid;
-    grid-template-columns: auto;
+    grid-template-columns: minmax(0, 1fr);
     grid-gap: 8px;
 }
 
@@ -353,7 +353,7 @@ button.media-player-item-remove:hover {
     border-bottom: solid 1px #cccccc;
 }
 
-#comments div.comment-text > * {
+#comments div.comment-text > *:not(a) {
     margin: 0 10px 8px 10px;
 }
 
@@ -416,9 +416,13 @@ a:hover {
     text-decoration: underline;
 }
 
-time:not(.timeago) {
+time[title]:not(.timeago) {
     text-decoration: underline dotted;
     cursor: help;
+}
+
+img {
+    max-width: 100%;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -466,6 +470,7 @@ input[type=checkbox] {
     display: grid;
     gap: 8px;
     background-color: transparent;
+    grid-template-columns: minmax(0, 1fr);
 }
 
 .grid-tight {
@@ -1067,9 +1072,11 @@ button#fullscreen.fullscreen {
 }
 
 a.tag:hover {
-    background-color: #4c401c;
-    color: #ffffff;
     text-decoration: none;
+    background-color: white;
+    color: #5d9125;
+    border: solid 1px #384729;
+    padding: 2px;
 }
 
 .nowrap {
