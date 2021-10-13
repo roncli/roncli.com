@@ -8,6 +8,7 @@ import { ProjectMongoData } from "./projectTypes"
 import { RedirectMongoData } from "./redirectTypes"
 import { RoleMongoData } from "./roleTypes"
 import { SavedLoginMongoData, UserMongoData } from "./userTypes"
+import MongoDb from "mongodb"
 
 declare module "mongodb" {
     export interface Db {
@@ -22,5 +23,10 @@ declare module "mongodb" {
         collection<TSchema = RoleMongoData>(name: "role", options?: CollectionOptions): Collection<TSchema>
         collection<TSchema = SavedLoginMongoData>(name: "savedLogin", options?: CollectionOptions): Collection<TSchema>
         collection<TSchema = UserMongoData>(name: "user", options?: CollectionOptions): Collection<TSchema>
+    }
+
+    // The default implementation of aggregate's generic (<T = Document>) is too restrictive, so we change it here to suit our needs.
+    export interface Collection {
+        aggregate<T = any>(pipeline?: MongoDb.Document[], options?: AggregateOptions): AggregationCursor<T>;
     }
 }
