@@ -1,5 +1,6 @@
 /**
  * @typedef {import("../../types/node/trackTypes").Track} TrackTypes.Track
+ * @typedef {import("../../types/node/trackTypes").TrackInfo} TrackTypes.TrackInfo
  */
 
 const Cache = require("@roncli/node-redis").Cache,
@@ -32,28 +33,36 @@ class Track {
      */
     static async cacheSoundcloud() {
         // Retrieve all the tracks from Soundcloud.
-        const tracks = await (await Soundcloud.getTracks()).map((track) => {
+        /** @type {{score: number, value:{track: TrackTypes.TrackInfo, publishDate: Date, tagList: string[]}}[]} */
+        const tracks = (await Soundcloud.getTracks()).map((track) => {
             const publishDate = track.release_year ? new Date(track.release_year, track.release_month ? track.release_month - 1 : 0, track.release_day || 1) : new Date(track.created_at);
             return {
                 score: publishDate.getTime(),
-                value: {track, publishDate}
+                value: {
+                    track: {
+                        id: track.id,
+                        user: {username: track.user.username},
+                        title: track.title,
+                        uri: track.uri,
+                        "permalink_url": track.permalink_url,
+                        description: track.description
+                    },
+                    publishDate,
+                    tagList: Track.extractTags(track)
+                }
             };
         });
 
         // Divide the tracks into tags.
-        /** @type {{[x: string]: {score: number, value: {track: TrackTypes.Track, publishDate: Date}}[]}} */
+        /** @type {{[x: string]: {score: number, value: {track: TrackTypes.TrackInfo, publishDate: Date}}[]}} */
         const tags = {};
         for (const track of tracks) {
-            if (track.value.track.tag_list && track.value.track.tag_list.length > 0) {
-                const tagList = track.value.track.tag_list.trim().match(tagRegex);
-                for (const rawTag of tagList) {
-                    const tag = rawTag.replace(/"/g, "");
-
+            if (track.value.tagList && track.value.tagList.length > 0) {
+                for (const tag of track.value.tagList) {
                     if (!tags[tag]) {
                         tags[tag] = [];
                     }
                     tags[tag].push(track);
-
                 }
             }
         }
@@ -84,6 +93,36 @@ class Track {
         })()));
 
         await Promise.all(promises);
+    }
+
+    //              #                       #    ###
+    //              #                       #     #
+    //  ##   #  #  ###   ###    ###   ##   ###    #     ###   ###   ###
+    // # ##   ##    #    #  #  #  #  #      #     #    #  #  #  #  ##
+    // ##     ##    #    #     # ##  #      #     #    # ##   ##     ##
+    //  ##   #  #    ##  #      # #   ##     ##   #     # #  #     ###
+    //                                                        ###
+    /**
+     * Extracts the tags from a SoundCloud track.
+     * @param {TrackTypes.Track} track The track.
+     * @returns {string[]} The tags.
+     */
+    static extractTags(track) {
+        const tags = [];
+
+        if (track.genre) {
+            tags.push(track.genre);
+        }
+
+        if (track.tag_list && track.tag_list.length > 0) {
+            const tagList = track.tag_list.trim().match(tagRegex);
+
+            for (const rawTag of tagList) {
+                tags.push(rawTag.replace(/"/g, ""));
+            }
+        }
+
+        return tags;
     }
 
     //              #    ###                     #     ###         ###      #
@@ -174,15 +213,17 @@ class Track {
     //  ##    ##   #  #  ###      ##  #      ###   ##     ##   ##   #
     /**
      * Creates a new track object.
-     * @param {{track: TrackTypes.Track, publishDate: Date}} data The track data.
+     * @param {{track: TrackTypes.TrackInfo, publishDate: Date, tagList: string[]}} data The track data.
      */
     constructor(data) {
         this.id = data.track.id;
         this.username = data.track.user.username;
         this.title = data.track.title;
         this.uri = data.track.uri;
-        this.permalink = data.track.permalink;
+        this.permalink = data.track.permalink_url;
+        this.description = data.track.description;
         this.publishDate = data.publishDate;
+        this.tagList = data.tagList;
     }
 }
 
