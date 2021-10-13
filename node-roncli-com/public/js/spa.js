@@ -191,18 +191,31 @@ class SPA {
      */
     static runTimeago() {
         /** @type {NodeListOf<HTMLTimeElement>} */
-        const elements = document.querySelectorAll("time.timeago");
+        const timeagoEls = document.querySelectorAll("time.timeago");
 
-        if (elements.length > 0) {
-            elements.forEach((el) => {
+        if (timeagoEls.length > 0) {
+            timeagoEls.forEach((el) => {
                 el.title = SPA.Time.formatDate(new Date(el.dateTime));
                 el.innerText = SPA.Time.formatDate(new Date(el.dateTime));
             });
 
-            SPA.Timeago.render(elements);
+            SPA.Timeago.render(timeagoEls);
 
-            elements.forEach((el) => {
+            timeagoEls.forEach((el) => {
                 el.classList.remove("timeago");
+            });
+        }
+
+        /** @type {NodeListOf<HTMLTimeElement>} */
+        const localEls = document.querySelectorAll("time.local");
+
+        if (localEls.length > 0) {
+            localEls.forEach((el) => {
+                el.innerText = SPA.Time.formatDate(new Date(el.dateTime));
+            });
+
+            localEls.forEach((el) => {
+                el.classList.remove("local");
             });
         }
     }
