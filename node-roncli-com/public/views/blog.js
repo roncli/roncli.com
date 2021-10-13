@@ -60,7 +60,7 @@ class BlogView {
                             `).join("")}
                         </div>
                         <div class="panel-body rounded-bottom center">
-                            <button id="toggle-top" class="btn">⏬ Show More</button>
+                            <button id="toggle-top" class="btn"><i class="bi-chevron-double-down"></i> Show More</button>
                         </div>
                     </div>
                 </div>

@@ -29,27 +29,27 @@ class AdminView {
         return /* html */`
             <div class="grid grid-columns-3-fixed">
                 <a href="/admin/cache" class="contents">
-                    <div class="pill">🗃️ Cache</div>
+                    <div class="pill"><i class="bi-server"></i> Cache</div>
                 </a>
                 <a href="/admin/files" class="contents">
-                    <div class="pill">📂 Files</div>
+                    <div class="pill"><i class="bi-folder"></i> Files</div>
                 </a>
                 <a href="/admin/front-page" class="contents">
-                    <div class="pill">📰 Front Page</div>
+                    <div class="pill"><i class="bi-newspaper"></i> Front Page</div>
                 </a>
                 <a href="/admin/moderation" class="contents">
-                    <div class="pill center-self"><span>🔴 Moderation</span>${data.commentsToModerate === 0 ? "" : /* html */`
+                    <div class="pill center-self"><span><i class="bi-circle-fill"></i> Moderation</span>${data.commentsToModerate === 0 ? "" : /* html */`
                         &nbsp;<span class="badge">${data.commentsToModerate.toLocaleString("en-US")}</span>
                     `}</div>
                 </a>
                 <a href="/admin/pages" class="contents">
-                    <div class="pill">📄 Pages</div>
+                    <div class="pill"><i class="bi-file-earmark-text"></i> Pages</div>
                 </a>
                 <a href="/admin/redirects" class="contents">
-                    <div class="pill">🔄 Redirects</div>
+                    <div class="pill"><i class="bi-arrow-repeat"></i> Redirects</div>
                 </a>
                 <a href="/admin/youtube" class="contents">
-                    <div class="pill">▶️ YouTube</div>
+                    <div class="pill"><i class="bi-youtube"></i> YouTube</div>
                 </a>
             </div>
         `;

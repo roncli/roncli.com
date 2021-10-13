@@ -37,7 +37,7 @@ class BlogPostView {
                     ${navs.prev ? /* html */`
                         <a href="${navs.prev.url}" class="contents blog-nav-link" ${data.category ? `data-category="${BlogPostView.Encoding.attributeEncode(data.category)}"` : ""}>
                             <div class="pill grid grid-columns-2" style="grid-template-columns: max-content auto;">
-                                <div style="grid-row-end: span 2">◀️</div>
+                                <div style="grid-row-end: span 2"><i class="bi-caret-left-fill"></i></div>
                                 <div class="blog-nav">${data.category ? `Previously in ${BlogPostView.Encoding.htmlEncode(data.category)}` : "Previous post"}:</div>
                                 <div class="blog-nav-title">${BlogPostView.Encoding.htmlEncode(navs.prev.title)}</div>
                             </div>
@@ -49,7 +49,7 @@ class BlogPostView {
                         <a href="${navs.next.url}" class="contents blog-nav-link" ${data.category ? `data-category="${BlogPostView.Encoding.attributeEncode(data.category)}"` : ""}>
                             <div class="pill grid grid-columns-2" style="grid-template-columns: auto max-content;">
                                 <div class="blog-nav">Next${data.category ? ` in ${BlogPostView.Encoding.htmlEncode(data.category)}` : " post"}:</div>
-                                <div style="grid-row-end: span 2">▶️</div>
+                                <div style="grid-row-end: span 2"><i class="bi-caret-right-fill"></i></div>
                                 <div class="blog-nav-title">${BlogPostView.Encoding.htmlEncode(navs.next.title)}</div>
                             </div>
                         </a>
@@ -65,7 +65,7 @@ class BlogPostView {
                         ${data.categoryNavs[data.category].prev ? /* html */`
                             <a href="${data.categoryNavs[data.category].prev.url}" class="contents blog-nav-link" data-category="${BlogPostView.Encoding.attributeEncode(data.category)}">
                                 <div class="pill grid grid-columns-2" style="grid-template-columns: max-content auto;">
-                                    <div style="grid-row-end: span 2">◀️</div>
+                                    <div style="grid-row-end: span 2"><i class="bi-caret-left-fill"></i></div>
                                     <div class="blog-nav">Previously in ${BlogPostView.Encoding.htmlEncode(data.category)}:</div>
                                     <div class="blog-nav-title">${BlogPostView.Encoding.htmlEncode(data.categoryNavs[data.category].prev.title)}</div>
                                 </div>
@@ -77,7 +77,7 @@ class BlogPostView {
                             <a href="${data.categoryNavs[data.category].next.url}" class="contents blog-nav-link" data-category="${BlogPostView.Encoding.attributeEncode(data.category)}">
                                 <div class="pill grid grid-columns-2" style="grid-template-columns: auto max-content;">
                                     <div class="blog-nav">Next in ${BlogPostView.Encoding.htmlEncode(data.category)}:</div>
-                                    <div style="grid-row-end: span 2">▶️</div>
+                                    <div style="grid-row-end: span 2"><i class="bi-caret-right-fill"></i></div>
                                     <div class="blog-nav-title">${BlogPostView.Encoding.htmlEncode(data.categoryNavs[data.category].next.title)}</div>
                                 </div>
                             </a>
@@ -88,7 +88,7 @@ class BlogPostView {
                     ${data.mainNav.prev ? /* html */`
                         <a href="${data.mainNav.prev.url}" class="contents blog-nav-link">
                             <div class="pill grid grid-columns-2" style="grid-template-columns: max-content auto;">
-                                <div style="grid-row-end: span 2">◀️</div>
+                                <div style="grid-row-end: span 2"><i class="bi-caret-left-fill"></i></div>
                                 <div class="blog-nav">Previous post:</div>
                                 <div class="blog-nav-title">${BlogPostView.Encoding.htmlEncode(data.mainNav.prev.title)}</div>
                             </div>
@@ -100,7 +100,7 @@ class BlogPostView {
                         <a href="${data.mainNav.next.url}" class="contents blog-nav-link">
                             <div class="pill grid grid-columns-2" style="grid-template-columns: auto max-content;">
                                 <div class="blog-nav">Next post:</div>
-                                <div style="grid-row-end: span 2">▶️</div>
+                                <div style="grid-row-end: span 2"><i class="bi-caret-right-fill"></i></div>
                                 <div class="blog-nav-title">${BlogPostView.Encoding.htmlEncode(data.mainNav.next.title)}</div>
                             </div>
                         </a>
@@ -112,7 +112,7 @@ class BlogPostView {
                             ${data.categoryNavs[category].prev ? /* html */`
                                 <a href="${data.categoryNavs[category].prev.url}" class="contents blog-nav-link" data-category="${BlogPostView.Encoding.attributeEncode(category)}">
                                     <div class="pill grid grid-columns-2" style="grid-template-columns: max-content auto;">
-                                        <div style="grid-row-end: span 2">◀️</div>
+                                        <div style="grid-row-end: span 2"><i class="bi-caret-left-fill"></i></div>
                                         <div class="blog-nav">Previously in ${BlogPostView.Encoding.htmlEncode(category)}:</div>
                                         <div class="blog-nav-title">${BlogPostView.Encoding.htmlEncode(data.categoryNavs[category].prev.title)}</div>
                                     </div>
@@ -124,7 +124,7 @@ class BlogPostView {
                                 <a href="${data.categoryNavs[category].next.url}" class="contents blog-nav-link" data-category="${BlogPostView.Encoding.attributeEncode(category)}">
                                     <div class="pill grid grid-columns-2" style="grid-template-columns: auto max-content;">
                                         <div class="blog-nav">Next in ${BlogPostView.Encoding.htmlEncode(category)}:</div>
-                                        <div style="grid-row-end: span 2">▶️</div>
+                                        <div style="grid-row-end: span 2"><i class="bi-caret-right-fill"></i></div>
                                         <div class="blog-nav-title">${BlogPostView.Encoding.htmlEncode(data.categoryNavs[category].next.title)}</div>
                                     </div>
                                 </a>

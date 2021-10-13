@@ -30,9 +30,9 @@ class Blog {
             div.classList.toggle("top-only");
 
             if (div.classList.contains("top-only")) {
-                btn.innerText = "⏬ Show More";
+                btn.innerHTML = "<i class=\"bi-chevron-double-down\"></i> Show More";
             } else {
-                btn.innerText = "⏫ Show Less";
+                btn.innerText = "<i class=\"bi-chevron-double-up\"></i> Show Less";
             }
         });
 

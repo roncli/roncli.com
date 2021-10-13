@@ -40,7 +40,11 @@ class DirectoryView {
                         ${data.entries.map((entry) => /* html */`
                             <div class="contents-row">
                                 <a class="contents${entry.size === void 0 ? "" : " download"}" href="/files${data.path}/${entry.name}">
-                                    <div><div class="name">${entry.size === void 0 ? "📂" : "📄"} ${DirectoryView.Encoding.htmlEncode(entry.name)}</div></div>
+                                    <div><div class="name">${entry.size === void 0 ? /* html */`
+                                    <i class="bi-folder"></i>
+                                ` : /* html */`
+                                    <i class="bi-file-earmark-text"></i>
+                                `} ${DirectoryView.Encoding.htmlEncode(entry.name)}</div></div>
                                 </a>
                                 <a class="contents${entry.size === void 0 ? "" : " download"}" href="/files${data.path}/${entry.name}">
                                     <div><div class="size">${entry.size === void 0 ? "" : /* html */`

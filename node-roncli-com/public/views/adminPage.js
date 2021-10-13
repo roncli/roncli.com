@@ -92,7 +92,7 @@ class AdminPageView {
                     <div class="panel-title rounded-top"><h1>Content</h1></div>
                     <div class="panel-body grid grid-columns-2">
                         <div id="html" class="editor-container" data-html="${AdminPageView.Encoding.attributeEncode(data.page.page)}"></div>
-                        <div><button id="fullscreen">🖥️</button></div>
+                        <div><button id="fullscreen"><i class="bi-arrows-fullscreen"></i></button></div>
                     </div>
                     <div class="panel-body center rounded-bottom">
                         <div><button class="btn" id="save-page">Save</button></div>

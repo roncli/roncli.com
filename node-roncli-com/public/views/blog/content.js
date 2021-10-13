@@ -274,7 +274,7 @@ class BlogContentView {
                 <div class="panel-body">
                     ${content.embed}
                     <div class="center">
-                        <button class="btn add-to-media-player" data-source="soundcloud" data-url="${BlogContentView.Encoding.attributeEncode(content.audio_url)}">🎵 Add To Playlist</button>
+                        <button class="btn add-to-media-player" data-source="soundcloud" data-url="${BlogContentView.Encoding.attributeEncode(content.audio_url)}"><i class="bi-plus"></i><i class="bi-music-note-beamed"></i> Add To Playlist</button>
                     </div>
                 </div>
                 <div class="panel-body rounded-bottom">
@@ -338,7 +338,7 @@ class BlogContentView {
                 </div>
                 <div class="panel-body rounded-bottom">
                     ${content.player[content.player.length - 1].embed_code}
-                    <button class="btn add-to-media-player" data-source="youtube" data-url="${BlogContentView.Encoding.attributeEncode(content.permalink_url)}">🎵 Add To Playlist</button>
+                    <button class="btn add-to-media-player" data-source="youtube" data-url="${BlogContentView.Encoding.attributeEncode(content.permalink_url)}"><i class="bi-plus"></i><i class="bi-music-note-beamed"></i> Add To Playlist</button>
                     ${content.caption}
                 </div>
             </div>

@@ -37,7 +37,7 @@ class PlaylistView {
                 <div class="panel-body rounded-bottom grid center-items">
                     <div class="large">by <a href="https://youtube.com/channel/${data.playlist.channelId}">${PlaylistView.Encoding.htmlEncode(data.playlist.channelTitle)}</a></div>
                     <div>
-                        <button class="btn" id="add-all">➕🎵 Add All To Playlist</button>
+                        <button class="btn" id="add-all"><i class="bi-plus"></i><i class="bi-music-note-beamed"></i> Add All To Playlist</button>
                     </div>
                     ${data.playlist.description ? /* html */`
                         <div style="justify-self: left;">${PlaylistView.Encoding.htmlEncode(data.playlist.description).replace(/\r\n/g, "\r").replace(/[\r\n]/g, "<br />")}</div>
@@ -48,8 +48,8 @@ class PlaylistView {
                         ${data.playlist.videos.map((v) => /* html */`
                             <div class="pill pill-static grid" style="align-items: center; grid-template-columns: 1fr auto auto;">
                                 <div class="title large">${PlaylistView.Encoding.htmlEncode(v.title)}</div>
-                                <div class="play"><button class="btn play-video" data-id="${PlaylistView.Encoding.attributeEncode(v.id)}">▶️ Play</button></div>
-                                <div class="add"><button class="btn add-to-media-player" data-source="youtube" data-url="https://youtube.com/watch?v=${PlaylistView.Encoding.attributeEncode(v.id)}">🎵 Add To Playlist</button></div>
+                                <div class="play"><button class="btn play-video" data-id="${PlaylistView.Encoding.attributeEncode(v.id)}"><i class="bi-play-fill"></i> Play</button></div>
+                                <div class="add"><button class="btn add-to-media-player" data-source="youtube" data-url="https://youtube.com/watch?v=${PlaylistView.Encoding.attributeEncode(v.id)}"><i class="bi-plus"></i><i class="bi-music-note-beamed"></i> Add To Playlist</button></div>
                             </div>
                         `).join("")}
                     </div>

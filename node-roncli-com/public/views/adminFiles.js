@@ -61,7 +61,11 @@ class AdminFilesView {
                     <div class="panel-body rounded-bottom">
                         ${data.entries.map((entry) => /* html */`
                             <div class="pill pill-static grid" style="grid-template-columns: 25fr 2fr 3fr auto; align-items: center;">
-                                <div class="name"><a class="contents${entry.size === void 0 ? "" : " download"}" href="${entry.size === void 0 ? "/admin" : ""}/files${data.path}/${entry.name}">${entry.size === void 0 ? "📂" : "📄"} ${AdminFilesView.Encoding.htmlEncode(entry.name)}</a></div>
+                                <div class="name"><a class="contents${entry.size === void 0 ? "" : " download"}" href="${entry.size === void 0 ? "/admin" : ""}/files${data.path}/${entry.name}">${entry.size === void 0 ? /* html */`
+                                    <i class="bi-folder"></i>
+                                ` : /* html */`
+                                    <i class="bi-file-earmark-text"></i>
+                                `} ${AdminFilesView.Encoding.htmlEncode(entry.name)}</a></div>
                                 <div class="size">${entry.size === void 0 ? "" : /* html */`
                                     ${AdminFilesView.Numbers.fileSize(entry.size)}
                                 `}</div>

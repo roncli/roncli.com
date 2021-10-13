@@ -30,7 +30,7 @@ class PaginationPageView {
     static get(data) {
         return /* html */`
             Page: ${data.page > 1 ? /* html */`
-                <a href="#" class="page" data-page="${data.page - 1}">◀️</a>
+                <a href="#" class="page" data-page="${data.page - 1}"><i class="bi-caret-left-fill"></i></a>
             ` : ""}
             ${Array(data.total).fill().map((_, index) => /* html */`
                 ${index === data.total - 1 && index + 1 - data.page >= 4 ? "..." : ""}
@@ -42,7 +42,7 @@ class PaginationPageView {
                 ${index === 0 && data.page - (index + 1) >= 4 ? "..." : ""}
             `).join("")}
             ${data.page < data.total ? /* html */`
-                <a href="#" class="page" data-page="${data.page + 1}">▶️</a>
+                <a href="#" class="page" data-page="${data.page + 1}"><i class="bi-play-fill"></i></a>
             ` : ""}
         `;
     }
