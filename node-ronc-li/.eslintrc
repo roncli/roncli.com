@@ -102,14 +102,7 @@
         "sort-keys": "off",
         "sort-vars": "off",
         "space-before-function-paren": "off",
-        "quote-props": "off",
-        "valid-jsdoc": [
-            "error", {
-                "prefer": {
-                    "return": "return"
-                }
-            }
-        ]
+        "quote-props": "off"
     },
     "overrides": [
         {

@@ -1,7 +1,3 @@
-/**
- * @typedef {{[x: string]: string}} Validation
- */
-
 //  #####                              ####                         ##    #   #    #
 //  #                                  #   #                         #    #   #
 //  #      # ##   # ##    ###   # ##   #   #   ###   # ##    ###     #    #   #   ##     ###   #   #
@@ -22,7 +18,7 @@ class ErrorPanelView {
     //  ###
     /**
      * Gets the rendered view template.
-     * @param {Validation} validation The validation to display.
+     * @param {{[x: string]: string}} validation The validation to display.
      * @returns {string} An HTML string of the view.
      */
     static get(validation) {

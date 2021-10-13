@@ -5,7 +5,7 @@
 
 const Comment = require("../../src/models/comment"),
     EditorJSParser = require("editorjs-parser"),
-    Log = require("node-application-insights-logger"),
+    Log = require("@roncli/node-application-insights-logger"),
     RouterBase = require("hot-router").RouterBase,
     User = require("../../src/models/user");
 

@@ -147,8 +147,6 @@ class Comments {
 
                     comment = await res.json();
                 } catch (err) {
-                    console.log(err);
-
                     await Comments.Index.showModal("Error Posting Comment", "An error occurred while posting a comment.  Please reload the page and try again.");
 
                     return;

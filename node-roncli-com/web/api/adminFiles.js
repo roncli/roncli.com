@@ -5,7 +5,7 @@
 
 const Directory = require("../../src/models/directory"),
     fs = require("fs").promises,
-    Log = require("node-application-insights-logger"),
+    Log = require("@roncli/node-application-insights-logger"),
     path = require("path"),
     RouterBase = require("hot-router").RouterBase,
     User = require("../../src/models/user");

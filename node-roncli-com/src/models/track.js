@@ -2,9 +2,9 @@
  * @typedef {import("../../types/node/trackTypes").Track} TrackTypes.Track
  */
 
-const Cache = require("node-redis").Cache,
-    Log = require("node-application-insights-logger"),
-    SortedSetCache = require("node-redis").SortedSetCache,
+const Cache = require("@roncli/node-redis").Cache,
+    Log = require("@roncli/node-application-insights-logger"),
+    SortedSetCache = require("@roncli/node-redis").SortedSetCache,
     Soundcloud = require("../soundcloud"),
 
     tagRegex = /[^\s"]+|"[^"]*"/g;

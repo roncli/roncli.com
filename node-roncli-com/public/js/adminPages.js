@@ -71,8 +71,6 @@ class AdminPages {
 
                 data = await res.json();
             } catch (err) {
-                console.log(err);
-
                 await AdminPages.Index.showModal("Error Occurred", "An error occurred while creating a new top level page.  Please try again.");
 
                 AdminPages.Index.loading(false);
@@ -118,8 +116,6 @@ class AdminPages {
 
                 data = await res.json();
             } catch (err) {
-                console.log(err);
-
                 await AdminPages.Index.showModal("Error Occurred", "An error occurred while making a page a top level page.  Please try again.");
 
                 AdminPages.Index.loading(false);
@@ -171,8 +167,6 @@ class AdminPages {
                     return;
                 }
             } catch (err) {
-                console.log(err);
-
                 await AdminPages.Index.showModal("Error Occurred", "An error occurred while deleting a page.  Please try again.");
 
                 AdminPages.Index.loading(false);

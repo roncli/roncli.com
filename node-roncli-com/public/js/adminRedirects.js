@@ -48,8 +48,6 @@ class AdminRedirects {
                     return;
                 }
             } catch (err) {
-                console.log(err);
-
                 await AdminRedirects.Index.showModal("Error Occurred", "An error occurred while deleting a redirect.  Please try again.");
 
                 AdminRedirects.Index.loading(false);
@@ -96,8 +94,6 @@ class AdminRedirects {
 
                 data = await res.json();
             } catch (err) {
-                console.log(err);
-
                 await AdminRedirects.Index.showModal("Error Occurred", "An error occurred while adding a redirect.  Please try again.");
 
                 AdminRedirects.Index.loading(false);

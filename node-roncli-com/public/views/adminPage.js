@@ -122,7 +122,7 @@ class AdminPageView {
         return /* html */`
             <div class="info-panel">
                 <div class="info-panel-title rounded-top">${AdminPageView.Encoding.htmlEncode(data.page.shortTitle)}</div>
-                <div class="info-panel-body rounded-bottom">
+                <div class="info-panel-body">
                     <ul class="breadcrumb">
                         <li><a href="/">Home</a></li>
                         <li><a href="/admin">Admin</a></li>
@@ -132,6 +132,8 @@ class AdminPageView {
                         `).join("") : ""}
                         <li class="info-short-title">${AdminPageView.Encoding.htmlEncode(data.page.shortTitle)}</li>
                     </ul>
+                </div>
+                <div class="info-panel-body rounded-bottom">
                     Add or update pages on the website.
                 </div>
             </div>

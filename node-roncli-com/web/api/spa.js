@@ -3,9 +3,10 @@
  * @typedef {import("express").Response} Express.Response
  */
 
-const Log = require("node-application-insights-logger"),
+const Log = require("@roncli/node-application-insights-logger"),
     request = require("@root/request"),
-    RouterBase = require("hot-router").RouterBase;
+    RouterBase = require("hot-router").RouterBase,
+    url = require("url");
 
 //   ###   ####     #      #             #
 //  #   #  #   #   # #    # #
@@ -58,7 +59,14 @@ class SPAApi extends RouterBase {
                 return;
             }
 
-            const path = req.body.path;
+            const path = req.body.path,
+                dataset = req.body.dataset;
+
+            let querystring = "";
+
+            if (Object.keys(dataset).length > 0) {
+                querystring = `?${new url.URLSearchParams(dataset).toString()}`;
+            }
 
             if (!path) {
                 res.status(400).json({error: "Bad request, you must send a path."});
@@ -66,7 +74,7 @@ class SPAApi extends RouterBase {
             }
 
             let localRes = await request.get({
-                uri: `http://localhost:${process.env.PORT || 3030}${path}`,
+                uri: `http://localhost:${process.env.PORT || 3030}${path}${querystring}`,
                 json: true,
                 headers: {
                     cookie: req.headers.cookie,
@@ -79,7 +87,7 @@ class SPAApi extends RouterBase {
                 const newPath = localRes.headers.location;
 
                 localRes = await request.get({
-                    uri: `http://localhost:${process.env.PORT || 3030}${newPath}`,
+                    uri: `http://localhost:${process.env.PORT || 3030}${newPath}${querystring}`,
                     json: true,
                     headers: {
                         cookie: req.headers.cookie,

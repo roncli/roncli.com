@@ -59,7 +59,7 @@ class Time {
             case -86400000:
                 return `Yesterday ${this.formatTime(time)}`;
             default:
-                return `${["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][time.getMonth()]} ${time.getDate()} ${time.getFullYear()} ${this.formatTime(time)}`;
+                return `${["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][time.getMonth()]} ${time.getDate()}, ${time.getFullYear()} ${this.formatTime(time)}`;
         }
     }
 

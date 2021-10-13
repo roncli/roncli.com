@@ -1,6 +1,6 @@
 const AllowedPlaylist = require("./allowedPlaylist"),
-    Cache = require("node-redis").Cache,
-    Log = require("node-application-insights-logger"),
+    Cache = require("@roncli/node-redis").Cache,
+    Log = require("@roncli/node-application-insights-logger"),
     YouTube = require("../google/youtube");
 
 //  ####    ##                   ##      #            #

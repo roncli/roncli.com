@@ -48,8 +48,6 @@ class AdminModeration {
 
                 data = await res.json();
             } catch (err) {
-                console.log(err);
-
                 await AdminModeration.Index.showModal("Error Occurred", "An error occurred while accepting a comment.  Please try again.");
 
                 AdminModeration.Index.loading(false);
@@ -92,8 +90,6 @@ class AdminModeration {
 
                 data = await res.json();
             } catch (err) {
-                console.log(err);
-
                 await AdminModeration.Index.showModal("Error Occurred", "An error occurred while rejecting a comment.  Please try again.");
 
                 AdminModeration.Index.loading(false);

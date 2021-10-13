@@ -1,7 +1,3 @@
-/**
- * @typedef {{subject: string, from: string}} SMTPSettings
- */
-
 const Nodemailer = require("nodemailer"),
 
     transport = Nodemailer.createTransport({

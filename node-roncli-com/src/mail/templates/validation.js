@@ -1,6 +1,7 @@
 /**
  * @typedef {import("../../../types/node/mailTypes").EmailData} MailTypes.EmailData
- * @typedef {{user: import("../../models/user"), code: string} & MailTypes.EmailData} ValidationTemplateData
+ * @typedef {{user: User, code: string} & MailTypes.EmailData} ValidationTemplateData
+ * @typedef {import("../../models/user")} User}
  */
 
 const Encoding = require("../../../public/js/common/encoding"),

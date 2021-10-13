@@ -3,7 +3,7 @@
  * @typedef {import("express").Response} Express.Response
  */
 
-const Log = require("node-application-insights-logger"),
+const Log = require("@roncli/node-application-insights-logger"),
     RouterBase = require("hot-router").RouterBase,
     User = require("../../src/models/user"),
 

@@ -1,6 +1,6 @@
 const Blog = require("./models/blog"),
-    Cache = require("node-redis").Cache,
-    Log = require("node-application-insights-logger"),
+    Cache = require("@roncli/node-redis").Cache,
+    Log = require("@roncli/node-application-insights-logger"),
     NecroDancer = require("./models/necrodancer"),
     Profile = require("./models/profile"),
     Repository = require("./models/repository"),

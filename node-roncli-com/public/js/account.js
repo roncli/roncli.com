@@ -1,7 +1,3 @@
-/**
- * @typedef {{[x: string]: string}} Validation
- */
-
 //    #                                        #
 //   # #                                       #
 //  #   #   ###    ###    ###   #   #  # ##   ####
@@ -25,7 +21,7 @@ class Account {
      */
     static DOMContentLoaded() {
         document.getElementById("change-email").addEventListener("click", async () => {
-            /** @type {Validation} */
+            /** @type {{[x: string]: string}} */
             const changeValidation = {};
 
             await Account.Template.loadTemplate("/views/account/changeEmail.js", "AccountChangeEmailView");
@@ -103,7 +99,6 @@ class Account {
                             changeValidation["changeEmail-button"] = "There was an error while trying to change your password, please try again.";
                         }
                     } catch (err) {
-                        console.log(err);
                         changeValidation["changeEmail-button"] = "There was an error while trying to change your password, please try again.";
                     }
 
@@ -127,7 +122,7 @@ class Account {
         });
 
         document.getElementById("change-alias").addEventListener("click", async () => {
-            /** @type {Validation} */
+            /** @type {{[x: string]: string}} */
             const changeValidation = {};
 
             await Account.Template.loadTemplate("/views/account/changeAlias.js", "AccountChangeAliasView");
@@ -196,7 +191,6 @@ class Account {
                             changeValidation["changeAlias-button"] = "There was an error while trying to change your alias, please try again.";
                         }
                     } catch (err) {
-                        console.log(err);
                         changeValidation["changeAlias-button"] = "There was an error while trying to change your alias, please try again.";
                     }
 
@@ -218,7 +212,7 @@ class Account {
         });
 
         document.getElementById("change-password").addEventListener("click", async () => {
-            /** @type {Validation} */
+            /** @type {{[x: string]: string}} */
             const changeValidation = {};
 
             await Account.Template.loadTemplate("/views/account/changePassword.js", "AccountChangePasswordView");
@@ -321,7 +315,6 @@ class Account {
                             changeValidation["changePassword-button"] = "There was an error while trying to change your password, please try again.";
                         }
                     } catch (err) {
-                        console.log(err);
                         changeValidation["changePassword-button"] = "There was an error while trying to change your password, please try again.";
                     }
 

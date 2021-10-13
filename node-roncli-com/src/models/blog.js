@@ -5,10 +5,10 @@
  */
 
 const Blogger = require("../google/blogger"),
-    Cache = require("node-redis").Cache,
-    HashCache = require("node-redis").HashCache,
-    Log = require("node-application-insights-logger"),
-    SortedSetCache = require("node-redis").SortedSetCache,
+    Cache = require("@roncli/node-redis").Cache,
+    HashCache = require("@roncli/node-redis").HashCache,
+    Log = require("@roncli/node-application-insights-logger"),
+    SortedSetCache = require("@roncli/node-redis").SortedSetCache,
     Tumblr = require("../tumblr"),
 
     bloggerUrlMatch = /^https?:\/\/blog\.roncli\.com\/[0-9]{4}\/[0-9]{2}\/(?<path>.*)\.html$/;
@@ -82,7 +82,7 @@ class Blog {
                 value: {
                     blogSource: "blogger",
                     id: title.id,
-                    categories: title.labels,
+                    categories: title.labels.sort(),
                     published: new Date(title.published).getTime(),
                     title: title.title,
                     url: `/blogger/${title.id}/${path}`
@@ -125,7 +125,7 @@ class Blog {
             })()
         ];
 
-        for (const category in Object.keys(categories)) {
+        for (const category of Object.keys(categories)) {
             if (Object.prototype.hasOwnProperty.call(categories, category)) {
                 promises.push((async () => {
                     await SortedSetCache.add(`${process.env.REDIS_PREFIX}:blogger:category:${category}`, categories[category], expire);
@@ -174,7 +174,7 @@ class Blog {
                 value: {
                     blogSource: "tumblr",
                     id: post.id,
-                    categories: post.tags,
+                    categories: post.tags.sort(),
                     published: post.timestamp * 1000,
                     title: Tumblr.getTitleFromPost(post),
                     url: `/tumblr/${post.id}/${post.slug}`
@@ -222,7 +222,7 @@ class Blog {
             })()
         ];
 
-        for (const category in Object.keys(categories)) {
+        for (const category of Object.keys(categories)) {
             if (Object.prototype.hasOwnProperty.call(categories, category)) {
                 promises.push((async () => {
                     await SortedSetCache.add(`${process.env.REDIS_PREFIX}:tumblr:category:${category}`, categories[category], expire);
@@ -231,6 +231,80 @@ class Blog {
         }
 
         await Promise.all(promises);
+    }
+
+    //                          #    ###    #     #    ##
+    //                          #     #           #     #
+    //  ##    ##   #  #  ###   ###    #    ##    ###    #     ##    ###
+    // #     #  #  #  #  #  #   #     #     #     #     #    # ##  ##
+    // #     #  #  #  #  #  #   #     #     #     #     #    ##      ##
+    //  ##    ##    ###  #  #    ##   #    ###     ##  ###    ##   ###
+    /**
+     * Gets a count of the blog titles.
+     * @returns {Promise<number>} A promise that returns the number of blog titles.
+     */
+    static async countTitles() {
+        try {
+            if (!await Cache.exists([`${process.env.REDIS_PREFIX}:blog:titles`])) {
+                await Blog.cacheBlog();
+            }
+
+            return await SortedSetCache.count(`${process.env.REDIS_PREFIX}:blog:titles`, "-inf", "+inf");
+        } catch (err) {
+            Log.error("There was an error while counting blog titles.", {err});
+            return 0;
+        }
+    }
+
+    //                          #    ###    #     #    ##                 ###          ##          #
+    //                          #     #           #     #                 #  #        #  #         #
+    //  ##    ##   #  #  ###   ###    #    ##    ###    #     ##    ###   ###   #  #  #      ###  ###    ##    ###   ##   ###   #  #
+    // #     #  #  #  #  #  #   #     #     #     #     #    # ##  ##     #  #  #  #  #     #  #   #    # ##  #  #  #  #  #  #  #  #
+    // #     #  #  #  #  #  #   #     #     #     #     #    ##      ##   #  #   # #  #  #  # ##   #    ##     ##   #  #  #      # #
+    //  ##    ##    ###  #  #    ##   #    ###     ##  ###    ##   ###    ###     #    ##    # #    ##   ##   #      ##   #       #
+    //                                                                           #                             ###               #
+    /**
+     * Gets a count of the blog titles by category.
+     * @param {string} category The category to get titles for.
+     * @returns {Promise<number>} A promise that returns the number of blog titles.
+     */
+    static async countTitlesByCategory(category) {
+        try {
+            if (!await Cache.exists([`${process.env.REDIS_PREFIX}:blog:category:${category}`])) {
+                await Blog.cacheBlog();
+            }
+
+            return await SortedSetCache.count(`${process.env.REDIS_PREFIX}:blog:category:${category}`, "-inf", "+inf");
+        } catch (err) {
+            Log.error("There was an error while counting blog titles.", {err});
+            return 0;
+        }
+    }
+
+    //              #     ##          #                             #
+    //              #    #  #         #
+    //  ###   ##   ###   #      ###  ###    ##    ###   ##   ###   ##     ##    ###
+    // #  #  # ##   #    #     #  #   #    # ##  #  #  #  #  #  #   #    # ##  ##
+    //  ##   ##     #    #  #  # ##   #    ##     ##   #  #  #      #    ##      ##
+    // #      ##     ##   ##    # #    ##   ##   #      ##   #     ###    ##   ###
+    //  ###                                       ###
+    /**
+     * Gets the blog categories.
+     * @returns {Promise<{category: string, posts: number}[]>} A promise that returns the categories.
+     */
+    static async getCategories() {
+        try {
+            if (!await Cache.exists([`${process.env.REDIS_PREFIX}:blog:categories`])) {
+                await Blog.cacheBlog();
+            }
+
+            const categories = await SortedSetCache.get(`${process.env.REDIS_PREFIX}:blog:categories`, 0, -1, true);
+
+            return categories.map((c) => ({category: c.value, posts: -c.score}));
+        } catch (err) {
+            Log.error("There was an error while getting blog categories.", {err});
+            return void 0;
+        }
     }
 
     //              #    ###                 #    ###         #  #        ##
@@ -254,25 +328,88 @@ class Blog {
             /** @type {BlogTypes.Title} */
             const title = await HashCache.get(`${process.env.REDIS_PREFIX}:blog:urls`, url);
 
-            /** @type {Google.Blogger.SchemaComment[]} */
-            let comments = void 0;
-
-            let content;
-            switch (title.blogSource) {
-                case "blogger":
-                    content = await HashCache.get(`${process.env.REDIS_PREFIX}:blogger:posts`, title.id);
-                    if (!content) {
-                        content = await Blog.cacheBloggerPost(title.id);
+            const [content, comments, mainNav, categoryNavs] = await Promise.all([
+                (async () => {
+                    switch (title.blogSource) {
+                        case "blogger": {
+                            const post = await HashCache.get(`${process.env.REDIS_PREFIX}:blogger:posts`, title.id);
+                            if (!post) {
+                                return Blog.cacheBloggerPost(title.id);
+                            }
+                            return post;
+                        }
+                        case "tumblr":
+                            return HashCache.get(`${process.env.REDIS_PREFIX}:tumblr:posts`, title.id);
+                        default:
+                            return void 0;
                     }
+                })(),
+                (() => {
+                    switch (title.blogSource) {
+                        case "blogger":
+                            return Blogger.getComments(title.id);
+                        default:
+                            return void 0;
+                    }
+                })(),
+                (async () => {
+                    const rank = await SortedSetCache.rankReverse(`${process.env.REDIS_PREFIX}:blog:titles`, title);
 
-                    comments = await Blogger.getComments(title.id);
-                    break;
-                case "tumblr":
-                    content = await HashCache.get(`${process.env.REDIS_PREFIX}:tumblr:posts`, title.id);
-                    break;
-            }
+                    const [prev, next] = await Promise.all([
+                        (async () => {
+                            const prevTitle = await Blog.getTitles(rank + 1, 1);
 
-            return new Blog(title, content, comments);
+                            if (!prevTitle) {
+                                return void 0;
+                            }
+
+                            return prevTitle[0];
+                        })(),
+                        (async () => {
+                            if (rank === 0) {
+                                return void 0;
+                            }
+
+                            return (await Blog.getTitles(rank - 1, 1))[0];
+                        })()
+                    ]);
+
+                    return {prev, next};
+                })(),
+                (async () => {
+                    /** @type {{[x: string]: {prev: BlogTypes.Title, next: BlogTypes.Title}}} */
+                    const categories = {};
+
+                    await Promise.all(title.categories.map((category) => (async () => {
+                        const rank = await SortedSetCache.rankReverse(`${process.env.REDIS_PREFIX}:blog:category:${category}`, title);
+
+                        const [prev, next] = await Promise.all([
+                            (async () => {
+                                const prevTitle = await Blog.getTitles(rank + 1, 1);
+
+                                if (!prevTitle) {
+                                    return void 0;
+                                }
+
+                                return prevTitle[0];
+                            })(),
+                            (async () => {
+                                if (rank === 0) {
+                                    return void 0;
+                                }
+
+                                return (await Blog.getTitles(rank - 1, 1))[0];
+                            })()
+                        ]);
+
+                        categories[category] = {prev, next};
+                    })()));
+
+                    return categories;
+                })()
+            ]);
+
+            return new Blog(title, content, comments, mainNav, categoryNavs);
         } catch (err) {
             Log.error("There was an error while getting a blog post by URL.", {err});
             return void 0;
@@ -338,6 +475,59 @@ class Blog {
         }
     }
 
+    //              #    ###    #     #    ##                 ###          ##          #                                  ###         ###          #
+    //              #     #           #     #                 #  #        #  #         #                                  #  #        #  #         #
+    //  ###   ##   ###    #    ##    ###    #     ##    ###   ###   #  #  #      ###  ###    ##    ###   ##   ###   #  #  ###   #  #  #  #   ###  ###    ##
+    // #  #  # ##   #     #     #     #     #    # ##  ##     #  #  #  #  #     #  #   #    # ##  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #   #    # ##
+    //  ##   ##     #     #     #     #     #    ##      ##   #  #   # #  #  #  # ##   #    ##     ##   #  #  #      # #  #  #   # #  #  #  # ##   #    ##
+    // #      ##     ##   #    ###     ##  ###    ##   ###    ###     #    ##    # #    ##   ##   #      ##   #       #   ###     #   ###    # #    ##   ##
+    //  ###                                                          #                             ###               #           #
+    /**
+     * Gets the titles by category and date.
+     * @param {string} category The category to get titles by.
+     * @param {Date} date The date to get titles by.
+     * @returns {Promise<{page: number, titles: BlogTypes.Title[]}>} A promise that returns the list of titles.
+     */
+    static async getTitlesByCategoryByDate(category, date) {
+        if (!await Cache.exists([`${process.env.REDIS_PREFIX}:blog:category:${category}`])) {
+            await Blog.cacheBlog();
+        }
+
+        const count = await SortedSetCache.count(`${process.env.REDIS_PREFIX}:blog:category:${category}`, `(${date.getTime()}`, "+inf"),
+            page = Math.max(Math.ceil(count / Blog.pageSize), 1);
+
+        return {
+            page,
+            titles: await Blog.getTitlesByCategory(category, page * Blog.pageSize - Blog.pageSize, Blog.pageSize)
+        };
+    }
+
+    //              #    ###    #     #    ##                 ###         ###          #
+    //              #     #           #     #                 #  #        #  #         #
+    //  ###   ##   ###    #    ##    ###    #     ##    ###   ###   #  #  #  #   ###  ###    ##
+    // #  #  # ##   #     #     #     #     #    # ##  ##     #  #  #  #  #  #  #  #   #    # ##
+    //  ##   ##     #     #     #     #     #    ##      ##   #  #   # #  #  #  # ##   #    ##
+    // #      ##     ##   #    ###     ##  ###    ##   ###    ###     #   ###    # #    ##   ##
+    //  ###                                                          #
+    /**
+     * Gets the titles by date.
+     * @param {Date} date The date to get titles by.
+     * @returns {Promise<{page: number, titles: BlogTypes.Title[]}>} A promise that returns the list of titles.
+     */
+    static async getTitlesByDate(date) {
+        if (!await Cache.exists([`${process.env.REDIS_PREFIX}:blog:titles`])) {
+            await Blog.cacheBlog();
+        }
+
+        const count = await SortedSetCache.count(`${process.env.REDIS_PREFIX}:blog:titles`, `(${date.getTime()}`, "+inf"),
+            page = Math.max(Math.ceil(count / Blog.pageSize), 1);
+
+        return {
+            page,
+            titles: await Blog.getTitles(page * Blog.pageSize - Blog.pageSize, Blog.pageSize)
+        };
+    }
+
     //                           #                       #
     //                           #                       #
     //  ##    ##   ###    ###   ###   ###   #  #   ##   ###    ##   ###
@@ -348,13 +538,19 @@ class Blog {
      * Creates a new blog object.
      * @param {BlogTypes.Title} post The title of the post.
      * @param {object} content The content of the post.
-     * @param {Google.Blogger.SchemaComment[]} [comments] The comments.
+     * @param {Google.Blogger.SchemaComment[]} comments The comments.
+     * @param {{prev: BlogTypes.Title, next: BlogTypes.Title}} mainNav The main navigation.
+     * @param {{[x: string]: {prev: BlogTypes.Title, next: BlogTypes.Title}}} categoryNavs The navigations for each category.
      */
-    constructor(post, content, comments) {
+    constructor(post, content, comments, mainNav, categoryNavs) {
         this.post = post;
         this.content = content;
         this.comments = comments;
+        this.mainNav = mainNav;
+        this.categoryNavs = categoryNavs;
     }
 }
+
+Blog.pageSize = 10;
 
 module.exports = Blog;

@@ -56,7 +56,9 @@ class Blogger {
                 throw new Error(`There was an error while getting comments for a blog post from Google: status ${res.status}`);
             }
 
-            comments.push(...res.data.items);
+            if (res.data.items) {
+                comments.push(...res.data.items);
+            }
 
             params.pageToken = res.data.nextPageToken || void 0;
         } while (params.pageToken);

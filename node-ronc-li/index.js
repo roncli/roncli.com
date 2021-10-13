@@ -1,6 +1,6 @@
 const Exception = require("./src/errors/exception"),
     express = require("express"),
-    Log = require("node-application-insights-logger"),
+    Log = require("@roncli/node-application-insights-logger"),
     Redirect = require("./src/models/redirect"),
     util = require("util");
 

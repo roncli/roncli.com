@@ -141,8 +141,6 @@ class AdminPage {
 
                 data = await res.json();
             } catch (err) {
-                console.log(err);
-
                 await AdminPage.Index.showModal("Error Occurred", "An error occurred while creating a new child page.  Please try again.");
 
                 AdminPage.Index.loading(false);
@@ -193,8 +191,6 @@ class AdminPage {
 
                 data = await res.json();
             } catch (err) {
-                console.log(err);
-
                 await AdminPage.Index.showModal("Error Occurred", "An error occurred while making a page a child of this page.  Please try again.");
 
                 AdminPage.Index.loading(false);
@@ -246,8 +242,6 @@ class AdminPage {
                     return;
                 }
             } catch (err) {
-                console.log(err);
-
                 await AdminPage.Index.showModal("Error Occurred", "An error occurred while deleting a page.  Please try again.");
 
                 AdminPage.Index.loading(false);
@@ -291,8 +285,6 @@ class AdminPage {
                     return;
                 }
             } catch (err) {
-                console.log(err);
-
                 await AdminPage.Index.showModal("Error Occurred", "An error occurred while saving the page.  Please try again.");
 
                 AdminPage.Index.loading(false);
@@ -336,8 +328,6 @@ class AdminPage {
                     return;
                 }
             } catch (err) {
-                console.log(err);
-
                 await AdminPage.Index.showModal("Error Occurred", "An error occurred while saving the page.  Please try again.");
 
                 AdminPage.Index.loading(false);

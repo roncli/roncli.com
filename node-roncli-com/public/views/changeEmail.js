@@ -59,6 +59,12 @@ class ChangeEmailView {
         return /* html */`
             <div class="info-panel">
                 <div class="info-panel-title rounded-top">Change Your Email Address</div>
+                <div class="info-panel-body">
+                    <ul class="breadcrumb">
+                        <li><a href="/">Home</a></li>
+                        <li>Change Your Email Address</li>
+                    </ul>
+                </div>
                 <div class="info-panel-body rounded-bottom">
                     You can use this page to change the email address associated with your account.  You will need to validate your new email address before you can log in with it.
                 </div>

@@ -97,7 +97,7 @@ class AdminFilesView {
         return /* html */`
             <div class="info-panel">
                 <div class="info-panel-title rounded-top">Files Admin: ${AdminFilesView.Encoding.htmlEncode(data)}</div>
-                <div class="info-panel-body rounded-bottom">
+                <div class="info-panel-body">
                     <ul class="breadcrumb">
                         <li><a href="/">Home</a></li>
                         <li><a href="/admin">Admin</a></li>
@@ -113,6 +113,8 @@ class AdminFilesView {
                             `}
                         `}
                     </ul>
+                </div>
+                <div class="info-panel-body rounded-bottom">
                     This is a collection of random files that I have uploaded to make easily available. They range from useful to downright silly. Download at your own risk!
                 </div>
             </div>

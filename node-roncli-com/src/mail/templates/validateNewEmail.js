@@ -1,6 +1,8 @@
 /**
- * @typedef {{authorizationCode: string, changeAuthorization: import("../../../types/node/changeAuthorizationTypes").ChangeAuthorizationData, user: import("../../models/user")} & MailTypes.EmailData} ValidateNewEmailTemplateData
+ * @typedef {import("../../../types/node/changeAuthorizationTypes").ChangeAuthorizationData} ChangeAuthorizationTypes.ChangeAuthorizationData
+ * @typedef {{authorizationCode: string, changeAuthorization: ChangeAuthorizationTypes.ChangeAuthorizationData, user: User} & MailTypes.EmailData} ValidateNewEmailTemplateData
  * @typedef {import("../../../types/node/mailTypes").EmailData} MailTypes.EmailData
+ * @typedef {import("../../models/user")} User}
  */
 
 const Encoding = require("../../../public/js/common/encoding"),

@@ -48,7 +48,7 @@ class PlaylistView {
                         ${data.playlist.videos.map((v) => /* html */`
                             <div class="pill pill-static grid" style="align-items: center; grid-template-columns: 1fr auto auto;">
                                 <div class="title large">${PlaylistView.Encoding.htmlEncode(v.title)}</div>
-                                <div class="play"><button class="btn play-video" data-id="${PlaylistView.Encoding.attributeEncode(v.id)}">▶ Play</button></div>
+                                <div class="play"><button class="btn play-video" data-id="${PlaylistView.Encoding.attributeEncode(v.id)}">▶️ Play</button></div>
                                 <div class="add"><button class="btn add-to-media-player" data-source="youtube" data-url="https://youtube.com/watch?v=${PlaylistView.Encoding.attributeEncode(v.id)}">🎵 Add To Playlist</button></div>
                             </div>
                         `).join("")}

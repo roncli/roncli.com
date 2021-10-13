@@ -48,8 +48,6 @@ class AdminFiles {
                     return;
                 }
             } catch (err) {
-                console.log(err);
-
                 await AdminFiles.Index.showModal("Error Occurred", "An error occurred while deleting a file.  Please try again.");
 
                 AdminFiles.Index.loading(false);
@@ -96,8 +94,6 @@ class AdminFiles {
 
                 data = await res.json();
             } catch (err) {
-                console.log(err);
-
                 await AdminFiles.Index.showModal("Error Occurred", "An error occurred while creating a directory.  Please try again.");
 
                 AdminFiles.Index.loading(false);
@@ -132,8 +128,6 @@ class AdminFiles {
                     body: formData
                 });
 
-                console.log(res);
-
                 if (res.status !== 200) {
                     if (res.status === 409) {
                         await AdminFiles.Index.showModal("File or Directory Exists", "A file or directory exists with the same name.  Please upload with a different filename and try again.");
@@ -148,8 +142,6 @@ class AdminFiles {
 
                 data = await res.json();
             } catch (err) {
-                console.log(err);
-
                 await AdminFiles.Index.showModal("Error Occurred", "An error occurred while uploading a file.  Please try again.");
 
                 AdminFiles.Index.loading(false);

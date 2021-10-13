@@ -3,7 +3,7 @@
  */
 
 const ContactDb = require("../database/contact"),
-    Log = require("node-application-insights-logger");
+    Log = require("@roncli/node-application-insights-logger");
 
 //   ###                  #                    #
 //  #   #                 #                    #

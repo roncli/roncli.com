@@ -1,7 +1,3 @@
-/**
- * @typedef {{[x: string]: string}} Validation
- */
-
 //   ###   #                                  #####                  #     ##
 //  #   #  #                                  #                             #
 //  #      # ##    ###   # ##    ## #   ###   #      ## #    ###    ##      #
@@ -26,7 +22,7 @@ class ChangeEmail {
      * @returns {void}
      */
     static DOMContentLoaded() {
-        /** @type {Validation} */
+        /** @type {{[x: string]: string}} */
         const changeValidation = {};
 
         document.getElementById("change-email-panel").addEventListener("keyup", (kev) => {
@@ -85,7 +81,6 @@ class ChangeEmail {
                         changeValidation["change-button"] = "There was an error while trying to change your email address, please try again.";
                     }
                 } catch (err) {
-                    console.log(err);
                     changeValidation["change-button"] = "There was an error while trying to change your email address, please try again.";
                 }
 

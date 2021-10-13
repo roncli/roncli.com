@@ -1,0 +1,11 @@
+div#tag-cloud.top-only div:not(.top) {
+    display: none;
+}
+
+div#blog-pagination {
+    font-size: 14px;
+}
+
+div#blog-pagination a.page, div#blog-pagination a.page:hover, div#blog-pagination a.page:focus, div#blog-pagination a.page:active {
+    text-decoration: none;
+}

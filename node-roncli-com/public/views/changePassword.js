@@ -63,6 +63,12 @@ class ChangePasswordView {
         return /* html */`
             <div class="info-panel">
                 <div class="info-panel-title rounded-top">Change Your Password</div>
+                <div class="info-panel-body">
+                    <ul class="breadcrumb">
+                        <li><a href="/">Home</a></li>
+                        <li>Change Your Password</li>
+                    </ul>
+                </div>
                 <div class="info-panel-body rounded-bottom">
                     You can use this page to change your password.  It is recommended to use a unique password that you haven't used before.
                 </div>

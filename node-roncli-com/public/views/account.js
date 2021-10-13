@@ -70,10 +70,14 @@ class AccountView {
         return /* html */`
             <div class="info-panel">
                 <div class="info-panel-title rounded-top">Welcome</div>
+                <div class="info-panel-body">
+                    <ul class="breadcrumb">
+                        <li><a href="/">Home</a></li>
+                        <li>Account</li>
+                    </ul>
+                </div>
                 <div class="info-panel-body rounded-bottom">
-                    <img src="/images/roncliSmall.png" style="float: left; padding-right: 3px;" />
-                    Hello! You've found the homepage of me, Ronald M. Clifford, also known as <b>roncli</b> or <b>The Nightstalker</b>.<br /><br />
-                    Here, you can check out my music, browse my coding projects, follow along with what games I'm playing, and check out everything else that makes life worth living.
+                    From here, you can view or change your account information, including your email, alias, and password.  Please note that changing your password will require email verification, and changing your email address will require email verification both with your existing email address and with your new email address.
                 </div>
             </div>
         `;

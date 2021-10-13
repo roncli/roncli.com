@@ -3,9 +3,9 @@
  * @typedef {import("../../types/node/speedrunTypes").VariableData} SpeedrunTypes.VariableData
  */
 
-const Cache = require("node-redis").Cache,
-    Log = require("node-application-insights-logger"),
-    SortedSetCache = require("node-redis").SortedSetCache,
+const Cache = require("@roncli/node-redis").Cache,
+    Log = require("@roncli/node-application-insights-logger"),
+    SortedSetCache = require("@roncli/node-redis").SortedSetCache,
     SpeedrunCom = require("../speedrun.com");
 
 //   ###                            #

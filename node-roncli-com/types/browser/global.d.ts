@@ -19,6 +19,10 @@ import AdminRedirectsView from "../../public/views/adminRedirects"
 import AdminView from "../../public/views/admin"
 import AdminYouTube from "../../public/js/adminYouTube"
 import AdminYouTubeView from "../../public/views/adminYouTube"
+import Blog from "../../public/js/blog"
+import BlogCategoryView from "../../public/views/blogCategory"
+import BlogContentView from "../../public/views/blog/content"
+import BlogTitlesView from "../../public/views/blog/titles"
 import BlogView from "../../public/views/blog"
 import ChangeEmail from "../../public/js/changeEmail"
 import ChangeEmailView from "../../public/views/changeEmail"
@@ -41,6 +45,7 @@ import ModalView from "../../public/views/index/modal"
 import NotFoundView from "../../public/views/404"
 import Numbers from "../../public/js/common/numbers"
 import PageView from "../../public/views/page"
+import PaginationPageView from "../../public/views/pagination/page"
 import Playlist from "../../public/js/playlist"
 import PlaylistView from "../../public/views/playlist"
 import ServerErrorView from "../../public/views/500"
@@ -77,7 +82,11 @@ declare global {
         AdminView: typeof AdminView
         AdminYouTube: typeof AdminYouTube
         AdminYouTubeView: typeof AdminYouTubeView
+        Blog: typeof Blog
+        BlogContentView: typeof BlogContentView
+        BlogTitlesView: typeof BlogTitlesView
         BlogView: typeof BlogView
+        BlogCategoryView: typeof BlogCategoryView
         ChangeEmail: typeof ChangeEmail
         ChangeEmailView: typeof ChangeEmailView
         ChangePassword: typeof ChangePassword
@@ -100,6 +109,7 @@ declare global {
         NotFoundView: typeof NotFoundView
         Numbers: typeof Numbers
         PageView: typeof PageView
+        PaginationPageView: typeof PaginationPageView
         Playlist: typeof Playlist
         PlaylistView: typeof PlaylistView
         require: any

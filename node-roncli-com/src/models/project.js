@@ -3,7 +3,7 @@
  */
 
 const ProjectDb = require("../database/project"),
-    Log = require("node-application-insights-logger");
+    Log = require("@roncli/node-application-insights-logger");
 
 //  ####                    #                  #
 //  #   #                                      #

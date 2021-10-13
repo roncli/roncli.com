@@ -1,5 +1,4 @@
-const Cache = require("node-redis").Cache,
-    CacheData = require("./src/cacheData"),
+const CacheData = require("./src/cacheData"),
     compression = require("compression"),
     connectRedis = require("connect-redis"),
     cookieParser = require("cookie-parser"),
@@ -7,12 +6,13 @@ const Cache = require("node-redis").Cache,
     expressSession = require("express-session"),
     fs = require("fs").promises,
     HotRouter = require("hot-router"),
-    Log = require("node-application-insights-logger"),
-    Minify = require("node-minify"),
+    Log = require("@roncli/node-application-insights-logger"),
+    Minify = require("@roncli/node-minify"),
     path = require("path"),
-    Redis = require("node-redis"),
+    Redis = require("@roncli/node-redis"),
     util = require("util"),
 
+    Cache = Redis.Cache,
     Redirects = require("./src/redirects");
 
 process.on("unhandledRejection", (reason) => {

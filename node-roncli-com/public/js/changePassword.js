@@ -1,7 +1,3 @@
-/**
- * @typedef {{[x: string]: string}} Validation
- */
-
 //   ###   #                                  ####                                                 #
 //  #   #  #                                  #   #                                                #
 //  #      # ##    ###   # ##    ## #   ###   #   #   ###    ###    ###   #   #   ###   # ##    ## #
@@ -26,7 +22,7 @@ class ChangePassword {
      * @returns {void}
      */
     static DOMContentLoaded() {
-        /** @type {Validation} */
+        /** @type {{[x: string]: string}} */
         const changeValidation = {};
 
         document.getElementById("change-password-panel").addEventListener("keyup", (kev) => {
@@ -95,7 +91,6 @@ class ChangePassword {
                         changeValidation["change-button"] = "There was an error while trying to change your password, please try again.";
                     }
                 } catch (err) {
-                    console.log(err);
                     changeValidation["change-button"] = "There was an error while trying to change your password, please try again.";
                 }
 

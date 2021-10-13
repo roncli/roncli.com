@@ -2,10 +2,9 @@
  * @typedef {import("express").Request} Express.Request
  * @typedef {import("express").Response} Express.Response
  * @typedef {import("../../types/node/userTypes").UserData} UserTypes.UserData
- * @typedef {{validated: boolean, data?: object}} ValidationData
  */
 
-const Cache = require("node-redis").Cache,
+const Cache = require("@roncli/node-redis").Cache,
     ChangeAuthorizationDb = require("../database/changeAuthorization"),
     ChangeEmailTemplate = require("../mail/templates/changeEmail"),
     ChangePasswordTemplate = require("../mail/templates/changePassword"),
@@ -325,7 +324,7 @@ class User {
      * @param {string} userId The user ID.
      * @param {string} code The authorization code.
      * @param {"password" | "emailChange" | "emailValidate" | "register"} type The type of authorization.
-     * @returns {Promise<ValidationData>} A promise that returns whether the user is now validated.
+     * @returns {Promise<{validated: boolean, data?: object}>} A promise that returns whether the user is now validated.
      */
     static async validate(userId, code, type) {
         const authorizationData = await ChangeAuthorizationDb.get(userId, code, type);

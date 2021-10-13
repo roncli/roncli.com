@@ -69,12 +69,14 @@ class AdminModerationView {
         return /* html */`
             <div class="info-panel">
                 <div class="info-panel-title rounded-top">Moderation Admin</div>
-                <div class="info-panel-body rounded-bottom">
+                <div class="info-panel-body">
                     <ul class="breadcrumb">
                         <li><a href="/">Home</a></li>
                         <li><a href="/admin">Admin</a></li>
                         <li>Moderation</li>
                     </ul>
+                </div>
+                <div class="info-panel-body rounded-bottom">
                     Approve or reject comments made across the site.
                 </div>
             </div>

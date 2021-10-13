@@ -3,10 +3,10 @@
  * @typedef {import("../../types/node/githubTypes").Release} GithubTypes.Release
  */
 
-const Cache = require("node-redis").Cache,
+const Cache = require("@roncli/node-redis").Cache,
     Github = require("../github"),
-    Log = require("node-application-insights-logger"),
-    SortedSetCache = require("node-redis").SortedSetCache;
+    Log = require("@roncli/node-application-insights-logger"),
+    SortedSetCache = require("@roncli/node-redis").SortedSetCache;
 
 //  ####                                 #     #
 //  #   #                                      #

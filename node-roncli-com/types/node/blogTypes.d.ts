@@ -3,7 +3,7 @@ declare namespace BlogTypes {
         blogSource: string
         id: string
         categories: string[]
-        published: Date
+        published: number
         title: string
         url: string
     }

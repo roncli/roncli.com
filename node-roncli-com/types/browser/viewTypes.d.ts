@@ -58,10 +58,42 @@ declare namespace ViewTypes {
         playlists: AllowedPlaylist[]
     }
 
-    type BlogViewParameters = {}
+    type BlogCategoryViewParameters = {
+        category: string
+        titles: BlogTypes.Title[]
+        categories: {
+            category: string
+            posts: number
+        }[]
+        count: number
+        pageSize: number
+        newestDate: string
+    }
+
+    type BlogCategoryViewInfoParameters = {
+        category: string
+        categories: {
+            category: string
+            posts: number
+        }[]
+    }
+
+    type BlogViewParameters = {
+        titles: BlogTypes.Title[]
+        categories: {
+            category: string
+            posts: number
+        }[]
+        count: number
+        pageSize: number
+        newestDate: string
+    }
 
     type BlogViewInfoParameters = {
-        categories: string[]
+        categories: {
+            category: string
+            posts: number
+        }[]
     }
 
     type CommentsViewParameters = {
@@ -120,6 +152,11 @@ declare namespace ViewTypes {
 
     type PageViewParameters = {
         page: Page
+    }
+
+    type PaginationPageViewParameters = {
+        page: number
+        total: number
     }
 
     type PlaylistViewParameters = {

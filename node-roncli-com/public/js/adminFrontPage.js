@@ -56,8 +56,6 @@ class AdminFrontPage {
 
             data = await res.json();
         } catch (err) {
-            console.log(err);
-
             await AdminFrontPage.Index.showModal("Error Occurred", "An error occurred while adding a feature.  Please try again.");
 
             AdminFrontPage.Index.loading(false);
@@ -111,8 +109,6 @@ class AdminFrontPage {
 
             data = await res.json();
         } catch (err) {
-            console.log(err);
-
             await AdminFrontPage.Index.showModal("Error Occurred", "An error occurred while deleting a feature.  Please try again.");
 
             AdminFrontPage.Index.loading(false);

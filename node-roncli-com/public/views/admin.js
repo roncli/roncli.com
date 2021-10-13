@@ -46,7 +46,7 @@ class AdminView {
                     <div class="pill">🔄 Redirects</div>
                 </a>
                 <a href="/admin/youtube" class="contents">
-                    <div class="pill">▶ YouTube</div>
+                    <div class="pill">▶️ YouTube</div>
                 </a>
             </div>
         `;
@@ -67,11 +67,13 @@ class AdminView {
         return /* html */`
             <div class="info-panel">
                 <div class="info-panel-title rounded-top">Site Administration</div>
-                <div class="info-panel-body rounded-bottom">
+                <div class="info-panel-body">
                     <ul class="breadcrumb">
                         <li><a href="/">Home</a></li>
                         <li>Admin</li>
                     </ul>
+                </div>
+                <div class="info-panel-body rounded-bottom">
                     From here you have control over various parts of the website.
                 </div>
             </div>

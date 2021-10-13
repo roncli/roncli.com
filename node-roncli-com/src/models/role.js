@@ -2,7 +2,7 @@
  * @typedef {import("../../types/node/roleTypes").RoleData} RoleTypes.RoleData
  */
 
-const Cache = require("node-redis").Cache,
+const Cache = require("@roncli/node-redis").Cache,
     RoleDb = require("../database/role");
 
 //  ####           ##

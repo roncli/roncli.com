@@ -34,7 +34,7 @@ class HomeView {
             ` : /* html */`
                 <div class="panel rounded">
                     <div class="panel-title rounded-top"><h1>Recent Blog Posts</h1></div>
-                    <div class="panel-list rounded-bottom grid-columns-2">
+                    <div class="panel-list rounded-bottom grid-columns-3">
                         ${data.titles.map((title) => /* html */`
                             <div class="contents-row">
                                 <a class="contents" href="${HomeView.Encoding.attributeEncode(title.url)}">
@@ -42,6 +42,13 @@ class HomeView {
                                 </a>
                                 <a class="contents" href="${HomeView.Encoding.attributeEncode(title.url)}">
                                     <div><div class="date"><time class="timeago" datetime="${new Date(title.published).toISOString()}">${new Date(title.published).toUTCString()}</time></div></div>
+                                </a>
+                                <a class="contents" href="${HomeView.Encoding.attributeEncode(title.url)}">
+                                    <div style="flex-wrap: wrap; column-gap: 4px; row-gap: 4px;">
+                                        ${title.categories.map((c) => /* html */`
+                                            <div class="tag">${HomeView.Encoding.htmlEncode(c)}</div>
+                                        `).join("")}
+                                    </div>
                                 </a>
                             </div>
                         `).join("")}

@@ -5,7 +5,7 @@
 
 const Directory = require("../../src/models/directory"),
     fs = require("fs").promises,
-    Log = require("node-application-insights-logger"),
+    Log = require("@roncli/node-application-insights-logger"),
     multer = require("multer"),
     os = require("os"),
     path = require("path"),

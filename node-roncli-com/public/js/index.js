@@ -1,7 +1,6 @@
 /**
  * @typedef {import("../../types/browser/mediaTypes").Media} MediaTypes.Media
  * @typedef {import("../../src/models/user")} User
- * @typedef {{[x: string]: string}} Validation
  */
 
 //   ###              #
@@ -327,7 +326,7 @@ class Index {
     /**
      * Updates the validation for the login form.
      * @param {string} id The element ID to update the validation with.
-     * @param {Validation} validation The results of the validation.
+     * @param {{[x: string]: string}} validation The results of the validation.
      * @returns {Promise} A promise that resolves when the validation has been updated.
      */
     static async updateValidation(id, validation) {
@@ -397,13 +396,13 @@ class Index {
             ev.preventDefault();
 
             if (el.id === "log-in") {
-                /** @type {Validation} */
+                /** @type {{[x: string]: string}} */
                 const loginValidation = {};
 
-                /** @type {Validation} */
+                /** @type {{[x: string]: string}} */
                 const registerValidation = {};
 
-                /** @type {Validation} */
+                /** @type {{[x: string]: string}} */
                 const recoverValidation = {};
 
                 await Index.Template.loadTemplate("/views/index/login.js", "LoginView");
@@ -531,7 +530,6 @@ class Index {
 
                             data = await res.json();
                         } catch (err) {
-                            console.log(err);
                             loginValidation["login-button"] = "There was an error while trying to login, please try again.";
                         }
 
@@ -677,7 +675,6 @@ class Index {
                                 registerValidation["register-button"] = "There was an error while trying to register, please try again.";
                             }
                         } catch (err) {
-                            console.log(err);
                             registerValidation["register-button"] = "There was an error while trying to register, please try again.";
                         }
 
@@ -751,7 +748,6 @@ class Index {
 
                             status = res.status;
                         } catch (err) {
-                            console.log(err);
                             recoverValidation["recover-button"] = "There was an error while trying to recover your password, please try again.";
                         }
 

@@ -24,10 +24,11 @@ class SPA {
     /**
      * Loads the specified page.
      * @param {string} path The path of page to load.
+     * @param {DOMStringMap} [dataset] The dataset of the element clicked on.
      * @param {boolean} [fromPopstate] Whether this is from the popstate event.
      * @returns {void}
      */
-    static loadPage(path, fromPopstate) {
+    static loadPage(path, dataset, fromPopstate) {
         if (SPA.onNavigate) {
             SPA.onNavigate();
             SPA.onNavigate = void 0;
@@ -42,7 +43,8 @@ class SPA {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                path
+                path,
+                dataset
             })
         }).then(async (res) => {
             // Something went wrong, just try to load the page directly.
@@ -72,7 +74,7 @@ class SPA {
                 }
 
                 // Load the required JS files.
-                if (data.js.length > 0) {
+                if (data.js.length > 0 && (!data.jsClass || !window[data.jsClass])) {
                     const script = document.createElement("script");
                     promise = new Promise((resolve, reject) => {
                         try {
@@ -135,7 +137,7 @@ class SPA {
 
             // Update push state.
             if (!fromPopstate) {
-                window.history.pushState({}, "", path);
+                window.history.pushState(dataset, "", path);
             }
 
             SPA.Index.loading(false);
@@ -250,7 +252,7 @@ class SPA {
 
                 ev.preventDefault();
 
-                SPA.loadPage(a.getAttribute("href"));
+                SPA.loadPage(a.getAttribute("href"), a.dataset);
 
                 return false;
             } catch (err) {
@@ -269,10 +271,11 @@ class SPA {
     // #           #
     /**
      * Handles the popstate event of the window.
+     * @param {PopStateEvent} ev The event.
      * @returns {void}
      */
-    static popstate() {
-        SPA.loadPage(document.location.pathname, true);
+    static popstate(ev) {
+        SPA.loadPage(document.location.pathname, ev.state, true);
     }
 }
 

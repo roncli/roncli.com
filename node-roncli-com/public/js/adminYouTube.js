@@ -57,8 +57,6 @@ class AdminYouTube {
 
                 data = await res.json();
             } catch (err) {
-                console.log(err);
-
                 await AdminYouTube.Index.showModal("Error Occurred", "An error occurred while adding an allowed playlist.  Please try again.");
 
                 AdminYouTube.Index.loading(false);
@@ -101,8 +99,6 @@ class AdminYouTube {
                     return;
                 }
             } catch (err) {
-                console.log(err);
-
                 await AdminYouTube.Index.showModal("Error Occurred", "An error occurred while adding an allowed playlist.  Please try again.");
 
                 AdminYouTube.Index.loading(false);

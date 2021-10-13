@@ -4,7 +4,7 @@
  */
 
 const CommentDb = require("../database/comment"),
-    Log = require("node-application-insights-logger"),
+    Log = require("@roncli/node-application-insights-logger"),
     sanitizeHtml = require("sanitize-html");
 
 //   ###                                       #
