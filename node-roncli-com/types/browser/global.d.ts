@@ -4,6 +4,8 @@ import AccountChangeEmailView from "../../public/views/account/changeEmail"
 import AccountChangePasswordView from "../../public/views/account/changePassword"
 import AccountView from "../../public/views/account"
 import AddErrorView from "../../public/views/media/addError"
+import AdminCache from "../../public/js/adminCache"
+import AdminCacheView from "../../public/views/adminCache"
 import AdminFiles from "../../public/js/adminFiles"
 import AdminFilesView from "../../public/views/adminFiles"
 import AdminFrontPage from "../../public/js/adminFrontPage"
@@ -68,6 +70,8 @@ declare global {
         AccountChangePasswordView: typeof AccountChangePasswordView
         AccountView: typeof AccountView
         AddErrorView: typeof AddErrorView
+        AdminCache: typeof AdminCache
+        AdminCacheView: typeof AdminCacheView
         AdminFiles: typeof AdminFiles
         AdminFilesView: typeof AdminFilesView
         AdminFrontPage: typeof AdminFrontPage

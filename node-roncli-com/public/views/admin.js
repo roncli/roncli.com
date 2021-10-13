@@ -28,6 +28,9 @@ class AdminView {
     static get(data) {
         return /* html */`
             <div class="grid grid-columns-3-fixed">
+                <a href="/admin/cache" class="contents">
+                    <div class="pill">🗃️ Cache</div>
+                </a>
                 <a href="/admin/files" class="contents">
                     <div class="pill">📂 Files</div>
                 </a>
