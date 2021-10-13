@@ -213,6 +213,10 @@ class Soundcloud {
             json: true
         });
 
+        if (res.statusCode === 429) {
+            throw new Error(`Rate limit reached for Soundcloud ${res.body.errors[0].meta.rate_limit.group}, exceeded ${res.body.errors[0].meta.rate_limit.max_nr_of_requests} requests, limit resets at ${res.body.errors[0].meta.reset_time}`);
+        }
+
         if (res.statusCode !== 200) {
             throw new Error(`There was an error while refreshing an access token from Soundcloud: status ${res.statusCode}`);
         }
