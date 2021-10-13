@@ -44,7 +44,7 @@
         "multer": "1.4.3",
         "nodemailer": "6.7.0",
         "pbkdf2": "3.1.2",
-        "sanitize-html": "2.5.1",
+        "sanitize-html": "2.5.2",
         "sortablejs": "1.14.0",
         "svg-captcha": "1.4.0",
         "timeago.js": "4.0.2",
