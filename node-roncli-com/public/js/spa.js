@@ -140,13 +140,14 @@ class SPA {
 
             // Update push state.
             if (!fromPopstate) {
-                window.history.pushState(dataset, "", path);
+                window.history.pushState({...dataset}, "", path);
             }
 
             SPA.Index.loading(false);
-        }).catch(() => {
+        }).catch((err) => {
+            console.log(err);
             // On error, just follow the link.
-            window.location.href = path;
+            // window.location.href = path;
         });
     }
 
