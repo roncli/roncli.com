@@ -222,7 +222,7 @@ class Home extends RouterBase {
             res.status(200).send(await Common.page(
                 "",
                 void 0,
-                {js: ["/views/home.js"]},
+                {},
                 HomeView.get(data),
                 HomeView.getInfo(),
                 req,

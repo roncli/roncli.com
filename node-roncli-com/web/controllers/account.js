@@ -100,7 +100,10 @@ class Account extends RouterBase {
             res.status(200).send(await Common.page(
                 "",
                 void 0,
-                {css: ["/css/account.css"], js: ["/js/account.js", "/views/account.js"]},
+                {
+                    css: ["/css/account.css"],
+                    js: ["/js/account.js"]
+                },
                 AccountView.get(user),
                 AccountView.getInfo(),
                 req,

@@ -81,7 +81,7 @@ class AdminModeration extends RouterBase {
             res.status(200).send(await Common.page(
                 "",
                 void 0,
-                {js: ["/js/adminModeration.js", "/views/adminModeration.js"]},
+                {js: ["/js/adminModeration.js"]},
                 AdminModerationView.get(data),
                 AdminModerationView.getInfo(),
                 req,

@@ -105,7 +105,7 @@ class Files extends RouterBase {
             res.status(200).send(await Common.page(
                 "",
                 void 0,
-                {js: ["/views/directory.js"]},
+                {},
                 DirectoryView.get(data),
                 DirectoryView.getInfo(data.path),
                 req,

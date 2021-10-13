@@ -139,7 +139,7 @@ class AdminFiles extends RouterBase {
             res.status(200).send(await Common.page(
                 "",
                 void 0,
-                {js: ["/js/adminFiles.js", "/views/adminFiles.js"]},
+                {js: ["/js/adminFiles.js"]},
                 AdminFilesView.get(data),
                 AdminFilesView.getInfo(data.path),
                 req,

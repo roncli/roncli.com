@@ -80,7 +80,7 @@ class Admin extends RouterBase {
             res.status(200).send(await Common.page(
                 "",
                 void 0,
-                {css: [], js: ["/views/admin.js"]},
+                {},
                 AdminView.get(data),
                 AdminView.getInfo(),
                 req,

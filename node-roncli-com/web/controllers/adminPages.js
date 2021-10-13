@@ -87,7 +87,7 @@ class AdminPages extends RouterBase {
             res.status(200).send(await Common.page(
                 "",
                 void 0,
-                {js: ["/js/adminPages.js", "/views/adminPages.js"]},
+                {js: ["/js/adminPages.js"]},
                 AdminPagesView.get(data),
                 AdminPagesView.getInfo(),
                 req,

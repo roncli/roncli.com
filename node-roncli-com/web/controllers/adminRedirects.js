@@ -81,7 +81,7 @@ class AdminRedirects extends RouterBase {
             res.status(200).send(await Common.page(
                 "",
                 void 0,
-                {js: ["/js/adminRedirects.js", "/views/adminRedirects.js"]},
+                {js: ["/js/adminRedirects.js"]},
                 AdminRedirectsView.get(data),
                 AdminRedirectsView.getInfo(),
                 req,

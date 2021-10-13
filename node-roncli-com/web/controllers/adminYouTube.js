@@ -80,7 +80,7 @@ class AdminYouTube extends RouterBase {
             res.status(200).send(await Common.page(
                 "",
                 void 0,
-                {js: ["/js/adminYouTube.js", "/views/adminYouTube.js"]},
+                {js: ["/js/adminYouTube.js"]},
                 AdminYouTubeView.get(data),
                 AdminYouTubeView.getInfo(),
                 req,

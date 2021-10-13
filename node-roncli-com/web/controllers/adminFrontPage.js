@@ -88,7 +88,7 @@ class AdminFrontPage extends RouterBase {
             res.status(200).send(await Common.page(
                 "",
                 void 0,
-                {js: ["/js/sortable/sortable.js", "/js/adminFrontPage.js", "/views/adminFrontPage.js"]},
+                {js: ["/js/sortable/sortable.js", "/js/adminFrontPage.js"]},
                 AdminFrontPageView.get(data),
                 AdminFrontPageView.getInfo(),
                 req,
