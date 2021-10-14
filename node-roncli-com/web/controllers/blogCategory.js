@@ -54,9 +54,8 @@ class BlogCategory extends RouterBase {
      * @returns {Promise} A promise that resolves when the request has been processed.
      */
     static async get(req, res) {
-        const user = await User.getCurrent(req);
-
-        const category = req.params.category;
+        const user = await User.getCurrent(req),
+            category = req.params.category;
 
         if (!category || category.length === 0) {
             await Common.notFound(req, res, user);
@@ -71,21 +70,7 @@ class BlogCategory extends RouterBase {
             return;
         }
 
-        /** @type {{category: string, posts: number}[]} */
-        let categories;
-
-        /** @type {number} */
-        let count;
-
-        await Promise.all([
-            (async () => {
-                categories = await Blog.getCategories();
-            })(),
-            (async () => {
-                count = await Blog.countTitlesByCategory(category);
-            })()
-        ]);
-
+        const [categories, count] = await Promise.all([Blog.getCategories(), Blog.countTitlesByCategory(category)]);
 
         let local, newestDate;
 

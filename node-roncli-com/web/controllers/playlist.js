@@ -56,8 +56,7 @@ class Playlist extends RouterBase {
      * @returns {Promise} A promise that resolves when the request is processed.
      */
     static async get(req, res) {
-        const user = await User.getCurrent(req),
-            playlist = await PlaylistModel.get(req.params.id);
+        const [user, playlist] = await Promise.all([User.getCurrent(req), PlaylistModel.get(req.params.id)]);
 
         if (!playlist) {
             await Common.notFound(req, res, user);

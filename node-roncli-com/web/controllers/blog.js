@@ -54,25 +54,10 @@ class Blog extends RouterBase {
      * @returns {Promise} A promise that resolves when the request has been processed.
      */
     static async get(req, res) {
-        const user = await User.getCurrent(req);
-
         // Get the titles first since we need to load the blog and get the URL of the first post.
-        const titles = await BlogModel.getTitles(0, BlogModel.pageSize);
+        const [user, titles] = await Promise.all([User.getCurrent(req), BlogModel.getTitles(0, BlogModel.pageSize)]);
 
-        /** @type {{category: string, posts: number}[]} */
-        let categories;
-
-        /** @type {number} */
-        let count;
-
-        await Promise.all([
-            (async () => {
-                categories = await BlogModel.getCategories();
-            })(),
-            (async () => {
-                count = await BlogModel.countTitles();
-            })()
-        ]);
+        const [categories, count] = await Promise.all([BlogModel.getCategories(), BlogModel.countTitles()]);
 
         let local, newestDate;
 

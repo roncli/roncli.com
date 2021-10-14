@@ -55,18 +55,16 @@ class Page extends RouterBase {
      * @returns {Promise} A promise that resolves when the request has been processed.
      */
     static async get(req, res) {
-        const user = await User.getCurrent(req),
-            page = await PageModel.getByPath(req.path);
+        const [user, page] = await Promise.all([User.getCurrent(req), PageModel.getByPath(req.path)]);
 
         if (!page) {
             await Common.notFound(req, res, user);
             return;
         }
 
-        await page.loadMetadata();
+        const [comments] = await Promise.all([Comment.getByUrl(page.url, user), page.loadMetadata()]);
 
-        const data = {page},
-            comments = await Comment.getByUrl(page.url, user);
+        const data = {page};
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({
