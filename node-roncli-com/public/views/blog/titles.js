@@ -12,7 +12,7 @@
 //                       #   #
 //                        ###
 /**
- * A class that represents the blog titles content view.
+ * A class that represents the blog titles view.
  */
 class BlogTitlesView {
     //              #

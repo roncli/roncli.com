@@ -29,7 +29,7 @@ class BlogCategoryView {
      * @returns {string} An HTML string of the page.
      */
     static get(data) {
-        const cutoff = data.categories[Math.floor(data.categories.length / data.pageSize)].posts;
+        const cutoff = data.categories[Math.floor(data.categories.length / 10)].posts;
 
         return /* html */`
             <div class="grid">
@@ -47,7 +47,7 @@ class BlogCategoryView {
                         </div>
                     </div>
                 </div>
-                <div class="panel">
+                <div class="panel rounded">
                     <div class="panel-title rounded-top"><h1>Categories</h1></div>
                     <div id="tag-cloud" class="top-only panel-body" style="display: flex; flex-wrap: wrap; column-gap: 4px; row-gap: 4px; align-items: center;">
                         ${data.categories.sort((a, b) => a.category.localeCompare(b.category)).map((c) => /* html */`
@@ -97,7 +97,7 @@ class BlogCategoryView {
             <div class="info-panel">
                 <div class="info-panel-title rounded-top">Categories</div>
                 <div class="info-panel-list rounded-bottom">
-                    ${categories.sort((a, b) => b.posts - a.posts).map((category) => /* html */`
+                    ${categories.sort((a, b) => b.posts - a.posts || a.category.localeCompare(b.category)).map((category) => /* html */`
                         <a class="contents" href="${BlogCategoryView.Encoding.attributeEncode(`/blog/category/${encodeURI(category.category)}`)}" target="_blank">
                             <div class="center">${BlogCategoryView.Encoding.htmlEncode(category.category)} (${category.posts})</div>
                         </a>

@@ -32,7 +32,7 @@ class Blog {
             if (div.classList.contains("top-only")) {
                 btn.innerHTML = "<i class=\"bi-chevron-double-down\"></i> Show More";
             } else {
-                btn.innerText = "<i class=\"bi-chevron-double-up\"></i> Show Less";
+                btn.innerHTML = "<i class=\"bi-chevron-double-up\"></i> Show Less";
             }
         });
 

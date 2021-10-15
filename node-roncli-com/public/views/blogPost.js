@@ -176,7 +176,7 @@ class BlogPostView {
             <div class="info-panel">
                 <div class="info-panel-title rounded-top">Categories</div>
                 <div class="info-panel-list rounded-bottom">
-                    ${categories.sort((a, b) => b.posts - a.posts).map((cat) => /* html */`
+                    ${categories.sort((a, b) => b.posts - a.posts || a.category.localeCompare(b.category)).map((cat) => /* html */`
                         <a class="contents" href="${BlogPostView.Encoding.attributeEncode(`/blog/category/${encodeURI(cat.category)}`)}" target="_blank">
                             <div class="center">${BlogPostView.Encoding.htmlEncode(cat.category)} (${cat.posts})</div>
                         </a>

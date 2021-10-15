@@ -119,7 +119,7 @@ class Blog {
             })(),
             (async () => {
                 await SortedSetCache.add(`${process.env.REDIS_PREFIX}:blogger:categories`, Object.keys(categories).map((category) => ({
-                    score: -categories[category].length,
+                    score: categories[category].length,
                     value: category
                 })), expire);
             })()
@@ -210,7 +210,7 @@ class Blog {
             })(),
             (async () => {
                 await SortedSetCache.add(`${process.env.REDIS_PREFIX}:tumblr:categories`, Object.keys(categories).map((category) => ({
-                    score: -categories[category].length,
+                    score: categories[category].length,
                     value: category
                 })), expire);
             })(),
@@ -314,9 +314,9 @@ class Blog {
                 await Blog.cacheBlog();
             }
 
-            const categories = await SortedSetCache.get(`${process.env.REDIS_PREFIX}:blog:categories`, 0, -1, true);
+            const categories = await SortedSetCache.getReverse(`${process.env.REDIS_PREFIX}:blog:categories`, 0, -1, true);
 
-            return categories.map((c) => ({category: c.value, posts: -c.score}));
+            return categories.map((c) => ({category: c.value, posts: c.score}));
         } catch (err) {
             Log.error("There was an error while getting blog categories.", {err});
             return void 0;

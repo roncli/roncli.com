@@ -80,7 +80,7 @@ class BlogContentView {
      */
     static blogger(title, content) {
         return /* html */`
-            <div class="panel">
+            <div class="panel rounded">
                 <div class="panel-title rounded-top">
                     <h3>${BlogContentView.Encoding.htmlEncode(title.title)}</h3>
                     Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
@@ -109,7 +109,7 @@ class BlogContentView {
      */
     static tumblrAnswer(title, content) {
         return /* html */`
-            <div class="panel">
+            <div class="panel rounded">
                 <div class="panel-title rounded-top">
                     Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
                     ${title.categories.map((c) => /* html */`
@@ -138,7 +138,7 @@ class BlogContentView {
      */
     static tumblrAudio(title, content) {
         return /* html */`
-            <div class="panel">
+            <div class="panel rounded">
                 <div class="panel-title rounded-top">
                     <h3>${BlogContentView.Encoding.htmlEncode(content.track_name)}</h3>
                     ${content.artist ? /* html */`
@@ -171,7 +171,7 @@ class BlogContentView {
      */
     static tumblrLink(title, content) {
         return /* html */`
-            <div class="panel">
+            <div class="panel rounded">
                 <div class="panel-title rounded-top">
                     Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
                     ${title.categories.map((c) => /* html */`
@@ -200,7 +200,7 @@ class BlogContentView {
      */
     static tumblrPhoto(title, content) {
         return /* html */`
-            <div class="panel">
+            <div class="panel rounded">
                 <div class="panel-title rounded-top">
                     Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
                     ${title.categories.map((c) => /* html */`
@@ -234,7 +234,7 @@ class BlogContentView {
      */
     static tumblrQuote(title, content) {
         return /* html */`
-            <div class="panel">
+            <div class="panel rounded">
                 <div class="panel-title rounded-top">
                     Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
                     ${title.categories.map((c) => /* html */`
@@ -263,7 +263,7 @@ class BlogContentView {
      */
     static tumblrSoundCloud(title, content) {
         return /* html */`
-            <div class="panel">
+            <div class="panel rounded">
                 <div class="panel-title rounded-top">
                     <h3>${BlogContentView.Encoding.htmlEncode(content.track_name)}</h3>
                     Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
@@ -298,7 +298,7 @@ class BlogContentView {
      */
     static tumblrText(title, content) {
         return /* html */`
-            <div class="panel">
+            <div class="panel rounded">
                 <div class="panel-title rounded-top">
                     ${content.title ? /* html */`
                         <h3>${BlogContentView.Encoding.htmlEncode(content.title)}</h3>
@@ -329,7 +329,7 @@ class BlogContentView {
      */
     static tumblrYouTube(title, content) {
         return /* html */`
-            <div class="panel">
+            <div class="panel rounded">
                 <div class="panel-title rounded-top">
                     Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
                     ${title.categories.map((c) => /* html */`
