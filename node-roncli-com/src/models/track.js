@@ -95,6 +95,54 @@ class Track {
         await Promise.all(promises);
     }
 
+    //                          #    ###                     #
+    //                          #     #                      #
+    //  ##    ##   #  #  ###   ###    #    ###    ###   ##   # #    ###
+    // #     #  #  #  #  #  #   #     #    #  #  #  #  #     ##    ##
+    // #     #  #  #  #  #  #   #     #    #     # ##  #     # #     ##
+    //  ##    ##    ###  #  #    ##   #    #      # #   ##   #  #  ###
+    /**
+     * Gets the number of SoundCloud tracks.
+     * @returns {Promise<number>} A promise that returns the number of tracks.
+     */
+    static async countTracks() {
+        try {
+            if (!await Cache.exists([`${process.env.REDIS_PREFIX}:soundcloud:tracks`])) {
+                await Track.cacheSoundcloud();
+            }
+
+            return await SortedSetCache.count(`${process.env.REDIS_PREFIX}:soundcloud:tracks`, "-inf", "+inf");
+        } catch (err) {
+            Log.error("There was an error while counting SoundCloud tracks.", {err});
+            return 0;
+        }
+    }
+
+    //                          #    ###                     #            ###          ##          #
+    //                          #     #                      #            #  #        #  #         #
+    //  ##    ##   #  #  ###   ###    #    ###    ###   ##   # #    ###   ###   #  #  #      ###  ###    ##    ###   ##   ###   #  #
+    // #     #  #  #  #  #  #   #     #    #  #  #  #  #     ##    ##     #  #  #  #  #     #  #   #    # ##  #  #  #  #  #  #  #  #
+    // #     #  #  #  #  #  #   #     #    #     # ##  #     # #     ##   #  #   # #  #  #  # ##   #    ##     ##   #  #  #      # #
+    //  ##    ##    ###  #  #    ##   #    #      # #   ##   #  #  ###    ###     #    ##    # #    ##   ##   #      ##   #       #
+    //                                                                           #                             ###               #
+    /**
+     * Gets the number of SoundCloud tracks for the specified category.
+     * @param {string} category The category.
+     * @returns {Promise<number>} A promise that returns the number of tracks.
+     */
+    static async countTracksByCategory(category) {
+        try {
+            if (!await Cache.exists([`${process.env.REDIS_PREFIX}:soundcloud:tag:${category}`])) {
+                await Track.cacheSoundcloud();
+            }
+
+            return await SortedSetCache.count(`${process.env.REDIS_PREFIX}:soundcloud:tag:${category}`, "-inf", "+inf");
+        } catch (err) {
+            Log.error("There was an error while counting SoundCloud tracks by category.", {err});
+            return 0;
+        }
+    }
+
     //              #                       #    ###
     //              #                       #     #
     //  ##   #  #  ###   ###    ###   ##   ###    #     ###   ###   ###
@@ -123,6 +171,32 @@ class Track {
         }
 
         return tags;
+    }
+
+    //              #     ##          #                             #
+    //              #    #  #         #
+    //  ###   ##   ###   #      ###  ###    ##    ###   ##   ###   ##     ##    ###
+    // #  #  # ##   #    #     #  #   #    # ##  #  #  #  #  #  #   #    # ##  ##
+    //  ##   ##     #    #  #  # ##   #    ##     ##   #  #  #      #    ##      ##
+    // #      ##     ##   ##    # #    ##   ##   #      ##   #     ###    ##   ###
+    //  ###                                       ###
+    /**
+     * Gets the track categories.
+     * @returns {Promise<{category: string, tracks: number}[]>} A promise that returns the categories.
+     */
+    static async getCategories() {
+        try {
+            if (!await Cache.exists([`${process.env.REDIS_PREFIX}:soundcloud:tags`])) {
+                await Track.cacheSoundcloud();
+            }
+
+            const categories = await SortedSetCache.getReverse(`${process.env.REDIS_PREFIX}:soundcloud:tags`, 0, -1, true);
+
+            return categories.map((c) => ({category: c.value, tracks: c.score}));
+        } catch (err) {
+            Log.error("There was an error while getting track categories.", {err});
+            return void 0;
+        }
     }
 
     //              #    ###                     #     ###         ###      #
@@ -178,31 +252,84 @@ class Track {
         }
     }
 
-    //              #    ###                     #            ###         ###
-    //              #     #                      #            #  #         #
-    //  ###   ##   ###    #    ###    ###   ##   # #    ###   ###   #  #   #     ###   ###
-    // #  #  # ##   #     #    #  #  #  #  #     ##    ##     #  #  #  #   #    #  #  #  #
-    //  ##   ##     #     #    #     # ##  #     # #     ##   #  #   # #   #    # ##   ##
-    // #      ##     ##   #    #      # #   ##   #  #  ###    ###     #    #     # #  #
-    //  ###                                                          #                 ###
+    //              #    ###                     #            ###          ##          #
+    //              #     #                      #            #  #        #  #         #
+    //  ###   ##   ###    #    ###    ###   ##   # #    ###   ###   #  #  #      ###  ###    ##    ###   ##   ###   #  #
+    // #  #  # ##   #     #    #  #  #  #  #     ##    ##     #  #  #  #  #     #  #   #    # ##  #  #  #  #  #  #  #  #
+    //  ##   ##     #     #    #     # ##  #     # #     ##   #  #   # #  #  #  # ##   #    ##     ##   #  #  #      # #
+    // #      ##     ##   #    #      # #   ##   #  #  ###    ###     #    ##    # #    ##   ##   #      ##   #       #
+    //  ###                                                          #                             ###               #
     /**
-     * Gets a list of tracks by tag.
-     * @param {string} tag The tag to get tracks for.
+     * Gets a list of tracks by category.
+     * @param {string} category The category to get tracks for.
      * @param {number} offset The track to start from.
      * @param {number} count The number of tracks to retrieve.
      * @returns {Promise<Track[]>} A promise that returns the tracks.
      */
-    static async getTracksByTag(tag, offset, count) {
+    static async getTracksByCategory(category, offset, count) {
         try {
-            if (!await Cache.exists([`${process.env.REDIS_PREFIX}:soundcloud:tag:${tag}`])) {
+            if (!await Cache.exists([`${process.env.REDIS_PREFIX}:soundcloud:tag:${category}`])) {
                 await Track.cacheSoundcloud();
             }
 
-            return (await SortedSetCache.getReverse(`${process.env.REDIS_PREFIX}:soundcloud:tag:${tag}`, offset, offset + count - 1)).map((t) => new Track(t));
+            return (await SortedSetCache.getReverse(`${process.env.REDIS_PREFIX}:soundcloud:tag:${category}`, offset, offset + count - 1)).map((t) => new Track(t));
         } catch (err) {
-            Log.error("There was an error while getting tracks by tag.", {err});
+            Log.error("There was an error while getting tracks by category.", {err});
             return [];
         }
+    }
+
+    //              #    ###                     #            ###          ##          #                                  ###         ###          #
+    //              #     #                      #            #  #        #  #         #                                  #  #        #  #         #
+    //  ###   ##   ###    #    ###    ###   ##   # #    ###   ###   #  #  #      ###  ###    ##    ###   ##   ###   #  #  ###   #  #  #  #   ###  ###    ##
+    // #  #  # ##   #     #    #  #  #  #  #     ##    ##     #  #  #  #  #     #  #   #    # ##  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #  #   #    # ##
+    //  ##   ##     #     #    #     # ##  #     # #     ##   #  #   # #  #  #  # ##   #    ##     ##   #  #  #      # #  #  #   # #  #  #  # ##   #    ##
+    // #      ##     ##   #    #      # #   ##   #  #  ###    ###     #    ##    # #    ##   ##   #      ##   #       #   ###     #   ###    # #    ##   ##
+    //  ###                                                          #                             ###               #           #
+    /**
+     * Gets the tracks by category and date.
+     * @param {string} category The category to get tracks by.
+     * @param {Date} date The date to get tracks by.
+     * @returns {Promise<{page: number, tracks: Track[]}>} A promise that returns the list of tracks.
+     */
+    static async getTracksByCategoryByDate(category, date) {
+        if (!await Cache.exists([`${process.env.REDIS_PREFIX}:soundcloud:tag:${category}`])) {
+            await Track.cacheSoundcloud();
+        }
+
+        const count = await SortedSetCache.count(`${process.env.REDIS_PREFIX}:soundcloud:tag:${category}`, `(${date.getTime()}`, "+inf"),
+            page = Math.max(Math.ceil(count / Track.pageSize), 1);
+
+        return {
+            page,
+            tracks: await Track.getTracksByCategory(category, page * Track.pageSize - Track.pageSize, Track.pageSize)
+        };
+    }
+
+    //              #    ###                     #            ###         ###          #
+    //              #     #                      #            #  #        #  #         #
+    //  ###   ##   ###    #    ###    ###   ##   # #    ###   ###   #  #  #  #   ###  ###    ##
+    // #  #  # ##   #     #    #  #  #  #  #     ##    ##     #  #  #  #  #  #  #  #   #    # ##
+    //  ##   ##     #     #    #     # ##  #     # #     ##   #  #   # #  #  #  # ##   #    ##
+    // #      ##     ##   #    #      # #   ##   #  #  ###    ###     #   ###    # #    ##   ##
+    //  ###                                                          #
+    /**
+     * Gets the tracks by date.
+     * @param {Date} date The date to get tracks by.
+     * @returns {Promise<{page: number, tracks: Track[]}>} A promise that returns the list of tracks.
+     */
+    static async getTracksByDate(date) {
+        if (!await Cache.exists([`${process.env.REDIS_PREFIX}:soundcloud:tracks`])) {
+            await Track.cacheSoundcloud();
+        }
+
+        const count = await SortedSetCache.count(`${process.env.REDIS_PREFIX}:soundcloud:tracks`, `(${date.getTime()}`, "+inf"),
+            page = Math.max(Math.ceil(count / Track.pageSize), 1);
+
+        return {
+            page,
+            tracks: await Track.getTracks(page * Track.pageSize - Track.pageSize, Track.pageSize)
+        };
     }
 
     //                           #                       #
@@ -225,6 +352,21 @@ class Track {
         this.publishDate = data.publishDate;
         this.tagList = data.tagList;
     }
+
+    //             ##
+    //              #
+    // #  #  ###    #
+    // #  #  #  #   #
+    // #  #  #      #
+    //  ###  #     ###
+    /**
+     * Gets the roncli.com URL of the track.
+     */
+    get url() {
+        return `/soundcloud/${this.id}/${this.permalink.split("/")[4]}`;
+    }
 }
+
+Track.pageSize = 10;
 
 module.exports = Track;

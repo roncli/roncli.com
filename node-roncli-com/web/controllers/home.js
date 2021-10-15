@@ -159,7 +159,7 @@ class Home extends RouterBase {
             })(),
             (async () => {
                 data.recent = await Track.getTracks(0, 5);
-                data.classics = await Track.getTracksByTag("Classic", 0, 5);
+                data.classics = await Track.getTracksByCategory("Classic", 0, 5);
             })(),
             (async () => {
                 data.commits = await Repository.getCommits(0, 5);

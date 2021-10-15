@@ -45,6 +45,9 @@ import MediaView from "../../public/views/media/media"
 import MethodNotAllowedView from "../../public/views/405"
 import Modal from "../../public/js/common/modal"
 import ModalView from "../../public/views/index/modal"
+import Music from "../../public/js/music"
+import MusicView from "../../public/views/music"
+import MusicTracksView from "../../public/views/music/tracks"
 import NotFoundView from "../../public/views/404"
 import Numbers from "../../public/js/common/numbers"
 import PageView from "../../public/views/page"
@@ -112,6 +115,9 @@ declare global {
         Modal: typeof Modal
         ModalView: typeof ModalView
         monaco: any
+        Music: typeof Music
+        MusicTracksView: typeof MusicTracksView
+        MusicView: typeof MusicView
         NotFoundView: typeof NotFoundView
         Numbers: typeof Numbers
         PageView: typeof PageView

@@ -69,7 +69,7 @@ class HomeView {
                             <div class="center"><h4 ${data.features.music.length > 0 ? "class=\"pad-top\"" : ""}><b>Latest</b></h4></div>
                             <div class="grid-tight grid-middle grid-columns-2">
                             ${data.recent.map((track) => /* html */`
-                                <div class="left"><a href="/soundcloud/${track.id}/${encodeURI(track.permalink)}">${HomeView.Encoding.htmlEncode(track.title)}</a></div>
+                                <div class="left"><a href="${track.url}">${HomeView.Encoding.htmlEncode(track.title)}</a></div>
                                 <div class="right"><button class="add-to-media-player" data-source="soundcloud" data-url="${HomeView.Encoding.attributeEncode(track.uri)}"><i class="bi-plus"></i><i class="bi-music-note-beamed"></i></button></div>
                             `).join("")}
                             </div>
@@ -78,7 +78,7 @@ class HomeView {
                             <div class="center"><h4 ${data.features.music.length > 0 || data.recent && data.recent.length > 0 ? "class=\"pad-top\"" : ""}><b>Classics</b></h4></div>
                             <div class="grid-tight grid-middle grid-columns-2">
                             ${data.classics.map((track) => /* html */`
-                                <div class="left"><a href="/soundcloud/${track.id}/${encodeURI(track.permalink)}">${HomeView.Encoding.htmlEncode(track.title)}</a></div>
+                                <div class="left"><a href="${track.url}">${HomeView.Encoding.htmlEncode(track.title)}</a></div>
                                 <div class="right"><button class="add-to-media-player" data-source="soundcloud" data-url="${HomeView.Encoding.attributeEncode(track.uri)}"><i class="bi-plus"></i><i class="bi-music-note-beamed"></i></button></div>
                             `).join("")}
                             </div>

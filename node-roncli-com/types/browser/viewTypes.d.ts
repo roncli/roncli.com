@@ -175,6 +175,26 @@ declare namespace ViewTypes {
         comments: Comment[]
     }
 
+    type MusicViewParameters = {
+        page: Page
+        tracks: Track[]
+        categories: {
+            category: string
+            tracks: number
+        }[]
+        count: number
+        pageSize: number
+        newestDate: string
+    }
+
+    type MusicViewInfoParameters = {
+        categories: {
+            category: string
+            tracks: number
+        }[]
+        page: Page
+    }
+
     type PageViewParameters = {
         page: Page
     }
