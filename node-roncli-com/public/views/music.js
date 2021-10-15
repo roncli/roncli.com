@@ -42,17 +42,17 @@ class MusicView {
                         <div id="music-tracks" class="panel-list grid-columns-3">
                             ${MusicView.MusicTracksView.get(data.tracks)}
                         </div>
-                        <div class="panel-body rounded-bottom grid grid-columns-2-fixed" style="justify-items: center; align-items: center;">
+                        <div class="panel-body rounded-bottom grid grid-columns-3-fixed" style="justify-items: center; align-items: center;">
                             <div id="music-pagination" data-total="${Math.ceil(data.count / data.pageSize)}">
                                 ${MusicView.PaginationPageView.get({page: 1, total: Math.ceil(data.count / data.pageSize)})}
+                            </div>
+                            <div>
+                                <button class="btn" id="add-all"><i class="bi-plus"></i><i class="bi-music-note-beamed"></i> Add All To Playlist</button>
                             </div>
                             <div>
                                 Find posts near: <input type="date" id="music-date" min="1998-03-04" max="${data.newestDate}" value="${data.newestDate}" />
                             </div>
                         </div>
-                    </div>
-                    <div class="panel rounded">
-                        <div class="panel-title rounded"><h1>Discography</h1></div>
                     </div>
                     <div id="discography">
                         <div class="grid grid-columns-3-fixed">

@@ -117,6 +117,41 @@ class Music {
 
             return false;
         });
+
+        document.getElementById("add-all").addEventListener("click", async () => {
+            const category = document.getElementById("music-date").dataset.category;
+
+            let data;
+
+            try {
+                const res = await fetch(`/api/music?action=play${category ? `&category=${category}` : ""}`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                if (res.status !== 200) {
+                    await Music.Index.showModal("Error Occurred", "An error occurred while loading the list of music posts.  Please try again.");
+
+                    Music.Index.loading(false);
+
+                    return;
+                }
+
+                data = await res.json();
+            } catch (err) {
+                await Music.Index.showModal("Error Occurred", "An error occurred while loading the list of music posts.  Please try again.");
+
+                Music.Index.loading(false);
+
+                return;
+            }
+
+            for (const uri of data) {
+                await Music.Index.addToPlaylist("soundcloud", uri);
+            }
+        });
     }
 }
 

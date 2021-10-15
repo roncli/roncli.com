@@ -99,6 +99,25 @@ class MusicAPI extends RouterBase {
                 return;
             }
 
+            if (req.query.action) {
+                switch (req.query.action) {
+                    case "play": {
+                        let tracks;
+
+                        if (category && category.length > 0) {
+                            tracks = await Track.getTracksByCategory(category, 0, -1);
+                        } else {
+                            tracks = await Track.getTracks(0, -1);
+                        }
+
+                        const data = tracks.map((t) => t.uri);
+
+                        res.status(200).json(data);
+                        return;
+                    }
+                }
+            }
+
             res.status(400).json({error: "Bad request, you must include a page or a date."});
         } catch (err) {
             res.status(500).json({error: "Server error."});
