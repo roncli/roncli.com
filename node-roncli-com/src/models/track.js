@@ -95,6 +95,20 @@ class Track {
         await Promise.all(promises);
     }
 
+    //       ##                       ##               #
+    //        #                      #  #              #
+    //  ##    #     ##    ###  ###   #      ###   ##   ###    ##
+    // #      #    # ##  #  #  #  #  #     #  #  #     #  #  # ##
+    // #      #    ##    # ##  #     #  #  # ##  #     #  #  ##
+    //  ##   ###    ##    # #  #      ##    # #   ##   #  #   ##
+    /**
+     * Clears the blog cache.
+     * @returns {Promise} A promise that resolves when the cache has been cleared.
+     */
+    static async clearCache() {
+        await Cache.remove(await Cache.getAllKeys(`${process.env.REDIS_PREFIX}:soundcloud:*`));
+    }
+
     //                          #    ###                     #
     //                          #     #                      #
     //  ##    ##   #  #  ###   ###    #    ###    ###   ##   # #    ###

@@ -6,6 +6,7 @@
 const Blog = require("../../src/models/blog"),
     Log = require("@roncli/node-application-insights-logger"),
     RouterBase = require("hot-router").RouterBase,
+    Track = require("../../src/models/track"),
     User = require("../../src/models/user");
 
 //    #        #           #            ###                 #               #    ####    ###
@@ -79,6 +80,11 @@ class AdminCacheAPI extends RouterBase {
                 case "blog":
                     await Blog.clearCache();
                     await Blog.cacheBlog();
+                    res.sendStatus(204);
+                    break;
+                case "soundcloud":
+                    await Track.clearCache();
+                    await Track.cacheSoundcloud();
                     res.sendStatus(204);
                     break;
                 default:
