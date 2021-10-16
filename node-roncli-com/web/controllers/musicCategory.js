@@ -4,23 +4,25 @@
  */
 
 const Common = require("../includes/common"),
-    MusicView = require("../../public/views/music"),
+    MusicCategoryView = require("../../public/views/musicCategory"),
     Page = require("../../src/models/page"),
     RouterBase = require("hot-router").RouterBase,
     Track = require("../../src/models/track"),
     User = require("../../src/models/user");
 
-//  #   #                  #
-//  #   #
-//  ## ##  #   #   ###    ##     ###
-//  # # #  #   #  #        #    #   #
-//  #   #  #   #   ###     #    #
-//  #   #  #  ##      #    #    #   #
-//  #   #   ## #  ####    ###    ###
+//  #   #                  #            ###           #
+//  #   #                              #   #          #
+//  ## ##  #   #   ###    ##     ###   #       ###   ####    ###    ## #   ###   # ##   #   #
+//  # # #  #   #  #        #    #   #  #          #   #     #   #  #  #   #   #  ##  #  #   #
+//  #   #  #   #   ###     #    #      #       ####   #     #####   ##    #   #  #      #  ##
+//  #   #  #  ##      #    #    #   #  #   #  #   #   #  #  #      #      #   #  #       ## #
+//  #   #   ## #  ####    ###    ###    ###    ####    ##    ###    ###    ###   #          #
+//                                                                 #   #                #   #
+//                                                                  ###                  ###
 /**
- * A class that represents the music controller.
+ * A class that represents the music category controller.
  */
-class Music extends RouterBase {
+class MusicCategory extends RouterBase {
     //                    #
     //                    #
     // ###    ##   #  #  ###    ##
@@ -34,7 +36,7 @@ class Music extends RouterBase {
     static get route() {
         const route = {...super.route};
 
-        route.path = "/music";
+        route.path = "/music/:type(category|tag)/:category";
 
         return route;
     }
@@ -53,9 +55,18 @@ class Music extends RouterBase {
      * @returns {Promise} A promise that resolves when the request has been processed.
      */
     static async get(req, res) {
-        const [user, page, tracks, categories, count] = await Promise.all([User.getCurrent(req), Page.getByPath(req.path), Track.getTracks(0, Track.pageSize), Track.getCategories(), Track.countTracks()]);
+        let path = req.path;
 
-        await page.loadMetadata();
+        if (path.startsWith("/music/tag")) {
+            path = path.replace(/^\/music\/tag/, "/music/category");
+        }
+
+        const category = req.params.category,
+            [user, page, tracks, categories, count] = await Promise.all([User.getCurrent(req), Page.getByPath(path), Track.getTracksByCategory(category, 0, Track.pageSize), Track.getCategories(), Track.countTracksByCategory(category)]);
+
+        if (page) {
+            await page.loadMetadata();
+        }
 
         let local, newestDate;
 
@@ -65,6 +76,7 @@ class Music extends RouterBase {
         }
 
         const data = {
+            category,
             page,
             tracks,
             categories,
@@ -74,6 +86,7 @@ class Music extends RouterBase {
         };
 
         const info = {
+            category,
             categories,
             page
         };
@@ -92,11 +105,11 @@ class Music extends RouterBase {
                         path: "/views/pagination/page.js"
                     },
                     {
-                        name: "MusicView",
-                        path: "/views/music.js"
+                        name: "MusicCategoryView",
+                        path: "/views/musicCategory.js"
                     }
                 ],
-                view: "MusicView",
+                view: "MusicCategoryView",
                 jsClass: "Music",
                 data,
                 info
@@ -109,8 +122,8 @@ class Music extends RouterBase {
                     css: ["/css/music.css"],
                     js: ["/views/music/tracks.js", "/views/pagination/page.js", "/js/music.js"]
                 },
-                MusicView.get(data),
-                MusicView.getInfo(info),
+                MusicCategoryView.get(data),
+                MusicCategoryView.getInfo(info),
                 req,
                 user
             ));
@@ -118,4 +131,4 @@ class Music extends RouterBase {
     }
 }
 
-module.exports = Music;
+module.exports = MusicCategory;

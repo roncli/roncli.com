@@ -63,6 +63,46 @@ class Time {
         }
     }
 
+    //   #                            #    ###          #           ##         ##
+    //  # #                           #    #  #         #          #  #         #
+    //  #     ##   ###   # #    ###  ###   #  #   ###  ###    ##   #  #  ###    #    #  #
+    // ###   #  #  #  #  ####  #  #   #    #  #  #  #   #    # ##  #  #  #  #   #    #  #
+    //  #    #  #  #     #  #  # ##   #    #  #  # ##   #    ##    #  #  #  #   #     # #
+    //  #     ##   #     #  #   # #    ##  ###    # #    ##   ##    ##   #  #  ###     #
+    //                                                                                #
+    /**
+     * Formats the date.
+     * @param {Date} time The date to display.
+     * @returns {string} The formatted date.
+     */
+    static formatDateOnly(time) {
+        const now = new Date(),
+            today = new Date(now);
+
+        today.setMilliseconds(0);
+        today.setSeconds(0);
+        today.setMinutes(0);
+        today.setHours(0);
+
+        const date = new Date(time);
+
+        date.setMilliseconds(0);
+        date.setSeconds(0);
+        date.setMinutes(0);
+        date.setHours(0);
+
+        switch (date.getTime() - today.getTime()) {
+            case 0:
+                return "Today";
+            case 86400000:
+                return "Tomorrow";
+            case -86400000:
+                return "Yesterday";
+            default:
+                return `${["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"][time.getMonth()]} ${time.getDate()}, ${time.getFullYear()}`;
+        }
+    }
+
     //   #                            #    ###    #
     //  # #                           #     #
     //  #     ##   ###   # #    ###  ###    #    ##    # #    ##    ###   ###    ###  ###

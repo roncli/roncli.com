@@ -145,9 +145,7 @@ class SPA {
 
             SPA.Index.loading(false);
         }).catch((err) => {
-            console.log(err);
-            // On error, just follow the link.
-            // window.location.href = path;
+            window.location.href = path;
         });
     }
 
@@ -217,6 +215,19 @@ class SPA {
 
             localEls.forEach((el) => {
                 el.classList.remove("local");
+            });
+        }
+
+        /** @type {NodeListOf<HTMLTimeElement>} */
+        const dateEls = document.querySelectorAll("time.date");
+
+        if (dateEls.length > 0) {
+            dateEls.forEach((el) => {
+                el.innerText = SPA.Time.formatDateOnly(new Date(el.dateTime));
+            });
+
+            dateEls.forEach((el) => {
+                el.classList.remove("date");
             });
         }
     }

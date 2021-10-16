@@ -1,0 +1,30 @@
+iframe#soundcloud-player {
+    width: 100%;
+    height: 200px;
+    margin-bottom: 5px;
+}
+
+.music-nav-link:hover, .music-nav-link:focus, .music-nav-link:active {
+    text-decoration: none;
+}
+
+.music-nav-link div.pill {
+    align-items: center;
+    row-gap: 0;
+    background-image: linear-gradient(to bottom, #576e3f 0, #384729 100%);
+    background-color: #384729;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.08);
+    color: white;
+}
+
+.music-nav-link div.pill:hover {
+    background-color: #384729;
+}
+
+.music-nav-link div.pill .music-nav {
+    font-size: 12px;
+}
+
+.music-nav-link div.pill .music-nav-title {
+    font-size: 16px;
+}

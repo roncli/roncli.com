@@ -50,7 +50,7 @@ class MusicView {
                                 <button class="btn" id="add-all"><i class="bi-plus"></i><i class="bi-music-note-beamed"></i> Add All To Playlist</button>
                             </div>
                             <div>
-                                Find posts near: <input type="date" id="music-date" min="1998-03-04" max="${data.newestDate}" value="${data.newestDate}" />
+                                Find music near: <input type="date" id="music-date" min="1998-03-04" max="${data.newestDate}" value="${data.newestDate}" />
                             </div>
                         </div>
                     </div>

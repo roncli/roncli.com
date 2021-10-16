@@ -217,9 +217,70 @@ class Track {
                 await Track.cacheSoundcloud();
             }
 
+            /** @type {{track: TrackTypes.TrackInfo, publishDate: Date, tagList: string[]}} */
             const track = await Cache.get(`${process.env.REDIS_PREFIX}:soundcloud:track:${id}`);
 
-            return track ? new Track(track) : void 0;
+            const [mainNav, categoryNavs] = await Promise.all([
+                (async () => {
+                    const rank = await SortedSetCache.rankReverse(`${process.env.REDIS_PREFIX}:soundcloud:tracks`, track);
+
+                    const [prev, next] = await Promise.all([
+                        (async () => {
+                            const prevTitle = await Track.getTracks(rank + 1, 1);
+
+                            if (!prevTitle) {
+                                return void 0;
+                            }
+
+                            return prevTitle[0];
+                        })(),
+                        (async () => {
+                            if (rank === 0) {
+                                return void 0;
+                            }
+
+                            return (await Track.getTracks(rank - 1, 1))[0];
+                        })()
+                    ]);
+
+                    return {prev, next};
+                })(),
+                (async () => {
+                    /** @type {{[x: string]: {prev: Track, next: Track}}} */
+                    const categories = {};
+
+                    await Promise.all(track.tagList.map((category) => (async () => {
+                        const rank = await SortedSetCache.rankReverse(`${process.env.REDIS_PREFIX}:soundcloud:tag:${category}`, track);
+
+                        const [prev, next] = await Promise.all([
+                            (async () => {
+                                const prevTitle = await Track.getTracksByCategory(category, rank + 1, 1);
+
+                                if (!prevTitle) {
+                                    return void 0;
+                                }
+
+                                return prevTitle[0];
+                            })(),
+                            (async () => {
+                                if (rank === 0) {
+                                    return void 0;
+                                }
+
+                                return (await Track.getTracksByCategory(category, rank - 1, 1))[0];
+                            })()
+                        ]);
+
+                        if (prev || next) {
+                            categories[category] = {prev, next};
+                        }
+                    })()));
+
+                    return categories;
+                })()
+            ]);
+
+            return track ? new Track(track, mainNav, categoryNavs) : void 0;
         } catch (err) {
             Log.error("There was an error while getting a track.", {err});
             return void 0;
@@ -341,8 +402,10 @@ class Track {
     /**
      * Creates a new track object.
      * @param {{track: TrackTypes.TrackInfo, publishDate: Date, tagList: string[]}} data The track data.
+     * @param {{prev: Track, next: Track}} [mainNav] The main navs.
+     * @param {{[x: string]: {prev: Track, next: Track}}} [categoryNavs] The category navs.
      */
-    constructor(data) {
+    constructor(data, mainNav, categoryNavs) {
         this.id = data.track.id;
         this.username = data.track.user.username;
         this.title = data.track.title;
@@ -351,19 +414,10 @@ class Track {
         this.description = data.track.description;
         this.publishDate = data.publishDate;
         this.tagList = data.tagList;
-    }
+        this.mainNav = mainNav;
+        this.categoryNavs = categoryNavs;
 
-    //             ##
-    //              #
-    // #  #  ###    #
-    // #  #  #  #   #
-    // #  #  #      #
-    //  ###  #     ###
-    /**
-     * Gets the roncli.com URL of the track.
-     */
-    get url() {
-        return `/soundcloud/${this.id}/${this.permalink.split("/")[4]}`;
+        this.url = `/soundcloud/${this.id}/${this.permalink.split("/")[4]}`;
     }
 }
 
