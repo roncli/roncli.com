@@ -103,7 +103,7 @@ class BlogView {
                 <div class="info-panel-title rounded-top">Categories</div>
                 <div class="info-panel-list rounded-bottom">
                     ${categories.sort((a, b) => b.posts - a.posts || a.category.localeCompare(b.category)).map((category) => /* html */`
-                        <a class="contents" href="${BlogView.Encoding.attributeEncode(`/blog/category/${encodeURI(category.category)}`)}" target="_blank">
+                        <a class="contents" href="${BlogView.Encoding.attributeEncode(`/blog/category/${encodeURI(category.category)}`)}">
                             <div class="center">${BlogView.Encoding.htmlEncode(category.category)} (${category.posts})</div>
                         </a>
                     `).join("")}

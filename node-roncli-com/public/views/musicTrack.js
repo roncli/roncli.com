@@ -216,7 +216,7 @@ class MusicTrackView {
                 <div class="info-panel-title rounded-top">Categories</div>
                 <div class="info-panel-list rounded-bottom">
                     ${categories.sort((a, b) => b.tracks - a.tracks || a.category.localeCompare(b.category)).map((category) => /* html */`
-                        <a class="contents" href="/music/category/${MusicTrackView.Encoding.attributeEncode(category.category)}" target="_blank">
+                        <a class="contents" href="/music/category/${MusicTrackView.Encoding.attributeEncode(category.category)}">
                             <div class="center">${MusicTrackView.Encoding.htmlEncode(category.category)} (${category.tracks})</div>
                         </a>
                     `).join("")}
