@@ -9,6 +9,7 @@ import Page from "../../src/models/page"
 import PageTypes from "../node/pageTypes"
 import Playlist from "../../src/models/playlist"
 import ProfileTypes from "../node/profileTypes"
+import Project from "../../src/models/project"
 import Redirect from "../../src/models/redirect"
 import Speedrun from "../../src/models/speedrun"
 import Track from "../../src/models/track"
@@ -119,6 +120,19 @@ declare namespace ViewTypes {
             category: string
             posts: number
         }[]
+    }
+
+    type CodingViewParameters = {
+        user: User
+        page: Page
+        projects: Project[]
+        commits: GithubTypes.Commit[]
+        releases: GithubTypes.Release[]
+    }
+
+    type CodingViewInfoParameters = {
+        projects: Project[]
+        page: Page
     }
 
     type CommentsViewParameters = {

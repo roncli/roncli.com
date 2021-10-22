@@ -62,11 +62,10 @@ class Home extends RouterBase {
     static async get(req, res) {
         const go = req.query.go && req.query.go.toString() || void 0;
 
-        /** @type {ViewTypes.HomeViewParameters} */
-        const data = {};
-
         /** @type {User} */
         let user = await User.getCurrent(req);
+
+        let validated, emailChangeAuthorized, emailChanged, changePasswordSuccess, changeEmailSuccess;
 
         switch (go) {
             case "validation":
@@ -75,7 +74,7 @@ class Home extends RouterBase {
                         code = req.query.v && req.query.v.toString() || void 0;
 
                     if (userId && code) {
-                        data.validated = (await User.validate(userId, code, "register")).validated;
+                        validated = (await User.validate(userId, code, "register")).validated;
                     }
                 }
                 break;
@@ -104,7 +103,7 @@ class Home extends RouterBase {
                             return;
                         }
 
-                        data.emailChangeAuthorized = true;
+                        emailChangeAuthorized = true;
                         break;
                     }
                 }
@@ -115,95 +114,96 @@ class Home extends RouterBase {
                         code = req.query.a && req.query.a.toString() || void 0;
 
                     if (userId && code) {
-                        const validated = await User.validate(userId, code, "emailValidate");
+                        const emailValidated = await User.validate(userId, code, "emailValidate");
 
-                        if (validated.validated && validated.data && validated.data.email) {
+                        if (emailValidated.validated && emailValidated.data && emailValidated.data.email) {
 
-                            await User.changeEmail(userId, validated.data.email);
+                            await User.changeEmail(userId, emailValidated.data.email);
 
                             await User.logout(req, res);
                             user = void 0;
 
-                            data.emailChanged = true;
+                            emailChanged = true;
                         }
                     }
                 }
                 break;
             case "changePasswordSuccess":
                 if (!user) {
-                    data.changePasswordSuccess = true;
+                    changePasswordSuccess = true;
                 }
                 break;
             case "changeEmailSuccess":
                 if (user && user.awaitingValidation("emailValidate")) {
-                    data.changeEmailSuccess = true;
+                    changeEmailSuccess = true;
                 }
                 break;
         }
 
-        /** @type {Project[]} */
-        let projects;
+        const [titles, features, {recent, classics}, {commits, releases}, projects, wow, d3, ff14, speedruns, necrodancer] = await Promise.all([
+            Blog.getTitles(0, 5),
+            (async () => {
+                const allFeatures = await Feature.getAll();
 
-        await Promise.all([
-            (async () => {
-                data.titles = await Blog.getTitles(0, 5);
-            })(),
-            (async () => {
-                const features = await Feature.getAll();
-                data.features = {
-                    music: features.filter((f) => f.section === "music").sort((a, b) => a.order - b.order),
-                    coding: features.filter((f) => f.section === "coding").sort((a, b) => a.order - b.order),
-                    gaming: features.filter((f) => f.section === "gaming").sort((a, b) => a.order - b.order),
-                    life: features.filter((f) => f.section === "life").sort((a, b) => a.order - b.order)
+                return {
+                    music: allFeatures.filter((f) => f.section === "music").sort((a, b) => a.order - b.order),
+                    coding: allFeatures.filter((f) => f.section === "coding").sort((a, b) => a.order - b.order),
+                    gaming: allFeatures.filter((f) => f.section === "gaming").sort((a, b) => a.order - b.order),
+                    life: allFeatures.filter((f) => f.section === "life").sort((a, b) => a.order - b.order)
                 };
             })(),
-            (async () => {
-                data.recent = await Track.getTracks(0, 5);
-                data.classics = await Track.getTracksByCategory("Classic", 0, 5);
-            })(),
-            (async () => {
-                data.commits = await Repository.getCommits(0, 5);
-                data.releases = await Repository.getReleases(0, 5);
-            })(),
-            (async () => {
-                projects = await Project.getAll();
-            })(),
-            (async () => {
-                data.wow = await Profile.getWowProfile();
-            })(),
-            (async () => {
-                data.d3 = await Profile.getD3Profiles();
-            })(),
-            (async () => {
-                data.ff14 = await Profile.getFF14Profile();
-            })(),
-            (async () => {
-                data.speedruns = await Speedrun.getSpeedruns(0, 5);
-            })(),
-            (async () => {
-                data.necrodancer = await NecroDancer.getRuns(0, 5);
-            })()
+            (async () => ({
+                recent: await Track.getTracks(0, 5),
+                classics: await Track.getTracksByCategory("Classic", 0, 5)
+            }))(),
+            (async () => ({
+                commits: await Repository.getCommits(0, 5),
+                releases: await Repository.getReleases(0, 5)
+            }))(),
+            Project.getAll(),
+            Profile.getWowProfile(),
+            Profile.getD3Profiles(),
+            Profile.getFF14Profile(),
+            Speedrun.getSpeedruns(0, 5),
+            NecroDancer.getRuns(0, 5)
         ]);
 
         if (projects) {
-            for (const commit of data.commits) {
-                const project = projects.find((p) => `${p.github.user}/${p.github.repository}` === commit.repo.url);
+            for (const commit of commits) {
+                const project = projects.find((p) => `${p.github.user}/${p.github.repository}` === commit.repo.name);
 
                 if (project) {
                     commit.url = project.url;
                 }
             }
-        }
 
-        if (projects) {
-            for (const release of data.releases) {
-                const project = projects.find((p) => `${p.github.user}/${p.github.repository}` === release.repo.url);
+            for (const release of releases) {
+                const project = projects.find((p) => `${p.github.user}/${p.github.repository}` === release.repo.name);
 
                 if (project) {
                     release.url = project.url;
                 }
             }
         }
+
+        const data = {
+            validated,
+            emailChangeAuthorized,
+            emailChanged,
+            changePasswordSuccess,
+            changeEmailSuccess,
+            titles,
+            features,
+            recent,
+            classics,
+            commits,
+            releases,
+            wow,
+            d3,
+            ff14,
+            speedruns,
+            necrodancer
+        };
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({

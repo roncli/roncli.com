@@ -1,11 +1,15 @@
-// TODO: Determine if authorization is needed
-
 /**
+ * @typedef {import("@octokit/openapi-types").components["schemas"]["commit"]} Github.Commit
+ * @typedef {import("@octokit/openapi-types").components["schemas"]["full-repository"]} Github.FullRepository
+ * @typedef {import("@octokit/openapi-types").components["schemas"]["release"]} Github.Release
  * @typedef {import("../../types/node/githubTypes").Event} GithubTypes.Event
  */
 
 const Octokit = require("@octokit/rest").Octokit,
-    github = new Octokit();
+
+    octokit = new Octokit({
+        auth: process.env.GITHUB_TOKEN
+    });
 
 //   ###     #     #     #             #
 //  #   #          #     #             #
@@ -30,7 +34,7 @@ class Github {
      * @returns {Promise<GithubTypes.Event[]>} A promise that returns with the events.
      */
     static getEvents() {
-        return github.paginate(github.rest.activity.listPublicEventsForUser.endpoint.merge({username: "roncli", "per_page": 100}));
+        return octokit.paginate(octokit.rest.activity.listPublicEventsForUser.endpoint.merge({username: "roncli", "per_page": 100}));
     }
 
     //              #    ###
@@ -44,38 +48,36 @@ class Github {
      * Get a repository.
      * @param {string} owner The owner.
      * @param {string} repo The repository.
-     * @returns {Promise<{repository: object, commits: object[], releases: object[]}>} A promise that returns the repository.
+     * @returns {Promise<{repository: Github.FullRepository, commits: Github.Commit[], releases: Github.Release[]}>} A promise that returns the repository.
      */
     static async getRepository(owner, repo) {
-        let repository, commits, releases;
-
-        await Promise.all([
+        const [repository, commits, releases] = await Promise.all([
             (async () => {
-                const res = await github.rest.repos.get({owner, repo});
+                const res = await octokit.rest.repos.get({owner, repo});
 
                 if (res.status !== 200) {
                     throw new Error(`There was an error while getting a repository from Github: status ${res.status}`);
                 }
 
-                repository = res.data;
+                return res.data;
             })(),
             (async () => {
-                const res = await github.rest.repos.listCommits({owner, repo, "per_page": 100});
+                const res = await octokit.rest.repos.listCommits({owner, repo, "per_page": 100});
 
                 if (res.status !== 200) {
                     throw new Error(`There was an error while getting commits for a repository from Github: status ${res.status}`);
                 }
 
-                commits = res.data;
+                return res.data;
             })(),
             (async () => {
-                const res = await github.rest.repos.listReleases({owner, repo, "per_page": 100});
+                const res = await octokit.rest.repos.listReleases({owner, repo, "per_page": 100});
 
                 if (res.status !== 200) {
                     throw new Error(`There was an error while getting releases for a repository from Github: status ${res.status}`);
                 }
 
-                releases = res.data;
+                return res.data;
             })()
         ]);
 
