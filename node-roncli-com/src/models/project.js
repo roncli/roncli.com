@@ -31,7 +31,7 @@ class Project {
      */
     static async getAll() {
         try {
-            return (await ProjectDb.getAll()).map((f) => new Project(f));
+            return (await ProjectDb.getAll()).map((f) => new Project(f)).sort((a, b) => a.order - b.order);
         } catch (err) {
             Log.error("There was an error while getting all projects.", {err});
             return [];
@@ -55,6 +55,7 @@ class Project {
         this.projectUrl = data.projectUrl;
         this.github = data.github;
         this.description = data.description;
+        this.order = data.order;
         this.dateAdded = data.dateAdded;
         this.dateUpdated = data.dateUpdated;
     }

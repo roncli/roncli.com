@@ -210,7 +210,7 @@ roncli.createCollection("project", {
     validator: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["_id", "title", "url", "projectUrl", "github", "description", "dateAdded", "dateUpdated"],
+            required: ["_id", "title", "url", "projectUrl", "github", "description", "order", "dateAdded", "dateUpdated"],
             additionalProperties: false,
             properties: {
                 _id: {
@@ -240,6 +240,9 @@ roncli.createCollection("project", {
                 },
                 description: {
                     bsonType: "string"
+                },
+                order: {
+                    bsonType: "int"
                 },
                 dateAdded: {
                     bsonType: "date"

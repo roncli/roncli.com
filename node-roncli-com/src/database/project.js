@@ -44,6 +44,7 @@ class ProjectDb {
                 repository: p.github.repository
             },
             description: p.description,
+            order: p.order,
             dateAdded: p.dateAdded,
             dateUpdated: p.dateUpdated
         }));

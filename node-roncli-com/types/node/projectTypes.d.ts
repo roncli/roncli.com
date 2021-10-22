@@ -11,6 +11,7 @@ declare namespace ProjectTypes {
             repository: string
         }
         description: string
+        order: number
         dateAdded: string
         dateUpdated: string
     }
@@ -25,6 +26,7 @@ declare namespace ProjectTypes {
             repository: string
         }
         description: string
+        order: number
         dateAdded: string
         dateUpdated: string
     }
