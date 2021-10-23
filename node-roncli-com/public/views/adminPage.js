@@ -137,17 +137,19 @@ class AdminPageView {
                     Add or update pages on the website.
                 </div>
             </div>
-            ${data.page.parentPageId && data.page.siblingPages && data.page.siblingPages.length > 1 ? /* html */`
-                <div class="info-panel">
-                    <div class="info-panel-title rounded-top">${AdminPageView.Encoding.htmlEncode(data.page.parentPages[data.page.parentPages.length - 1].shortTitle)}</div>
-                    <div class="info-panel-list rounded-bottom">
-                        ${data.page.siblingPages.map((p) => /* html */`
-                            <a class="contents ${data.page.url === p.url ? "selected" : ""}" href="/admin/page${p.url}">
-                                <div class="center">${AdminPageView.Encoding.htmlEncode(p.shortTitle)}</div>
-                            </a>
-                        `).join("")}
+            ${data.page ? /* html */`
+                ${data.page.parentPageId && data.page.siblingPages && data.page.siblingPages.length > 1 ? /* html */`
+                    <div class="info-panel">
+                        <div class="info-panel-title rounded-top">${AdminPageView.Encoding.htmlEncode(data.page.parentPages[data.page.parentPages.length - 1].shortTitle)}</div>
+                        <div class="info-panel-list rounded-bottom">
+                            ${data.page.siblingPages.map((p) => /* html */`
+                                <a class="contents ${data.page.url === p.url ? "selected" : ""}" href="/admin/page${p.url}">
+                                    <div class="center">${AdminPageView.Encoding.htmlEncode(p.shortTitle)}</div>
+                                </a>
+                            `).join("")}
+                        </div>
                     </div>
-                </div>
+                ` : ""}
             ` : ""}
         `;
     }

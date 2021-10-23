@@ -107,29 +107,31 @@ class CodingView {
                     This page is dedicated to showcasing the many software projects that I have created and contributed to.
                 </div>
             </div>
-            ${data.page.parentPageId && data.page.siblingPages && data.page.siblingPages.length > 1 ? /* html */`
-                <div class="info-panel">
-                    <div class="info-panel-title rounded-top">${CodingView.Encoding.htmlEncode(data.page.parentPages[data.page.parentPages.length - 1].shortTitle)}</div>
-                    <div class="info-panel-list rounded-bottom">
-                        ${data.page.siblingPages.map((p) => /* html */`
-                            <a class="contents ${data.page.url === p.url ? "selected" : ""}" href="${p.url}">
-                                <div class="center">${CodingView.Encoding.htmlEncode(p.shortTitle)}</div>
-                            </a>
-                        `).join("")}
+            ${data.page ? /* html */`
+                ${data.page.parentPageId && data.page.siblingPages && data.page.siblingPages.length > 1 ? /* html */`
+                    <div class="info-panel">
+                        <div class="info-panel-title rounded-top">${CodingView.Encoding.htmlEncode(data.page.parentPages[data.page.parentPages.length - 1].shortTitle)}</div>
+                        <div class="info-panel-list rounded-bottom">
+                            ${data.page.siblingPages.map((p) => /* html */`
+                                <a class="contents ${data.page.url === p.url ? "selected" : ""}" href="${p.url}">
+                                    <div class="center">${CodingView.Encoding.htmlEncode(p.shortTitle)}</div>
+                                </a>
+                            `).join("")}
+                        </div>
                     </div>
-                </div>
-            ` : ""}
-            ${data.page.childPages && data.page.childPages.length > 0 ? /* html */`
-                <div class="info-panel">
-                    <div class="info-panel-title rounded-top">${CodingView.Encoding.htmlEncode(data.page.shortTitle)}</div>
-                    <div class="info-panel-list rounded-bottom">
-                        ${data.page.childPages.map((p) => /* html */`
-                            <a class="contents" href="${p.url}">
-                                <div class="center">${CodingView.Encoding.htmlEncode(p.shortTitle)}</div>
-                            </a>
-                        `).join("")}
+                ` : ""}
+                ${data.page.childPages && data.page.childPages.length > 0 ? /* html */`
+                    <div class="info-panel">
+                        <div class="info-panel-title rounded-top">${CodingView.Encoding.htmlEncode(data.page.shortTitle)}</div>
+                        <div class="info-panel-list rounded-bottom">
+                            ${data.page.childPages.map((p) => /* html */`
+                                <a class="contents" href="${p.url}">
+                                    <div class="center">${CodingView.Encoding.htmlEncode(p.shortTitle)}</div>
+                                </a>
+                            `).join("")}
+                        </div>
                     </div>
-                </div>
+                ` : ""}
             ` : ""}
             <div class="info-panel">
                 <div class="info-panel-title rounded-top">Projects</div>

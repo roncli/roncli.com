@@ -135,29 +135,31 @@ class MusicView {
                     Welcome to the home of The Nightstalker.  Here, you can find all of the music I have released over the years, listen to stripped down versions of some of my vocal works, and get a sneak peak at what I'm working on.
                 </div>
             </div>
-            ${data.page.parentPageId && data.page.siblingPages && data.page.siblingPages.length > 1 ? /* html */`
-                <div class="info-panel">
-                    <div class="info-panel-title rounded-top">${MusicView.Encoding.htmlEncode(data.page.parentPages[data.page.parentPages.length - 1].shortTitle)}</div>
-                    <div class="info-panel-list rounded-bottom">
-                        ${data.page.siblingPages.map((p) => /* html */`
-                            <a class="contents ${data.page.url === p.url ? "selected" : ""}" href="${p.url}">
-                                <div class="center">${MusicView.Encoding.htmlEncode(p.shortTitle)}</div>
-                            </a>
-                        `).join("")}
+            ${data.page ? /* html */`
+                ${data.page.parentPageId && data.page.siblingPages && data.page.siblingPages.length > 1 ? /* html */`
+                    <div class="info-panel">
+                        <div class="info-panel-title rounded-top">${MusicView.Encoding.htmlEncode(data.page.parentPages[data.page.parentPages.length - 1].shortTitle)}</div>
+                        <div class="info-panel-list rounded-bottom">
+                            ${data.page.siblingPages.map((p) => /* html */`
+                                <a class="contents ${data.page.url === p.url ? "selected" : ""}" href="${p.url}">
+                                    <div class="center">${MusicView.Encoding.htmlEncode(p.shortTitle)}</div>
+                                </a>
+                            `).join("")}
+                        </div>
                     </div>
-                </div>
-            ` : ""}
-            ${data.page.childPages && data.page.childPages.length > 0 ? /* html */`
-                <div class="info-panel">
-                    <div class="info-panel-title rounded-top">${MusicView.Encoding.htmlEncode(data.page.shortTitle)}</div>
-                    <div class="info-panel-list rounded-bottom">
-                        ${data.page.childPages.map((p) => /* html */`
-                            <a class="contents" href="${p.url}">
-                                <div class="center">${MusicView.Encoding.htmlEncode(p.shortTitle)}</div>
-                            </a>
-                        `).join("")}
+                ` : ""}
+                ${data.page.childPages && data.page.childPages.length > 0 ? /* html */`
+                    <div class="info-panel">
+                        <div class="info-panel-title rounded-top">${MusicView.Encoding.htmlEncode(data.page.shortTitle)}</div>
+                        <div class="info-panel-list rounded-bottom">
+                            ${data.page.childPages.map((p) => /* html */`
+                                <a class="contents" href="${p.url}">
+                                    <div class="center">${MusicView.Encoding.htmlEncode(p.shortTitle)}</div>
+                                </a>
+                            `).join("")}
+                        </div>
                     </div>
-                </div>
+                ` : ""}
             ` : ""}
             <div class="info-panel">
                 <div class="info-panel-title rounded-top">Categories</div>
