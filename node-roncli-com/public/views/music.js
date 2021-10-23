@@ -29,9 +29,11 @@ class MusicView {
     static get(data) {
         return /* html */`
             <div class="grid">
-                <div>
-                    ${data.page.page}
-                </div>
+                ${data.page ? /* html */`
+                    <div>
+                        ${data.page.page}
+                    </div>
+                ` : ""}
                 ${!data.tracks || data.tracks.length === 0 ? /* html */`
                     <div class="panel rounded">
                         <div class="panel-title rounded">Music Temporarily Unavailable</div>
