@@ -60,7 +60,7 @@ class CodingView {
                         <div class="panel-body grid-tight grid-columns-4 rounded-bottom">
                             ${data.releases.map((r) => /* html */`
                                 <div>${CodingView.Encoding.htmlEncode(r.name)}</div>
-                                <div title="${CodingView.Encoding.attributeEncode(r.body)}">${CodingView.Encoding.htmlEncode(r.body.split("/n").shift())}</div>
+                                <div title="${CodingView.Encoding.attributeEncode(r.body)}">${CodingView.Encoding.htmlEncode(r.body.split("\n").shift())}</div>
                                 <div><time class="timeago" datetime="${new Date(r.createdAt).toISOString()}">${new Date(r.createdAt).toUTCString()}</time></div>
                                 <div><a href="${r.url}" ${r.url.startsWith("http") ? "target=\"blank\"" : ""}>${CodingView.Encoding.htmlEncode(r.repo.name)}</a></div>
                             `).join("")}
@@ -72,7 +72,7 @@ class CodingView {
                         <div class="panel-title rounded-top"><h1>Latest Commits</h1></div>
                         <div class="panel-body grid-tight grid-columns-3 rounded-bottom">
                             ${data.commits.map((c) => /* html */`
-                                <div class="ellipsis" title="${CodingView.Encoding.attributeEncode(c.message)}">${CodingView.Encoding.htmlEncode(c.message.split("/n").shift())}</div>
+                                <div class="ellipsis" title="${CodingView.Encoding.attributeEncode(c.message)}">${CodingView.Encoding.htmlEncode(c.message.split("\n").shift())}</div>
                                 <div><time class="timeago" datetime="${new Date(c.createdAt).toISOString()}">${new Date(c.createdAt).toUTCString()}</time></div>
                                 <div><a href="${c.url}" ${c.url.startsWith("http") ? "target=\"blank\"" : ""}>${CodingView.Encoding.htmlEncode(c.repo.name)}</a></div>
                             `).join("")}

@@ -98,7 +98,7 @@ class HomeView {
                             <div class="center"><h4 ${data.features.coding.length > 0 || data.commits && data.commits.length > 0 ? "class=\"pad-top\"" : ""}><b>Latest Releases</b></h4></div>
                             ${data.releases.map((release) => /* html */`
                                 <div class="grid-tight grid-columns-2">
-                                    <div class="left ellipsis">${HomeView.Encoding.htmlEncode(release.name.split("/n").shift())}</div>
+                                    <div class="left ellipsis">${HomeView.Encoding.htmlEncode(release.name.split("\n").shift())}</div>
                                     <div class="right"><a href="${release.url}" ${release.url.startsWith("http") ? "target=\"blank\"" : ""}>${HomeView.Encoding.htmlEncode(release.repo.name)}</a></div>
                                 </div>
                             `).join("")}
@@ -107,7 +107,7 @@ class HomeView {
                             <div class="center"><h4 ${data.features.coding.length > 0 ? "class=\"pad-top\"" : ""}><b>Latest Commits</b></h4></div>
                             ${data.commits.map((commit) => /* html */`
                                 <div class="grid-tight grid-columns-2">
-                                    <div class="left ellipsis">${HomeView.Encoding.htmlEncode(commit.message.split("/n").shift())}</div>
+                                    <div class="left ellipsis">${HomeView.Encoding.htmlEncode(commit.message.split("\n").shift())}</div>
                                     <div class="right"><a href="${commit.url}" ${commit.url.startsWith("http") ? "target=\"blank\"" : ""}>${HomeView.Encoding.htmlEncode(commit.repo.name)}</a></div>
                                 </div>
                             `).join("")}
