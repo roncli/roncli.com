@@ -122,6 +122,18 @@ declare namespace ViewTypes {
         }[]
     }
 
+    type CodingProjectViewParameters = {
+        user: User
+        page: Page
+        project: Project
+    }
+
+    type CodingProjectViewInfoParameters = {
+        projects: Project[]
+        page: Page
+        title: string
+    }
+
     type CodingViewParameters = {
         user: User
         page: Page

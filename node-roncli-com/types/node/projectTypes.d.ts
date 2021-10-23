@@ -30,6 +30,30 @@ declare namespace ProjectTypes {
         dateAdded: string
         dateUpdated: string
     }
+
+    type RepositoryData = {
+        repository: {
+            url: string
+            primaryLanguage: string
+            createdAt: Date
+            updatedAt: Date
+            description: string
+        }
+        releases: {
+            name: string
+            body: string
+            createdAt: Date
+            url: string
+        }[]
+        commits: {
+            author: string
+            committer: string
+            description: string
+            createdAt: Date
+            url: string
+            sha: string
+        }[]
+    }
 }
 
 export = ProjectTypes

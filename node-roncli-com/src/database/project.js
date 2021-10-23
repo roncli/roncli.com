@@ -49,6 +49,43 @@ class ProjectDb {
             dateUpdated: p.dateUpdated
         }));
     }
+
+    //              #    ###         ###          #    #
+    //              #    #  #        #  #         #    #
+    //  ###   ##   ###   ###   #  #  #  #   ###  ###   ###
+    // #  #  # ##   #    #  #  #  #  ###   #  #   #    #  #
+    //  ##   ##     #    #  #   # #  #     # ##   #    #  #
+    // #      ##     ##  ###     #   #      # #    ##  #  #
+    //  ###                     #
+    /**
+     * Gets a project by its path.
+     * @param {string} path The path.
+     * @returns {Promise<ProjectTypes.ProjectData>} A promise that returns the project.
+     */
+    static async getByPath(path) {
+        const db = await Db.get();
+
+        const project = await db.collection("project").findOne({url: path});
+
+        if (!project) {
+            return void 0;
+        }
+
+        return {
+            _id: project._id.toHexString(),
+            url: project.url,
+            title: project.title,
+            projectUrl: project.projectUrl,
+            github: {
+                user: project.github.user,
+                repository: project.github.repository
+            },
+            description: project.description,
+            order: project.order,
+            dateAdded: project.dateAdded,
+            dateUpdated: project.dateUpdated
+        };
+    }
 }
 
 module.exports = ProjectDb;

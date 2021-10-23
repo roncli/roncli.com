@@ -31,6 +31,7 @@ import ChangeEmail from "../../public/js/changeEmail"
 import ChangeEmailView from "../../public/views/changeEmail"
 import ChangePassword from "../../public/js/changePassword"
 import ChangePasswordView from "../../public/views/changePassword"
+import CodingProjectView from "../../public/views/codingProject"
 import CodingView from "../../public/views/coding"
 import CommentView from "../../public/views/comment/comment"
 import Comments from "../../public/js/common/comments"
@@ -103,6 +104,7 @@ declare global {
         ChangeEmailView: typeof ChangeEmailView
         ChangePassword: typeof ChangePassword
         ChangePasswordView: typeof ChangePasswordView
+        CodingProjectView: typeof CodingProjectView
         CodingView: typeof CodingView
         CommentView: typeof CommentView
         Comments: typeof Comments
