@@ -244,9 +244,20 @@ class Blog {
      * @returns {Promise} A promise that resolves when the cache has been cleared.
      */
     static async clearCache() {
-        await Cache.remove(await Cache.getAllKeys(`${process.env.REDIS_PREFIX}:blog:*`));
-        await Cache.remove(await Cache.getAllKeys(`${process.env.REDIS_PREFIX}:blogger:*`));
-        await Cache.remove(await Cache.getAllKeys(`${process.env.REDIS_PREFIX}:tumblr:*`));
+        const blogKeys = await Cache.getAllKeys(`${process.env.REDIS_PREFIX}:blog:*`);
+        if (blogKeys.length > 0) {
+            await Cache.remove(blogKeys);
+        }
+
+        const bloggerKeys = await Cache.getAllKeys(`${process.env.REDIS_PREFIX}:blogger:*`);
+        if (bloggerKeys.length > 0) {
+            await Cache.remove(bloggerKeys);
+        }
+
+        const tumblrKeys = await Cache.getAllKeys(`${process.env.REDIS_PREFIX}:tumblr:*`);
+        if (tumblrKeys.length > 0) {
+            await Cache.remove(tumblrKeys);
+        }
     }
 
     //                          #    ###    #     #    ##

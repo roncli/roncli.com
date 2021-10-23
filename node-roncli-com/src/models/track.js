@@ -106,7 +106,10 @@ class Track {
      * @returns {Promise} A promise that resolves when the cache has been cleared.
      */
     static async clearCache() {
-        await Cache.remove(await Cache.getAllKeys(`${process.env.REDIS_PREFIX}:soundcloud:*`));
+        const keys = await Cache.getAllKeys(`${process.env.REDIS_PREFIX}:soundcloud:*`);
+        if (keys.length > 0) {
+            await Cache.remove(keys);
+        }
     }
 
     //                          #    ###                     #
