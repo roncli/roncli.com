@@ -65,6 +65,11 @@ class AdminPage extends RouterBase {
 
         const page = await Page.getByPath(relativePath);
 
+        if (!page) {
+            await Common.notFound(req, res, user);
+            return;
+        }
+
         await page.loadMetadata();
 
         const pages = await Page.getAllMetadata(),
