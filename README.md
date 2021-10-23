@@ -150,8 +150,8 @@ The following should be the contents of privateConfig.js:
             },
             github: {
                 type: "oauth",
-                key: "(Your Github client ID)",
-                secret: "(Your Github client secret)"
+                key: "(Your GitHub client ID)",
+                secret: "(Your GitHub client secret)"
             },
             battlenet: {
                 apikey: "(Your Battle.Net API key)"

@@ -18,7 +18,7 @@ const Cache = require("@roncli/node-redis").Cache,
 //                #                                                #   #
 //                #                                                 ###
 /**
- * A class that represents a Github repository.
+ * A class that represents a GitHub repository.
  */
 class Repository {
     //                   #           ####                     #
@@ -32,7 +32,7 @@ class Repository {
      * @returns {Promise} A promise that resolves when the events are cached.
      */
     static async cacheEvents() {
-        // Retrieve all events from Github.
+        // Retrieve all events from GitHub.
         const events = await Github.getEvents();
 
         // Separate events into commits and releases.

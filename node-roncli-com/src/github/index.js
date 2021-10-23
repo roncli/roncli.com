@@ -19,7 +19,7 @@ const Octokit = require("@octokit/rest").Octokit,
 //  #   #    #     #  #  #   #  #  ##  ##  #
 //   ###    ###     ##   #   #   ## #  # ##
 /**
- * A class that handles calls to Github's API.
+ * A class that handles calls to GitHub's API.
  */
 class Github {
     //              #    ####                     #
@@ -56,7 +56,7 @@ class Github {
                 const res = await octokit.rest.repos.get({owner, repo});
 
                 if (res.status !== 200) {
-                    throw new Error(`There was an error while getting a repository from Github: status ${res.status}`);
+                    throw new Error(`There was an error while getting a repository from GitHub: status ${res.status}`);
                 }
 
                 return res.data;
@@ -65,7 +65,7 @@ class Github {
                 const res = await octokit.rest.repos.listCommits({owner, repo, "per_page": 100});
 
                 if (res.status !== 200) {
-                    throw new Error(`There was an error while getting commits for a repository from Github: status ${res.status}`);
+                    throw new Error(`There was an error while getting commits for a repository from GitHub: status ${res.status}`);
                 }
 
                 return res.data;
@@ -74,7 +74,7 @@ class Github {
                 const res = await octokit.rest.repos.listReleases({owner, repo, "per_page": 100});
 
                 if (res.status !== 200) {
-                    throw new Error(`There was an error while getting releases for a repository from Github: status ${res.status}`);
+                    throw new Error(`There was an error while getting releases for a repository from GitHub: status ${res.status}`);
                 }
 
                 return res.data;

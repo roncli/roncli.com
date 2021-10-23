@@ -29,7 +29,7 @@ class Project {
     //  ##    # #   ##   #  #   ##   #  #   ##   ###    ##   ###    ###     ##   ##   #       #
     //                                           #                                           #
     /**
-     * Caches repository information from Github.
+     * Caches repository information from GitHub.
      * @param {string} user The user.
      * @param {string} repository The repository.
      * @returns {Promise} A promise that resolves when the repository information has been cached.
