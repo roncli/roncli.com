@@ -950,6 +950,10 @@ div.pill {
     text-align: center;
 }
 
+div.pill.pill-sortable {
+    cursor: grab;
+}
+
 div.pill.pill-sortable,
 div.pill.pill-static {
     font-size: 14px;
@@ -980,7 +984,8 @@ div.pill:active {
 }
 
 div.pill.pill-sortable:active {
-    border-color: #5d9125
+    border-color: #5d9125;
+    cursor: grabbing;
 }
 
 div.pill.pill-static:active {
