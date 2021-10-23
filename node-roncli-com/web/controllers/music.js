@@ -53,9 +53,20 @@ class Music extends RouterBase {
      * @returns {Promise} A promise that resolves when the request has been processed.
      */
     static async get(req, res) {
-        const [user, page, tracks, categories, count] = await Promise.all([User.getCurrent(req), Page.getByPath(req.path), Track.getTracks(0, Track.pageSize), Track.getCategories(), Track.countTracks()]);
+        const [user, page, tracks, categories, count] = await Promise.all([
+            User.getCurrent(req),
+            (async () => {
+                const result = await Page.getByPath(req.path);
+                if (result) {
+                    await result.loadMetadata();
+                }
 
-        await page.loadMetadata();
+                return result;
+            })(),
+            Track.getTracks(0, Track.pageSize),
+            Track.getCategories(),
+            Track.countTracks()
+        ]);
 
         let local, newestDate;
 

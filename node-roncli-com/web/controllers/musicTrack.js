@@ -66,11 +66,19 @@ class MusicTrack extends RouterBase {
             }
         }
 
-        const [track, page, categories, comments] = await Promise.all([Track.getTrackById(req.params.id), Page.getByPath(req.path), Track.getCategories(), Comment.getByUrl(req.path, user)]);
+        const [track, page, categories, comments] = await Promise.all([
+            Track.getTrackById(req.params.id),
+            (async () => {
+                const result = await Page.getByPath(req.path);
+                if (result) {
+                    await result.loadMetadata();
+                }
 
-        if (page) {
-            await page.loadMetadata();
-        }
+                return result;
+            })(),
+            Track.getCategories(),
+            Comment.getByUrl(req.path, user)
+        ]);
 
         const data = {
             category,

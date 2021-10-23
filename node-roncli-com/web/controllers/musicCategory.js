@@ -62,11 +62,21 @@ class MusicCategory extends RouterBase {
         }
 
         const category = req.params.category,
-            [user, page, tracks, categories, count] = await Promise.all([User.getCurrent(req), Page.getByPath(path), Track.getTracksByCategory(category, 0, Track.pageSize), Track.getCategories(), Track.countTracksByCategory(category)]);
+            [user, page, tracks, categories, count] = await Promise.all([
+                User.getCurrent(req),
+                (async () => {
+                    const result = await Page.getByPath(req.path);
 
-        if (page) {
-            await page.loadMetadata();
-        }
+                    if (result) {
+                        await result.loadMetadata();
+                    }
+
+                    return result;
+                })(),
+                Track.getTracksByCategory(category, 0, Track.pageSize),
+                Track.getCategories(),
+                Track.countTracksByCategory(category)
+            ]);
 
         let local, newestDate;
 

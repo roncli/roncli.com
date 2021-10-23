@@ -60,7 +60,9 @@ class Coding extends RouterBase {
             User.getCurrent(req),
             (async () => {
                 const result = await Page.getByPath(req.path);
-                await result.loadMetadata();
+                if (result) {
+                    await result.loadMetadata();
+                }
 
                 return result;
             })(),
