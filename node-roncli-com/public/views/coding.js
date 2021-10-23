@@ -59,10 +59,10 @@ class CodingView {
                         <div class="panel-title rounded-top"><h1>Latest Releases</h1></div>
                         <div class="panel-body grid-tight grid-columns-4 rounded-bottom" style="grid-template-columns: auto 1fr auto auto; gap: 2px 5px;">
                             ${data.releases.map((r) => /* html */`
-                                <div>${CodingView.Encoding.htmlEncode(r.name)}</div>
+                                <div><a href="${r.url}" target="_blank">${CodingView.Encoding.htmlEncode(r.name)}</a></div>
                                 <div title="${CodingView.Encoding.attributeEncode(r.body)}">${CodingView.Encoding.htmlEncode(r.body.split("\n").shift())}</div>
                                 <div><time class="timeago" datetime="${new Date(r.createdAt).toISOString()}">${new Date(r.createdAt).toUTCString()}</time></div>
-                                <div><a href="${r.url}" ${r.url.startsWith("http") ? "target=\"blank\"" : ""}>${CodingView.Encoding.htmlEncode(r.repo.name)}</a></div>
+                                <div><a href="${r.repo.url}" ${r.repo.url.startsWith("http") ? "target=\"blank\"" : ""}>${CodingView.Encoding.htmlEncode(r.repo.name)}</a></div>
                             `).join("")}
                         </div>
                     </div>

@@ -86,7 +86,9 @@ class Coding extends RouterBase {
                 const project = projects.find((p) => `${p.github.user}/${p.github.repository}` === release.repo.name);
 
                 if (project) {
-                    release.url = project.url;
+                    release.repo.url = project.url;
+                } else {
+                    release.repo.url = release.url;
                 }
             }
         }
