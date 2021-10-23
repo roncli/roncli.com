@@ -30,6 +30,7 @@ class AdminCacheView {
                     </div>
                     <div>
                         <button class="btn" style="font-size: 20px;" data-cache="blog">Blogger & Tumblr Cache</button>
+                        <button class="btn" style="font-size: 20px;" data-cache="github">GitHub Cache</button>
                         <button class="btn" style="font-size: 20px;" data-cache="soundcloud">SoundCloud Cache</button>
                     </div>
                 </div>

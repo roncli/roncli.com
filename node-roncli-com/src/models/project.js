@@ -66,6 +66,23 @@ class Project {
         }, expire);
     }
 
+    //       ##                       ##               #
+    //        #                      #  #              #
+    //  ##    #     ##    ###  ###   #      ###   ##   ###    ##
+    // #      #    # ##  #  #  #  #  #     #  #  #     #  #  # ##
+    // #      #    ##    # ##  #     #  #  # ##  #     #  #  ##
+    //  ##   ###    ##    # #  #      ##    # #   ##   #  #   ##
+    /**
+     * Clears the project cache.
+     * @returns {Promise} A promise that resolves when the cache has been cleared.
+     */
+    static async clearCache() {
+        const keys = await Cache.getAllKeys(`${process.env.REDIS_PREFIX}:github:repository:*`);
+        if (keys.length > 0) {
+            await Cache.remove(keys);
+        }
+    }
+
     //              #     ##   ##    ##
     //              #    #  #   #     #
     //  ###   ##   ###   #  #   #     #

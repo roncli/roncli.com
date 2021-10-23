@@ -107,6 +107,20 @@ class Repository {
         ]);
     }
 
+    //       ##                       ##               #
+    //        #                      #  #              #
+    //  ##    #     ##    ###  ###   #      ###   ##   ###    ##
+    // #      #    # ##  #  #  #  #  #     #  #  #     #  #  # ##
+    // #      #    ##    # ##  #     #  #  # ##  #     #  #  ##
+    //  ##   ###    ##    # #  #      ##    # #   ##   #  #   ##
+    /**
+     * Clears the repository cache.
+     * @returns {Promise} A promise that resolves when the cache has been cleared.
+     */
+    static async clearCache() {
+        await Cache.remove([`${process.env.REDIS_PREFIX}:github:commits`, `${process.env.REDIS_PREFIX}:github:releases`]);
+    }
+
     //              #     ##                      #     #
     //              #    #  #                           #
     //  ###   ##   ###   #      ##   # #   # #   ##    ###    ###
