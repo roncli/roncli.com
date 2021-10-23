@@ -57,7 +57,7 @@ class CodingView {
                 ${data.releases && data.releases.length > 0 ? /* html */`
                     <div class="panel rounded">
                         <div class="panel-title rounded-top"><h1>Latest Releases</h1></div>
-                        <div class="panel-body grid-tight grid-columns-4 rounded-bottom">
+                        <div class="panel-body grid-tight grid-columns-4 rounded-bottom" style="grid-template-columns: auto 1fr auto auto; gap: 2px 5px;">
                             ${data.releases.map((r) => /* html */`
                                 <div>${CodingView.Encoding.htmlEncode(r.name)}</div>
                                 <div title="${CodingView.Encoding.attributeEncode(r.body)}">${CodingView.Encoding.htmlEncode(r.body.split("\n").shift())}</div>
@@ -70,7 +70,7 @@ class CodingView {
                 ${data.commits && data.commits.length > 0 ? /* html */`
                     <div class="panel rounded">
                         <div class="panel-title rounded-top"><h1>Latest Commits</h1></div>
-                        <div class="panel-body grid-tight grid-columns-3 rounded-bottom">
+                        <div class="panel-body grid-tight grid-columns-3 rounded-bottom" style="grid-template-columns: 1fr auto auto; gap: 2px 5px;">
                             ${data.commits.map((c) => /* html */`
                                 <div class="ellipsis" title="${CodingView.Encoding.attributeEncode(c.message)}">${CodingView.Encoding.htmlEncode(c.message.split("\n").shift())}</div>
                                 <div><time class="timeago" datetime="${new Date(c.createdAt).toISOString()}">${new Date(c.createdAt).toUTCString()}</time></div>
