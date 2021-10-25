@@ -126,7 +126,7 @@ class AdminPage {
                 if (res.status === 409) {
                     data = await res.json();
 
-                    await AdminPage.Index.showModal("Cannot Add Page", `${data.message}.`);
+                    await AdminPage.Index.showModal("Cannot Add Page", `${data.message}`);
 
                     AdminPage.Index.loading(false);
 
