@@ -47,6 +47,10 @@ declare namespace ViewTypes {
         otherPages: PageTypes.PageMetadata[]
     }
 
+    type AdminProjectViewParameters = {
+        project: Project
+    }
+
     type AdminProjectsViewParameters = {
         projects: Project[]
     }

@@ -268,6 +268,25 @@ class Project {
 
         this.repository = await Cache.get(`${process.env.REDIS_PREFIX}:github:repository:${this.github.user}:${this.github.repository}`);
     }
+
+    //                #         #
+    //                #         #
+    // #  #  ###    ###   ###  ###    ##
+    // #  #  #  #  #  #  #  #   #    # ##
+    // #  #  #  #  #  #  # ##   #    ##
+    //  ###  ###    ###   # #    ##   ##
+    //       #
+    /**
+     * Updates the project.
+     * @param {Partial<ProjectTypes.ProjectData>} body The body to update.
+     */
+    async update(body) {
+        Object.keys(body).forEach((key) => {
+            this[key] = body[key];
+        });
+
+        await ProjectDb.update(this, body);
+    }
 }
 
 module.exports = Project;

@@ -243,6 +243,34 @@ class ProjectDb {
 
         await db.collection("project").findOneAndUpdate({_id: MongoDb.ObjectId.createFromHexString(id)}, {$set: {order}});
     }
+
+    //                #         #
+    //                #         #
+    // #  #  ###    ###   ###  ###    ##
+    // #  #  #  #  #  #  #  #   #    # ##
+    // #  #  #  #  #  #  # ##   #    ##
+    //  ###  ###    ###   # #    ##   ##
+    //       #
+    /**
+     * Updates the project in the database.
+     * @param {Project} project The project.
+     * @param {Partial<ProjectTypes.ProjectData>} body The data to update within the project.
+     * @returns {Promise} A promise that resolves when the project has been updated.
+     */
+    static async update(project, body) {
+        /** @type {Partial<ProjectTypes.ProjectMongoData>} */
+        const mongoBody = {};
+
+        Object.keys(body).forEach((key) => {
+            if (key !== "_id") {
+                mongoBody[key] = body[key];
+            }
+        });
+
+        const db = await Db.get();
+
+        await db.collection("project").findOneAndUpdate({_id: MongoDb.ObjectId.createFromHexString(project.id)}, {$set: mongoBody});
+    }
 }
 
 module.exports = ProjectDb;
