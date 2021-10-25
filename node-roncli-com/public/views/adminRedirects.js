@@ -27,7 +27,7 @@ class AdminRedirectsView {
      */
     static get(data) {
         return /* html */`
-            <div id="admin-files" class="panel rounded">
+            <div id="admin-redirects" class="panel rounded">
                 <div class="panel-title rounded-top"><h1>Redirects Admin</h1></div>
                 <div class="panel-body grid center-items">
                     <div class="groups">
