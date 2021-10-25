@@ -16,6 +16,8 @@ import AdminPage from "../../public/js/adminPage"
 import AdminPageView from "../../public/views/adminPage"
 import AdminPages from "../../public/js/adminPages"
 import AdminPagesView from "../../public/views/adminPages"
+import AdminProjects from "../../public/js/adminProjects"
+import AdminProjectsView from "../../public/views/adminProjects"
 import AdminRedirects from "../../public/js/adminRedirects"
 import AdminRedirectsView from "../../public/views/adminRedirects"
 import AdminView from "../../public/views/admin"
@@ -89,6 +91,8 @@ declare global {
         AdminPageView: typeof AdminPageView
         AdminPages: typeof AdminPages
         AdminPagesView: typeof AdminPagesView
+        AdminProjects: typeof AdminProjects
+        AdminProjectsView: typeof AdminProjectsView
         AdminRedirects: typeof AdminRedirects
         AdminRedirectsView: typeof AdminRedirectsView
         AdminView: typeof AdminView

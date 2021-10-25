@@ -45,6 +45,9 @@ class AdminView {
                 <a href="/admin/pages" class="contents">
                     <div class="pill"><i class="bi-file-earmark-text"></i> Pages</div>
                 </a>
+                <a href="/admin/projects" class="contents">
+                    <div class="pill"><i class="bi-github"></i> Projects</div>
+                </a>
                 <a href="/admin/redirects" class="contents">
                     <div class="pill"><i class="bi-arrow-repeat"></i> Redirects</div>
                 </a>

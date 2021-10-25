@@ -47,6 +47,10 @@ declare namespace ViewTypes {
         otherPages: PageTypes.PageMetadata[]
     }
 
+    type AdminProjectsViewParameters = {
+        projects: Project[]
+    }
+
     type AdminRedirectsViewParameters = {
         redirects: Redirect[]
     }

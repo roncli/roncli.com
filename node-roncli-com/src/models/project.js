@@ -83,6 +83,29 @@ class Project {
         }
     }
 
+    //              #
+    //              #
+    //  ###   ##   ###
+    // #  #  # ##   #
+    //  ##   ##     #
+    // #      ##     ##
+    //  ###
+    /**
+     * Gets a project by its ID.
+     * @param {string} id The ID.
+     * @returns {Promise<Project>} A promise that returns the project.
+     */
+    static async get(id) {
+        const data = await ProjectDb.get(id);
+
+        if (!data) {
+            return void 0;
+        }
+
+        return new Project(data);
+    }
+
+
     //              #     ##   ##    ##
     //              #    #  #   #     #
     //  ###   ##   ###   #  #   #     #
@@ -125,6 +148,45 @@ class Project {
         return new Project(data);
     }
 
+    //              #    ###         ###    #     #    ##
+    //              #    #  #         #           #     #
+    //  ###   ##   ###   ###   #  #   #    ##    ###    #     ##
+    // #  #  # ##   #    #  #  #  #   #     #     #     #    # ##
+    //  ##   ##     #    #  #   # #   #     #     #     #    ##
+    // #      ##     ##  ###     #    #    ###     ##  ###    ##
+    //  ###                     #
+    /**
+     * Gets a project by its title.
+     * @param {string} title The title.
+     * @returns {Promise<Project>} A promise that returns the project.
+     */
+    static async getByTitle(title) {
+        const data = await ProjectDb.getByTitle(title);
+
+        if (!data) {
+            return void 0;
+        }
+
+        return new Project(data);
+    }
+
+    //               #     ##            #
+    //               #    #  #           #
+    //  ###    ##   ###   #  #  ###    ###   ##   ###
+    // ##     # ##   #    #  #  #  #  #  #  # ##  #  #
+    //   ##   ##     #    #  #  #     #  #  ##    #
+    // ###     ##     ##   ##   #      ###   ##   #
+    /**
+     * Sets the order of a project.
+     * @param {string} id The project ID.
+     * @param {number} order The order of the project.
+     * @returns {Promise} A promise that resolves when the order has been set.
+     */
+    static async setOrder(id, order) {
+        await ProjectDb.setOrder(id, order);
+    }
+
+
     //                           #                       #
     //                           #                       #
     //  ##    ##   ###    ###   ###   ###   #  #   ##   ###    ##   ###
@@ -148,6 +210,40 @@ class Project {
 
         /** @type {ProjectTypes.RepositoryData} */
         this.repository = null;
+    }
+
+    //          #     #
+    //          #     #
+    //  ###   ###   ###
+    // #  #  #  #  #  #
+    // # ##  #  #  #  #
+    //  # #   ###   ###
+    /**
+     * Adds the project.
+     * @returns {Promise} A promise that resolves when the project has been added.
+     */
+    async add() {
+        this.projectUrl = `https://github.com/${this.github.user}/${this.github.repository}`;
+        this.description = "";
+        this.order = await ProjectDb.count() + 1;
+        this.dateAdded = new Date();
+        this.dateUpdated = this.dateAdded;
+
+        await ProjectDb.add(this);
+    }
+
+    //    #        ##           #
+    //    #         #           #
+    //  ###   ##    #     ##   ###    ##
+    // #  #  # ##   #    # ##   #    # ##
+    // #  #  ##     #    ##     #    ##
+    //  ###   ##   ###    ##     ##   ##
+    /**
+     * Deletes the project.
+     * @returns {Promise} A promise that resolves when the project has been deleted.
+     */
+    async delete() {
+        await ProjectDb.delete(this);
     }
 
     // ##                   #  ###                             #     #
