@@ -89,7 +89,7 @@ class AdminPageAPI extends RouterBase {
                 return;
             }
 
-            await Page.deleteById(page);
+            await Page.deleteByMetadata(page);
 
             res.sendStatus(204);
         } catch (err) {

@@ -36,19 +36,19 @@ class Page {
         await PageDb.changeParent(path, newParentPageId);
     }
 
-    //    #        ##           #          ###         ###      #
-    //    #         #           #          #  #         #       #
-    //  ###   ##    #     ##   ###    ##   ###   #  #   #     ###
-    // #  #  # ##   #    # ##   #    # ##  #  #  #  #   #    #  #
-    // #  #  ##     #    ##     #    ##    #  #   # #   #    #  #
-    //  ###   ##   ###    ##     ##   ##   ###     #   ###    ###
+    //    #        ##           #          ###         #  #         #             #         #
+    //    #         #           #          #  #        ####         #             #         #
+    //  ###   ##    #     ##   ###    ##   ###   #  #  ####   ##   ###    ###   ###   ###  ###    ###
+    // #  #  # ##   #    # ##   #    # ##  #  #  #  #  #  #  # ##   #    #  #  #  #  #  #   #    #  #
+    // #  #  ##     #    ##     #    ##    #  #   # #  #  #  ##     #    # ##  #  #  # ##   #    # ##
+    //  ###   ##   ###    ##     ##   ##   ###     #   #  #   ##     ##   # #   ###   # #    ##   # #
     //                                            #
     /**
-     * Deletes a page by its ID.
+     * Deletes a page by its metadata.
      * @param {PageTypes.PageMetadata} page The page metadata.
      * @returns {Promise} A promise that resolves when the page has been deleted.
      */
-    static async deleteById(page) {
+    static async deleteByMetadata(page) {
         await PageDb.deleteById(page.id, page.parentPageId, page.order);
     }
 
