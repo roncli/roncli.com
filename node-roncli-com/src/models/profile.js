@@ -69,6 +69,11 @@ class Profile {
         // Retrieve the data from Square Enix.
         const data = await FinalFantasy.getCharacter();
 
+        if (data.Error) {
+            Log.error("There was an error while caching the Final Fantasy XIV profiles.", {err: new Error(data.Subject), properties: {message: data.Message, debug: data.Debug}});
+            return;
+        }
+
         // Save to cache.
         const expire = new Date();
         expire.setDate(expire.getDate() + 1);
