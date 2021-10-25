@@ -99,12 +99,6 @@ class AdminProjects {
                     AdminProjects.Index.loading(false);
 
                     return;
-                } else if (res.status === 400) {
-                    await AdminProjects.Index.showModal("Invalid GitHub Repository", "This repository does not exist on GitHub.  Please try again.");
-
-                    AdminProjects.Index.loading(false);
-
-                    return;
                 } else if (res.status !== 200) {
                     await AdminProjects.Index.showModal("Error Occurred", "An error occurred while creating a new project.  Please try again.");
 
