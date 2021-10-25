@@ -34,7 +34,7 @@ class ProjectDb {
     static async add(project) {
         const db = await Db.get();
 
-        await db.collection("project").insertOne({
+        const result = await db.collection("project").insertOne({
             url: project.url,
             title: project.title,
             projectUrl: project.projectUrl,
@@ -44,6 +44,8 @@ class ProjectDb {
             dateAdded: project.dateAdded,
             dateUpdated: project.dateUpdated
         });
+
+        project.id = result.insertedId.toHexString();
     }
 
     //                          #
