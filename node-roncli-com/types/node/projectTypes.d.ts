@@ -5,15 +5,15 @@ declare namespace ProjectTypes {
         _id?: string
         url: string
         title: string
-        projectUrl: string
+        projectUrl?: string
         github: {
             user: string
             repository: string
         }
-        description: string
-        order: number
-        dateAdded: string
-        dateUpdated: string
+        description?: string
+        order?: number
+        dateAdded?: Date
+        dateUpdated?: Date
     }
 
     type ProjectMongoData = {
@@ -27,8 +27,8 @@ declare namespace ProjectTypes {
         }
         description: string
         order: number
-        dateAdded: string
-        dateUpdated: string
+        dateAdded: Date
+        dateUpdated: Date
     }
 
     type RepositoryData = {
