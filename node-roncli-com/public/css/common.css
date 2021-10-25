@@ -837,6 +837,7 @@ div.tabs > input:nth-child(9):checked ~ div > section:nth-child(9) {
 }
 
 div.groups {
+    width: 100%;
     max-width: 500px;
     margin: auto;
 }
