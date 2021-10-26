@@ -130,12 +130,12 @@ class AdminProjectsAPI extends RouterBase {
                 return;
             }
 
-            const fxs = [];
+            const promises = [];
             for (let index = 0; index < req.body.order.length; index++) {
-                fxs.push(Project.setOrder(req.body.order[index], index + 1));
+                promises.push(Project.setOrder(req.body.order[index], index + 1));
             }
 
-            await Promise.all(fxs);
+            await Promise.all(promises);
 
             res.sendStatus(204);
         } catch (err) {

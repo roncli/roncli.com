@@ -65,13 +65,13 @@ class User {
         const promises = [];
 
         if (email) {
-            promises.push((() => UserDb.checkEmailExists(email, user ? user.id : void 0))());
+            promises.push(UserDb.checkEmailExists(email, user ? user.id : void 0));
         } else {
             promises.push(false);
         }
 
         if (username) {
-            promises.push((() => UserDb.checkUsernameExists(username, user ? user.id : void 0))());
+            promises.push(UserDb.checkUsernameExists(username, user ? user.id : void 0));
         } else {
             promises.push(false);
         }

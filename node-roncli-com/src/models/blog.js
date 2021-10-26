@@ -53,9 +53,7 @@ class Blog {
         // Create the combination category keys.
         /** @type {string[]} */
         const categories = await SortedSetCache.get(`${process.env.REDIS_PREFIX}:blog:categories`, 0, -1);
-        await Promise.all(categories.map((category) => (async () => {
-            await SortedSetCache.combine(`${process.env.REDIS_PREFIX}:blog:category:${category}`, [`${process.env.REDIS_PREFIX}:blogger:category:${category}`, `${process.env.REDIS_PREFIX}:tumblr:category:${category}`], expire);
-        })()));
+        await Promise.all(categories.map((category) => SortedSetCache.combine(`${process.env.REDIS_PREFIX}:blog:category:${category}`, [`${process.env.REDIS_PREFIX}:blogger:category:${category}`, `${process.env.REDIS_PREFIX}:tumblr:category:${category}`], expire)));
     }
 
     //                   #           ###   ##
@@ -108,28 +106,20 @@ class Blog {
         expire.setDate(expire.getDate() + 7);
 
         const promises = [
-            (async () => {
-                await SortedSetCache.add(`${process.env.REDIS_PREFIX}:blogger:titles`, titles, expire);
-            })(),
-            (async () => {
-                await HashCache.add(`${process.env.REDIS_PREFIX}:blog:urls`, titles.map((title) => ({
-                    key: title.value.url,
-                    value: title.value
-                })), expire);
-            })(),
-            (async () => {
-                await SortedSetCache.add(`${process.env.REDIS_PREFIX}:blogger:categories`, Object.keys(categories).map((category) => ({
-                    score: categories[category].length,
-                    value: category
-                })), expire);
-            })()
+            SortedSetCache.add(`${process.env.REDIS_PREFIX}:blogger:titles`, titles, expire),
+            HashCache.add(`${process.env.REDIS_PREFIX}:blog:urls`, titles.map((title) => ({
+                key: title.value.url,
+                value: title.value
+            })), expire),
+            SortedSetCache.add(`${process.env.REDIS_PREFIX}:blogger:categories`, Object.keys(categories).map((category) => ({
+                score: categories[category].length,
+                value: category
+            })), expire)
         ];
 
         for (const category of Object.keys(categories)) {
             if (Object.prototype.hasOwnProperty.call(categories, category)) {
-                promises.push((async () => {
-                    await SortedSetCache.add(`${process.env.REDIS_PREFIX}:blogger:category:${category}`, categories[category], expire);
-                })());
+                promises.push(SortedSetCache.add(`${process.env.REDIS_PREFIX}:blogger:category:${category}`, categories[category], expire));
             }
         }
 
@@ -199,34 +189,24 @@ class Blog {
         expire.setDate(expire.getDate() + 7);
 
         const promises = [
-            (async () => {
-                await SortedSetCache.add(`${process.env.REDIS_PREFIX}:tumblr:titles`, titles, expire);
-            })(),
-            (async () => {
-                await HashCache.add(`${process.env.REDIS_PREFIX}:blog:urls`, titles.map((title) => ({
-                    key: title.value.url,
-                    value: title.value
-                })), expire);
-            })(),
-            (async () => {
-                await SortedSetCache.add(`${process.env.REDIS_PREFIX}:tumblr:categories`, Object.keys(categories).map((category) => ({
-                    score: categories[category].length,
-                    value: category
-                })), expire);
-            })(),
-            (async () => {
-                await HashCache.add(`${process.env.REDIS_PREFIX}:tumblr:posts`, posts.map((post) => ({
-                    key: post.id,
-                    value: post
-                })), expire);
-            })()
+            SortedSetCache.add(`${process.env.REDIS_PREFIX}:tumblr:titles`, titles, expire),
+            HashCache.add(`${process.env.REDIS_PREFIX}:blog:urls`, titles.map((title) => ({
+                key: title.value.url,
+                value: title.value
+            })), expire),
+            SortedSetCache.add(`${process.env.REDIS_PREFIX}:tumblr:categories`, Object.keys(categories).map((category) => ({
+                score: categories[category].length,
+                value: category
+            })), expire),
+            HashCache.add(`${process.env.REDIS_PREFIX}:tumblr:posts`, posts.map((post) => ({
+                key: post.id,
+                value: post
+            })), expire)
         ];
 
         for (const category of Object.keys(categories)) {
             if (Object.prototype.hasOwnProperty.call(categories, category)) {
-                promises.push((async () => {
-                    await SortedSetCache.add(`${process.env.REDIS_PREFIX}:tumblr:category:${category}`, categories[category], expire);
-                })());
+                promises.push(SortedSetCache.add(`${process.env.REDIS_PREFIX}:tumblr:category:${category}`, categories[category], expire));
             }
         }
 

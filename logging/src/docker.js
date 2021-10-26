@@ -156,10 +156,10 @@ class Docker {
     async getStats() {
         const containers = await this.dockerode.listContainers(),
             containerStats = [],
-            fxs = [];
+            promises = [];
 
         for (const containerInfo of containers) {
-            fxs.push((async () => {
+            promises.push((async () => {
                 const stats = await this.getStatsByContainerId(containerInfo.Id, containerInfo.Names[0]);
                 if (stats) {
                     containerStats.push(stats);
@@ -167,7 +167,7 @@ class Docker {
             })());
         }
 
-        await Promise.all(fxs);
+        await Promise.all(promises);
 
         return containerStats;
     }

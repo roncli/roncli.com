@@ -97,13 +97,9 @@ class Repository {
         const expire = new Date();
         expire.setDate(expire.getDate() + 1);
 
-        Promise.all([
-            (async () => {
-                await SortedSetCache.add(`${process.env.REDIS_PREFIX}:github:commits`, commits, expire);
-            })(),
-            (async () => {
-                await SortedSetCache.add(`${process.env.REDIS_PREFIX}:github:releases`, releases, expire);
-            })()
+        await Promise.all([
+            SortedSetCache.add(`${process.env.REDIS_PREFIX}:github:commits`, commits, expire),
+            SortedSetCache.add(`${process.env.REDIS_PREFIX}:github:releases`, releases, expire)
         ]);
     }
 

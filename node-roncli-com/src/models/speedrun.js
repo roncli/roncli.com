@@ -112,7 +112,10 @@ class Speedrun {
         const expire = new Date();
         expire.setDate(expire.getDate() + 1);
 
-        await SortedSetCache.add(`${process.env.REDIS_PREFIX}:speedrun.com:speedruns`, speedruns, expire);
+        await Promise.all([
+            SortedSetCache.add(`${process.env.REDIS_PREFIX}:speedrun.com:speedruns`, speedruns, expire),
+            Cache.add(`${process.env.REDIS_PREFIX}:speedrun.com:games`, games, expire)
+        ]);
     }
 
     //              #     ##                        #

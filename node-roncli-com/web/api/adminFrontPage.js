@@ -227,12 +227,12 @@ class AdminFrontPageAPI extends RouterBase {
                 return;
             }
 
-            const fxs = [];
+            const promises = [];
             for (let index = 0; index < req.body.order.length; index++) {
-                fxs.push(Feature.setOrder(req.body.section, req.body.order[index], index));
+                promises.push(Feature.setOrder(req.body.section, req.body.order[index], index));
             }
 
-            await Promise.all(fxs);
+            await Promise.all(promises);
 
             res.sendStatus(204);
         } catch (err) {

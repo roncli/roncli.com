@@ -73,24 +73,16 @@ class Track {
 
         /** @type {Promise[]} */
         const promises = [
-            (async () => {
-                await SortedSetCache.add(`${process.env.REDIS_PREFIX}:soundcloud:tracks`, tracks, expire);
-            })(),
-            (async () => {
-                await SortedSetCache.add(`${process.env.REDIS_PREFIX}:soundcloud:tags`, Object.keys(tags).map((tag) => ({
-                    score: tags[tag].length,
-                    value: tag
-                })));
-            })()
+            SortedSetCache.add(`${process.env.REDIS_PREFIX}:soundcloud:tracks`, tracks, expire),
+            SortedSetCache.add(`${process.env.REDIS_PREFIX}:soundcloud:tags`, Object.keys(tags).map((tag) => ({
+                score: tags[tag].length,
+                value: tag
+            })))
         ];
 
-        promises.push(...tracks.map((track) => (async () => {
-            await Cache.add(`${process.env.REDIS_PREFIX}:soundcloud:track:${track.value.track.id}`, track.value, expire);
-        })()));
+        promises.push(...tracks.map((track) => Cache.add(`${process.env.REDIS_PREFIX}:soundcloud:track:${track.value.track.id}`, track.value, expire)));
 
-        promises.push(...Object.keys(tags).map((tag) => (async () => {
-            await SortedSetCache.add(`${process.env.REDIS_PREFIX}:soundcloud:tag:${tag}`, tags[tag], expire);
-        })()));
+        promises.push(...Object.keys(tags).map((tag) => SortedSetCache.add(`${process.env.REDIS_PREFIX}:soundcloud:tag:${tag}`, tags[tag], expire)));
 
         await Promise.all(promises);
     }
