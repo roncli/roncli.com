@@ -1,7 +1,6 @@
 /**
  * @typedef {import("express").Request} Express.Request
  * @typedef {import("express").Response} Express.Response
- * @typedef {import("../../types/browser/viewTypes").HomeViewParameters} ViewTypes.HomeViewParameters
  */
 
 const Blog = require("../../src/models/blog"),
@@ -62,7 +61,6 @@ class Home extends RouterBase {
     static async get(req, res) {
         const go = req.query.go && req.query.go.toString() || void 0;
 
-        /** @type {User} */
         let user = await User.getCurrent(req);
 
         let validated, emailChangeAuthorized, emailChanged, changePasswordSuccess, changeEmailSuccess;
