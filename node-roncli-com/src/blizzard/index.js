@@ -11,6 +11,79 @@ const BlizzardJs = require("blizzard.js");
  * A class that handles calls to Blizzard's API.
  */
 class Blizzard {
+    //              #    ###    #          #     ##          ####   ##   #                              #
+    //              #    #  #              #      #             #  #  #  #                              #
+    //  ###   ##   ###   #  #  ##     ###  ###    #     ##    ##   #     ###    ###  ###    ###   ##   ###    ##   ###    ###
+    // #  #  # ##   #    #  #   #    #  #  #  #   #    #  #     #  #     #  #  #  #  #  #  #  #  #      #    # ##  #  #  ##
+    //  ##   ##     #    #  #   #    # ##  #  #   #    #  #  #  #  #  #  #  #  # ##  #     # ##  #      #    ##    #       ##
+    // #      ##     ##  ###   ###    # #  ###   ###    ##    ##    ##   #  #   # #  #      # #   ##     ##   ##   #     ###
+    //  ###
+    /**
+     * Gets the Diablo 3 characters.
+     * @returns {Promise<any>} A promise that returns the Diablo 3 characters.
+     */
+    static async getDiablo3Characters() {
+        const client = await BlizzardJs.d3.createInstance({
+            key: process.env.BLIZZARD_CLIENT_ID,
+            secret: process.env.BLIZZARD_CLIENT_SECRET,
+            origin: "us",
+            locale: "en_US"
+        });
+
+        const res = await client.accountProfile({account: "roncli-1818"});
+
+        if (res.status !== 200) {
+            throw new Error(`There was an error while getting the D3 characters from Blizzard: status ${res.status}`);
+        }
+
+        return res.data;
+    }
+
+    //              #    #  #               ##         #      #                                         #
+    //              #    #  #              #  #        #                                                #
+    //  ###   ##   ###   #  #   ##   #  #  #  #   ##   ###   ##     ##   # #    ##   # #    ##   ###   ###
+    // #  #  # ##   #    ####  #  #  #  #  ####  #     #  #   #    # ##  # #   # ##  ####  # ##  #  #   #
+    //  ##   ##     #    ####  #  #  ####  #  #  #     #  #   #    ##    # #   ##    #  #  ##    #  #   #
+    // #      ##     ##  #  #   ##   ####  #  #   ##   #  #  ###    ##    #     ##   #  #   ##   #  #    ##
+    //  ###
+    /**
+     * Gets the WoW achievement.
+     * @returns {Promise<{info: any, media: any}>} A promise that returns the WoW achievement.
+     */
+    static async getWowAchievement(id) {
+        const client = await BlizzardJs.wow.createInstance({
+            key: process.env.BLIZZARD_CLIENT_ID,
+            secret: process.env.BLIZZARD_CLIENT_SECRET,
+            origin: "us",
+            locale: "en_US"
+        });
+
+        const data = {info: void 0, media: void 0};
+
+        await Promise.all([
+            (async () => {
+                const res = await client.achievement({id});
+
+                if (res.status !== 200) {
+                    throw new Error(`There was an error while getting WoW achievement ${id} from Blizzard: status ${res.status}`);
+                }
+
+                data.info = res.data;
+            })(),
+            (async () => {
+                const res = await client.achievement({id, media: true});
+
+                if (res.status !== 200) {
+                    throw new Error(`There was an error while getting WoW achievement ${id} from Blizzard: status ${res.status}`);
+                }
+
+                data.media = res.data;
+            })()
+        ]);
+
+        return data;
+    }
+
     //              #    #  #               ##   #                              #
     //              #    #  #              #  #  #                              #
     //  ###   ##   ###   #  #   ##   #  #  #     ###    ###  ###    ###   ##   ###    ##   ###
@@ -63,34 +136,6 @@ class Blizzard {
         ]);
 
         return data;
-    }
-
-    //              #    ###    #          #     ##          ####   ##   #                              #
-    //              #    #  #              #      #             #  #  #  #                              #
-    //  ###   ##   ###   #  #  ##     ###  ###    #     ##    ##   #     ###    ###  ###    ###   ##   ###    ##   ###    ###
-    // #  #  # ##   #    #  #   #    #  #  #  #   #    #  #     #  #     #  #  #  #  #  #  #  #  #      #    # ##  #  #  ##
-    //  ##   ##     #    #  #   #    # ##  #  #   #    #  #  #  #  #  #  #  #  # ##  #     # ##  #      #    ##    #       ##
-    // #      ##     ##  ###   ###    # #  ###   ###    ##    ##    ##   #  #   # #  #      # #   ##     ##   ##   #     ###
-    //  ###
-    /**
-     * Gets the Diablo 3 characters.
-     * @returns {Promise<any>} A promise that returns the Diablo 3 characters.
-     */
-    static async getDiablo3Characters() {
-        const client = await BlizzardJs.d3.createInstance({
-            key: process.env.BLIZZARD_CLIENT_ID,
-            secret: process.env.BLIZZARD_CLIENT_SECRET,
-            origin: "us",
-            locale: "en_US"
-        });
-
-        const res = await client.accountProfile({account: "roncli-1818"});
-
-        if (res.status !== 200) {
-            throw new Error(`There was an error while getting the D3 characters from Blizzard: status ${res.status}`);
-        }
-
-        return res.data;
     }
 }
 

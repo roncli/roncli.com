@@ -94,7 +94,6 @@ class Coding extends RouterBase {
         }
 
         const data = {
-            user,
             page,
             projects,
             commits,

@@ -118,6 +118,30 @@ class Speedrun {
         ]);
     }
 
+    //              #     ##
+    //              #    #  #
+    //  ###   ##   ###   #      ###  # #    ##    ###
+    // #  #  # ##   #    # ##  #  #  ####  # ##  ##
+    //  ##   ##     #    #  #  # ##  #  #  ##      ##
+    // #      ##     ##   ###   # #  #  #   ##   ###
+    //  ###
+    /**
+     * Gets a list of speedrun games.
+     * @returns {Promise<string[]>} A promise that returns the games.}
+     */
+    static async getGames() {
+        try {
+            if (!await Cache.exists([`${process.env.REDIS_PREFIX}:speedrun.com:games`])) {
+                await Speedrun.cacheSpeedruns();
+            }
+
+            return await Cache.get(`${process.env.REDIS_PREFIX}:speedrun.com:games`);
+        } catch (err) {
+            Log.error("There was an error while getting speedruns.", {err});
+            return void 0;
+        }
+    }
+
     //              #     ##                        #
     //              #    #  #                       #
     //  ###   ##   ###    #    ###    ##    ##    ###  ###   #  #  ###    ###

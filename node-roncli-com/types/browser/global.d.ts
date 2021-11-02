@@ -43,6 +43,7 @@ import CommentsView from "../../public/views/comment/comments"
 import DirectoryView from "../../public/views/directory"
 import Encoding from "../../public/js/common/encoding"
 import ErrorPanelView from "../../public/views/index/errorPanel"
+import GamingView from "../../public/views/gaming"
 import HomeView from "../../public/views/home"
 import Index from "../../public/js/index"
 import IndexView from "../../public/views/index"
@@ -120,6 +121,7 @@ declare global {
         DirectoryView: typeof DirectoryView
         Encoding: typeof Encoding
         ErrorPanelView: typeof ErrorPanelView
+        GamingView: typeof GamingView
         HomeView: typeof HomeView
         Index: typeof Index
         IndexView: typeof IndexView

@@ -13,6 +13,7 @@ const Blog = require("../../src/models/blog"),
     Repository = require("../../src/models/repository"),
     RouterBase = require("hot-router").RouterBase,
     Speedrun = require("../../src/models/speedrun"),
+    SteamGame = require("../../src/models/steamGame"),
     Track = require("../../src/models/track"),
     User = require("../../src/models/user");
 
@@ -138,7 +139,7 @@ class Home extends RouterBase {
                 break;
         }
 
-        const [titles, features, {recent, classics}, {commits, releases}, projects, wow, d3, ff14, speedruns, necrodancer] = await Promise.all([
+        const [titles, features, {recent, classics}, {commits, releases}, projects, steamGames, wow, d3, ff14, [speedruns, necrodancer]] = await Promise.all([
             Blog.getTitles(0, 5),
             (async () => {
                 const allFeatures = await Feature.getAll();
@@ -159,11 +160,14 @@ class Home extends RouterBase {
                 releases: await Repository.getReleases(0, 5)
             }))(),
             Project.getAll(),
+            SteamGame.getRecentGames(0, 5),
             Profile.getWowProfile(),
             Profile.getD3Profiles(),
             Profile.getFF14Profile(),
-            Speedrun.getSpeedruns(0, 5),
-            NecroDancer.getRuns(0, 5)
+            Promise.all([
+                Speedrun.getSpeedruns(0, 5),
+                NecroDancer.getRuns(0, 5)
+            ])
         ]);
 
         if (projects) {
@@ -196,6 +200,7 @@ class Home extends RouterBase {
             classics,
             commits,
             releases,
+            steamGames,
             wow,
             d3,
             ff14,

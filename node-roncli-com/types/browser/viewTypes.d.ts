@@ -12,6 +12,7 @@ import ProfileTypes from "../node/profileTypes"
 import Project from "../../src/models/project"
 import Redirect from "../../src/models/redirect"
 import Speedrun from "../../src/models/speedrun"
+import SteamGame from "../../src/models/steamGame"
 import Track from "../../src/models/track"
 import User from "../../src/models/user"
 
@@ -131,7 +132,6 @@ declare namespace ViewTypes {
     }
 
     type CodingProjectViewParameters = {
-        user: User
         page: Page
         project: Project
     }
@@ -143,7 +143,6 @@ declare namespace ViewTypes {
     }
 
     type CodingViewParameters = {
-        user: User
         page: Page
         projects: Project[]
         commits: GithubTypes.Commit[]
@@ -167,6 +166,21 @@ declare namespace ViewTypes {
             date: Date
         }[]
     }
+    
+    type GamingViewParameters = {
+        page: Page
+        recentSteamGames: SteamGame[]
+        steamGames: SteamGame[]
+        speedruns: Speedrun[],
+        necrodancer: NecroDancer[],
+        ff14: ProfileTypes.FF14Data
+        d3: ProfileTypes.D3Data[]
+        wow: ProfileTypes.WowData
+    }
+
+    type GamingViewInfoParameters = {
+        page: Page
+    }
 
     type HomeViewParameters = {
         titles: BlogTypes.Title[]
@@ -180,6 +194,7 @@ declare namespace ViewTypes {
         classics: Track[]
         commits: GithubTypes.Commit[]
         releases: GithubTypes.Release[]
+        steamGames: SteamGame[]
         wow: ProfileTypes.WowData
         d3: ProfileTypes.D3Data[]
         ff14: ProfileTypes.FF14Data

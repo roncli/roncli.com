@@ -38,7 +38,7 @@ class AdminView {
                     <div class="pill"><i class="bi-newspaper"></i> Front Page</div>
                 </a>
                 <a href="/admin/moderation" class="contents">
-                    <div class="pill center-self"><span><i class="bi-circle-fill"></i> Moderation</span>${data.commentsToModerate === 0 ? "" : /* html */`
+                    <div class="pill full-center-self"><span><i class="bi-circle-fill"></i> Moderation</span>${data.commentsToModerate === 0 ? "" : /* html */`
                         &nbsp;<span class="badge">${data.commentsToModerate.toLocaleString("en-US")}</span>
                     `}</div>
                 </a>

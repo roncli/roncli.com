@@ -4,25 +4,28 @@
  */
 
 const Common = require("../includes/common"),
-    CodingProjectView = require("../../public/views/codingProject"),
+    GamingView = require("../../public/views/gaming"),
+    NecroDancer = require("../../src/models/necrodancer"),
     Page = require("../../src/models/page"),
-    Project = require("../../src/models/project"),
+    Profile = require("../../src/models/profile"),
     RouterBase = require("hot-router").RouterBase,
+    Speedrun = require("../../src/models/speedrun"),
+    SteamGame = require("../../src/models/steamGame"),
     User = require("../../src/models/user");
 
-//   ###              #    #                  ####                    #                  #
-//  #   #             #                       #   #                                      #
-//  #       ###    ## #   ##    # ##    ## #  #   #  # ##    ###     ##    ###    ###   ####
-//  #      #   #  #  ##    #    ##  #  #  #   ####   ##  #  #   #     #   #   #  #   #   #
-//  #      #   #  #   #    #    #   #   ##    #      #      #   #     #   #####  #       #
-//  #   #  #   #  #  ##    #    #   #  #      #      #      #   #     #   #      #   #   #  #
-//   ###    ###    ## #   ###   #   #   ###   #      #       ###   #  #    ###    ###     ##
-//                                     #   #                       #  #
-//                                      ###                         ##
+//   ###                   #
+//  #   #
+//  #       ###   ## #    ##    # ##    ## #
+//  #          #  # # #    #    ##  #  #  #
+//  #  ##   ####  # # #    #    #   #   ##
+//  #   #  #   #  # # #    #    #   #  #
+//   ###    ####  #   #   ###   #   #   ###
+//                                     #   #
+//                                      ###
 /**
- * A class that represents the coding project controller.
+ * A class that represents the gaming page.
  */
-class CodingProject extends RouterBase {
+class Gaming extends RouterBase {
     //                    #
     //                    #
     // ###    ##   #  #  ###    ##
@@ -36,7 +39,7 @@ class CodingProject extends RouterBase {
     static get route() {
         const route = {...super.route};
 
-        route.path = "/project/:name";
+        route.path = "/gaming";
 
         return route;
     }
@@ -55,17 +58,8 @@ class CodingProject extends RouterBase {
      * @returns {Promise} A promise that resolves when the request has been processed.
      */
     static async get(req, res) {
-        const [user, project] = await Promise.all([
+        const [user, page, recentSteamGames, steamGames, speedruns, necrodancer, ff14, d3, wow] = await Promise.all([
             User.getCurrent(req),
-            Project.getByPath(req.path)
-        ]);
-
-        if (!project) {
-            await Common.notFound(req, res, user);
-            return;
-        }
-
-        const [page, projects] = await Promise.all([
             (async () => {
                 const result = await Page.getByPath(req.path);
                 if (result) {
@@ -74,19 +68,28 @@ class CodingProject extends RouterBase {
 
                 return result;
             })(),
-            Project.getAll(),
-            project.loadRepository()
+            SteamGame.getRecentGames(0, 10),
+            SteamGame.getGames(0, 10),
+            Speedrun.getSpeedruns(0, 10),
+            NecroDancer.getRuns(0, 10),
+            Profile.getFF14Profile(),
+            Profile.getD3Profiles(),
+            Profile.getWowProfile()
         ]);
 
         const data = {
             page,
-            project
+            recentSteamGames,
+            steamGames,
+            speedruns,
+            necrodancer,
+            ff14,
+            d3,
+            wow
         };
 
         const info = {
-            page,
-            projects,
-            title: project.title
+            page
         };
 
         if (req.headers["content-type"] === "application/json") {
@@ -95,11 +98,11 @@ class CodingProject extends RouterBase {
                 js: [],
                 views: [
                     {
-                        name: "CodingProjectView",
-                        path: "/views/codingProject.js"
+                        name: "GamingView",
+                        path: "/views/gaming.js"
                     }
                 ],
-                view: "CodingProjectView",
+                view: "GamingView",
                 data,
                 info
             });
@@ -108,8 +111,8 @@ class CodingProject extends RouterBase {
                 "",
                 void 0,
                 {},
-                CodingProjectView.get(data),
-                CodingProjectView.getInfo(info),
+                GamingView.get(data),
+                GamingView.getInfo(info),
                 req,
                 user
             ));
@@ -117,4 +120,4 @@ class CodingProject extends RouterBase {
     }
 }
 
-module.exports = CodingProject;
+module.exports = Gaming;

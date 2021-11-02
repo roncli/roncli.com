@@ -7,6 +7,7 @@
 const Blizzard = require("../blizzard"),
     Cache = require("@roncli/node-redis").Cache,
     FinalFantasy = require("../finalFantasy"),
+    HashCache = require("@roncli/node-redis").HashCache,
     Log = require("@roncli/node-application-insights-logger"),
     SortedSetCache = require("@roncli/node-redis").SortedSetCache;
 
@@ -34,7 +35,7 @@ class Profile {
     static async cacheD3() {
         // Retrieve the data from Blizzard.
         const data = (await Blizzard.getDiablo3Characters()).heroes.filter((h) => !h.dead).map((hero) => ({
-            score: hero.seasonal ? 1000000000 : 0 + hero.hardcore ? 100000000 : 0 + (hero.kills ? hero.kills.elites : 0),
+            score: (hero.seasonal ? 1000000000 : 0) + (hero.hardcore ? 100000000 : 0) + (hero.kills ? hero.kills.elites : 0),
             value: {
                 id: hero.id,
                 name: hero.name,
@@ -90,10 +91,12 @@ class Profile {
             title: data.character.title ? data.character.title.name : void 0,
             titleTop: data.character.title_top,
             achievementPoints: data.achievements.points,
-            recentAchievements: data.achievements.list.sort((a, b) => b.date - a.date).slice(0, 5).map((a) => ({
+            recentAchievements: data.achievements.list.sort((a, b) => b.date - a.date).slice(0, 10).map((a) => ({
                 id: a.id,
                 name: a.name,
-                timestamp: new Date(a.date * 1000)
+                timestamp: new Date(a.date * 1000),
+                icon: a.icon,
+                points: a.points
             })),
             avatarUrl: data.character.avatar,
             portraitUrl: data.character.portrait
@@ -121,6 +124,14 @@ class Profile {
         const avatar = data.media && data.media.assets && data.media.assets.find((a) => a.key === "avatar") || void 0,
             inset = data.media && data.media.assetts && data.media.assets.find((a) => a.key === "inset") || void 0;
 
+        const achievements = await Promise.all(data.achievements.recent_events.map(async (event) => {
+            if (!await HashCache.exists(`${process.env.REDIS_PREFIX}:wow:achievements`, event.achievement.id.toString())) {
+                await Profile.cacheWowAchievement(event.achievement.id);
+            }
+
+            return HashCache.get(`${process.env.REDIS_PREFIX}:wow:achievements`, event.achievement.id.toString());
+        }));
+
         await Cache.add(`${process.env.REDIS_PREFIX}:wow:profile`, {
             id: data.profile.id,
             name: data.profile.name,
@@ -131,14 +142,38 @@ class Profile {
             level: data.profile.level,
             title: data.profile.active_title ? data.profile.active_title.display_string : void 0,
             achievementPoints: data.achievements.total_points,
-            recentAchievements: data.achievements.recent_events.map((event) => ({
+            recentAchievements: data.achievements.recent_events.map((event, index) => ({
                 id: event.achievement.id,
                 name: event.achievement.name,
-                timestamp: new Date(event.timestamp)
-            })),
+                timestamp: new Date(event.timestamp),
+                points: achievements[index] && achievements[index].info.points || void 0,
+                icon: achievements[index] && achievements[index].media.assets && (achievements[index].media.assets.find((a) => a.key === "icon") || {}).value || void 0
+            })).sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime()),
             avatarUrl: avatar ? avatar.value : void 0,
             insetUrl: inset ? inset.value : void 0
         }, expire);
+    }
+
+    //                   #           #  #               ##         #      #                                         #
+    //                   #           #  #              #  #        #                                                #
+    //  ##    ###   ##   ###    ##   #  #   ##   #  #  #  #   ##   ###   ##     ##   # #    ##   # #    ##   ###   ###
+    // #     #  #  #     #  #  # ##  ####  #  #  #  #  ####  #     #  #   #    # ##  # #   # ##  ####  # ##  #  #   #
+    // #     # ##  #     #  #  ##    ####  #  #  ####  #  #  #     #  #   #    ##    # #   ##    #  #  ##    #  #   #
+    //  ##    # #   ##   #  #   ##   #  #   ##   ####  #  #   ##   #  #  ###    ##    #     ##   #  #   ##   #  #    ##
+    /**
+     * Caches a single WoW achievement.
+     * @param {number} id The achievement ID.
+     * @returns {Promise} A promise that resolves when the WoW achievement is cached.
+     */
+    static async cacheWowAchievement(id) {
+        // Retrieve the data from Blizzard.
+        const data = await Blizzard.getWowAchievement(id);
+
+        // Save to cache.
+        const expire = new Date();
+        expire.setDate(expire.getDate() + 30);
+
+        await HashCache.add(`${process.env.REDIS_PREFIX}:wow:achievements`, [{key: id.toString(), value: data}], expire);
     }
 
     //              #    ###   ####  ###                 #    #    ##

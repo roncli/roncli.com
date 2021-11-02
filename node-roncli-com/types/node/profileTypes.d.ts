@@ -27,6 +27,8 @@ declare namespace ProfileTypes {
             id: string
             name: string
             timestamp: Date
+            icon: string
+            points: number
         }[]
         avatarUrl: string
         portraitUrl: string
@@ -46,6 +48,8 @@ declare namespace ProfileTypes {
             id: number
             name: string
             timestamp: Date
+            icon: string
+            points: number
         }[]
         avatarUrl: string
         insetUrl: string

@@ -123,17 +123,27 @@ class HomeView {
                                 <div class="center"><a href="${feature.url}">${HomeView.Encoding.htmlEncode(feature.title)}</a></div>
                             `).join("")}
                         `}
+                        ${data.steamGames && data.steamGames.length > 0 ? /* html */`
+                            <div class="center"><h4 ${data.features.gaming.length > 0 ? "class=\"pad-top\"" : ""}><b>Recent Steam Games</b></h4></div>
+                            <div class="grid-tight grid-middle" style="grid-template-columns: 16px auto auto;">
+                                ${data.steamGames.map((game) => /* html */`
+                                    <div class="left" style="width: 16px;"><img src="${game.iconUrl}" alt="${HomeView.Encoding.attributeEncode(game.name)}" style="width: 16px; height: 16px;"></div>
+                                    <div class="left"><a href="/steam/${game.appId}/${HomeView.Encoding.attributeEncode(game.name)}">${HomeView.Encoding.htmlEncode(game.name)}</a></div>
+                                    <div class="right">${game.playtimeTwoWeeks} minute${game.playtimeTwoWeeks === 1 ? "" : "s"}</div>
+                                `).join("")}
+                            </div>
+                        ` : ""}
                         ${data.speedruns && data.speedruns.length > 0 ? /* html */`
-                            <div class="center"><h4 ${data.features.gaming.length > 0 ? "class=\"pad-top\"" : ""}><b>Speedrun Records</b></h4></div>
+                            <div class="center"><h4 ${data.features.gaming.length > 0 || data.steamGames && data.steamGames.length > 0 ? "class=\"pad-top\"" : ""}><b>Speedrun Records</b></h4></div>
                             <div class="grid-tight grid-columns-2">
                                 ${data.speedruns.map((speedrun) => /* html */`
-                                    <div class="left">#${speedrun.place} <b>${HomeView.Encoding.htmlEncode(speedrun.game)}</b> ${HomeView.Encoding.htmlEncode(speedrun.category)}${!speedrun.variables || speedrun.variables.length === 0 ? "" : /* html */`, ${speedrun.variables.map((variable) => HomeView.Encoding.htmlEncode(variable)).join(", ")}`}</div>
+                                    <div class="left">#${speedrun.place} <a href="/gaming/speedruns/${HomeView.Encoding.attributeEncode(speedrun.game)}">${HomeView.Encoding.htmlEncode(speedrun.game)}</a> ${HomeView.Encoding.htmlEncode(speedrun.category)}${!speedrun.variables || speedrun.variables.length === 0 ? "" : /* html */`, ${speedrun.variables.map((variable) => HomeView.Encoding.htmlEncode(variable)).join(", ")}`}</div>
                                     <div class="right"><a href="${speedrun.url}" target="_blank">${HomeView.Time.formatTimespan(speedrun.time, 3)}</a></div>
                                 `).join("")}
                             </div>
                         ` : ""}
                         ${data.necrodancer && data.necrodancer.length > 0 ? /* html */`
-                            <div class="center"><h4 ${data.features.gaming.length > 0 || data.speedruns && data.speedruns.length > 0 ? "class=\"pad-top\"" : ""}><b>Crypt of the NecroDancer Records</b></h4></div>
+                            <div class="center"><h4 ${data.features.gaming.length > 0 || data.steamGames && data.steamGames.length > 0 || data.speedruns && data.speedruns.length > 0 ? "class=\"pad-top\"" : ""}><b>Crypt of the NecroDancer Records</b></h4></div>
                             <div class="grid-tight grid-columns-2">
                                 ${data.necrodancer.map((run) => /* html */`
                                     <div class="left">#${run.rank} ${HomeView.Encoding.htmlEncode(run.name)}</div>
@@ -141,27 +151,8 @@ class HomeView {
                                 `).join("")}
                             </div>
                         ` : ""}
-                        ${data.wow ? /* html */`
-                            <div class="center"><h4 ${data.features.gaming.length > 0 || data.speedruns && data.speedruns.length > 0 || data.necrodancer && data.necrodancer.length > 0 ? "class=\"pad-top\"" : ""}><b>World of Warcraft</b></h4></div>
-                            <div class="grid-tight grid-middle grid-columns-2">
-                                <div class="right"><img src="${data.wow.avatarUrl}" /></div>
-                                <div class="left">
-                                    ${HomeView.Encoding.htmlEncode(data.wow.title).replace(/\{name\}/, `<b>${HomeView.Encoding.htmlEncode(data.wow.name)}</b>`)}<br />
-                                    ${data.wow.guild ? HomeView.Encoding.htmlEncode(`<${data.wow.guild}>`) : ""} ${HomeView.Encoding.htmlEncode(data.wow.realm)}<br />
-                                    ${HomeView.Encoding.htmlEncode(data.wow.race)} ${HomeView.Encoding.htmlEncode(data.wow.class)}<br />
-                                    Level <b>${data.wow.level}</b><br />
-                                    <b>${data.wow.achievementPoints}</b> Achievement Points
-                                </div>
-                            </div>
-                        ` : ""}
-                        ${data.d3 && data.d3.length > 0 ? /* html */`
-                            <div class="center"><h4 ${data.features.gaming.length > 0 || data.speedruns && data.speedruns.length > 0 || data.necrodancer && data.necrodancer.length > 0 || data.wow ? "class=\"pad-top\"" : ""}><b>Diablo III</b></h4></div>
-                            <div class="center">Level <b>${data.d3[0].level}</b> ${data.d3[0].seasonal ? "Seasonal" : ""} ${data.d3[0].hardcore ? "Hardcore" : ""} ${HomeView.Encoding.htmlEncode(data.d3[0].class)}</div>
-                            <div class="center">Paragon Level <b>${data.d3[0].paragon}</b></div>
-                            <div class="center"><b>${data.d3[0].eliteKills}</b> Elite Kills</div>
-                        ` : ""}
                         ${data.ff14 ? /* html */`
-                            <div class="center"><h4 ${data.features.gaming.length > 0 || data.speedruns && data.speedruns.length > 0 || data.necrodancer && data.necrodancer.length > 0 || data.wow || data.d3 && data.d3.length > 0 ? "class=\"pad-top\"" : ""}><b>Final Fantasy XIV Online</b></h4></div>
+                            <div class="center"><h4 ${data.features.gaming.length > 0 || data.steamGames && data.steamGames.length > 0 || data.speedruns && data.speedruns.length > 0 || data.necrodancer && data.necrodancer.length > 0 ? "class=\"pad-top\"" : ""}><b>Final Fantasy XIV Online</b></h4></div>
                             <div class="grid-tight grid-middle grid-columns-2">
                                 <div class="right"><img src="${data.ff14.avatarUrl}" /></div>
                                 <div class="left">
@@ -170,6 +161,27 @@ class HomeView {
                                     ${HomeView.Encoding.htmlEncode(data.ff14.race)} ${HomeView.Encoding.htmlEncode(data.ff14.job)}<br />
                                     Level <b>${data.ff14.level}</b><br />
                                     <b>${data.ff14.achievementPoints}</b> Achievement Points
+                                </div>
+                            </div>
+                        ` : ""}
+                        ${data.d3 && data.d3.length > 0 ? /* html */`
+                            <div class="center"><h4 ${data.features.gaming.length > 0 || data.steamGames && data.steamGames.length > 0 || data.speedruns && data.speedruns.length > 0 || data.necrodancer && data.necrodancer.length > 0 || data.ff14 ? "class=\"pad-top\"" : ""}><b>Diablo III</b></h4></div>
+                            <div class="center">Level <b>${data.d3[0].level}</b> ${data.d3[0].seasonal ? "Seasonal" : ""} ${data.d3[0].hardcore ? "Hardcore" : ""} ${HomeView.Encoding.htmlEncode(data.d3[0].class)}</div>
+                            ${data.d3[0].paragon ? /* html */`
+                                <div class="center">Paragon Level <b>${data.d3[0].paragon}</b></div>
+                            ` : ""}
+                            <div class="center"><b>${data.d3[0].eliteKills}</b> Elite Kills</div>
+                        ` : ""}
+                        ${data.wow ? /* html */`
+                            <div class="center"><h4 ${data.features.gaming.length > 0 || data.steamGames && data.steamGames.length > 0 || data.speedruns && data.speedruns.length > 0 || data.necrodancer && data.necrodancer.length > 0 || data.ff14 || data.d3 && data.d3.length > 0 ? "class=\"pad-top\"" : ""}><b>World of Warcraft</b></h4></div>
+                            <div class="grid-tight grid-middle grid-columns-2">
+                                <div class="right"><img src="${data.wow.avatarUrl}" /></div>
+                                <div class="left">
+                                    ${HomeView.Encoding.htmlEncode(data.wow.title).replace(/\{name\}/, `<b>${HomeView.Encoding.htmlEncode(data.wow.name)}</b>`)}<br />
+                                    ${data.wow.guild ? HomeView.Encoding.htmlEncode(`<${data.wow.guild}>`) : ""} ${HomeView.Encoding.htmlEncode(data.wow.realm)}<br />
+                                    ${HomeView.Encoding.htmlEncode(data.wow.race)} ${HomeView.Encoding.htmlEncode(data.wow.class)}<br />
+                                    Level <b>${data.wow.level}</b><br />
+                                    <b>${data.wow.achievementPoints}</b> Achievement Points
                                 </div>
                             </div>
                         ` : ""}

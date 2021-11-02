@@ -5,6 +5,7 @@ const Blog = require("./models/blog"),
     Profile = require("./models/profile"),
     Repository = require("./models/repository"),
     Speedrun = require("./models/speedrun"),
+    SteamGame = require("./models/steamGame"),
     Track = require("./models/track");
 
 //   ###                 #             ####           #
@@ -69,6 +70,11 @@ class CacheData {
                 (async () => {
                     if (await Cache.ttl(`${process.env.REDIS_PREFIX}:soundcloud:tracks`) < 1800) {
                         await Track.cacheSoundcloud();
+                    }
+                })(),
+                (async () => {
+                    if (await Cache.ttl(`${process.env.REDIS_PREFIX}:steam:games`) < 1800) {
+                        await SteamGame.cacheGames();
                     }
                 })()
             ]);

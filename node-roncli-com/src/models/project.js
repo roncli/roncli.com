@@ -255,7 +255,7 @@ class Project {
     //                                     #                                           #
     /**
      * Loads the GitHub repository for the project.
-     * @returns {Promise} A promise that resolves when the repository has been
+     * @returns {Promise} A promise that resolves when the repository has been loaded.
      */
     async loadRepository() {
         if (!this.github.repository || !this.github.user) {
