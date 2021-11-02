@@ -28,7 +28,7 @@
         "@root/request": "1.8.0",
         "@xivapi/js": "roncli/xivapi-js#1e23375482e9a8db1d977ac510f65d2888dae2fb",
         "blizzard.js": "4.1.1",
-        "bootstrap-icons": "1.6.1",
+        "bootstrap-icons": "1.7.0",
         "compression": "1.7.4",
         "connect-redis": "6.0.0",
         "cookie-parser": "1.4.5",
