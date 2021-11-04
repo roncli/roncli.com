@@ -62,7 +62,7 @@ class MusicCategoryView {
                         <div class="panel-title rounded-top"><h1>Other Categories</h1></div>
                         <div id="tag-cloud" class="panel-body rounded-bottom" style="display: flex; flex-wrap: wrap; column-gap: 4px; row-gap: 4px; align-items: center;">
                             ${data.categories.sort((a, b) => a.category.localeCompare(b.category)).filter((c) => ["Classic", "Release", "Stripped Down", "Preview", "Remake", "B-Side"].indexOf(c.category) === -1).map((c) => /* html */`
-                                <div><a class="tag" style="font-size: ${8 + Math.min(c.tracks / 2, 16)}px;" href="/music/category/${MusicCategoryView.Encoding.attributeEncode(c.category)}">${MusicCategoryView.Encoding.htmlEncode(c.category)}</a></div>
+                                <div><a class="tag" style="font-size: ${8 + Math.min(c.tracks / 2, 16)}px;" href="/music/category/${MusicCategoryView.Encoding.attributeEncode(encodeURI(c.category))}">${MusicCategoryView.Encoding.htmlEncode(c.category)}</a></div>
                             `).join("")}
                         </div>
                     </div>
@@ -130,7 +130,7 @@ class MusicCategoryView {
                 <div class="info-panel-title rounded-top">Categories</div>
                 <div class="info-panel-list rounded-bottom">
                     ${categories.sort((a, b) => b.tracks - a.tracks || a.category.localeCompare(b.category)).map((category) => /* html */`
-                        <a class="contents" href="${MusicCategoryView.Encoding.attributeEncode(`/music/category/${encodeURI(category.category)}`)}">
+                        <a class="contents" href="/music/category/${MusicCategoryView.Encoding.attributeEncode(encodeURI(category.category))}">
                             <div class="center">${MusicCategoryView.Encoding.htmlEncode(category.category)} (${category.tracks})</div>
                         </a>
                     `).join("")}

@@ -507,6 +507,10 @@ input[type=checkbox] {
     grid-template-columns: repeat(3, 1fr);
 }
 
+.grid-columns-4-fixed {
+    grid-template-columns: repeat(4, 1fr);
+}
+
 .grid-columns-2-min {
     grid-template-columns: repeat(2, min-content);
     white-space: nowrap;

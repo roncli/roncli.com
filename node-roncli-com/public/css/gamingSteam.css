@@ -1,0 +1,26 @@
+div#steam-games-list div.game {
+    background-image: linear-gradient(to bottom, white 0, #f0f0f0 100%);
+    background-repeat: repeat-x;
+    border-radius: 8px;
+    text-align: center;
+    padding: 5px 0;
+}
+
+div#steam-games-list div.game div.title {
+    font-size: 18px;
+    padding-bottom: 1px;
+}
+
+div#steam-games-list div.game div.logo {
+    height: 89px;
+    background-size: 100%;
+}
+
+div#steam-games-list div.game:hover {
+    background-image: linear-gradient(to bottom, #576e3f 0, #384729 100%);
+}
+
+div#steam-games-list div.game:hover div {
+    color: white;
+    text-decoration: none;
+}

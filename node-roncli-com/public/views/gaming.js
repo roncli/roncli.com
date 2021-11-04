@@ -44,7 +44,7 @@ class GamingView {
                             <div class="panel-body grid-tight grid-middle grid-columns-3-min center-content">
                                 ${data.recentSteamGames.map((game) => /* html */`
                                     <div class="left" style="width: 16px;"><img src="${game.iconUrl}" alt="${GamingView.Encoding.attributeEncode(game.name)}" style="width: 16px; height: 16px;" /></div>
-                                    <div class="left"><a href="/steam/${game.appId}/${GamingView.Encoding.attributeEncode(game.name)}">${GamingView.Encoding.htmlEncode(game.name)}</a></div>
+                                    <div class="left"><a href="/steam/${game.appId}/${GamingView.Encoding.attributeEncode(encodeURI(game.name))}">${GamingView.Encoding.htmlEncode(game.name)}</a></div>
                                     <div class="right">${game.playtimeTwoWeeks} minute${game.playtimeTwoWeeks === 1 ? "" : "s"}</div>
                                 `).join("")}
                             </div>
@@ -53,7 +53,7 @@ class GamingView {
                         <div class="panel-body grid-tight grid-middle grid-columns-3-min center-content">
                             ${data.steamGames.map((game) => /* html */`
                                 <div class="left" style="width: 16px;"><img src="${game.iconUrl}" alt="${GamingView.Encoding.attributeEncode(game.name)}" style="width: 16px; height: 16px;" /></div>
-                                <div class="left"><a href="/steam/${game.appId}/${GamingView.Encoding.attributeEncode(game.name)}">${GamingView.Encoding.htmlEncode(game.name)}</a></div>
+                                <div class="left"><a href="/steam/${game.appId}/${GamingView.Encoding.attributeEncode(encodeURI(game.name))}">${GamingView.Encoding.htmlEncode(game.name)}</a></div>
                                 <div class="right">${(game.playtimeTotal / 60).toFixed(2)} hour${game.playtimeTotal === 60 ? "" : "s"}</div>
                             `).join("")}
                         </div>
@@ -73,7 +73,7 @@ class GamingView {
                             <div class="panel-body grid-tight grid-columns-4-min center-content">
                                 ${data.speedruns.map((speedrun) => /* html */`
                                     <div class="right">#${speedrun.place}</div>
-                                    <div class="left"><a href="/gaming/speedruns/${GamingView.Encoding.attributeEncode(speedrun.game)}">${GamingView.Encoding.htmlEncode(speedrun.game)}</a></div>
+                                    <div class="left"><a href="/gaming/speedruns/${GamingView.Encoding.attributeEncode(encodeURI(speedrun.gameId))}/${GamingView.Encoding.attributeEncode(encodeURI(speedrun.game))}">${GamingView.Encoding.htmlEncode(speedrun.game)}</a></div>
                                     <div class="left">${GamingView.Encoding.htmlEncode(speedrun.category)}${!speedrun.variables || speedrun.variables.length === 0 ? "" : /* html */`, ${speedrun.variables.map((variable) => GamingView.Encoding.htmlEncode(variable)).join(", ")}`}</div>
                                     <div class="right"><a href="${speedrun.url}" target="_blank">${GamingView.Time.formatTimespan(speedrun.time, 3)}</a></div>
                                 `).join("")}

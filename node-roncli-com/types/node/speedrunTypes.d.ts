@@ -1,6 +1,7 @@
 declare namespace SpeedrunTypes {
     type Speedrun = {
         game: string
+        gameId: string
         category: string
         place: number
         url: string

@@ -85,7 +85,7 @@ class BlogContentView {
                     <h3>${BlogContentView.Encoding.htmlEncode(title.title)}</h3>
                     Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
                     ${title.categories.map((c) => /* html */`
-                        <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(c)}">${BlogContentView.Encoding.htmlEncode(c)}</a>
+                        <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(encodeURI(c))}">${BlogContentView.Encoding.htmlEncode(c)}</a>
                     `).join("")}
                 </div>
                 <div class="panel-body rounded-bottom">
@@ -113,7 +113,7 @@ class BlogContentView {
                 <div class="panel-title rounded-top">
                     Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
                     ${title.categories.map((c) => /* html */`
-                        <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(c)}">${BlogContentView.Encoding.htmlEncode(c)}</a>
+                        <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(encodeURI(c))}">${BlogContentView.Encoding.htmlEncode(c)}</a>
                     `).join("")}
                 </div>
                 <div class="panel-body rounded-bottom">
@@ -146,7 +146,7 @@ class BlogContentView {
                     ` : ""}
                     Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
                     ${title.categories.map((c) => /* html */`
-                        <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(c)}">${BlogContentView.Encoding.htmlEncode(c)}</a>
+                        <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(encodeURI(c))}">${BlogContentView.Encoding.htmlEncode(c)}</a>
                     `).join("")}
                 </div>
                 <div class="panel-body rounded-bottom">
@@ -175,7 +175,7 @@ class BlogContentView {
                 <div class="panel-title rounded-top">
                     Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
                     ${title.categories.map((c) => /* html */`
-                        <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(c)}">${BlogContentView.Encoding.htmlEncode(c)}</a>
+                        <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(encodeURI(c))}">${BlogContentView.Encoding.htmlEncode(c)}</a>
                     `).join("")}
                 </div>
                 <div class="panel-body rounded-bottom">
@@ -204,7 +204,7 @@ class BlogContentView {
                 <div class="panel-title rounded-top">
                     Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
                     ${title.categories.map((c) => /* html */`
-                        <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(c)}">${BlogContentView.Encoding.htmlEncode(c)}</a>
+                        <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(encodeURI(c))}">${BlogContentView.Encoding.htmlEncode(c)}</a>
                     `).join("")}
                 </div>
                 <div class="panel-body">
@@ -238,7 +238,7 @@ class BlogContentView {
                 <div class="panel-title rounded-top">
                     Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
                     ${title.categories.map((c) => /* html */`
-                        <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(c)}">${BlogContentView.Encoding.htmlEncode(c)}</a>
+                        <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(encodeURI(c))}">${BlogContentView.Encoding.htmlEncode(c)}</a>
                     `).join("")}
                 </div>
                 <div class="panel-body rounded-bottom">
@@ -268,7 +268,7 @@ class BlogContentView {
                     <h3>${BlogContentView.Encoding.htmlEncode(content.track_name)}</h3>
                     Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
                     ${title.categories.map((c) => /* html */`
-                        <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(c)}">${BlogContentView.Encoding.htmlEncode(c)}</a>
+                        <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(encodeURI(c))}">${BlogContentView.Encoding.htmlEncode(c)}</a>
                     `).join("")}
                 </div>
                 <div class="panel-body">
@@ -305,7 +305,7 @@ class BlogContentView {
                     ` : ""}
                     Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
                     ${title.categories.map((c) => /* html */`
-                        <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(c)}">${BlogContentView.Encoding.htmlEncode(c)}</a>
+                        <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(encodeURI(c))}">${BlogContentView.Encoding.htmlEncode(c)}</a>
                     `).join("")}
                 </div>
                 <div class="panel-body rounded-bottom">
@@ -333,7 +333,7 @@ class BlogContentView {
                 <div class="panel-title rounded-top">
                     Posted <time class="local" datetime="${new Date(title.published)}"></time><br />
                     ${title.categories.map((c) => /* html */`
-                        <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(c)}">${BlogContentView.Encoding.htmlEncode(c)}</a>
+                        <a class="tag" href="/blog/category/${BlogContentView.Encoding.attributeEncode(encodeURI(c))}">${BlogContentView.Encoding.htmlEncode(c)}</a>
                     `).join("")}
                 </div>
                 <div class="panel-body rounded-bottom">

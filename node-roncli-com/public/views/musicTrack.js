@@ -60,7 +60,7 @@ class MusicTrackView {
                         <h1>${MusicTrackView.Encoding.htmlEncode(data.track.title)}</h1>
                         Released <time class="date" datetime="${new Date(data.track.publishDate)}"></time><br />
                         ${data.track.tagList.map((c) => /* html */`
-                            <a class="tag" href="/music/category/${MusicTrackView.Encoding.attributeEncode(c)}">${MusicTrackView.Encoding.htmlEncode(c)}</a>
+                            <a class="tag" href="/music/category/${MusicTrackView.Encoding.attributeEncode(encodeURI(c))}">${MusicTrackView.Encoding.htmlEncode(c)}</a>
                         `).join("")}
                     </div>
                     <div class="panel-body center">
@@ -177,7 +177,7 @@ class MusicTrackView {
                         <li><a href="/">Home</a></li>
                         <li><a href="/music">Music</a></li>
                         ${data.category ? /* html */`
-                            <li><a href="/music/category/${MusicTrackView.Encoding.attributeEncode(data.category)}">${MusicTrackView.Encoding.htmlEncode(data.category)}</a></li>
+                            <li><a href="/music/category/${MusicTrackView.Encoding.attributeEncode(encodeURI(data.category))}">${MusicTrackView.Encoding.htmlEncode(data.category)}</a></li>
                         ` : ""}
                         <li>
                     </ul>
@@ -216,7 +216,7 @@ class MusicTrackView {
                 <div class="info-panel-title rounded-top">Categories</div>
                 <div class="info-panel-list rounded-bottom">
                     ${categories.sort((a, b) => b.tracks - a.tracks || a.category.localeCompare(b.category)).map((category) => /* html */`
-                        <a class="contents" href="/music/category/${MusicTrackView.Encoding.attributeEncode(category.category)}">
+                        <a class="contents" href="/music/category/${MusicTrackView.Encoding.attributeEncode(encodeURI(category.category))}">
                             <div class="center">${MusicTrackView.Encoding.htmlEncode(category.category)} (${category.tracks})</div>
                         </a>
                     `).join("")}

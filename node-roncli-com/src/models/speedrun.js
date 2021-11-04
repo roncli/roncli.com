@@ -4,6 +4,7 @@
  */
 
 const Cache = require("@roncli/node-redis").Cache,
+    HashCache = require("@roncli/node-redis").HashCache,
     Log = require("@roncli/node-application-insights-logger"),
     SortedSetCache = require("@roncli/node-redis").SortedSetCache,
     SpeedrunCom = require("../speedrun.com");
@@ -36,8 +37,23 @@ class Speedrun {
         // Get the speedruns from speedrun.com.
         const speedrunData = await SpeedrunCom.getSpeedruns();
 
+        // Get the games.
+        /** @type {{[x: string]: {name: string, runs: any[]}}} */
+        const speedrunsByGame = {};
+
+        speedrunData.forEach((speedrun) => {
+            if (!speedrunsByGame[speedrun.game.data.id]) {
+                speedrunsByGame[speedrun.game.data.id] = {
+                    name: speedrun.game.data.names.international,
+                    runs: []
+                };
+            }
+
+            speedrunsByGame[speedrun.game.data.id].runs.push(speedrun);
+        });
+
         // Get the unique games.
-        const games = [...new Set(speedrunData.map((s) => s.run.game))];
+        const games = Object.keys(speedrunsByGame);
 
         // Get variables for the games.
         /** @type {{[x: string]: SpeedrunTypes.VariableData[]}} */
@@ -78,6 +94,7 @@ class Speedrun {
             score: speedrun.place * 1000000 + speedrun.run.times.primary_t,
             value: {
                 game: speedrun.game.data.names.international,
+                gameId: speedrun.game.data.id,
                 category: speedrun.category.data.name,
                 place: speedrun.place,
                 url: speedrun.run.weblink,
@@ -114,30 +131,76 @@ class Speedrun {
 
         await Promise.all([
             SortedSetCache.add(`${process.env.REDIS_PREFIX}:speedrun.com:speedruns`, speedruns, expire),
-            Cache.add(`${process.env.REDIS_PREFIX}:speedrun.com:games`, games, expire)
+            HashCache.add(`${process.env.REDIS_PREFIX}:speedrun.com:games`, Object.keys(speedrunsByGame).map((id) => ({
+                key: id,
+                value: {
+                    name: speedrunsByGame[id].name,
+                    runs: speedrunsByGame[id].runs.map((run) => ({
+                        game: run.game.data.names.international,
+                        gameId: run.game.data.id,
+                        category: run.category.data.name,
+                        place: run.place,
+                        url: run.run.weblink,
+                        video: run.run.videos && run.run.videos.links && run.run.videos.links[0] && run.run.videos.links[0].uri || void 0,
+                        date: new Date(run.run.date),
+                        time: run.run.times.primary_t,
+                        variables: run.run.values ? Object.keys(run.run.values).map((value) => {
+                            const data = variables[run.run.game];
+
+                            if (!data) {
+                                return void 0;
+                            }
+
+                            const variable = data.find((d) => d.id === value);
+
+                            if (!variable) {
+                                return void 0;
+                            }
+
+                            const variableValue = variable.values.values[run.run.values[value]];
+
+                            if (!variableValue) {
+                                return void 0;
+                            }
+
+                            return variableValue.label;
+                        }).filter((v) => v) : []
+                    }))
+                }
+            })))
         ]);
     }
 
     //              #     ##
     //              #    #  #
-    //  ###   ##   ###   #      ###  # #    ##    ###
-    // #  #  # ##   #    # ##  #  #  ####  # ##  ##
-    //  ##   ##     #    #  #  # ##  #  #  ##      ##
-    // #      ##     ##   ###   # #  #  #   ##   ###
+    //  ###   ##   ###   #      ###  # #    ##
+    // #  #  # ##   #    # ##  #  #  ####  # ##
+    //  ##   ##     #    #  #  # ##  #  #  ##
+    // #      ##     ##   ###   # #  #  #   ##
     //  ###
     /**
-     * Gets a list of speedrun games.
-     * @returns {Promise<string[]>} A promise that returns the games.}
+     * Gets a speedrun game.
+     * @param {string} id The game ID.
+     * @returns {Promise<{name: string, runs: Speedrun[]}>} A promise that returns the speedrun game's data.
      */
-    static async getGames() {
+    static async getGame(id) {
         try {
             if (!await Cache.exists([`${process.env.REDIS_PREFIX}:speedrun.com:games`])) {
                 await Speedrun.cacheSpeedruns();
             }
 
-            return await Cache.get(`${process.env.REDIS_PREFIX}:speedrun.com:games`);
+            const data = await HashCache.get(`${process.env.REDIS_PREFIX}:speedrun.com:games`, id);
+
+            if (!data) {
+                return void 0;
+            }
+
+            return {
+                name: data.name,
+                runs: data.runs.map((s) => new Speedrun(s))
+            };
         } catch (err) {
-            Log.error("There was an error while getting speedruns.", {err});
+            Log.error("There was an error while getting a speedrun game.", {err});
             return void 0;
         }
     }
@@ -180,6 +243,7 @@ class Speedrun {
      */
     constructor(data) {
         this.game = data.game;
+        this.gameId = data.gameId;
         this.category = data.category;
         this.place = data.place;
         this.url = data.url;

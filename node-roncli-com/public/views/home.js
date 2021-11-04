@@ -128,7 +128,7 @@ class HomeView {
                             <div class="grid-tight grid-middle" style="grid-template-columns: 16px auto auto;">
                                 ${data.steamGames.map((game) => /* html */`
                                     <div class="left" style="width: 16px;"><img src="${game.iconUrl}" alt="${HomeView.Encoding.attributeEncode(game.name)}" style="width: 16px; height: 16px;"></div>
-                                    <div class="left"><a href="/steam/${game.appId}/${HomeView.Encoding.attributeEncode(game.name)}">${HomeView.Encoding.htmlEncode(game.name)}</a></div>
+                                    <div class="left"><a href="/steam/${game.appId}/${HomeView.Encoding.attributeEncode(encodeURI(game.name))}">${HomeView.Encoding.htmlEncode(game.name)}</a></div>
                                     <div class="right">${game.playtimeTwoWeeks} minute${game.playtimeTwoWeeks === 1 ? "" : "s"}</div>
                                 `).join("")}
                             </div>
@@ -137,7 +137,7 @@ class HomeView {
                             <div class="center"><h4 ${data.features.gaming.length > 0 || data.steamGames && data.steamGames.length > 0 ? "class=\"pad-top\"" : ""}><b>Speedrun Records</b></h4></div>
                             <div class="grid-tight grid-columns-2">
                                 ${data.speedruns.map((speedrun) => /* html */`
-                                    <div class="left">#${speedrun.place} <a href="/gaming/speedruns/${HomeView.Encoding.attributeEncode(speedrun.game)}">${HomeView.Encoding.htmlEncode(speedrun.game)}</a> ${HomeView.Encoding.htmlEncode(speedrun.category)}${!speedrun.variables || speedrun.variables.length === 0 ? "" : /* html */`, ${speedrun.variables.map((variable) => HomeView.Encoding.htmlEncode(variable)).join(", ")}`}</div>
+                                    <div class="left">#${speedrun.place} <a href="/gaming/speedruns/${HomeView.Encoding.attributeEncode(encodeURI(speedrun.gameId))}/${HomeView.Encoding.attributeEncode(encodeURI(speedrun.game))}">${HomeView.Encoding.htmlEncode(speedrun.game)}</a> ${HomeView.Encoding.htmlEncode(speedrun.category)}${!speedrun.variables || speedrun.variables.length === 0 ? "" : /* html */`, ${speedrun.variables.map((variable) => HomeView.Encoding.htmlEncode(variable)).join(", ")}`}</div>
                                     <div class="right"><a href="${speedrun.url}" target="_blank">${HomeView.Time.formatTimespan(speedrun.time, 3)}</a></div>
                                 `).join("")}
                             </div>

@@ -51,7 +51,7 @@ class BlogCategoryView {
                     <div class="panel-title rounded-top"><h1>Categories</h1></div>
                     <div id="tag-cloud" class="top-only panel-body" style="display: flex; flex-wrap: wrap; column-gap: 4px; row-gap: 4px; align-items: center;">
                         ${data.categories.sort((a, b) => a.category.localeCompare(b.category)).map((c) => /* html */`
-                            <div ${c.posts >= cutoff ? "class=\"top\"" : ""}><a class="tag" style="font-size: ${8 + Math.min(c.posts / 2, 16)}px;" href="/blog/category/${BlogCategoryView.Encoding.attributeEncode(c.category)}">${BlogCategoryView.Encoding.htmlEncode(c.category)}</a></div>
+                            <div ${c.posts >= cutoff ? "class=\"top\"" : ""}><a class="tag" style="font-size: ${8 + Math.min(c.posts / 2, 16)}px;" href="/blog/category/${BlogCategoryView.Encoding.attributeEncode(encodeURI(c.category))}">${BlogCategoryView.Encoding.htmlEncode(c.category)}</a></div>
                         `).join("")}
                     </div>
                     <div class="panel-body rounded-bottom center">
@@ -98,7 +98,7 @@ class BlogCategoryView {
                 <div class="info-panel-title rounded-top">Categories</div>
                 <div class="info-panel-list rounded-bottom">
                     ${categories.sort((a, b) => b.posts - a.posts || a.category.localeCompare(b.category)).map((category) => /* html */`
-                        <a class="contents" href="${BlogCategoryView.Encoding.attributeEncode(`/blog/category/${encodeURI(category.category)}`)}">
+                        <a class="contents" href="/blog/category/${BlogCategoryView.Encoding.attributeEncode(encodeURI(category.category))}">
                             <div class="center">${BlogCategoryView.Encoding.htmlEncode(category.category)} (${category.posts})</div>
                         </a>
                     `).join("")}

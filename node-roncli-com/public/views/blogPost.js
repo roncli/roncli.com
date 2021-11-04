@@ -161,7 +161,7 @@ class BlogPostView {
                         <li><a href="/">Home</a></li>
                         <li><a href="/blog">Blog</a></li>
                         ${category ? /* html */`
-                            <li><a href="/blog/category/${BlogPostView.Encoding.attributeEncode(category)}">Blog</a></li>
+                            <li><a href="/blog/category/${BlogPostView.Encoding.attributeEncode(encodeURI(category))}">Blog</a></li>
                         ` : ""}
                         <li>${BlogPostView.Encoding.htmlEncode(title.title)}</li>
                     </ul>
@@ -177,7 +177,7 @@ class BlogPostView {
                 <div class="info-panel-title rounded-top">Categories</div>
                 <div class="info-panel-list rounded-bottom">
                     ${categories.sort((a, b) => b.posts - a.posts || a.category.localeCompare(b.category)).map((cat) => /* html */`
-                        <a class="contents" href="${BlogPostView.Encoding.attributeEncode(`/blog/category/${encodeURI(cat.category)}`)}">
+                        <a class="contents" href="/blog/category/${BlogPostView.Encoding.attributeEncode(encodeURI(cat.category))}">
                             <div class="center">${BlogPostView.Encoding.htmlEncode(cat.category)} (${cat.posts})</div>
                         </a>
                     `).join("")}

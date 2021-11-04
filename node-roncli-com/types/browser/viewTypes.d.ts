@@ -166,7 +166,17 @@ declare namespace ViewTypes {
             date: Date
         }[]
     }
-    
+
+    type GamingSteamGamesViewParameters = {
+        games: SteamGame[]
+    }
+
+    type GamingSteamViewParameters = {
+        steamGames: SteamGame[]
+        count: number
+        pageSize: number
+    }
+
     type GamingViewParameters = {
         page: Page
         recentSteamGames: SteamGame[]

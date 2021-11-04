@@ -78,6 +78,29 @@ class SteamGame {
         ]);
     }
 
+    //                          #     ##
+    //                          #    #  #
+    //  ##    ##   #  #  ###   ###   #      ###  # #    ##    ###
+    // #     #  #  #  #  #  #   #    # ##  #  #  ####  # ##  ##
+    // #     #  #  #  #  #  #   #    #  #  # ##  #  #  ##      ##
+    //  ##    ##    ###  #  #    ##   ###   # #  #  #   ##   ###
+    /**
+     * Counts the number of Steam games.
+     * @returns {Promise<number>} A promise that returns the number of Steam games.
+     */
+    static async countGames() {
+        try {
+            if (!await Cache.exists([`${process.env.REDIS_PREFIX}:steam:games:total`])) {
+                await SteamGame.cacheGames();
+            }
+
+            return await SortedSetCache.count(`${process.env.REDIS_PREFIX}:steam:games:total`, "-inf", "+inf");
+        } catch (err) {
+            Log.error("There was an error while counting Steam games.", {err});
+            return 0;
+        }
+    }
+
     //              #
     //              #
     //  ###   ##   ###
@@ -204,5 +227,7 @@ class SteamGame {
         [this.schema, this.achievements] = await Cache.get(`${process.env.REDIS_PREFIX}:steam:achievements:${this.appId}`);
     }
 }
+
+SteamGame.pageSize = 16;
 
 module.exports = SteamGame;

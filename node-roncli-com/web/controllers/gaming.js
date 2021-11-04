@@ -58,7 +58,7 @@ class Gaming extends RouterBase {
      * @returns {Promise} A promise that resolves when the request has been processed.
      */
     static async get(req, res) {
-        const [user, page, recentSteamGames, steamGames, speedruns, necrodancer, ff14, d3, wow] = await Promise.all([
+        const [user, page, {recentSteamGames, steamGames}, speedruns, necrodancer, ff14, d3, wow] = await Promise.all([
             User.getCurrent(req),
             (async () => {
                 const result = await Page.getByPath(req.path);
@@ -68,8 +68,12 @@ class Gaming extends RouterBase {
 
                 return result;
             })(),
-            SteamGame.getRecentGames(0, 10),
-            SteamGame.getGames(0, 10),
+            (async () => {
+                const recentGames = await SteamGame.getRecentGames(0, 10),
+                    games = await SteamGame.getGames(0, 10);
+
+                return {recentSteamGames: recentGames, steamGames: games};
+            })(),
             Speedrun.getSpeedruns(0, 10),
             NecroDancer.getRuns(0, 10),
             Profile.getFF14Profile(),
