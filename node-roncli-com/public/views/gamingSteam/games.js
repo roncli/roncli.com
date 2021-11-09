@@ -31,7 +31,7 @@ class GamingSteamGamesView {
         return /* html */`
             ${data.games.map((game) => /* html */`
                 <div class="game">
-                    <a class="contents" href="/steam/${game.appId}/${GamingSteamGamesView.Encoding.attributeEncode(encodeURI(game.name))}">
+                    <a class="contents" href="/steam/${game.appId}/${GamingSteamGamesView.Encoding.slugEncode(game.name)}">
                         <div class="title">${GamingSteamGamesView.Encoding.htmlEncode(game.name)}</div>
                         <div class="logo" style="background-image: url(${game.logoUrl});"></div>
                         <div class="time">${(game.playtimeTotal / 60).toFixed(2)} hour${game.playtimeTotal === 60 ? "" : "s"}</div>

@@ -56,6 +56,22 @@ class Encoding {
     static jsEncode(str) {
         return str && str.replace(/"/gm, "\\\"") || "";
     }
+
+    //        ##                ####                       #
+    //         #                #                          #
+    //  ###    #    #  #   ###  ###   ###    ##    ##    ###   ##
+    // ##      #    #  #  #  #  #     #  #  #     #  #  #  #  # ##
+    //   ##    #    #  #   ##   #     #  #  #     #  #  #  #  ##
+    // ###    ###    ###  #     ####  #  #   ##    ##    ###   ##
+    //                     ###
+    /**
+     * Slug-encodes a string.
+     * @param {*} str The string.
+     * @returns {string} The encoded string.
+     */
+    static slugEncode(str) {
+        return str && str.replace(/[^a-zA-Z0-9]/g, "-").replace(/-+/g, "-").replace(/^-/, "").replace(/-$/, "").toLowerCase() || "";
+    }
 }
 
 if (typeof module === "undefined") {
