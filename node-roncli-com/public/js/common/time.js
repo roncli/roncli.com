@@ -103,6 +103,25 @@ class Time {
         }
     }
 
+    //   #                            #     ##    #                      ###    #
+    //  # #                           #    #  #   #                       #
+    //  #     ##   ###   # #    ###  ###    #    ###    ##    ###  # #    #    ##    # #    ##
+    // ###   #  #  #  #  ####  #  #   #      #    #    # ##  #  #  ####   #     #    ####  # ##
+    //  #    #  #  #     #  #  # ##   #    #  #   #    ##    # ##  #  #   #     #    #  #  ##
+    //  #     ##   #     #  #   # #    ##   ##     ##   ##    # #  #  #   #    ###   #  #   ##
+    /**
+     * Formats Steam time to days, hours, and minutes.
+     * @param {number} totalMinutes The number of minutes.
+     * @returns {string} A string representing the steam time.
+     */
+    static formatSteamTime(totalMinutes) {
+        const days = Math.floor(totalMinutes / 1440),
+            hours = Math.floor(totalMinutes / 60) % 24,
+            minutes = totalMinutes % 60;
+
+        return `${days ? `${days} day${days === 1 ? "" : "s"} ` : ""}${days || hours ? `${hours} hour${hours === 1 ? "" : "s"} ` : ""}${minutes} minute${minutes === 1 ? "" : "s"}`;
+    }
+
     //   #                            #    ###    #
     //  # #                           #     #
     //  #     ##   ###   # #    ###  ###    #    ##    # #    ##    ###   ###    ###  ###

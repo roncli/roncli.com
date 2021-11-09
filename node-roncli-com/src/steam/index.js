@@ -1,6 +1,7 @@
 /**
  * @typedef {{name: string, defaultvalue: number, displayName: string, hidden: number, description: string, icon: string, icongray: string}} SteamAPI.Achievement
  * @typedef {Awaited<ReturnType<import("steamapi")["getUserOwnedGames"]>>[number]} SteamAPI.Game
+ * @typedef {Awaited<ReturnType<import("steamapi")["getGameDetails"]>>} SteamAPI.GameDetails
  * @typedef {Awaited<ReturnType<import("steamapi")["getUserAchievements"]>>} SteamAPI.PlayerAchievements
  */
 
@@ -44,7 +45,7 @@ class Steam {
     /**
      * Gets the achievements for a game.
      * @param {number} appId The Steam app ID.
-     * @returns {Promise<[SteamAPI.Achievement, SteamAPI.PlayerAchievements]>}A promise that returns the game's achievements.
+     * @returns {Promise<[SteamAPI.Achievement[], SteamAPI.PlayerAchievements, SteamAPI.GameDetails]>}A promise that returns the game's achievements.
      */
     static getGameAchievements(appId) {
         const steam = new SteamAPI(process.env.STEAM_API_KEY);
@@ -60,7 +61,8 @@ class Steam {
 
                 return void 0;
             })(),
-            steam.getUserAchievements(appId.toString(), process.env.STEAM_ID)
+            steam.getUserAchievements(process.env.STEAM_ID, appId.toString()),
+            steam.getGameDetails(appId.toString())
         ]);
     }
 }

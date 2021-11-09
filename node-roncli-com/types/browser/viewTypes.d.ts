@@ -309,6 +309,11 @@ declare namespace ViewTypes {
         playlist: Playlist
     }
 
+    type SteamGameViewParameters = {
+        page?: Page
+        game: SteamGame
+    }
+
     type UserViewParameters = {
         user: User
         userLinks: {

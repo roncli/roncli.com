@@ -34,13 +34,32 @@ class SteamGame {
      */
     static async cacheAchievements(appId) {
         // Retrieve achievements from Steam.
-        const achievements = await Steam.getGameAchievements(appId);
+        const [gameAchievements, playerAchievements, details] = await Steam.getGameAchievements(appId);
 
         // Save to cache.
         const expire = new Date();
         expire.setDate(expire.getDate() + 1);
 
-        await Cache.add(`${process.env.REDIS_PREFIX}:steam:achievements:${appId}`, achievements, expire);
+        const achievements = gameAchievements.map((a) => {
+            const achievement = playerAchievements.achievements.find((pa) => pa.api === a.name);
+
+            return {
+                id: a.name,
+                name: a.displayName,
+                description: a.description,
+                icon: a.icon,
+                icongray: a.icongray,
+                // TODO: Remove @ts-ignore when @types/steamapi is updated
+                // @ts-ignore
+                achieved: achievement ? achievement.achieved : false,
+                unlockTime: achievement && achievement.unlockTime ? new Date(achievement.unlockTime * 1000) : void 0
+            };
+        });
+
+        await Cache.add(`${process.env.REDIS_PREFIX}:steam:achievements:${appId}`, {
+            headerUrl: details.header_image,
+            achievements
+        }, expire);
     }
 
     //                   #            ##
@@ -205,7 +224,7 @@ class SteamGame {
         /** @type {SteamAPI.Achievement} */
         this.schema = null;
 
-        /** @type {SteamAPI.PlayerAchievements} */
+        /** @type {{headerUrl: string, achievements: {id: string, name: string, description: string, icon: string, icongray: string, achieved: boolean, unlockTime: Date}[]}} */
         this.achievements = null;
     }
 
@@ -224,7 +243,7 @@ class SteamGame {
             await SteamGame.cacheAchievements(this.appId);
         }
 
-        [this.schema, this.achievements] = await Cache.get(`${process.env.REDIS_PREFIX}:steam:achievements:${this.appId}`);
+        this.achievements = await Cache.get(`${process.env.REDIS_PREFIX}:steam:achievements:${this.appId}`);
     }
 }
 
