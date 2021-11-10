@@ -37,8 +37,8 @@ class SteamGameView {
                         <img src="${data.game.achievements.headerUrl}" />
                     </div>
                     <div class="panel-body center playtime ${data.game.achievements.achievements.length === 0 ? "rounded-bottom" : ""}">
-                        <h5>Time played: <b>${SteamGameView.Time.formatSteamTime(data.game.playtimeTotal)}</h5>
-                        <h5>Last 2 weeks: <b>${SteamGameView.Time.formatSteamTime(data.game.playtimeTwoWeeks)}</h5>
+                        <h5>Time played: <b>${SteamGameView.Time.formatSteamTime(data.game.playtimeTotal)}</b></h5>
+                        <h5>Last 2 weeks: <b>${SteamGameView.Time.formatSteamTime(data.game.playtimeTwoWeeks)}</b></h5>
                     </div>
                     ${earnedAchievements.length === 0 ? "" : /* html */`
                         <div class="panel-body ${unearnedAchievements.length === 0 ? "rounded-bottom" : ""}">
