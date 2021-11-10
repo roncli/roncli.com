@@ -57,14 +57,14 @@ class SteamGame extends RouterBase {
             user = await User.getCurrent(req);
 
         if (!isFinite(appId) || appId % 1 !== 0) {
-            Common.notFound(req, res, user);
+            await Common.notFound(req, res, user);
             return;
         }
 
         const game = await SteamGameModel.get(appId);
 
         if (!game) {
-            Common.notFound(req, res, user);
+            await Common.notFound(req, res, user);
             return;
         }
 

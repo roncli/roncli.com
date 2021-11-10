@@ -4,24 +4,25 @@
  */
 
 const Common = require("../includes/common"),
-    GamingSpeedrunsView = require("../../public/views/gamingSpeedruns"),
+    SpeedrunGameView = require("../../public/views/speedrunGame"),
+    Page = require("../../src/models/page"),
     RouterBase = require("hot-router").RouterBase,
     Speedrun = require("../../src/models/speedrun"),
     User = require("../../src/models/user");
 
-//   ###                   #                   ###                            #
-//  #   #                                     #   #                           #
-//  #       ###   ## #    ##    # ##    ## #  #      # ##    ###    ###    ## #  # ##   #   #  # ##    ###
-//  #          #  # # #    #    ##  #  #  #    ###   ##  #  #   #  #   #  #  ##  ##  #  #   #  ##  #  #
-//  #  ##   ####  # # #    #    #   #   ##        #  ##  #  #####  #####  #   #  #      #   #  #   #   ###
-//  #   #  #   #  # # #    #    #   #  #      #   #  # ##   #      #      #  ##  #      #  ##  #   #      #
-//   ###    ####  #   #   ###   #   #   ###    ###   #       ###    ###    ## #  #       ## #  #   #  ####
-//                                     #   #         #
-//                                      ###          #
+//   ###                            #                        ###
+//  #   #                           #                       #   #
+//  #      # ##    ###    ###    ## #  # ##   #   #  # ##   #       ###   ## #    ###
+//   ###   ##  #  #   #  #   #  #  ##  ##  #  #   #  ##  #  #          #  # # #  #   #
+//      #  ##  #  #####  #####  #   #  #      #   #  #   #  #  ##   ####  # # #  #####
+//  #   #  # ##   #      #      #  ##  #      #  ##  #   #  #   #  #   #  # # #  #
+//   ###   #       ###    ###    ## #  #       ## #  #   #   ###    ####  #   #   ###
+//         #
+//         #
 /**
- * A class that represents the speedruns page.
+ * A class that represents the speedrun game page.
  */
-class GamingSpeedruns extends RouterBase {
+class SpeedrunGame extends RouterBase {
     //                    #
     //                    #
     // ###    ##   #  #  ###    ##
@@ -35,7 +36,7 @@ class GamingSpeedruns extends RouterBase {
     static get route() {
         const route = {...super.route};
 
-        route.path = "/gaming/speedruns";
+        route.path = "/speedrun/:id/:name";
 
         return route;
     }
@@ -54,13 +55,29 @@ class GamingSpeedruns extends RouterBase {
      * @returns {Promise} A promise that resolves when the request has been processed.
      */
     static async get(req, res) {
-        const [user, speedrunsByGame] = await Promise.all([
+        const [user, speedruns] = await Promise.all([
             User.getCurrent(req),
-            Speedrun.getSpeedrunsByGame()
+            Speedrun.getGame(req.params.id)
         ]);
 
+        if (!speedruns || !speedruns.runs || speedruns.runs.length === 0) {
+            await Common.notFound(req, res, user);
+            return;
+        }
+
+        const page = await Page.getByPath(req.path);
+        if (page) {
+            await page.loadMetadata();
+        }
+
         const data = {
-            speedrunsByGame
+            page,
+            speedruns
+        };
+
+        const info = {
+            name: speedruns.name,
+            page
         };
 
         if (req.headers["content-type"] === "application/json") {
@@ -69,25 +86,27 @@ class GamingSpeedruns extends RouterBase {
                 js: [],
                 views: [
                     {
-                        name: "GamingSpeedrunsView",
-                        path: "/views/gamingSpeedruns.js"
+                        name: "SpeedrunGameView",
+                        path: "/views/speedrunGame.js"
                     }
                 ],
-                view: "GamingSpeedrunsView",
-                data
+                view: "SpeedrunGameView",
+                data,
+                info
             });
         } else {
             res.status(200).send(await Common.page(
                 "",
                 void 0,
                 {},
-                GamingSpeedrunsView.get(data),
-                GamingSpeedrunsView.getInfo(),
+                SpeedrunGameView.get(data),
+                SpeedrunGameView.getInfo(info),
                 req,
                 user
             ));
         }
     }
+
 }
 
-module.exports = GamingSpeedruns;
+module.exports = SpeedrunGame;

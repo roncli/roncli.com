@@ -69,6 +69,7 @@ import Playlist from "../../public/js/playlist"
 import PlaylistView from "../../public/views/playlist"
 import ServerErrorView from "../../public/views/500"
 import SoundcloudView from "../../public/views/media/soundcloud"
+import SpeedrunGameView from "../../public/views/speedrunGame"
 import SteamGameView from "../../public/views/steamGame"
 import SPA from "../../public/js/spa"
 import Template from "../../public/js/common/template"
@@ -155,6 +156,7 @@ declare global {
         SC: any
         ServerErrorView: typeof ServerErrorView
         SoundcloudView: typeof SoundcloudView
+        SpeedrunGameView: typeof SpeedrunGameView
         SteamGameView: typeof SteamGameView
         SPA: typeof SPA
         Template: typeof Template

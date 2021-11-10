@@ -135,7 +135,7 @@ class Speedrun {
                 key: id,
                 value: {
                     name: speedrunsByGame[id].name,
-                    runs: speedrunsByGame[id].runs.map((run) => ({
+                    runs: speedrunsByGame[id].runs.sort((a, b) => a.place * 1000000 + a.run.times.primary_t - (b.place * 1000000 + b.run.times.primary_t)).map((run) => ({
                         game: run.game.data.names.international,
                         gameId: run.game.data.id,
                         category: run.category.data.name,

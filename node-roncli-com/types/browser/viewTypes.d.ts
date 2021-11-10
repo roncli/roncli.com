@@ -187,8 +187,8 @@ declare namespace ViewTypes {
         page: Page
         recentSteamGames: SteamGame[]
         steamGames: SteamGame[]
-        speedruns: Speedrun[],
-        necrodancer: NecroDancer[],
+        speedruns: Speedrun[]
+        necrodancer: NecroDancer[]
         ff14: ProfileTypes.FF14Data
         d3: ProfileTypes.D3Data[]
         wow: ProfileTypes.WowData
@@ -313,6 +313,19 @@ declare namespace ViewTypes {
     type PlaylistViewParameters = {
         page?: Page
         playlist: Playlist
+    }
+
+    type SpeedrunGameViewParameters = {
+        page?: Page
+        speedruns: {
+            name: string
+            runs: Speedrun[]
+        }
+    }
+
+    type SpeedrunGameViewInfoParameters = {
+        name: string
+        page?: Page
     }
 
     type SteamGameViewParameters = {
