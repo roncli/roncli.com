@@ -231,6 +231,43 @@ class Speedrun {
         }
     }
 
+    //              #     ##                        #                           ###          ##
+    //              #    #  #                       #                           #  #        #  #
+    //  ###   ##   ###    #    ###    ##    ##    ###  ###   #  #  ###    ###   ###   #  #  #      ###  # #    ##
+    // #  #  # ##   #      #   #  #  # ##  # ##  #  #  #  #  #  #  #  #  ##     #  #  #  #  # ##  #  #  ####  # ##
+    //  ##   ##     #    #  #  #  #  ##    ##    #  #  #     #  #  #  #    ##   #  #   # #  #  #  # ##  #  #  ##
+    // #      ##     ##   ##   ###    ##    ##    ###  #      ###  #  #  ###    ###     #    ###   # #  #  #   ##
+    //  ###                    #                                                       #
+    /**
+     * Gets speedruns by game.
+     * @returns {Promise<{[x: string]: Speedrun[]}>} A promise that returns the speedruns by game.
+     */
+    static async getSpeedrunsByGame() {
+        try {
+            if (!await Cache.exists([`${process.env.REDIS_PREFIX}:speedrun.com:speedruns`])) {
+                await Speedrun.cacheSpeedruns();
+            }
+
+            const speedruns = (await SortedSetCache.get(`${process.env.REDIS_PREFIX}:speedrun.com:speedruns`, 0, -1)).map((s) => new Speedrun(s));
+
+            /** @type {{[x: string]: Speedrun[]}} */
+            const speedrunsByGame = {};
+
+            speedruns.forEach((speedrun) => {
+                if (!speedrunsByGame[speedrun.game]) {
+                    speedrunsByGame[speedrun.game] = [];
+                }
+
+                speedrunsByGame[speedrun.game].push(speedrun);
+            });
+
+            return speedrunsByGame;
+        } catch (err) {
+            Log.error("There was an error while getting speedruns.", {err});
+            return void 0;
+        }
+    }
+
     //                           #                       #
     //                           #                       #
     //  ##    ##   ###    ###   ###   ###   #  #   ##   ###    ##   ###
@@ -248,7 +285,7 @@ class Speedrun {
         this.place = data.place;
         this.url = data.url;
         this.video = data.video;
-        this.date = data.date;
+        this.date = new Date(data.date);
         this.time = data.time;
         this.variables = data.variables;
     }

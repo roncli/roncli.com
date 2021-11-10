@@ -43,6 +43,7 @@ import CommentsView from "../../public/views/comment/comments"
 import DirectoryView from "../../public/views/directory"
 import Encoding from "../../public/js/common/encoding"
 import ErrorPanelView from "../../public/views/index/errorPanel"
+import GamingSpeedrunsView from "../../public/views/gamingSpeedruns"
 import GamingSteam from "../../public/js/gamingSteam"
 import GamingSteamGamesView from "../../public/views/gamingSteam/games"
 import GamingSteamView from "../../public/views/gamingSteam"
@@ -125,6 +126,7 @@ declare global {
         DirectoryView: typeof DirectoryView
         Encoding: typeof Encoding
         ErrorPanelView: typeof ErrorPanelView
+        GamingSpeedrunsView: typeof GamingSpeedrunsView
         GamingSteam: typeof GamingSteam
         GamingSteamGamesView: typeof GamingSteamGamesView
         GamingSteamView: typeof GamingSteamView

@@ -167,6 +167,12 @@ declare namespace ViewTypes {
         }[]
     }
 
+    type GamingSpeedrunsViewParameters = {
+        speedrunsByGame: {
+            [x: string]: Speedrun[]
+        }
+    }
+
     type GamingSteamGamesViewParameters = {
         games: SteamGame[]
     }
