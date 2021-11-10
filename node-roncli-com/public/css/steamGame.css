@@ -26,3 +26,8 @@ div.tooltip-content {
 div.tooltip-hover:hover div.tooltip-content {
     display: block;
 }
+
+img.achievement-image {
+    width: 64px;
+    height: 64px;
+}

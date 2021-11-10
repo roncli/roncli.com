@@ -46,7 +46,7 @@ class SteamGameView {
                             <div class="achievements">
                                 ${earnedAchievements.map((a) => /* html */`
                                     <div class="tooltip-hover">
-                                        <img src="${a.icon}" />
+                                        <img class="achievement-image" src="${a.icon}" />
                                         <div class="tooltip-content">
                                             <b>${a.name}</b>${a.description && a.description.length !== 0 ? /* html */`<br/>${a.description}` : ""}
                                         </div>
@@ -61,7 +61,7 @@ class SteamGameView {
                             <div class="achievements">
                                 ${unearnedAchievements.map((a) => /* html */`
                                     <div class="tooltip-hover">
-                                        <img src="${a.icongray}" />
+                                        <img class="achievement-image" src="${a.icongray}" />
                                         <div class="tooltip-content">
                                             <b>${a.name}</b>${a.description && a.description.length !== 0 ? /* html */`<br/>${a.description}` : ""}
                                         </div>
