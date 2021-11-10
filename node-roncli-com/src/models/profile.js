@@ -103,17 +103,17 @@ class Profile {
         }, expire);
     }
 
-    //                   #           #  #
-    //                   #           #  #
+    //                   #           #  #        #  #
+    //                   #           #  #        #  #
     //  ##    ###   ##   ###    ##   #  #   ##   #  #
-    // #     #  #  #     #  #  # ##  ####  #  #  #  #
+    // #     #  #  #     #  #  # ##  ####  #  #  ####
     // #     # ##  #     #  #  ##    ####  #  #  ####
-    //  ##    # #   ##   #  #   ##   #  #   ##   ####
+    //  ##    # #   ##   #  #   ##   #  #   ##   #  #
     /**
      * Caches the WoW data.
      * @returns {Promise} A promise that resolves when the WoW data is cached.
      */
-    static async cacheWow() {
+    static async cacheWoW() {
         // Retrieve the data from Blizzard.
         const data = await Blizzard.getWowCharacter();
 
@@ -126,7 +126,7 @@ class Profile {
 
         const achievements = await Promise.all(data.achievements.recent_events.map(async (event) => {
             if (!await HashCache.exists(`${process.env.REDIS_PREFIX}:wow:achievements`, event.achievement.id.toString())) {
-                await Profile.cacheWowAchievement(event.achievement.id);
+                await Profile.cacheWoWAchievement(event.achievement.id);
             }
 
             return HashCache.get(`${process.env.REDIS_PREFIX}:wow:achievements`, event.achievement.id.toString());
@@ -154,18 +154,18 @@ class Profile {
         }, expire);
     }
 
-    //                   #           #  #               ##         #      #                                         #
-    //                   #           #  #              #  #        #                                                #
+    //                   #           #  #        #  #   ##         #      #                                         #
+    //                   #           #  #        #  #  #  #        #                                                #
     //  ##    ###   ##   ###    ##   #  #   ##   #  #  #  #   ##   ###   ##     ##   # #    ##   # #    ##   ###   ###
-    // #     #  #  #     #  #  # ##  ####  #  #  #  #  ####  #     #  #   #    # ##  # #   # ##  ####  # ##  #  #   #
+    // #     #  #  #     #  #  # ##  ####  #  #  ####  ####  #     #  #   #    # ##  # #   # ##  ####  # ##  #  #   #
     // #     # ##  #     #  #  ##    ####  #  #  ####  #  #  #     #  #   #    ##    # #   ##    #  #  ##    #  #   #
-    //  ##    # #   ##   #  #   ##   #  #   ##   ####  #  #   ##   #  #  ###    ##    #     ##   #  #   ##   #  #    ##
+    //  ##    # #   ##   #  #   ##   #  #   ##   #  #  #  #   ##   #  #  ###    ##    #     ##   #  #   ##   #  #    ##
     /**
      * Caches a single WoW achievement.
      * @param {number} id The achievement ID.
      * @returns {Promise} A promise that resolves when the WoW achievement is cached.
      */
-    static async cacheWowAchievement(id) {
+    static async cacheWoWAchievement(id) {
         // Retrieve the data from Blizzard.
         const data = await Blizzard.getWowAchievement(id);
 
@@ -175,6 +175,58 @@ class Profile {
 
         await HashCache.add(`${process.env.REDIS_PREFIX}:wow:achievements`, [{key: id.toString(), value: data}], expire);
     }
+
+    //       ##                      ###   ####   ##               #
+    //        #                      #  #     #  #  #              #
+    //  ##    #     ##    ###  ###   #  #   ##   #      ###   ##   ###    ##
+    // #      #    # ##  #  #  #  #  #  #     #  #     #  #  #     #  #  # ##
+    // #      #    ##    # ##  #     #  #  #  #  #  #  # ##  #     #  #  ##
+    //  ##   ###    ##    # #  #     ###    ##    ##    # #   ##   #  #   ##
+    /**
+     * Clears the Diablo 3 cache.
+     * @returns {Promise} A promise that resolves when the cache has been cleared.
+     */
+    static async clearD3Cache() {
+        const blogKeys = await Cache.getAllKeys(`${process.env.REDIS_PREFIX}:d3:*`);
+        if (blogKeys.length > 0) {
+            await Cache.remove(blogKeys);
+        }
+    }
+
+    //       ##                      ####  ####   #      #    ##               #
+    //        #                      #     #     ##     ##   #  #              #
+    //  ##    #     ##    ###  ###   ###   ###    #    # #   #      ###   ##   ###    ##
+    // #      #    # ##  #  #  #  #  #     #      #    ####  #     #  #  #     #  #  # ##
+    // #      #    ##    # ##  #     #     #      #      #   #  #  # ##  #     #  #  ##
+    //  ##   ###    ##    # #  #     #     #     ###     #    ##    # #   ##   #  #   ##
+    /**
+     * Clears the FF14 cache.
+     * @returns {Promise} A promise that resolves when the cache has been cleared.
+     */
+    static async clearFF14Cache() {
+        const blogKeys = await Cache.getAllKeys(`${process.env.REDIS_PREFIX}:ff14:*`);
+        if (blogKeys.length > 0) {
+            await Cache.remove(blogKeys);
+        }
+    }
+
+    //       ##                      #  #        #  #   ##               #
+    //        #                      #  #        #  #  #  #              #
+    //  ##    #     ##    ###  ###   #  #   ##   #  #  #      ###   ##   ###    ##
+    // #      #    # ##  #  #  #  #  ####  #  #  ####  #     #  #  #     #  #  # ##
+    // #      #    ##    # ##  #     ####  #  #  ####  #  #  # ##  #     #  #  ##
+    //  ##   ###    ##    # #  #     #  #   ##   #  #   ##    # #   ##   #  #   ##
+    /**
+     * Clears the WoW cache.
+     * @returns {Promise} A promise that resolves when the cache has been cleared.
+     */
+    static async clearWoWCache() {
+        const blogKeys = await Cache.getAllKeys(`${process.env.REDIS_PREFIX}:wow:*`);
+        if (blogKeys.length > 0) {
+            await Cache.remove(blogKeys);
+        }
+    }
+
 
     //              #    ###   ####  ###                 #    #    ##
     //              #    #  #     #  #  #               # #         #
@@ -238,7 +290,7 @@ class Profile {
     static async getWowProfile() {
         try {
             if (!await Cache.exists([`${process.env.REDIS_PREFIX}:wow:profile`])) {
-                await Profile.cacheWow();
+                await Profile.cacheWoW();
             }
 
             return await Cache.get(`${process.env.REDIS_PREFIX}:wow:profile`);

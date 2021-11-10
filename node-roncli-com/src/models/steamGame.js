@@ -97,6 +97,23 @@ class SteamGame {
         ]);
     }
 
+    //       ##                       ##               #
+    //        #                      #  #              #
+    //  ##    #     ##    ###  ###   #      ###   ##   ###    ##
+    // #      #    # ##  #  #  #  #  #     #  #  #     #  #  # ##
+    // #      #    ##    # ##  #     #  #  # ##  #     #  #  ##
+    //  ##   ###    ##    # #  #      ##    # #   ##   #  #   ##
+    /**
+     * Clears the Steam cache.
+     * @returns {Promise} A promise that resolves when the cache has been cleared.
+     */
+    static async clearCache() {
+        const blogKeys = await Cache.getAllKeys(`${process.env.REDIS_PREFIX}:steam:*`);
+        if (blogKeys.length > 0) {
+            await Cache.remove(blogKeys);
+        }
+    }
+
     //                          #     ##
     //                          #    #  #
     //  ##    ##   #  #  ###   ###   #      ###  # #    ##    ###

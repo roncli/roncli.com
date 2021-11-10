@@ -5,9 +5,13 @@
 
 const Blog = require("../../src/models/blog"),
     Log = require("@roncli/node-application-insights-logger"),
+    NecroDancer = require("../../src/models/necrodancer"),
+    Profile = require("../../src/models/profile"),
     Project = require("../../src/models/project"),
     Repository = require("../../src/models/repository"),
     RouterBase = require("hot-router").RouterBase,
+    Speedrun = require("../../src/models/speedrun"),
+    SteamGame = require("../../src/models/steamGame"),
     Track = require("../../src/models/track"),
     User = require("../../src/models/user");
 
@@ -84,6 +88,16 @@ class AdminCacheAPI extends RouterBase {
                     await Blog.cacheBlog();
                     res.sendStatus(204);
                     break;
+                case "d3":
+                    await Profile.clearD3Cache();
+                    await Profile.cacheD3();
+                    res.sendStatus(204);
+                    break;
+                case "ff14":
+                    await Profile.clearFF14Cache();
+                    await Profile.cacheFF14();
+                    res.sendStatus(204);
+                    break;
                 case "github":
                     await Promise.all([Project.clearCache(), Repository.clearCache()]);
                     await Repository.cacheEvents();
@@ -92,6 +106,26 @@ class AdminCacheAPI extends RouterBase {
                 case "soundcloud":
                     await Track.clearCache();
                     await Track.cacheSoundcloud();
+                    res.sendStatus(204);
+                    break;
+                case "speedrun.com":
+                    await Speedrun.clearCache();
+                    await Speedrun.cacheSpeedruns();
+                    res.sendStatus(204);
+                    break;
+                case "steam":
+                    await SteamGame.clearCache();
+                    await SteamGame.cacheGames();
+                    res.sendStatus(204);
+                    break;
+                case "toofz":
+                    await NecroDancer.clearCache();
+                    await NecroDancer.cacheToofz();
+                    res.sendStatus(204);
+                    break;
+                case "wow":
+                    await Profile.clearWoWCache();
+                    await Profile.cacheWoW();
                     res.sendStatus(204);
                     break;
                 default:

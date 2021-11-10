@@ -49,6 +49,23 @@ class NecroDancer {
         await SortedSetCache.add(`${process.env.REDIS_PREFIX}:toofz:runs`, runs, expire);
     }
 
+    //       ##                       ##               #
+    //        #                      #  #              #
+    //  ##    #     ##    ###  ###   #      ###   ##   ###    ##
+    // #      #    # ##  #  #  #  #  #     #  #  #     #  #  # ##
+    // #      #    ##    # ##  #     #  #  # ##  #     #  #  ##
+    //  ##   ###    ##    # #  #      ##    # #   ##   #  #   ##
+    /**
+     * Clears the Toofz cache.
+     * @returns {Promise} A promise that resolves when the cache has been cleared.
+     */
+    static async clearCache() {
+        const blogKeys = await Cache.getAllKeys(`${process.env.REDIS_PREFIX}:toofz:*`);
+        if (blogKeys.length > 0) {
+            await Cache.remove(blogKeys);
+        }
+    }
+
     //              #    ###
     //              #    #  #
     //  ###   ##   ###   #  #  #  #  ###    ###
@@ -57,10 +74,10 @@ class NecroDancer {
     // #      ##     ##  #  #   ###  #  #  ###
     //  ###
     /**
-     * Gets a list of speedruns.
-     * @param {number} offset The speedrun to start from.
-     * @param {number} count The number of speedruns to retrieve.
-     * @returns {Promise<NecroDancer[]>} A promise that returns the speedruns.
+     * Gets a list of NecroDancer runs.
+     * @param {number} offset The run to start from.
+     * @param {number} count The number of run to retrieve.
+     * @returns {Promise<NecroDancer[]>} A promise that returns the NecroDancer runs.
      */
     static async getRuns(offset, count) {
         try {

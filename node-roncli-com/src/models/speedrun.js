@@ -171,6 +171,23 @@ class Speedrun {
         ]);
     }
 
+    //       ##                       ##               #
+    //        #                      #  #              #
+    //  ##    #     ##    ###  ###   #      ###   ##   ###    ##
+    // #      #    # ##  #  #  #  #  #     #  #  #     #  #  # ##
+    // #      #    ##    # ##  #     #  #  # ##  #     #  #  ##
+    //  ##   ###    ##    # #  #      ##    # #   ##   #  #   ##
+    /**
+     * Clears the speedrun.com cache.
+     * @returns {Promise} A promise that resolves when the cache has been cleared.
+     */
+    static async clearCache() {
+        const blogKeys = await Cache.getAllKeys(`${process.env.REDIS_PREFIX}:speedrun.com:*`);
+        if (blogKeys.length > 0) {
+            await Cache.remove(blogKeys);
+        }
+    }
+
     //              #     ##
     //              #    #  #
     //  ###   ##   ###   #      ###  # #    ##

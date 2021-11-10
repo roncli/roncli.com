@@ -53,7 +53,7 @@ class CacheData {
                 (async () => {
                     if (await Cache.ttl(`${process.env.REDIS_PREFIX}:wow:profile`) < 1800) {
                         console.log(`WoW: ${await Cache.ttl(`${process.env.REDIS_PREFIX}:wow:profile`)}`);
-                        await Profile.cacheWow();
+                        await Profile.cacheWoW();
                     }
                 })(),
                 (async () => {
