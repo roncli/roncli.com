@@ -167,6 +167,15 @@ declare namespace ViewTypes {
         }[]
     }
 
+    type GamingNecroDancerViewParameters = {
+        page: Page
+        necroDancer: NecroDancer[]
+    }
+
+    type GamingNecroDancerViewInfoParameters = {
+        page: Page
+    }
+
     type GamingSpeedrunsViewParameters = {
         speedrunsByGame: {
             [x: string]: Speedrun[]

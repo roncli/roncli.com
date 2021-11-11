@@ -81,7 +81,8 @@ body.fullscreen {
     margin-bottom: 3px;
 }
 
-#page-body #page-html, #page-body #loading {
+#page-body #page-html,
+#page-body #loading {
     grid-column: 1;
     grid-row: 3 / span 5;
 }

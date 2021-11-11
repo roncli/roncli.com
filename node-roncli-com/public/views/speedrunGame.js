@@ -110,7 +110,6 @@ class SpeedrunGameView {
             ` : ""}
         `;
     }
-
 }
 
 /** @type {typeof import("../js/common/encoding")} */
