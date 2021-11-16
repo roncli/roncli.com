@@ -39,8 +39,6 @@ services:
       MONGO_INITDB_ROOT_PASSWORD_FILE: /run/secrets/MONGO_INITDB_ROOT_PASSWORD_FILE
       USE_AZURE_FILE_STORAGE: 1
       WEB_RONCLI_PASSWORD_FILE: /run/secrets/WEB_RONCLI_PASSWORD_FILE
-    # volumes:
-    #   - /mnt/mongodb:/data/db:rw
     secrets:
       - DB_FILES_URI
       - DB_FILES_USERNAME
