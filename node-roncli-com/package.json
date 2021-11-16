@@ -20,7 +20,7 @@
     "dependencies": {
         "@editorjs/editorjs": "2.22.2",
         "@editorjs/quote": "2.4.0",
-        "@fontsource/archivo-narrow": "4.5.0",
+        "@fontsource/archivo-narrow": "4.5.1",
         "@octokit/rest": "18.12.0",
         "@roncli/node-application-insights-logger": "roncli/node-application-insights-logger#v1.0.5",
         "@roncli/node-minify": "roncli/node-minify#v1.1.1",
@@ -38,7 +38,7 @@
         "googleapis": "89.0.0",
         "hot-router": "1.0.0-beta.8",
         "html-minifier-terser": "6.0.2",
-        "monaco-editor": "0.30.0",
+        "monaco-editor": "0.30.1",
         "mongodb": "4.1.4",
         "multer": "1.4.3",
         "nodemailer": "6.7.0",
