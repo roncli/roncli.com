@@ -81,7 +81,7 @@ class Blog {
 
             Blog.DOMContentLoaded();
 
-            Blog.SPA.runTimeago();
+            await Blog.SPA.setupWidgets();
 
             return false;
         }));
@@ -129,7 +129,7 @@ class Blog {
 
             Blog.DOMContentLoaded();
 
-            Blog.SPA.runTimeago();
+            await Blog.SPA.setupWidgets();
 
             return false;
         });

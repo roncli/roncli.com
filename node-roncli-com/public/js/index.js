@@ -1,4 +1,5 @@
 /**
+ * @typedef {import("../../src/models/album")} Album
  * @typedef {import("../../types/browser/mediaTypes").Media} MediaTypes.Media
  * @typedef {import("../../src/models/user")} User
  */
@@ -48,10 +49,10 @@ class Index {
 
                             if (!matches || matches.length < 2) {
                                 // Invalid audio.
-                                throw new Error("Invalid Soundcloud track.");
+                                throw new Error("Invalid SoundCloud track.");
                             }
                             media.trackId = matches.groups.trackId;
-                            media.view = "SoundcloudView";
+                            media.view = "SoundCloudView";
 
                             const res = await fetch(`/api/soundcloud/${media.trackId}`, {
                                 method: "GET",
@@ -61,14 +62,14 @@ class Index {
                             });
 
                             if (res.status !== 200) {
-                                throw new Error("Soundcloud track not found.");
+                                throw new Error("SoundCloud track not found.");
                             }
 
                             let data;
                             try {
                                 data = await res.json();
                             } catch (err) {
-                                throw new Error("Error getting Soundcloud track.");
+                                throw new Error("Error getting SoundCloud track.");
                             }
 
                             media.title = `${data.username} - ${data.title}`;
@@ -290,6 +291,120 @@ class Index {
                 });
                 break;
         }
+    }
+
+    //               #                 ##   ##    #
+    //               #                #  #   #    #
+    //  ###    ##   ###   #  #  ###   #  #   #    ###   #  #  # #
+    // ##     # ##   #    #  #  #  #  ####   #    #  #  #  #  ####
+    //   ##   ##     #    #  #  #  #  #  #   #    #  #  #  #  #  #
+    // ###     ##     ##   ###  ###   #  #  ###   ###    ###  #  #
+    //                          #
+    /**
+     * Sets up the album for the specified element.
+     * @param {HTMLDivElement} el The element to setup the album in.
+     * @returns {Promise} A promise that resolves when the album is setup.
+     */
+    static async setupAlbum(el) {
+        const id = el.dataset.id;
+
+        if (!Index.albums[id]) {
+            const res = await fetch(`/api/album?id=${id}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (res.status !== 200) {
+                // TODO: Show loading error.
+                return;
+            }
+
+            Index.albums[id] = await res.json();
+        }
+
+        const album = Index.albums[id];
+
+        await Index.Template.loadTemplate("/views/index/album.js", "AlbumView");
+
+        el.innerHTML = window.AlbumView.get(id);
+
+        /** @type {HTMLDivElement} */
+        const img = el.querySelector("div.image");
+
+        img.style.backgroundImage = `url(${album.photos[0].url})`;
+
+        /** @type {HTMLSpanElement} */
+        const total = el.querySelector("span.total");
+
+        total.innerText = album.photos.length.toString();
+
+        /** @type {HTMLDivElement} */
+        const title = el.querySelector("div.title");
+
+        title.innerText = album.photos[0].title;
+
+        /** @type {HTMLDivElement} */
+        const description = el.querySelector("div.description");
+
+        description.innerText = album.photos[0].description;
+
+        /** @type {HTMLButtonElement} */
+        const fullscreen = el.querySelector("a.fullscreen");
+
+        fullscreen.addEventListener("click", (ev) => {
+            ev.preventDefault();
+
+            el.querySelector("div.slideshow").classList.toggle("fullscreen");
+            document.body.classList.toggle("fullscreen");
+            if (document.body.classList.contains("fullscreen")) {
+                window.scrollTo(0, 0);
+            }
+        });
+
+        /** @type {HTMLSpanElement} */
+        const num = el.querySelector("span.number");
+
+        /** @type {HTMLDivElement} */
+        const prev = el.querySelector("a.prev");
+
+        prev.addEventListener("click", (ev) => {
+            ev.preventDefault();
+
+            let current = +num.innerText - 1;
+
+            if (current < 1) {
+                current = album.photos.length;
+            }
+
+            const photo = album.photos[current - 1];
+
+            img.style.backgroundImage = `url(${photo.url})`;
+            num.innerText = current.toString();
+            title.innerText = photo.title;
+            description.innerText = photo.description;
+        });
+
+        /** @type {HTMLDivElement} */
+        const next = el.querySelector("a.next");
+
+        next.addEventListener("click", (ev) => {
+            ev.preventDefault();
+
+            let current = +num.innerText + 1;
+
+            if (current > album.photos.length) {
+                current = 1;
+            }
+
+            const photo = album.photos[current - 1];
+
+            img.style.backgroundImage = `url(${photo.url})`;
+            num.innerText = current.toString();
+            title.innerText = photo.title;
+            description.innerText = photo.description;
+        });
     }
 
     //        #                 #  #           #        ##
@@ -915,6 +1030,9 @@ class Index {
 Index.emailRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 Index.soundcloudRegex = /^https?:\/\/api\.soundcloud.com\/tracks\/(?<trackId>[0-9]+)(?:\/stream)?/;
 Index.youtubeRegex = /^https?:\/\/(?:www\.)?youtube\.com\/watch\?(?:.*&)?v=(?<videoId>[^&]*)(?:&.*)?$/;
+
+/** @type {{[x: string]: Album}} */
+Index.albums = {};
 
 Index.changeEmailSuccess = false;
 

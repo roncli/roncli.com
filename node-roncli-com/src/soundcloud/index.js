@@ -13,17 +13,17 @@ let expiration = null;
 /** @type {string} */
 let refreshToken = null;
 
-//   ###                            #          ##                      #
-//  #   #                           #           #                      #
-//  #       ###   #   #  # ##    ## #   ###     #     ###   #   #   ## #
-//   ###   #   #  #   #  ##  #  #  ##  #   #    #    #   #  #   #  #  ##
+//   ###                            #   ###    ##                      #
+//  #   #                           #  #   #    #                      #
+//  #       ###   #   #  # ##    ## #  #        #     ###   #   #   ## #
+//   ###   #   #  #   #  ##  #  #  ##  #        #    #   #  #   #  #  ##
 //      #  #   #  #   #  #   #  #   #  #        #    #   #  #   #  #   #
 //  #   #  #   #  #  ##  #   #  #  ##  #   #    #    #   #  #  ##  #  ##
 //   ###    ###    ## #  #   #   ## #   ###    ###    ###    ## #   ## #
 /**
- * A class that handles calls to Soundcloud's API.
+ * A class that handles calls to SoundCloud's API.
  */
-class Soundcloud {
+class SoundCloud {
     //                                       ###         #
     //                                        #          #
     //  ###   ##    ##    ##    ###    ###    #     ##   # #    ##   ###
@@ -114,16 +114,16 @@ class Soundcloud {
         });
 
         if (res.statusCode !== 200) {
-            throw new Error(`There was an error while getting a new access token from Soundcloud: status ${res.statusCode}`);
+            throw new Error(`There was an error while getting a new access token from SoundCloud: status ${res.statusCode}`);
         }
 
         if (!res.body) {
-            throw new Error("Soundcloud did not return any data while getting a new access token.");
+            throw new Error("SoundCloud did not return any data while getting a new access token.");
         }
 
-        Soundcloud.accessToken = res.body.access_token;
-        Soundcloud.refreshToken = res.body.refresh_token;
-        Soundcloud.expiration = new Date(new Date().getTime() + 1000 * (res.body.expires_in - 30));
+        SoundCloud.accessToken = res.body.access_token;
+        SoundCloud.refreshToken = res.body.refresh_token;
+        SoundCloud.expiration = new Date(new Date().getTime() + 1000 * (res.body.expires_in - 30));
     }
 
     //              #    ###         #
@@ -134,19 +134,19 @@ class Soundcloud {
     // #      ##     ##   #     ##   #  #   ##   #  #
     //  ###
     /**
-     * Gets an OAuth client credential token from Soundcloud.
+     * Gets an OAuth client credential token from SoundCloud.
      * @returns {Promise<string>} The token.
      */
     static async getToken() {
         if (!expiration || expiration < new Date()) {
             if (expiration) {
-                await Soundcloud.refreshAccessToken();
+                await SoundCloud.refreshAccessToken();
             } else {
-                await Soundcloud.getAccessToken();
+                await SoundCloud.getAccessToken();
             }
         }
 
-        return Soundcloud.accessToken;
+        return SoundCloud.accessToken;
     }
 
     //              #    ###                     #
@@ -157,7 +157,7 @@ class Soundcloud {
     // #      ##     ##   #    #      # #   ##   #  #  ###
     //  ###
     /**
-     * Gets the tracks from Soundcloud.
+     * Gets the tracks from SoundCloud.
      * @returns {Promise<TrackTypes.Track[]>} A promise that returns the tracks.
      */
     static async getTracks() {
@@ -166,7 +166,7 @@ class Soundcloud {
         let uri = "https://api.soundcloud.com/users/7641/tracks?limit=200&linked_partitioning=true";
 
         while (uri) {
-            const token = await Soundcloud.getToken();
+            const token = await SoundCloud.getToken();
 
             const res = await request.get({
                 uri,
@@ -177,7 +177,7 @@ class Soundcloud {
             });
 
             if (res.statusCode !== 200) {
-                throw new Error(`There was an error while getting tracks from Soundcloud: status ${res.statusCode}`);
+                throw new Error(`There was an error while getting tracks from SoundCloud: status ${res.statusCode}`);
             }
 
             if (res.body.collection && res.body.collection.length > 0) {
@@ -208,27 +208,27 @@ class Soundcloud {
                 "grant_type": "refresh_token",
                 "client_id": process.env.SOUNDCLOUD_CLIENT_ID,
                 "client_secret": process.env.SOUNDCLOUD_CLIENT_SECRET,
-                "refresh_token": Soundcloud.refreshToken
+                "refresh_token": SoundCloud.refreshToken
             },
             json: true
         });
 
         if (res.statusCode === 429) {
-            throw new Error(`Rate limit reached for Soundcloud ${res.body.errors[0].meta.rate_limit.group}, exceeded ${res.body.errors[0].meta.rate_limit.max_nr_of_requests} requests, limit resets at ${res.body.errors[0].meta.reset_time}`);
+            throw new Error(`Rate limit reached for SoundCloud ${res.body.errors[0].meta.rate_limit.group}, exceeded ${res.body.errors[0].meta.rate_limit.max_nr_of_requests} requests, limit resets at ${res.body.errors[0].meta.reset_time}`);
         }
 
         if (res.statusCode !== 200) {
-            throw new Error(`There was an error while refreshing an access token from Soundcloud: status ${res.statusCode}`);
+            throw new Error(`There was an error while refreshing an access token from SoundCloud: status ${res.statusCode}`);
         }
 
         if (!res.body) {
-            throw new Error("Soundcloud did not return any data while refreshing an access token.");
+            throw new Error("SoundCloud did not return any data while refreshing an access token.");
         }
 
-        Soundcloud.accessToken = res.body.access_token;
-        Soundcloud.refreshToken = res.body.refresh_token;
-        Soundcloud.expiration = new Date(new Date().getTime() + 1000 * (res.body.expires_in - 30));
+        SoundCloud.accessToken = res.body.access_token;
+        SoundCloud.refreshToken = res.body.refresh_token;
+        SoundCloud.expiration = new Date(new Date().getTime() + 1000 * (res.body.expires_in - 30));
     }
 }
 
-module.exports = Soundcloud;
+module.exports = SoundCloud;

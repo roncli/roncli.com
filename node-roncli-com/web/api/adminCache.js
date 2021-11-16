@@ -105,7 +105,7 @@ class AdminCacheAPI extends RouterBase {
                     break;
                 case "soundcloud":
                     await Track.clearCache();
-                    await Track.cacheSoundcloud();
+                    await Track.cacheSoundCloud();
                     res.sendStatus(204);
                     break;
                 case "speedrun.com":

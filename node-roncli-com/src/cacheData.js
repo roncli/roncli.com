@@ -78,7 +78,7 @@ class CacheData {
                 (async () => {
                     if (await Cache.ttl(`${process.env.REDIS_PREFIX}:soundcloud:tracks`) < 1800) {
                         console.log(`SoundCloud: ${await Cache.ttl(`${process.env.REDIS_PREFIX}:soundcloud:tracks`)}`);
-                        await Track.cacheSoundcloud();
+                        await Track.cacheSoundCloud();
                     }
                 })(),
                 (async () => {

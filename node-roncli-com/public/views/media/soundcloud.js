@@ -2,17 +2,17 @@
  * @typedef {import("../../../types/browser/mediaTypes").Media} MediaTypes.Media
  */
 
-//   ###                            #          ##                      #  #   #    #
-//  #   #                           #           #                      #  #   #
-//  #       ###   #   #  # ##    ## #   ###     #     ###   #   #   ## #  #   #   ##     ###   #   #
-//   ###   #   #  #   #  ##  #  #  ##  #   #    #    #   #  #   #  #  ##   # #     #    #   #  #   #
+//   ###                            #   ###    ##                      #  #   #    #
+//  #   #                           #  #   #    #                      #  #   #
+//  #       ###   #   #  # ##    ## #  #        #     ###   #   #   ## #  #   #   ##     ###   #   #
+//   ###   #   #  #   #  ##  #  #  ##  #        #    #   #  #   #  #  ##   # #     #    #   #  #   #
 //      #  #   #  #   #  #   #  #   #  #        #    #   #  #   #  #   #   # #     #    #####  # # #
 //  #   #  #   #  #  ##  #   #  #  ##  #   #    #    #   #  #  ##  #  ##   # #     #    #      # # #
 //   ###    ###    ## #  #   #   ## #   ###    ###    ###    ## #   ## #    #     ###    ###    # #
 /**
- * A class that represents the Soundcloud view.
+ * A class that represents the SoundCloud view.
  */
-class SoundcloudView {
+class SoundCloudView {
     //              #
     //              #
     //  ###   ##   ###
@@ -33,7 +33,7 @@ class SoundcloudView {
 }
 
 if (typeof module === "undefined") {
-    window.SoundcloudView = SoundcloudView;
+    window.SoundCloudView = SoundCloudView;
 } else {
-    module.exports = SoundcloudView; // eslint-disable-line no-undef
+    module.exports = SoundCloudView; // eslint-disable-line no-undef
 }

@@ -123,7 +123,7 @@ class SPA {
             }
 
             // Run timeago on the new page.
-            SPA.runTimeago();
+            await SPA.setupWidgets();
 
             // Run Twitter widgets on the new page.
             window.twttr.widgets.load();
@@ -177,18 +177,18 @@ class SPA {
         window.scrollTo(0, 0);
     }
 
-    //                   ###    #
-    //                    #
-    // ###   #  #  ###    #    ##    # #    ##    ###   ###   ##
-    // #  #  #  #  #  #   #     #    ####  # ##  #  #  #  #  #  #
-    // #     #  #  #  #   #     #    #  #  ##    # ##   ##   #  #
-    // #      ###  #  #   #    ###   #  #   ##    # #  #      ##
-    //                                                  ###
+    //               #                #  #   #       #               #
+    //               #                #  #           #               #
+    //  ###    ##   ###   #  #  ###   #  #  ##     ###   ###   ##   ###    ###
+    // ##     # ##   #    #  #  #  #  ####   #    #  #  #  #  # ##   #    ##
+    //   ##   ##     #    #  #  #  #  ####   #    #  #   ##   ##     #      ##
+    // ###     ##     ##   ###  ###   #  #  ###    ###  #      ##     ##  ###
+    //                          #                        ###
     /**
      * Sets up timeago on the page.
-     * @returns {void}
+     * @returns {Promise} A promise that resolves when the widgets are setup.
      */
-    static runTimeago() {
+    static async setupWidgets() {
         /** @type {NodeListOf<HTMLTimeElement>} */
         const timeagoEls = document.querySelectorAll("time.timeago");
 
@@ -230,6 +230,19 @@ class SPA {
                 el.classList.remove("date");
             });
         }
+
+        /** @type {NodeListOf<HTMLDivElement>} */
+        const albumEls = document.querySelectorAll("div.album");
+
+        if (albumEls.length > 0) {
+            for (const el of Array.from(albumEls)) {
+                await SPA.Index.setupAlbum(el);
+            }
+
+            albumEls.forEach((el) => {
+                el.classList.remove("album");
+            });
+        }
     }
 
     // ###    ##   #  #   ##                #                 #    #                    #           #
@@ -240,14 +253,14 @@ class SPA {
     // ###    ##   #  #   ##    ##   #  #    ##   ##   #  #    ##  ####   ##    # #   ###   ##    ###
     /**
      * Sets up the page.
-     * @returns {void}
+     * @returns {Promise} A promise that resolves when the page is setup.
      */
-    static DOMContentLoaded() {
+    static async DOMContentLoaded() {
         // Run timeago.
-        SPA.runTimeago();
+        await SPA.setupWidgets();
 
         // Setup comments to run timeago.
-        SPA.Comments.setupTimeago(SPA.runTimeago);
+        SPA.Comments.runWidgets(SPA.setupWidgets);
 
         // Setup the single page application.
         document.addEventListener("click", (ev) => {

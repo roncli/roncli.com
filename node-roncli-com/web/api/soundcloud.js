@@ -7,17 +7,17 @@ const Log = require("@roncli/node-application-insights-logger"),
     RouterBase = require("hot-router").RouterBase,
     Track = require("../../src/models/track");
 
-//   ###                            #          ##                      #    #    ####    ###
-//  #   #                           #           #                      #   # #   #   #    #
-//  #       ###   #   #  # ##    ## #   ###     #     ###   #   #   ## #  #   #  #   #    #
-//   ###   #   #  #   #  ##  #  #  ##  #   #    #    #   #  #   #  #  ##  #   #  ####     #
+//   ###                            #   ###    ##                      #    #    ####    ###
+//  #   #                           #  #   #    #                      #   # #   #   #    #
+//  #       ###   #   #  # ##    ## #  #        #     ###   #   #   ## #  #   #  #   #    #
+//   ###   #   #  #   #  ##  #  #  ##  #        #    #   #  #   #  #  ##  #   #  ####     #
 //      #  #   #  #   #  #   #  #   #  #        #    #   #  #   #  #   #  #####  #        #
 //  #   #  #   #  #  ##  #   #  #  ##  #   #    #    #   #  #  ##  #  ##  #   #  #        #
 //   ###    ###    ## #  #   #   ## #   ###    ###    ###    ## #   ## #  #   #  #       ###
 /**
- * A class that handles calls to the Soundcloud API.
+ * A class that handles calls to the SoundCloud API.
  */
-class SoundcloudAPI extends RouterBase {
+class SoundCloudAPI extends RouterBase {
     //                    #
     //                    #
     // ###    ##   #  #  ###    ##
@@ -66,9 +66,9 @@ class SoundcloudAPI extends RouterBase {
             res.status(200).json(track);
         } catch (err) {
             res.status(500).json({error: "Server error."});
-            Log.error(`An error occurred while posting to ${req.method} ${req && req.path || void 0} ${SoundcloudAPI.route.path}.`, {err});
+            Log.error(`An error occurred while posting to ${req.method} ${req && req.path || void 0} ${SoundCloudAPI.route.path}.`, {err});
         }
     }
 }
 
-module.exports = SoundcloudAPI;
+module.exports = SoundCloudAPI;

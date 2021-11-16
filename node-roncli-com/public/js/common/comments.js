@@ -9,20 +9,20 @@
  * A class of functions to handle the comments section of each page.
  */
 class Comments {
-    //               #                ###    #
-    //               #                 #
-    //  ###    ##   ###   #  #  ###    #    ##    # #    ##    ###   ###   ##
-    // ##     # ##   #    #  #  #  #   #     #    ####  # ##  #  #  #  #  #  #
-    //   ##   ##     #    #  #  #  #   #     #    #  #  ##    # ##   ##   #  #
-    // ###     ##     ##   ###  ###    #    ###   #  #   ##    # #  #      ##
-    //                          #                                    ###
+    //                   #  #   #       #               #
+    //                   #  #           #               #
+    // ###   #  #  ###   #  #  ##     ###   ###   ##   ###    ###
+    // #  #  #  #  #  #  ####   #    #  #  #  #  # ##   #    ##
+    // #     #  #  #  #  ####   #    #  #   ##   ##     #      ##
+    // #      ###  #  #  #  #  ###    ###  #      ##     ##  ###
+    //                                      ###
     /**
-     * Sets up the function to call when we want to run timeago.
-     * @param {Function} fx The function to run when we want to run timeago.
+     * Sets up the function to call when we want to setup widgets.
+     * @param {Function} fx The function to run when we want to setup widgets.
      * @returns {void}
      */
-    static setupTimeago(fx) {
-        Comments.runTimeago = fx;
+    static runWidgets(fx) {
+        Comments.setupWidgets = fx;
     }
 
     // ###    ##   #  #   ##                #                 #    #                    #           #
@@ -158,8 +158,8 @@ class Comments {
 
                 document.getElementById("comments").insertAdjacentHTML("beforeend", html);
 
-                if (Comments.runTimeago) {
-                    Comments.runTimeago();
+                if (Comments.setupWidgets) {
+                    await Comments.setupWidgets();
                 }
 
                 await Comments.editor.readOnly.toggle(false);
@@ -202,7 +202,7 @@ Comments.modal = null;
 Comments.Quote = typeof Quote === "undefined" ? require("../../../node_modules/@editorjs/quote/dist/bundle") : Quote; // eslint-disable-line no-undef
 
 /** @type {Function} */
-Comments.runTimeago = null;
+Comments.setupWidgets = null;
 
 /** @type {typeof import("../../js/common/template")} */
 // @ts-ignore

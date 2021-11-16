@@ -105,6 +105,7 @@ services:
       MINIFY_CACHE: 1
       MINIFY_ENABLED: 1
       NODE_ENV: production
+      PHOTOS_URL: https://photos.roncli.com
       PORT: 3030
       REDIS_PASSWORD_FILE: /run/secrets/REDIS_PASSWORD_FILE
       REDIS_PORT: 6379
@@ -188,6 +189,12 @@ services:
     #   driver: "gelf"
     #   options:
     #     gelf-address: "udp://localhost:12201"
+    environment:
+      PHOTOS_PASSWORD_FILE: /run/secrets/PHOTOS_PASSWORD_FILE
+      PHOTOS_USERNAME_FILE: /run/secrets/PHOTOS_USERNAME_FILE
+    secrets:
+      - PHOTOS_PASSWORD_FILE
+      - PHOTOS_USERNAME_FILE
     restart: always
     volumes:
       - certbot-conf:/etc/letsencrypt:rw
@@ -207,12 +214,41 @@ services:
   #       gelf-address: "udp://localhost:12201"
   #   environment:
   #     DOMAIN: roncli.com,ronc.li
+  #     DOMAIN: roncli.com,photos.roncli.com,ronc.li
   #     EMAIL: roncli@roncli.com
   #   restart: always
   #   volumes:
   #     - certbot-conf:/etc/letsencrypt:rw
   #     - certbot-work:/var/certbot/work:rw
   #   entrypoint: /var/certbot/start.sh
+
+  photoprism:
+    container_name: roncli-photoprism
+    build:
+      context: ./photoprism
+      args:
+        USE_AZURE_FILE_STORAGE: 0
+    networks:
+      - roncli.com-network
+    ports:
+      - "2342:2342"
+    # logging:
+    #   driver: "gelf"
+    #   options:
+    #     gelf-address: "udp://localhost:12201"
+    environment:
+      LIBRARY_URI: /run/secrets/LIBRARY_URI
+      LIBRARY_USERNAME: /run/secrets/LIBRARY_USERNAME
+      LIBRARY_PASSWORD: /run/secrets/LIBRARY_PASSWORD
+      PHOTOPRISM_ADMIN_PASSWORD_FILE: /run/secrets/PHOTOPRISM_ADMIN_PASSWORD_FILE
+      USE_AZURE_FILE_STORAGE: 0
+    secrets:
+      - LIBRARY_URI
+      - LIBRARY_USERNAME
+      - LIBRARY_PASSWORD
+      - PHOTOPRISM_ADMIN_PASSWORD_FILE
+    restart: always
+    entrypoint: /var/photoprism/start.sh
 
 networks:
   roncli.com-network:
@@ -250,10 +286,22 @@ secrets:
     file: ./secrets/GITHUB_TOKEN_FILE
   GOOGLE_API_KEY_FILE:
     file: ./secrets/GOOGLE_API_KEY_FILE
+  LIBRARY_URI:
+    file: ./secrets/LIBRARY_URI
+  LIBRARY_USERNAME:
+    file: ./secrets/LIBRARY_USERNAME
+  LIBRARY_PASSWORD:
+    file: ./secrets/LIBRARY_PASSWORD
   MONGO_INITDB_ROOT_PASSWORD_FILE:
     file: ./secrets/MONGO_INITDB_ROOT_PASSWORD_FILE
   MONGO_INITDB_ROOT_USERNAME_FILE:
     file: ./secrets/MONGO_INITDB_ROOT_USERNAME_FILE
+  PHOTOPRISM_ADMIN_PASSWORD_FILE:
+    file: ./secrets/PHOTOPRISM_ADMIN_PASSWORD_FILE
+  PHOTOS_USERNAME_FILE:
+    file: ./secrets/PHOTOS_USERNAME_FILE
+  PHOTOS_PASSWORD_FILE:
+    file: ./secrets/PHOTOS_PASSWORD_FILE
   REDIS_PASSWORD_FILE:
     file: ./secrets/REDIS_PASSWORD_FILE
   SMTP_PASSWORD_FILE:

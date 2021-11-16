@@ -1068,6 +1068,97 @@ button#fullscreen.fullscreen {
     z-index: 5;
 }
 
+div.slideshow {
+    height: 200px;
+    width: 100%;
+}
+
+div.slideshow div.slide {
+    color: white;
+    text-shadow: black 1px 1px 2px;
+}
+
+div.slideshow div.slide {
+    position: relative;
+    height: 200px;
+    width: 100%;
+    border-radius: 5px;
+    background-color: black;
+    text-align: center;
+}
+
+div.slideshow div.image {
+    height: 100%;
+    width: 100%;
+    border-radius: 5px;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+div.slideshow div.count {
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+}
+
+div.slideshow div.title {
+    position: absolute;
+    top: 5px;
+    width: 100%;
+}
+
+div.slideshow div.description {
+    position: absolute;
+    bottom: 20px;
+    width: 100%;
+}
+
+div.slideshow a.fullscreen {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 24px;
+}
+
+div.slideshow a.prev {
+    display: flex;
+    position: absolute;
+    top: 75px;
+    bottom: 75px;
+    left: 5px;
+    align-items: center;
+    font-size: 24px;
+}
+
+div.slideshow a.next {
+    display: flex;
+    position: absolute;
+    top: 75px;
+    bottom: 75px;
+    right: 5px;
+    align-items: center;
+    font-size: 24px;
+}
+
+div.slideshow.fullscreen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 10;
+}
+
+div.slideshow.fullscreen div.slide {
+    height: 100%;
+    border-radius: 0;
+}
+
+div.slideshow.fullscreen div.image {
+    border-radius: 0;
+}
+
 .breadcrumb {
     padding: 2px;
     margin: 0;

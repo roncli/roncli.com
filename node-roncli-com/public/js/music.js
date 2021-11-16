@@ -65,7 +65,7 @@ class Music {
 
             Music.DOMContentLoaded();
 
-            Music.SPA.runTimeago();
+            await Music.SPA.setupWidgets();
 
             return false;
         }));
@@ -113,7 +113,7 @@ class Music {
 
             Music.DOMContentLoaded();
 
-            Music.SPA.runTimeago();
+            await Music.SPA.setupWidgets();
 
             return false;
         });

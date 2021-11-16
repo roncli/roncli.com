@@ -60,7 +60,8 @@ class Admin extends RouterBase {
         }
 
         const data = {
-            commentsToModerate: (await Comment.getUnmoderated()).length
+            commentsToModerate: (await Comment.getUnmoderated()).length,
+            photosURL: process.env.PHOTOS_URL
         };
 
         if (req.headers["content-type"] === "application/json") {

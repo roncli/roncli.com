@@ -25,6 +25,7 @@ import AdminRedirectsView from "../../public/views/adminRedirects"
 import AdminView from "../../public/views/admin"
 import AdminYouTube from "../../public/js/adminYouTube"
 import AdminYouTubeView from "../../public/views/adminYouTube"
+import AlbumView from "../../public/views/index/album"
 import Blog from "../../public/js/blog"
 import BlogCategoryView from "../../public/views/blogCategory"
 import BlogContentView from "../../public/views/blog/content"
@@ -69,7 +70,7 @@ import PaginationPageView from "../../public/views/pagination/page"
 import Playlist from "../../public/js/playlist"
 import PlaylistView from "../../public/views/playlist"
 import ServerErrorView from "../../public/views/500"
-import SoundcloudView from "../../public/views/media/soundcloud"
+import SoundCloudView from "../../public/views/media/soundcloud"
 import SpeedrunGameView from "../../public/views/speedrunGame"
 import SteamGameView from "../../public/views/steamGame"
 import SPA from "../../public/js/spa"
@@ -110,6 +111,7 @@ declare global {
         AdminView: typeof AdminView
         AdminYouTube: typeof AdminYouTube
         AdminYouTubeView: typeof AdminYouTubeView
+        AlbumView: typeof AlbumView
         Blog: typeof Blog
         BlogContentView: typeof BlogContentView
         BlogPostView: typeof BlogPostView
@@ -157,7 +159,7 @@ declare global {
         require: any
         SC: any
         ServerErrorView: typeof ServerErrorView
-        SoundcloudView: typeof SoundcloudView
+        SoundCloudView: typeof SoundCloudView
         SpeedrunGameView: typeof SpeedrunGameView
         SteamGameView: typeof SteamGameView
         SPA: typeof SPA

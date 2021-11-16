@@ -62,6 +62,7 @@ declare namespace ViewTypes {
 
     type AdminViewParameters = {
         commentsToModerate: number
+        photosURL: string
     }
 
     type AdminYouTubeViewParameters = {

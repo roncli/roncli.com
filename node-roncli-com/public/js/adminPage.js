@@ -26,13 +26,11 @@ class AdminPage {
         await AdminPage.Template.loadTemplate("/js/monaco-editor/vs/loader.js", "require");
 
         window.require.config({paths: {vs: "/js/monaco-editor/vs"}});
-        window.require(["vs/editor/editor.main"], () => {
+        window.require(["vs/editor/editor.main"], async () => {
             const el = document.getElementById("html"),
                 html = el.dataset.html;
 
             el.removeAttribute("data-html");
-
-            document.getElementById("preview").innerHTML = html;
 
             AdminPage.editor = window.monaco.editor.create(el, {
                 value: html,
@@ -55,12 +53,16 @@ class AdminPage {
                     AdminPage.previewTimeout = void 0;
                 }
 
-                AdminPage.previewTimeout = setTimeout(() => {
+                AdminPage.previewTimeout = setTimeout(async () => {
                     if (AdminPage.editor) {
                         document.getElementById("preview").innerHTML = AdminPage.editor.getValue();
+                        await AdminPage.SPA.setupWidgets();
                     }
                 }, 1000);
             });
+
+            document.getElementById("preview").innerHTML = html;
+            await AdminPage.SPA.setupWidgets();
         });
 
         AdminPage.Sortable.create(document.getElementById("child-pages"), {

@@ -107,7 +107,7 @@ class AdminFiles {
 
             AdminFiles.DOMContentLoaded();
 
-            AdminFiles.SPA.runTimeago();
+            await AdminFiles.SPA.setupWidgets();
         });
 
         document.getElementById("upload").addEventListener("click", async () => {
@@ -155,7 +155,7 @@ class AdminFiles {
 
             AdminFiles.DOMContentLoaded();
 
-            AdminFiles.SPA.runTimeago();
+            await AdminFiles.SPA.setupWidgets();
         });
     }
 }

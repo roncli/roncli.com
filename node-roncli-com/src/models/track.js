@@ -6,7 +6,7 @@
 const Cache = require("@roncli/node-redis").Cache,
     Log = require("@roncli/node-application-insights-logger"),
     SortedSetCache = require("@roncli/node-redis").SortedSetCache,
-    Soundcloud = require("../soundcloud"),
+    SoundCloud = require("../soundcloud"),
 
     tagRegex = /[^\s"]+|"[^"]*"/g;
 
@@ -18,7 +18,7 @@ const Cache = require("@roncli/node-redis").Cache,
 //    #    #      #   #  #   #  #  #
 //    #    #       ####   ###   #   #
 /**
- * A class that represents a Soundcloud track.
+ * A class that represents a SoundCloud track.
  */
 class Track {
     //                   #            ##                        #        ##                   #
@@ -28,13 +28,13 @@ class Track {
     // #     # ##  #     #  #  ##    #  #  #  #  #  #  #  #  #  #  #      #    #  #  #  #  #  #
     //  ##    # #   ##   #  #   ##    ##    ##    ###  #  #   ###   ##   ###    ##    ###   ###
     /**
-     * Caches the tracks from Soundcloud.
+     * Caches the tracks from SoundCloud.
      * @returns {Promise} A promise that resolves when the tracks are cached.
      */
-    static async cacheSoundcloud() {
-        // Retrieve all the tracks from Soundcloud.
+    static async cacheSoundCloud() {
+        // Retrieve all the tracks from SoundCloud.
         /** @type {{score: number, value:{track: TrackTypes.TrackInfo, publishDate: Date, tagList: string[]}}[]} */
-        const tracks = (await Soundcloud.getTracks()).map((track) => {
+        const tracks = (await SoundCloud.getTracks()).map((track) => {
             const publishDate = track.release_year ? new Date(track.release_year, track.release_month ? track.release_month - 1 : 0, track.release_day || 1) : new Date(track.created_at);
             return {
                 score: publishDate.getTime(),
@@ -117,7 +117,7 @@ class Track {
     static async countTracks() {
         try {
             if (!await Cache.exists([`${process.env.REDIS_PREFIX}:soundcloud:tracks`])) {
-                await Track.cacheSoundcloud();
+                await Track.cacheSoundCloud();
             }
 
             return await SortedSetCache.count(`${process.env.REDIS_PREFIX}:soundcloud:tracks`, "-inf", "+inf");
@@ -142,7 +142,7 @@ class Track {
     static async countTracksByCategory(category) {
         try {
             if (!await Cache.exists([`${process.env.REDIS_PREFIX}:soundcloud:tag:${category}`])) {
-                await Track.cacheSoundcloud();
+                await Track.cacheSoundCloud();
             }
 
             return await SortedSetCache.count(`${process.env.REDIS_PREFIX}:soundcloud:tag:${category}`, "-inf", "+inf");
@@ -196,7 +196,7 @@ class Track {
     static async getCategories() {
         try {
             if (!await Cache.exists([`${process.env.REDIS_PREFIX}:soundcloud:tags`])) {
-                await Track.cacheSoundcloud();
+                await Track.cacheSoundCloud();
             }
 
             const categories = await SortedSetCache.getReverse(`${process.env.REDIS_PREFIX}:soundcloud:tags`, 0, -1, true);
@@ -223,7 +223,7 @@ class Track {
     static async getTrackById(id) {
         try {
             if (!await Cache.exists([`${process.env.REDIS_PREFIX}:soundcloud:tracks`])) {
-                await Track.cacheSoundcloud();
+                await Track.cacheSoundCloud();
             }
 
             /** @type {{track: TrackTypes.TrackInfo, publishDate: Date, tagList: string[]}} */
@@ -312,7 +312,7 @@ class Track {
     static async getTracks(offset, count) {
         try {
             if (!await Cache.exists([`${process.env.REDIS_PREFIX}:soundcloud:tracks`])) {
-                await Track.cacheSoundcloud();
+                await Track.cacheSoundCloud();
             }
 
             return (await SortedSetCache.getReverse(`${process.env.REDIS_PREFIX}:soundcloud:tracks`, offset, offset + count - 1)).map((t) => new Track(t));
@@ -339,7 +339,7 @@ class Track {
     static async getTracksByCategory(category, offset, count) {
         try {
             if (!await Cache.exists([`${process.env.REDIS_PREFIX}:soundcloud:tag:${category}`])) {
-                await Track.cacheSoundcloud();
+                await Track.cacheSoundCloud();
             }
 
             return (await SortedSetCache.getReverse(`${process.env.REDIS_PREFIX}:soundcloud:tag:${category}`, offset, offset + count - 1)).map((t) => new Track(t));
@@ -364,7 +364,7 @@ class Track {
      */
     static async getTracksByCategoryByDate(category, date) {
         if (!await Cache.exists([`${process.env.REDIS_PREFIX}:soundcloud:tag:${category}`])) {
-            await Track.cacheSoundcloud();
+            await Track.cacheSoundCloud();
         }
 
         const count = await SortedSetCache.count(`${process.env.REDIS_PREFIX}:soundcloud:tag:${category}`, `(${date.getTime()}`, "+inf"),
@@ -390,7 +390,7 @@ class Track {
      */
     static async getTracksByDate(date) {
         if (!await Cache.exists([`${process.env.REDIS_PREFIX}:soundcloud:tracks`])) {
-            await Track.cacheSoundcloud();
+            await Track.cacheSoundCloud();
         }
 
         const count = await SortedSetCache.count(`${process.env.REDIS_PREFIX}:soundcloud:tracks`, `(${date.getTime()}`, "+inf"),
