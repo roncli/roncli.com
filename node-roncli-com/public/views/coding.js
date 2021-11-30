@@ -72,7 +72,7 @@ class CodingView {
                         <div class="panel-title rounded-top"><h1>Latest Commits</h1></div>
                         <div class="panel-body grid-tight grid-columns-3 rounded-bottom" style="grid-template-columns: 1fr auto auto; gap: 2px 5px;">
                             ${data.commits.map((c) => /* html */`
-                                <div class="ellipsis" title="${CodingView.Encoding.attributeEncode(c.message)}">${CodingView.Encoding.htmlEncode(c.message.split("\n").shift())}</div>
+                                <div class="ellipsis-overflow" title="${CodingView.Encoding.attributeEncode(c.message)}">${CodingView.Encoding.htmlEncode(c.message.split("\n").shift())}</div>
                                 <div><time class="timeago" datetime="${new Date(c.createdAt).toISOString()}">${new Date(c.createdAt).toUTCString()}</time></div>
                                 <div><a href="${c.url}" ${c.url.startsWith("http") ? "target=\"blank\"" : ""}>${CodingView.Encoding.htmlEncode(c.repo.name)}</a></div>
                             `).join("")}

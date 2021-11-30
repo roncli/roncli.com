@@ -65,7 +65,7 @@ class CodingProjectView {
                         <div class="panel-title rounded-top"><h1>Commits</h1></div>
                         <div class="panel-body grid-tight grid-columns-3 rounded-bottom" style="grid-template-columns: 1fr auto auto;">
                             ${data.project.repository.commits.map((c) => /* html */`
-                                <div class="ellipsis" title="${CodingProjectView.Encoding.attributeEncode(c.description)}">${CodingProjectView.Encoding.htmlEncode(c.description.split("\n").shift())}</div>
+                                <div class="ellipsis-overflow" title="${CodingProjectView.Encoding.attributeEncode(c.description)}">${CodingProjectView.Encoding.htmlEncode(c.description.split("\n").shift())}</div>
                                 <div><time class="timeago" datetime="${new Date(c.createdAt).toISOString()}">${new Date(c.createdAt).toUTCString()}</time></div>
                                 <div><a href="${c.url}" target="_blank">${c.sha.substr(0, 7)}</a></div>
                             `).join("")}
