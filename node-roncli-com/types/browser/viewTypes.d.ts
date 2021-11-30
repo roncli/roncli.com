@@ -11,6 +11,7 @@ import Playlist from "../../src/models/playlist"
 import ProfileTypes from "../node/profileTypes"
 import Project from "../../src/models/project"
 import Redirect from "../../src/models/redirect"
+import Resume from "../../src/models/resume"
 import Speedrun from "../../src/models/speedrun"
 import SteamGame from "../../src/models/steamGame"
 import Track from "../../src/models/track"
@@ -58,6 +59,10 @@ declare namespace ViewTypes {
 
     type AdminRedirectsViewParameters = {
         redirects: Redirect[]
+    }
+    
+    type AdminResumeViewParameters = {
+        resume: Resume
     }
 
     type AdminViewParameters = {

@@ -280,6 +280,25 @@ roncli.createCollection("redirect", {
     }
 });
 
+// Create résumé collection.
+roncli.createCollection("resume", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["_id", "resume"],
+            additionalProperties: false,
+            properties: {
+                _id: {
+                    bsonType: "objectId"
+                },
+                resume: {
+                    bsonType: "string"
+                }
+            }
+        }
+    }
+});
+
 // Create role collection.
 roncli.createCollection("role", {
     validator: {

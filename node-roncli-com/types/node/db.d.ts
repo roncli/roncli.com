@@ -6,6 +6,7 @@ import { FeatureMongoData } from "./featureTypes"
 import { PageMongoData } from "./pageTypes"
 import { ProjectMongoData } from "./projectTypes"
 import { RedirectMongoData } from "./redirectTypes"
+import { ResumeMongoData } from "./resumeTypes"
 import { RoleMongoData } from "./roleTypes"
 import { SavedLoginMongoData, UserMongoData } from "./userTypes"
 import MongoDb from "mongodb"
@@ -20,6 +21,7 @@ declare module "mongodb" {
         collection<TSchema = PageMongoData>(name: "page", options?: CollectionOptions): Collection<TSchema>
         collection<TSchema = ProjectMongoData>(name: "project", options?: CollectionOptions): Collection<TSchema>
         collection<TSchema = RedirectMongoData>(name: "redirect", options?: CollectionOptions): Collection<TSchema>
+        collection<TSchema = ResumeMongoData>(name: "resume", options?: CollectionOptions): Collection<TSchema>
         collection<TSchema = RoleMongoData>(name: "role", options?: CollectionOptions): Collection<TSchema>
         collection<TSchema = SavedLoginMongoData>(name: "savedLogin", options?: CollectionOptions): Collection<TSchema>
         collection<TSchema = UserMongoData>(name: "user", options?: CollectionOptions): Collection<TSchema>

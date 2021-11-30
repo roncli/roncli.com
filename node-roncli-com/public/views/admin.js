@@ -54,6 +54,9 @@ class AdminView {
                 <a href="/admin/redirects" class="contents">
                     <div class="pill"><i class="bi-arrow-repeat"></i> Redirects</div>
                 </a>
+                <a href="/admin/résumé" class="contents">
+                    <div class="pill"><i class="bi-file-earmark-person"></i> Résumé</div>
+                </a>
                 <a href="/admin/youtube" class="contents">
                     <div class="pill"><i class="bi-youtube"></i> YouTube</div>
                 </a>

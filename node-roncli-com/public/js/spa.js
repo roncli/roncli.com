@@ -79,6 +79,7 @@ class SPA {
                     promise = new Promise((resolve, reject) => {
                         try {
                             script.onload = resolve;
+                            script.onerror = reject;
                         } catch (err) {
                             reject(err);
                         }

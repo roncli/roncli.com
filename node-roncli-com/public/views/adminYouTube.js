@@ -68,7 +68,7 @@ class AdminYouTubeView {
     static getInfo() {
         return /* html */`
             <div class="info-panel">
-                <div class="info-panel-title rounded-top">Redirects Admin</div>
+                <div class="info-panel-title rounded-top">YouTube Admin</div>
                 <div class="info-panel-body">
                     <ul class="breadcrumb">
                         <li><a href="/">Home</a></li>

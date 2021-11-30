@@ -22,6 +22,8 @@ import AdminProjects from "../../public/js/adminProjects"
 import AdminProjectsView from "../../public/views/adminProjects"
 import AdminRedirects from "../../public/js/adminRedirects"
 import AdminRedirectsView from "../../public/views/adminRedirects"
+import AdminResume from "../../public/js/adminResume"
+import AdminResumeView from "../../public/views/adminResume"
 import AdminView from "../../public/views/admin"
 import AdminYouTube from "../../public/js/adminYouTube"
 import AdminYouTubeView from "../../public/views/adminYouTube"
@@ -69,6 +71,8 @@ import PageView from "../../public/views/page"
 import PaginationPageView from "../../public/views/pagination/page"
 import Playlist from "../../public/js/playlist"
 import PlaylistView from "../../public/views/playlist"
+import Resume from "../../public/js/resume"
+import ResumeView from "../../public/views/resume"
 import ServerErrorView from "../../public/views/500"
 import SoundCloudView from "../../public/views/media/soundcloud"
 import SpeedrunGameView from "../../public/views/speedrunGame"
@@ -108,6 +112,8 @@ declare global {
         AdminProjectsView: typeof AdminProjectsView
         AdminRedirects: typeof AdminRedirects
         AdminRedirectsView: typeof AdminRedirectsView
+        AdminResume: typeof AdminResume
+        AdminResumeView: typeof AdminResumeView
         AdminView: typeof AdminView
         AdminYouTube: typeof AdminYouTube
         AdminYouTubeView: typeof AdminYouTubeView
@@ -152,11 +158,14 @@ declare global {
         MusicView: typeof MusicView
         NotFoundView: typeof NotFoundView
         Numbers: typeof Numbers
+        ol: any
         PageView: typeof PageView
         PaginationPageView: typeof PaginationPageView
         Playlist: typeof Playlist
         PlaylistView: typeof PlaylistView
         require: any
+        Resume: typeof Resume
+        ResumeView: typeof ResumeView
         SC: any
         ServerErrorView: typeof ServerErrorView
         SoundCloudView: typeof SoundCloudView

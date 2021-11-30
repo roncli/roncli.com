@@ -1,0 +1,75 @@
+#json-root {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #191935;
+    color: white;
+    font-family: "FixedSysExcelsiorIIIb Nerd Font";
+    overflow: hidden;
+}
+
+#json-root > div {
+    position: absolute;
+    transform-origin: top left;
+    font-size: 720px;
+}
+
+#json-root #back-link {
+    left: 0;
+    top: 0;
+    font-size: 36px;
+}
+
+#json-root .quote,
+#json-root .comma {
+    color: #808080;
+}
+
+#json-root .title,
+#json-root a {
+    color: #7070d4;
+}
+
+#json-root a {
+    text-decoration: underline;
+}
+
+#json-root a:hover,
+#json-root a:active {
+    color: #70d470;
+}
+
+#json-root .key,
+#json-root .value,
+#json-root .value .front-brace,
+#json-root .value .back-brace,
+#json-root .value .front-bracket,
+#json-root .value .back-bracket {
+    display: inline;
+}
+
+#json-root .subvalue {
+    margin-left: 1475px;
+}
+
+#json-root .ellipsis {
+    color: #808080;
+}
+
+#json-root div.location {
+    display: inline-grid;
+    grid-template-columns: repeat(3, auto);
+    align-items: start;
+    gap: 86.4px;
+}
+
+#json-root div.map {
+    width: 2160px;
+    height: 2160px;
+}
+
+#json-root div.comma {
+    align-self: end;
+}
