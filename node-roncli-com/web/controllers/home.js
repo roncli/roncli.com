@@ -210,7 +210,7 @@ class Home extends RouterBase {
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({
-                css: [],
+                css: ["/css/home.css"],
                 js: [],
                 views: [
                     {
@@ -225,7 +225,7 @@ class Home extends RouterBase {
             res.status(200).send(await Common.page(
                 "",
                 void 0,
-                {},
+                {css: ["/css/home.css"]},
                 HomeView.get(data),
                 HomeView.getInfo(),
                 req,

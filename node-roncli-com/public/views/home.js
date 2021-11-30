@@ -32,7 +32,7 @@ class HomeView {
                     <div class="panel-title rounded">Blog Temporarily Unavailable</div>
                 </div>
             ` : /* html */`
-                <div class="panel rounded">
+                <div id="home-blog" class="panel rounded">
                     <div class="panel-title rounded-top"><h1>Recent Blog Posts</h1></div>
                     <div class="panel-list rounded-bottom grid-columns-3">
                         ${data.titles.map((title) => /* html */`
@@ -43,7 +43,7 @@ class HomeView {
                                 <a class="contents" href="${HomeView.Encoding.attributeEncode(title.url)}">
                                     <div><div class="date"><time class="timeago" datetime="${new Date(title.published).toISOString()}">${new Date(title.published).toUTCString()}</time></div></div>
                                 </a>
-                                <a class="contents" href="${HomeView.Encoding.attributeEncode(title.url)}">
+                                <a class="contents tag-list" href="${HomeView.Encoding.attributeEncode(title.url)}">
                                     <div style="flex-wrap: wrap; column-gap: 4px; row-gap: 4px;">
                                         ${title.categories.map((c) => /* html */`
                                             <div class="tag">${HomeView.Encoding.htmlEncode(c)}</div>
@@ -55,7 +55,7 @@ class HomeView {
                     </div>
                 </div>
             `}
-            <div class="grid grid-columns-2-fixed pad-top">
+            <div id="home-panels" class="grid grid-columns-2-fixed pad-top">
                 <div class="panel rounded">
                     <div class="panel-title rounded-top"><h2>Music</h2></div>
                     <div class="panel-body rounded-bottom">

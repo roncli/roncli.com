@@ -36,7 +36,7 @@ class MusicTracksView {
                     <a class="contents" href="${track.url}" ${category ? `data-category="${MusicTracksView.Encoding.attributeEncode(category)}"` : ""}>
                         <div><div class="date"><time class="timeago" datetime="${new Date(track.publishDate).toISOString()}">${new Date(track.publishDate).toUTCString()}</time></div></div>
                     </a>
-                     <a class="contents" href="${track.url}" ${category ? `data-category="${MusicTracksView.Encoding.attributeEncode(category)}"` : ""}>
+                     <a class="contents tag-list" href="${track.url}" ${category ? `data-category="${MusicTracksView.Encoding.attributeEncode(category)}"` : ""}>
                         <div style="flex-wrap: wrap; column-gap: 4px; row-gap: 4px;">
                             ${track.tagList.map((c) => /* html */`
                                 <div class="tag">${MusicTracksView.Encoding.htmlEncode(c)}</div>

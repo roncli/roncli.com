@@ -1,0 +1,13 @@
+@media (max-width: 1000px) {
+    div#home-blog div.panel-list.grid-columns-3 {
+        grid-template-columns: repeat(2, auto);
+    }
+
+    div#home-blog div.panel-list div.contents-row a.contents.tag-list {
+        display: none;
+    }
+
+    div#home-panels.grid.grid-columns-2-fixed {
+        grid-template-columns: 100%;
+    }
+}

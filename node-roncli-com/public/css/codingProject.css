@@ -1,0 +1,6 @@
+@media (max-width: 1000px) {
+    div#project-info div.grid-columns-2-fixed.grid-rows-2 {
+        grid-template-columns: 100%;
+        grid-template-rows: repeat(4, auto);
+    }
+}

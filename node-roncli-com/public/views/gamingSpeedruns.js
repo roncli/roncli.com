@@ -39,11 +39,11 @@ class GamingSpeedrunsView {
                         <div class="panel-title rounded-top"><h1>Speedruns</h1></div>
                         ${Object.keys(data.speedrunsByGame).sort().map((game, index) => /* html */`
                             <div class="panel-body center" ${index === 0 ? "" : "style=\"padding-top: 8px;\""}><h3><a href="/speedrun/${GamingSpeedrunsView.Encoding.attributeEncode(data.speedrunsByGame[game][0].gameId)}/${GamingSpeedrunsView.Encoding.slugEncode(data.speedrunsByGame[game][0].game)}">${GamingSpeedrunsView.Encoding.htmlEncode(data.speedrunsByGame[game][0].game)}</a></h3></div>
-                            <div class="panel-body center-content grid grid-columns-5-min ${index === Object.keys(data.speedrunsByGame).length - 1 ? "rounded-bottom" : ""}">
+                            <div class="panel-body center-content grid grid-columns-5-min ${index === Object.keys(data.speedrunsByGame).length - 1 ? "rounded-bottom" : ""}" style="grid-template-columns: min-content auto auto min-content min-content;">
                                 ${data.speedrunsByGame[game].map((speedrun) => /* html */`
                                     <div class="right">#${speedrun.place}</div>
-                                    <div>${GamingSpeedrunsView.Encoding.htmlEncode(speedrun.category)}</div>
-                                    <div>${!speedrun.variables || speedrun.variables.length === 0 ? "" : speedrun.variables.map((variable) => GamingSpeedrunsView.Encoding.htmlEncode(variable)).join(", ")}</div>
+                                    <div class="ellipsis-overflow">${GamingSpeedrunsView.Encoding.htmlEncode(speedrun.category)}</div>
+                                    <div class="ellipsis-overflow">${!speedrun.variables || speedrun.variables.length === 0 ? "" : speedrun.variables.map((variable) => GamingSpeedrunsView.Encoding.htmlEncode(variable)).join(", ")}</div>
                                     <div class="right"><a href="${speedrun.url}" target="_blank">${GamingSpeedrunsView.Time.formatTimespan(speedrun.time, 3)}</a></div>
                                     <div>${speedrun.date ? /* html */`
                                         <time class="timeago" datetime="${new Date(speedrun.date).toISOString()}">${new Date(speedrun.date).toUTCString()}</time>

@@ -91,7 +91,7 @@ class CodingProject extends RouterBase {
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({
-                css: [],
+                css: ["/css/codingProject.css"],
                 js: [],
                 views: [
                     {
@@ -107,7 +107,7 @@ class CodingProject extends RouterBase {
             res.status(200).send(await Common.page(
                 "",
                 void 0,
-                {},
+                {css: ["/css/codingProject.css"]},
                 CodingProjectView.get(data),
                 CodingProjectView.getInfo(info),
                 req,

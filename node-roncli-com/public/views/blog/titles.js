@@ -38,7 +38,7 @@ class BlogTitlesView {
                     <a class="contents" href="${BlogTitlesView.Encoding.attributeEncode(title.url)}" ${category ? `data-category="${BlogTitlesView.Encoding.attributeEncode(category)}"` : ""}>
                         <div><div class="date"><time class="timeago" datetime="${new Date(title.published).toISOString()}">${new Date(title.published).toUTCString()}</time></div></div>
                     </a>
-                    <a class="contents" href="${BlogTitlesView.Encoding.attributeEncode(title.url)}" ${category ? `data-category="${BlogTitlesView.Encoding.attributeEncode(category)}"` : ""}>
+                    <a class="contents tag-list" href="${BlogTitlesView.Encoding.attributeEncode(title.url)}" ${category ? `data-category="${BlogTitlesView.Encoding.attributeEncode(category)}"` : ""}>
                         <div style="flex-wrap: wrap; column-gap: 4px; row-gap: 4px;">
                             ${title.categories.map((c) => /* html */`
                                 <div class="tag">${BlogTitlesView.Encoding.htmlEncode(c)}</div>

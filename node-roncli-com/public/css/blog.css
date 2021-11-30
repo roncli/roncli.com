@@ -9,3 +9,13 @@ div#blog-pagination {
 div#blog-pagination a.page, div#blog-pagination a.page:hover, div#blog-pagination a.page:focus, div#blog-pagination a.page:active {
     text-decoration: none;
 }
+
+@media (max-width: 1000px) {
+    div#blog-titles.panel-list.grid-columns-3 {
+        grid-template-columns: repeat(2, auto);
+    }
+
+    div#blog-titles.panel-list div.contents-row a.contents.tag-list {
+        display: none;
+    }
+}

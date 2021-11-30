@@ -50,3 +50,10 @@
 #modal .content .section:first-of-type {
     padding-top: 0;
 }
+
+@media (max-width: 700px) {
+    #modal .close {
+        font-size: 14px;
+        height: 16px;
+    }
+}

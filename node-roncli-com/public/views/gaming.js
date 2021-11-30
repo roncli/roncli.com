@@ -70,11 +70,11 @@ class GamingView {
                         </div>
                         ${data.speedruns && data.speedruns.length > 0 ? /* html */`
                             <div class="panel-body center"><h4><b>Top Speedruns:</b></h4></div>
-                            <div class="panel-body grid-tight grid-columns-4-min center-content">
+                            <div class="panel-body grid-tight grid-columns-4-min center-content" style="grid-template-columns: min-content min-content auto min-content">
                                 ${data.speedruns.map((speedrun) => /* html */`
                                     <div class="right">#${speedrun.place}</div>
-                                    <div class="left"><a href="/gaming/speedruns/${GamingView.Encoding.attributeEncode(encodeURI(speedrun.gameId))}/${GamingView.Encoding.slugEncode(speedrun.game)}">${GamingView.Encoding.htmlEncode(speedrun.game)}</a></div>
-                                    <div class="left">${GamingView.Encoding.htmlEncode(speedrun.category)}${!speedrun.variables || speedrun.variables.length === 0 ? "" : /* html */`, ${speedrun.variables.map((variable) => GamingView.Encoding.htmlEncode(variable)).join(", ")}`}</div>
+                                    <div class="left"><a href="/gaming/speedrun/${GamingView.Encoding.attributeEncode(encodeURI(speedrun.gameId))}/${GamingView.Encoding.slugEncode(speedrun.game)}">${GamingView.Encoding.htmlEncode(speedrun.game)}</a></div>
+                                    <div class="left ellipsis-overflow">${GamingView.Encoding.htmlEncode(speedrun.category)}${!speedrun.variables || speedrun.variables.length === 0 ? "" : /* html */`, ${speedrun.variables.map((variable) => GamingView.Encoding.htmlEncode(variable)).join(", ")}`}</div>
                                     <div class="right"><a href="${speedrun.url}" target="_blank">${GamingView.Time.formatTimespan(speedrun.time, 3)}</a></div>
                                 `).join("")}
                             </div>

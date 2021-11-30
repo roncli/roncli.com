@@ -31,12 +31,12 @@ class CodingProjectView {
     static get(data) {
         return /* html */`
             <div class="grid">
-                <div class="panel rounded">
+                <div id="project-info" class="panel rounded">
                     <div class="panel-title rounded-top"><h1>${CodingProjectView.Encoding.htmlEncode(data.project.title)}</h1></div>
-                    <div class="panel-body grid-tight grid-columns-2-fixed">
+                    <div class="panel-body grid-tight grid-columns-2-fixed grid-rows-2 grid-flow-column">
                         <div>Project Homepage: <a href="${data.project.repository.repository.url}" target="_blank">${CodingProjectView.Encoding.htmlEncode(data.project.repository.repository.url)}</a></div>
-                        <div>Created: <time class="timeago" datetime="${new Date(data.project.repository.repository.createdAt).toISOString()}">${new Date(data.project.repository.repository.createdAt).toUTCString()}</time></div>
                         <div>Primary Language: ${data.project.repository.repository.primaryLanguage}</div>
+                        <div>Created: <time class="timeago" datetime="${new Date(data.project.repository.repository.createdAt).toISOString()}">${new Date(data.project.repository.repository.createdAt).toUTCString()}</time></div>
                         <div>Updated: <time class="timeago" datetime="${new Date(data.project.repository.repository.updatedAt).toISOString()}">${new Date(data.project.repository.repository.updatedAt).toUTCString()}</time></div>
                     </div>
                     <div class="panel-body rounded-bottom">${CodingProjectView.Encoding.htmlEncode(data.project.repository.repository.description)}</div>

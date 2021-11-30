@@ -28,38 +28,41 @@ class DirectoryView {
      * @returns {string} An HTML string of the page.
      */
     static get(data) {
+        const path = data.path.split("/").filter((p) => p !== "");
+
         return /* html */`
             <div class="panel rounded">
                 <div class="panel-title rounded-top"><h1>Downloads - ${data.path || "/"}</h1></div>
-                ${data.entries.length === 0 ? /* html */`
-                    <div class="panel-body rounded-bottom">
-                        This directory is empty.
-                    </div>
-                ` : /* html */`
-                    <div class="panel-list rounded-bottom grid-columns-3" style="grid-template-columns: 1fr repeat(2, auto)">
-                        ${data.entries.map((entry) => /* html */`
-                            <div class="contents-row">
-                                <a class="contents${entry.size === void 0 ? "" : " download"}" href="/files${data.path}/${entry.name}">
-                                    <div><div class="name">${entry.size === void 0 ? /* html */`
-                                    <i class="bi-folder"></i>
-                                ` : /* html */`
-                                    <i class="bi-file-earmark-text"></i>
-                                `} ${DirectoryView.Encoding.htmlEncode(entry.name)}</div></div>
-                                </a>
-                                <a class="contents${entry.size === void 0 ? "" : " download"}" href="/files${data.path}/${entry.name}">
-                                    <div><div class="size">${entry.size === void 0 ? "" : /* html */`
-                                        ${DirectoryView.Numbers.fileSize(entry.size)}
-                                    `}</div></div>
-                                </a>
-                                <a class="contents${entry.size === void 0 ? "" : " download"}" href="/files${data.path}/${entry.name}">
-                                    <div><div class="date">${entry.date === void 0 ? "" : /* html */`
-                                        <time class="timeago" datetime="${new Date(entry.date).toISOString()}">${new Date(entry.date).toUTCString()}</time>
-                                    `}</div></div>
-                                </a>
-                            </div>
-                        `).join("")}
-                    </div>
-                `}
+                <div class="panel-list rounded-bottom grid-columns-3" style="grid-template-columns: 1fr repeat(2, auto)">
+                    ${data.path && data.path !== "" && data.path !== "/" ? /* html */`
+                        <div class="contents-row">
+                            <a class="contents" href="/files${path.length <= 1 ? "" : `/${path.slice(0, -1).join("/")}`}"><div><div class="name"><i class="bi-arrow-90deg-up"></i> Up to previous directory</div></div></a>
+                            <a class="contents" href="/files${path.length <= 1 ? "" : `/${path.slice(0, -1).join("/")}`}"><div><div class="size"></div></div></a>
+                            <a class="contents" href="/files${path.length <= 1 ? "" : `/${path.slice(0, -1).join("/")}`}"><div><div class="date"></div></div></a>
+                        </div>
+                    ` : ""}
+                    ${data.entries.map((entry) => /* html */`
+                        <div class="contents-row">
+                            <a class="contents${entry.size === void 0 ? "" : " download"}" href="/files${data.path}/${entry.name}">
+                                <div><div class="name">${entry.size === void 0 ? /* html */`
+                                <i class="bi-folder"></i>
+                            ` : /* html */`
+                                <i class="bi-file-earmark-text"></i>
+                            `} ${DirectoryView.Encoding.htmlEncode(entry.name)}</div></div>
+                            </a>
+                            <a class="contents${entry.size === void 0 ? "" : " download"}" href="/files${data.path}/${entry.name}">
+                                <div><div class="size">${entry.size === void 0 ? "" : /* html */`
+                                    ${DirectoryView.Numbers.fileSize(entry.size)}
+                                `}</div></div>
+                            </a>
+                            <a class="contents${entry.size === void 0 ? "" : " download"}" href="/files${data.path}/${entry.name}">
+                                <div><div class="date">${entry.date === void 0 ? "" : /* html */`
+                                    <time class="timeago" datetime="${new Date(entry.date).toISOString()}">${new Date(entry.date).toUTCString()}</time>
+                                `}</div></div>
+                            </a>
+                        </div>
+                    `).join("")}
+                </div>
             </div>
         `;
     }

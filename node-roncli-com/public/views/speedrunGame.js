@@ -33,11 +33,11 @@ class SpeedrunGameView {
             <div class="grid">
                 <div class="panel rounded">
                     <div class="panel-title rounded-top"><h1>${SpeedrunGameView.Encoding.htmlEncode(data.speedruns.name)} Speedruns</h1></div>
-                    <div class="panel-body rounded-bottom center-content grid grid-columns-5-min">
+                    <div class="panel-body rounded-bottom center-content grid grid-columns-5-min" style="grid-template-columns: min-content auto auto min-content min-content">
                         ${data.speedruns.runs.map((speedrun) => /* html */`
                             <div class="right">#${speedrun.place}</div>
-                            <div>${SpeedrunGameView.Encoding.htmlEncode(speedrun.category)}</div>
-                            <div>${!speedrun.variables || speedrun.variables.length === 0 ? "" : speedrun.variables.map((variable) => SpeedrunGameView.Encoding.htmlEncode(variable)).join(", ")}</div>
+                            <div class="ellipsis-overflow">${SpeedrunGameView.Encoding.htmlEncode(speedrun.category)}</div>
+                            <div class="ellipsis-overflow">${!speedrun.variables || speedrun.variables.length === 0 ? "" : speedrun.variables.map((variable) => SpeedrunGameView.Encoding.htmlEncode(variable)).join(", ")}</div>
                             <div class="right"><a href="${speedrun.url}" target="_blank">${SpeedrunGameView.Time.formatTimespan(speedrun.time, 3)}</a></div>
                             <div>${speedrun.date ? /* html */`
                                 <time class="timeago" datetime="${new Date(speedrun.date).toISOString()}">${new Date(speedrun.date).toUTCString()}</time>

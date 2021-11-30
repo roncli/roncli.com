@@ -20,3 +20,13 @@ div#discography div.pill {
 div#discography div.pill:hover {
     background-color: #384729;
 }
+
+@media (max-width: 1000px) {
+    div#music-tracks.panel-list.grid-columns-3 {
+        grid-template-columns: repeat(2, auto);
+    }
+
+    div#music-tracks.panel-list div.contents-row a.contents.tag-list {
+        display: none;
+    }
+}

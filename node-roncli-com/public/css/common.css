@@ -9,6 +9,7 @@ body.fullscreen {
 #page {
     max-width: 1200px;
     margin: 0 auto;
+    padding: 0 5px;
 }
 
 #page-body {
@@ -81,6 +82,13 @@ body.fullscreen {
     margin-bottom: 3px;
 }
 
+@media (max-width: 700px) {
+    #page-body #header #logo {    
+        height: 40px;
+        background-size: 240px 40px;
+    }
+}
+
 #page-body #page-html,
 #page-body #loading {
     grid-column: 1;
@@ -122,6 +130,21 @@ body.fullscreen {
 #page-body #discord {
     grid-column: 2;
     grid-row: 7;
+}
+
+@media (max-width: 700px) {
+    #page-body #page-html,
+    #page-body #loading {
+        grid-column: 1 / span 2;
+    }
+
+    #page-body #page-info,
+    #page-body #share,
+    #page-body #twitter,
+    #page-body #contacts,
+    #page-body #discord {
+        display: none;
+    }
 }
 
 #copyright {
@@ -441,6 +464,12 @@ h6 {
     font-size: 16px;
 }
 
+@media (max-width: 700px) {
+    h1, h2, h3, h4, h5, h6 {
+        font-size: 16px;
+    }
+}
+
 button {
     cursor: pointer;
 }
@@ -519,8 +548,16 @@ input[type=checkbox] {
     white-space: nowrap;
 }
 
+.grid-rows-2 {
+    grid-template-rows: repeat(2, auto);
+}
+
 .grid-span-2 {
     grid-column-end: span 2;
+}
+
+.grid-flow-column {
+    grid-auto-flow: column;
 }
 
 .ellipsis-overflow {

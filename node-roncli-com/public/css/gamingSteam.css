@@ -13,7 +13,8 @@ div#steam-games-list div.game div.title {
 
 div#steam-games-list div.game div.logo {
     height: 89px;
-    background-size: 100%;
+    background-size: cover;
+    background-position: center;
 }
 
 div#steam-games-list div.game:hover {
