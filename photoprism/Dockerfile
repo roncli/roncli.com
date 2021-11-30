@@ -11,16 +11,6 @@ RUN apt-get update && apt-get -y install cifs-utils && apt-get -y install keyuti
 WORKDIR /var/photoprism
 COPY . .
 
-# Make needed directories.
-RUN mkdir -p /photoprism/originals
-RUN mkdir -p /photoprism/storage
-
-# Import arg.
-ARG USE_AZURE_FILE_STORAGE
-
-# Replace library with link if we're going to use Azure file storage.
-RUN if [ $USE_AZURE_FILE_STORAGE -eq 1 ]; then rm -r /photoprism/originals; mkdir -p /mnt/library; ln -s /mnt/library /photoprism/originals; fi
-
 # Allow start script to run.
 RUN chmod +x /var/photoprism/*.sh
 

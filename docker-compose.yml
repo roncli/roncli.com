@@ -221,10 +221,7 @@ services:
 
   photoprism:
     container_name: roncli-photoprism
-    build:
-      context: ./photoprism
-      args:
-        USE_AZURE_FILE_STORAGE: 0
+    build: ./photoprism
     networks:
       - roncli.com-network
     ports:
@@ -237,11 +234,17 @@ services:
       LIBRARY_URI: /run/secrets/LIBRARY_URI
       LIBRARY_USERNAME: /run/secrets/LIBRARY_USERNAME
       LIBRARY_PASSWORD: /run/secrets/LIBRARY_PASSWORD
+      STORAGE_URI: /run/secrets/STORAGE_URI
+      STORAGE_USERNAME: /run/secrets/STORAGE_USERNAME
+      STORAGE_PASSWORD: /run/secrets/STORAGE_PASSWORD
       USE_AZURE_FILE_STORAGE: 0
     secrets:
       - LIBRARY_URI
       - LIBRARY_USERNAME
       - LIBRARY_PASSWORD
+      - STORAGE_URI
+      - STORAGE_USERNAME
+      - STORAGE_PASSWORD
     restart: always
     entrypoint: /var/photoprism/start.sh
 
@@ -305,6 +308,12 @@ secrets:
     file: ./secrets/SOUNDCLOUD_CLIENT_SECRET_FILE
   STEAM_API_KEY_FILE:
     file: ./secrets/STEAM_API_KEY_FILE
+  STORAGE_URI:
+    file: ./secrets/STORAGE_URI
+  STORAGE_USERNAME:
+    file: ./secrets/STORAGE_USERNAME
+  STORAGE_PASSWORD:
+    file: ./secrets/STORAGE_PASSWORD
   TUMBLR_CONSUMER_KEY_FILE:
     file: ./secrets/TUMBLR_CONSUMER_KEY_FILE
   TUMBLR_CONSUMER_SECRET_FILE:
