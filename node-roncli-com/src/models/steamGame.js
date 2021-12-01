@@ -49,8 +49,6 @@ class SteamGame {
                 description: a.description,
                 icon: a.icon,
                 icongray: a.icongray,
-                // TODO: Remove @ts-ignore when @types/steamapi is updated
-                // @ts-ignore
                 achieved: achievement ? achievement.achieved : false,
                 unlockTime: achievement && achievement.unlockTime ? new Date(achievement.unlockTime * 1000) : void 0
             };
