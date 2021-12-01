@@ -1,171 +1,32 @@
-roncli.com
-==========
+# roncli.com
 
-This is the source repository for the [roncli.com](https://roncli.com) website.  This website is written in [node.js](https://nodejs.org) using the [rendr](https://github.com/rendrjs/rendr) library.
+The website for roncli.com.  You can see this site in action at https://roncli.com
 
-Projects
-========
+## Features
 
-There are two parts to the roncli.com project.
+* User account creation and management.
+* Third party connections to Blizzard, GitHub, SoundCloud, speedrun.com, Steam, Toofz, and XIVAPI.
+* Complete admin section to manage the website.
+* Animated résumé page.
+* Web server solution through nginx.
+* SSL renewal solution through certbot.
+* Photo storage solution through PhotoPrism.
 
-The first is the SQL Server database, which is encapsulated in a Visual Studio SQL Server Data Tools 2013 project.
+## Version History
 
-The second is the Node project itself, which is developed via PhpStorm.  I do have a Visual Studio Node.js Tools project setup in the solution, but unfortunately Node.js Tools is really buggy right now, and the JavaScript editor is really clunky compared to PhpStorm.  I do not guarantee that the Visual Studio Node.js Tools project will be up to date, except for releases.
+### v2.0.0 Beta 1 - 12/1/2021
 
-Requirements
-============
+This release is a complete rewrite of the website, and is a release candidate for version 2.0.0.
 
-Be sure to have [Visual Studio 2013](https://www.visualstudio.com) with [Node.js Tools for Visual Studio](https://nodejstools.codeplex.com). and node.js 0.10.36 or later installed with npm.
+* No longer uses Rendr or Backbone.  Single page application functionality is now custom-built.
+* Microsoft SQL Server replaced with MongoDB.
+* Designed to work within docker containers.
+* Includes web server solution nginx.
+* Includes SSL renewal solution certbot.
+* Includes photo storage solution PhotoPrism.
+* Logs errors to Application Insights.
 
-Database Setup
-==============
-
-To setup the database, make sure you have Microsoft SQL Server installed.  I use 2014, but I imagine any version will work.
-
-1. Create an empty database.
-2. Open the Visual Studio solution.
-3. Right click on the database project and do a Schema Comparison.
-4. Press the Compare button to start the comparison.
-5. Press the Update button to update the database with the schema from the database.
-
-Windows Installation
-====================
-
-To run the website on Windows, make sure you perform the following steps.
-
-1. Install [Python 2.7.x](https://www.python.org/downloads/).
-2. Add the c:\GTK\bin\ directory to your system PATH.  (This may require a restart.)
-3. From an admin command prompt, install grunt-cli globally:
-
-        npm install -g grunt-cli
-
-4. Install the node modules from the /roncli.com directory:
-
-        npm install
-
-5. Add /roncli.com/assets/js/publicConfig.js and /roncli.com/server/privateConfig.js.  See below for file contents.
-6. Install the node modules from the /ronc.li directory:
-
-        npm install
-
-7. If using [iisnode](https://github.com/tjanczuk/iisnode):
-    - Point an IIS application to the inner /roncli.com directory
-    - Point another IIS application to the /ronc.li directory
-    - Run ```grunt``` from the same directory when installing and after every time you change code.
-    - Be sure to create the directory "logs" in the root of both of the applications and give the application pools write permission.  For instance, if your application pool is ```roncli.com```, you'll give permissions to the account ```IIS AppPool\roncli.com```.
-    - Don't forget to restart the application from within IIS after you run ```grunt```.
-
-    Otherwise, run using a standalone installation by running the following command from within /roncli.com to compile and run the web server:
-
-            grunt all
-
-    If you also wish to run the ronc.li application, run the following command from /ronc.li to run the web server:
-
-            node index.js
-
-Other Installations
-===================
-
-1. The roncli.com website requires the [Cairo](https://github.com/LearnBoost/node-canvas/wiki) library to be installed.  Make sure you follow the Cairo installation instructions for your operating system.
-2. From an admin command prompt, install grunt-cli globally:
-
-        npm install -g grunt-cli
-
-3. Install the node modules from the /roncli.com directory:
-
-        npm install
-
-4. Install the node modules from the /ronc.li directory:
-
-        npm install
-
-4. Add /roncli.com/assets/js/publicConfig.js and /roncli.com/server/privateConfig.js.  See below for file contents.
-5. Run the following command to compile and run the web server:
-
-        grunt all
-
-    If you also wish to run the ronc.li application, run the following command from /ronc.li to run the web server:
-
-        node index.js
-
-publicConfig.js
-===============
-The following should be the contents of publicConfig.js:
-
-        window.siteConfig = {
-            soundcloud: {
-                client_id: "(Your SoundCloud Client ID)"
-            }
-        };
-        
-privateConfig.js
-================
-The following should be the contents of privateConfig.js:
-
-        module.exports = {
-            server: {
-                secret: "(A random secret key that you create)",
-            },
-            twitter: {
-                consumer_key: "(Your Twitter API key)",
-                consumer_secret: "(Your Twitter API secret)",
-                access_token_key: "(Your Twitter access token key)",
-                access_token_secret: "(Your Twitter access token secret)"
-            },
-            database: {
-                server: "(Your SQL Server hostname)",
-                port: (Your SQL Server port),
-                user: "(Your SQL Server login name)",
-                password: "(Your SQL Server login password)",
-                database: "(Your SQL Server database name)",
-                pool: {
-                    min: 0,
-                    max: 50,
-                    idleTimeoutMillis: 30000
-                }
-            },
-            smtp: {
-                host: "(Your SMTP server hostname)"
-            },
-            redis: {
-                host: "(Your redis server hostname)",
-                port: (Your redis server hostname),
-                password: "(Your redis server password)"
-            },
-            files: {
-                path: "(A path to a directory that the application has read and write access to for file storage)"
-            },
-            google: {
-                blog_id: "(Your Google Blogger blog ID)",7
-                api_key: "(Your Google Blogger API key)"
-            },
-            tumblr: {
-                consumer_key: "(Your Tumblr consumer key)",
-                consumer_secret: "(Your Tumblr consumer secret)",
-                token: "(Your Tumblr token)",
-                token_secret: "(Your Tumblr token secret)"
-            },
-            soundcloud: {
-                id: "(Your SoundCloud Client ID)"
-            },
-            github: {
-                type: "oauth",
-                key: "(Your GitHub client ID)",
-                secret: "(Your GitHub client secret)"
-            },
-            battlenet: {
-                apikey: "(Your Battle.Net API key)"
-            },
-            steam: {
-                apikey: "(Your Steam API key)"
-            }
-        };
-
-Version History
-===============
-
-1.0.8 - 7/13/2019
------------------
+### v1.0.8 - 7/13/2019
 
 This release sets up the website to work over SSL, removes references to Google Plus, and replaces the captcha system with one that requires less of a setup on Windows.
 
@@ -174,8 +35,7 @@ This release sets up the website to work over SSL, removes references to Google 
 * Removed references to Google Plus.
 * Replaced Internet Explorer with Edge as a recommended browser.
 
-1.0.7 - 1/8/2019
-----------------
+### v1.0.7 - 1/8/2019
 
 This is a bug fix release.
 
@@ -187,8 +47,7 @@ This is a bug fix release.
 * Fix bug with missing blog data crashing the front page.
 * Fix bug with improperly cached data not getting refetched.
 
-1.0.6 - 5/6/2018
-----------------
+### v1.0.6 - 5/6/2018
 
 This is a bug fix release.
 
@@ -200,8 +59,7 @@ This is a bug fix release.
 * Fix bug with style element showing in CSS previews.
 * Fix ignored tags for the default controller.
 
-1.0.5 - 12/25/2016
-------------------
+### v1.0.5 - 12/25/2016
 
 This is a bug fix release.
 
@@ -210,8 +68,7 @@ This is a bug fix release.
 * Add Diamond rank to DCL and remove DCL playlists.
 * Fix bug with Steam headers not displaying.
 
-1.0.4 - 2/7/2016
-----------------
+### v1.0.4 - 2/7/2016
 
 This is a bug fix release.
 
@@ -221,24 +78,21 @@ This is a bug fix release.
 * Fixed bug with Facebook meta tags not HTML encoding.
 * Fixed bug with certain files being unable to be downloaded.
 
-1.0.3 - 9/23/2015
------------------
+### v1.0.3 - 9/23/2015
 
 This is a bug fix release.
 
 * Removed League of Legends from the site.  The API changed and is not useful for the type of stats I wish to display.
 * Fixed issues with gaming APIs not loading that were preventing the home page from loading.
 
-1.0.2 - 6/7/2015
-----------------
+### v1.0.2 - 6/7/2015
 
 This is a bug fix release.
 
 * Fixed the way that files are downloaded from the /files directory so that they may be downloaded from other pages.
 * Added favicon.ico to the root for browsers that require it.
 
-1.0.1 - 6/7/2015
-----------------
+### v1.0.1 - 6/7/2015
 
 This is a bug fix release.
 
@@ -246,8 +100,7 @@ This is a bug fix release.
 * Fixed bugs with Steam games that have achievements, but I haven't achieved any yet.
 
 
-1.0 - 6/3/2015
---------------
+### v1.0.0 - 6/3/2015
 
 This is the initial release of the roncli.com website!
 
@@ -262,64 +115,44 @@ This is the initial release of the roncli.com website!
 * Images can be no wider than 100% of the container it is in.
 * Updated some models, moving them to collections to allow for caching.
 
-0.7
----
+### v0.7.0
 
 This version implements the life section, which is essentially just a bunch of links to specific pages on the site.  Included is an administration section.
 
-0.6
----
+### v0.6.0
 
 This version implements the gaming section, which makes calls to Battle.Net, Riot Games, Steam, and the DCL.  Also implemented is file uploading, and support for enumerating YouTube playlists.  Included is an RSS feed for the gaming page and an administration section.  Gaming pages also double as HTML pages, meaning that if you create a page with the same URL as a gaming page, that HTML will display on the page along with the rest of the page.
 
-0.5
----
+### v0.5.0
 
 This version implements the coding section, which links to GitHub.  Included are RSS feeds for the coding page and each project pages, and an administration section.  Coding pages also double as HTML pages, meaning that if you create a page with the same URL as a coding page, that HTML will display on the page along with the rest of the page.
 
-0.4
----
+### v0.4.0
 
 This version implements the music section, which links to SoundCloud.  Included are comments, RSS feeds for the music and each individual tag, and an administration section.  Music pages also double as HTML pages, meaning that if you create a page with the same URL as a music page, that HTML will display on the page along with the rest of the page.
 
-0.3.1
------
+### v0.3.1
 
 This version adds comments to the bottom of pages, and adds an administration section to moderate them.
 
-0.3
----
+### v0.3.0
 
 This version implements HTML pages.  Included are page hierarchy with simple navigation, and an administration section.
 
-0.2
----
+### v0.2.0
 
 This version implements the blog, which links to Blogger and Tumblr.  Included are comments, RSS feeds for the blog and each individual category, and an administration section.
 
-0.1.1
------
+### v0.1.1
 
 This version introduces the account page where you can change your email, password, or alias.  This version is branched as the ```base``` branch, and will be kept updated as portions of the code pertaining to this branch are updated.
 
-0.1
----
+### v0.1.0
 
 This version introduces the bare bones of the website, including the layout, Twitter feed, contacts, and hosted sites. Users can register, login, and request password reset authorizations.
 
-Planned Versions
-================
-
-1.1
----
-
-* Remove Visual Studio projects.
-* Allow for a directory structure in the files section.
-* Add résumé page.
-
-License Details
-===============
+## License Details
 
 All original code is released without license.  This means that you may not distribute the code without the express written consent of the author.
 
-Because the code resides on GitHub, you are permitted via GitHub's [Terms of Service](https://docs.github.com/en/github/site-policy/github-terms-of-service) to view and fork this repository.
+Because the code resides on GitHub, you are permitted via GitHub's [Terms of Service](https://docs.github.com/en/github/site-policy/github-terms-of-service) to view and fork this repository.  Pull requests are always welcome!
