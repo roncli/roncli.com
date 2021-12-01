@@ -103,7 +103,7 @@ class IndexView {
                                         <div class="info-panel-title rounded-top">Contacts</div>
                                         <div class="info-panel-list rounded-bottom">
                                             ${contacts.map((contact) => /* html */`
-                                                <a class="contents" href="${IndexView.Encoding.attributeEncode(contact.value)}" target="_blank">
+                                                <a class="contents" rel="me" href="${IndexView.Encoding.attributeEncode(contact.value)}" target="_blank">
                                                     <div class="center">${IndexView.Encoding.htmlEncode(contact.title)}</div>
                                                 </a>
                                             `).join("")}
