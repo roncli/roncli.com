@@ -317,7 +317,7 @@ class Index {
             });
 
             if (res.status !== 200) {
-                // TODO: Show loading error.
+                el.innerHTML = "<div><h3>Could not find the specified album.</h3></div>";
                 return;
             }
 
