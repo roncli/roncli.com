@@ -9,7 +9,9 @@ WORKDIR /var/www
 COPY ./package.json .
 
 # Run NPM install.
+RUN apk update && apk add git
 RUN npm install --production --silent
+RUN apk del git
 
 # Copy remaining files.
 COPY . .
