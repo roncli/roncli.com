@@ -26,7 +26,7 @@ do
     mkdir -p /var/certbot/work/$ENTRY
 
     # Run certbot if certificates don't yet exist.
-    if [[ ! -f /var/certbot/work/.init ]];
+    if [[ ! -f /var/certbot/work/$ENTRY/.init ]];
     then
         echo "Running certbot to initialize certificates."
 
@@ -42,13 +42,13 @@ do
         # Remove directories needed by certbot.
         rm -Rf /etc/letsencrypt/live/$ENTRY
         rm -Rf /etc/letsencrypt/archive/$ENTRY
-        rm -Rf /etc/letsencrypt/renewal/$ENTRY.conf    
+        rm -Rf /etc/letsencrypt/renewal/$ENTRY.conf
 
         # Get the certificate.
         certbot certonly -n --webroot -w /var/certbot/work/$ENTRY/.well-known $stagingArg --email $EMAIL -d $ENTRY --rsa-key-size 4096 --agree-tos --force-renewal
 
         # Create .init file to indicate the certificates now exist.
-        touch /var/certbot/work/.init
+        touch /var/certbot/work/$ENTRY/.init
     fi
 done
 

@@ -2,34 +2,34 @@ version: "3.7"
 
 services:
 
-  # logging:
-  #   container_name: roncli-logging
-  #   build: ./logging
-  #   ports:
-  #     - "12201:12201/udp"
-  #   environment:
-  #     PORT: 12201
-  #     APPINSIGHTS_PERFORMANCE_METRICS: 0
-  #     APPINSIGHTS_INSTRUMENTATIONKEY: /run/secrets/APPINSIGHTS_INSTRUMENTATIONKEY
-  #     APPLICATION: roncli.com
-  #   secrets:
-  #     - APPINSIGHTS_INSTRUMENTATIONKEY
-  #   restart: always
-  #   entrypoint: /var/logging/start.sh
+  logging:
+    container_name: roncli-logging
+    build: ./logging
+    ports:
+      - "12201:12201/udp"
+    environment:
+      PORT: 12201
+      APPINSIGHTS_PERFORMANCE_METRICS: 0
+      APPINSIGHTS_INSTRUMENTATIONKEY: /run/secrets/APPINSIGHTS_INSTRUMENTATIONKEY
+      APPLICATION: roncli.com
+    secrets:
+      - APPINSIGHTS_INSTRUMENTATIONKEY
+    restart: always
+    entrypoint: /var/logging/start.sh
 
   db:
     container_name: roncli-db
     build: ./db
-    # depends_on:
-    #   - logging
+    depends_on:
+      - logging
     networks:
       - roncli.com-network
     ports:
       - "27017:27017"
-    # logging:
-    #   driver: "gelf"
-    #   options:
-    #     gelf-address: "udp://localhost:12201"
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://localhost:12201"
     environment:
       DB_FILES_URI: /run/secrets/DB_FILES_URI
       DB_FILES_USERNAME: /run/secrets/DB_FILES_USERNAME
@@ -53,16 +53,16 @@ services:
   redis:
     container_name: roncli-redis
     build: ./redis
-    # depends_on:
-    #   - logging
+    depends_on:
+      - logging
     networks:
       - roncli.com-network
     ports:
       - "6379:6379"
-    # logging:
-    #   driver: "gelf"
-    #   options:
-    #     gelf-address: "udp://localhost:12201"
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://localhost:12201"
     environment:
       REDIS_PASSWORD_FILE: /run/secrets/REDIS_PASSWORD_FILE
       REDIS_PORT: 6379
@@ -79,15 +79,15 @@ services:
       args:
         USE_AZURE_FILE_STORAGE: 1
     depends_on:
-      # - logging
+      - logging
       - db
       - redis
     networks:
       - roncli.com-network
-    # logging:
-    #   driver: "gelf"
-    #   options:
-    #     gelf-address: "udp://localhost:12201"
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://localhost:12201"
     environment:
       APPINSIGHTS_INSTRUMENTATIONKEY: /run/secrets/APPINSIGHTS_INSTRUMENTATIONKEY
       BLIZZARD_CLIENT_ID_FILE: /run/secrets/BLIZZARD_CLIENT_ID_FILE
@@ -146,47 +146,47 @@ services:
     entrypoint: /var/www/start.sh
     privileged: true
 
-  # node-ronc-li:
-  #   container_name: roncli-node-ronc-li
-  #   build: ./node-ronc-li
-  #   depends_on:
-  #     - logging
-  #     - db
-  #     - redis
-  #   networks:
-  #     - roncli.com-network
-  #   logging:
-  #     driver: "gelf"
-  #     options:
-  #       gelf-address: "udp://localhost:12201"
-  #   environment:
-  #     APPINSIGHTS_INSTRUMENTATIONKEY: /run/secrets/APPINSIGHTS_INSTRUMENTATIONKEY
-  #     NODE_ENV: production
-  #     PORT: 3031
-  #     WEB_RONCLI_PASSWORD_FILE: /run/secrets/WEB_RONCLI_PASSWORD_FILE
-  #   secrets:
-  #     - APPINSIGHTS_INSTRUMENTATIONKEY
-  #     - WEB_RONCLI_PASSWORD_FILE
-  #   restart: always
-  #   entrypoint: /var/www/start.sh
-  #   privileged: true
+  node-ronc-li:
+    container_name: roncli-node-ronc-li
+    build: ./node-ronc-li
+    depends_on:
+      - logging
+      - db
+      - redis
+    networks:
+      - roncli.com-network
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://localhost:12201"
+    environment:
+      APPINSIGHTS_INSTRUMENTATIONKEY: /run/secrets/APPINSIGHTS_INSTRUMENTATIONKEY
+      NODE_ENV: production
+      PORT: 3031
+      WEB_RONCLI_PASSWORD_FILE: /run/secrets/WEB_RONCLI_PASSWORD_FILE
+    secrets:
+      - APPINSIGHTS_INSTRUMENTATIONKEY
+      - WEB_RONCLI_PASSWORD_FILE
+    restart: always
+    entrypoint: /var/www/start.sh
+    privileged: true
 
   nginx:
     container_name: roncli-nginx
     build: ./nginx
     depends_on:
       - node-roncli-com
-      # - node-ronc-li
-      # - logging
+      - node-ronc-li
+      - logging
     networks:
       - roncli.com-network
     ports:
       - "80:80"
       - "443:443"
-    # logging:
-    #   driver: "gelf"
-    #   options:
-    #     gelf-address: "udp://localhost:12201"
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://localhost:12201"
     environment:
       PHOTOS_PASSWORD_FILE: /run/secrets/PHOTOS_PASSWORD_FILE
       PHOTOS_USERNAME_FILE: /run/secrets/PHOTOS_USERNAME_FILE
@@ -200,24 +200,24 @@ services:
       - nginx-work:/var/nginx/work:rw
     entrypoint: /var/nginx/start.sh
 
-  # certbot:
-  #   container_name: roncli-certbot
-  #   build: ./certbot
-  #   depends_on:
-  #     - nginx
-  #     - logging
-  #   logging:
-  #     driver: "gelf"
-  #     options:
-  #       gelf-address: "udp://localhost:12201"
-  #   environment:
-  #     DOMAIN: roncli.com,photos.roncli.com,ronc.li
-  #     EMAIL: roncli@roncli.com
-  #   restart: always
-  #   volumes:
-  #     - certbot-conf:/etc/letsencrypt:rw
-  #     - certbot-work:/var/certbot/work:rw
-  #   entrypoint: /var/certbot/start.sh
+  certbot:
+    container_name: roncli-certbot
+    build: ./certbot
+    depends_on:
+      - nginx
+      - logging
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://localhost:12201"
+    environment:
+      DOMAIN: roncli.com,photos.roncli.com,ronc.li
+      EMAIL: roncli@roncli.com
+    restart: always
+    volumes:
+      - certbot-conf:/etc/letsencrypt:rw
+      - certbot-work:/var/certbot/work:rw
+    entrypoint: /var/certbot/start.sh
 
   photoprism:
     container_name: roncli-photoprism
@@ -226,10 +226,10 @@ services:
       - roncli.com-network
     ports:
       - "2342:2342"
-    # logging:
-    #   driver: "gelf"
-    #   options:
-    #     gelf-address: "udp://localhost:12201"
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://localhost:12201"
     environment:
       LIBRARY_URI: /run/secrets/LIBRARY_URI
       LIBRARY_USERNAME: /run/secrets/LIBRARY_USERNAME
@@ -237,7 +237,7 @@ services:
       STORAGE_URI: /run/secrets/STORAGE_URI
       STORAGE_USERNAME: /run/secrets/STORAGE_USERNAME
       STORAGE_PASSWORD: /run/secrets/STORAGE_PASSWORD
-      USE_AZURE_FILE_STORAGE: 0
+      USE_AZURE_FILE_STORAGE: 1
     secrets:
       - LIBRARY_URI
       - LIBRARY_USERNAME
