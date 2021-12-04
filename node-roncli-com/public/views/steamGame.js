@@ -48,7 +48,7 @@ class SteamGameView {
                                     <div class="tooltip-hover">
                                         <img class="achievement-image" src="${a.icon}" />
                                         <div class="tooltip-content">
-                                            <b>${a.name}</b>${a.description && a.description.length !== 0 ? /* html */`<br/>${a.description}` : ""}
+                                            <b>${SteamGameView.Encoding.htmlEncode(a.name)}</b>${a.description && a.description.length !== 0 ? /* html */`<br/>${SteamGameView.Encoding.htmlEncode(a.description)}` : ""}
                                         </div>
                                     </div>
                                 `).join("")}
@@ -63,7 +63,7 @@ class SteamGameView {
                                     <div class="tooltip-hover">
                                         <img class="achievement-image" src="${a.icongray}" />
                                         <div class="tooltip-content">
-                                            <b>${a.name}</b>${a.description && a.description.length !== 0 ? /* html */`<br/>${a.description}` : ""}
+                                            <b>${SteamGameView.Encoding.htmlEncode(a.name)}</b>${a.description && a.description.length !== 0 ? /* html */`<br/>${SteamGameView.Encoding.htmlEncode(a.description)}` : ""}
                                         </div>
                                     </div>
                                 `).join("")}
