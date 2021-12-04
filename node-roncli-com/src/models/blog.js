@@ -335,6 +335,10 @@ class Blog {
             /** @type {BlogTypes.Title} */
             const title = await HashCache.get(`${process.env.REDIS_PREFIX}:blog:urls`, url);
 
+            if (!title) {
+                return void 0;
+            }
+
             const [content, comments, mainNav, categoryNavs] = await Promise.all([
                 (async () => {
                     switch (title.blogSource) {
