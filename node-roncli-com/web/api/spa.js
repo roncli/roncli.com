@@ -64,7 +64,7 @@ class SPAApi extends RouterBase {
 
             let querystring = "";
 
-            if (Object.keys(dataset).length > 0) {
+            if (dataset && Object.keys(dataset).length > 0) {
                 querystring = `?${new url.URLSearchParams(dataset).toString()}`;
             }
 
