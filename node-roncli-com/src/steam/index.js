@@ -72,7 +72,13 @@ class Steam {
                     return void 0;
                 }
             })(),
-            steam.getGameDetails(appId.toString())
+            (async () => {
+                try {
+                    return await steam.getGameDetails(appId.toString());
+                } catch (err) {
+                    return void 0;
+                }
+            })()
         ]);
     }
 }

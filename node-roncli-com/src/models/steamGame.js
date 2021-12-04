@@ -61,7 +61,7 @@ class SteamGame {
         }
 
         await Cache.add(`${process.env.REDIS_PREFIX}:steam:achievements:${appId}`, {
-            headerUrl: details.header_image,
+            headerUrl: details ? details.header_image : void 0,
             achievements
         }, expire);
     }
@@ -265,6 +265,10 @@ class SteamGame {
         }
 
         this.achievements = await Cache.get(`${process.env.REDIS_PREFIX}:steam:achievements:${this.appId}`);
+
+        if (!this.achievements.headerUrl) {
+            this.achievements.headerUrl = this.logoUrl;
+        }
     }
 }
 
