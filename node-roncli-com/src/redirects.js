@@ -87,7 +87,7 @@ module.exports = {
     },
     "/css/fonts/bootstrap-icons.woff": {
         path: path.join(__dirname, "../node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff"),
-        contentTYpe: "font/woff"
+        contentType: "font/woff"
     },
     "/css/fonts/bootstrap-icons.woff2": {
         path: path.join(__dirname, "../node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2"),
