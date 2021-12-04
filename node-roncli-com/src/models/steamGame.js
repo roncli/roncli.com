@@ -40,19 +40,25 @@ class SteamGame {
         const expire = new Date();
         expire.setDate(expire.getDate() + 1);
 
-        const achievements = gameAchievements.map((a) => {
-            const achievement = playerAchievements.achievements.find((pa) => pa.api === a.name);
+        let achievements;
 
-            return {
-                id: a.name,
-                name: a.displayName,
-                description: a.description,
-                icon: a.icon,
-                icongray: a.icongray,
-                achieved: achievement ? achievement.achieved : false,
-                unlockTime: achievement && achievement.unlockTime ? new Date(achievement.unlockTime * 1000) : void 0
-            };
-        });
+        if (gameAchievements) {
+            achievements = gameAchievements.map((a) => {
+                const achievement = playerAchievements ? playerAchievements.achievements.find((pa) => pa.api === a.name) : void 0;
+
+                return {
+                    id: a.name,
+                    name: a.displayName,
+                    description: a.description,
+                    icon: a.icon,
+                    icongray: a.icongray,
+                    achieved: achievement ? achievement.achieved : false,
+                    unlockTime: achievement && achievement.unlockTime ? new Date(achievement.unlockTime * 1000) : void 0
+                };
+            });
+        } else {
+            achievements = [];
+        }
 
         await Cache.add(`${process.env.REDIS_PREFIX}:steam:achievements:${appId}`, {
             headerUrl: details.header_image,

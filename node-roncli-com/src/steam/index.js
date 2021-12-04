@@ -5,7 +5,7 @@
  * @typedef {Awaited<ReturnType<import("steamapi")["getUserAchievements"]>>} SteamAPI.PlayerAchievements
  */
 
-const SteamAPI = require("steamapi");
+const SteamApi = require("steamapi");
 
 //   ###    #
 //  #   #   #
@@ -30,7 +30,7 @@ class Steam {
      * @returns {Promise<SteamAPI.Game[]>} A promise that returns the owned games.
      */
     static getOwnedGames() {
-        const steam = new SteamAPI(process.env.STEAM_API_KEY);
+        const steam = new SteamApi(process.env.STEAM_API_KEY);
 
         return steam.getUserOwnedGames(process.env.STEAM_ID);
     }
@@ -48,20 +48,30 @@ class Steam {
      * @returns {Promise<[SteamAPI.Achievement[], SteamAPI.PlayerAchievements, SteamAPI.GameDetails]>}A promise that returns the game's achievements.
      */
     static getGameAchievements(appId) {
-        const steam = new SteamAPI(process.env.STEAM_API_KEY);
+        const steam = new SteamApi(process.env.STEAM_API_KEY);
 
         return Promise.all([
             (async () => {
-                /** @type {{[x: string]: any}} */
-                const schema = await steam.getGameSchema(appId.toString());
+                try {
+                    /** @type {{[x: string]: any}} */
+                    const schema = await steam.getGameSchema(appId.toString());
 
-                if (schema && schema.availableGameStats && schema.availableGameStats.achievements && schema.availableGameStats.achievements.length > 0) {
-                    return schema.availableGameStats.achievements;
+                    if (schema && schema.availableGameStats && schema.availableGameStats.achievements && schema.availableGameStats.achievements.length > 0) {
+                        return schema.availableGameStats.achievements;
+                    }
+                } catch (err) {
+                    return void 0;
                 }
 
                 return void 0;
             })(),
-            steam.getUserAchievements(process.env.STEAM_ID, appId.toString()),
+            (async () => {
+                try {
+                    return await steam.getUserAchievements(process.env.STEAM_ID, appId.toString());
+                } catch (err) {
+                    return void 0;
+                }
+            })(),
             steam.getGameDetails(appId.toString())
         ]);
     }
