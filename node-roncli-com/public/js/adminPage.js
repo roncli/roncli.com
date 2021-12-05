@@ -56,6 +56,21 @@ class AdminPage {
                 AdminPage.previewTimeout = setTimeout(async () => {
                     if (AdminPage.editor) {
                         document.getElementById("preview").innerHTML = AdminPage.editor.getValue();
+
+                        /** @type {NodeListOf<HTMLScriptElement>} */
+                        const scripts = document.querySelectorAll("#preview script");
+
+                        scripts.forEach((script) => {
+                            const newScript = document.createElement("script");
+
+                            Array.from(script.attributes).forEach((attr) => {
+                                newScript.setAttribute(attr.name, attr.value);
+                            });
+
+                            newScript.appendChild(document.createTextNode(script.innerHTML));
+                            script.parentNode.replaceChild(newScript, script);
+                        });
+
                         await AdminPage.SPA.setupWidgets();
                     }
                 }, 1000);
@@ -68,6 +83,21 @@ class AdminPage {
             };
 
             document.getElementById("preview").innerHTML = html;
+
+            /** @type {NodeListOf<HTMLScriptElement>} */
+            const scripts = document.querySelectorAll("#preview script");
+
+            scripts.forEach((script) => {
+                const newScript = document.createElement("script");
+
+                Array.from(script.attributes).forEach((attr) => {
+                    newScript.setAttribute(attr.name, attr.value);
+                });
+
+                newScript.appendChild(document.createTextNode(script.innerHTML));
+                script.parentNode.replaceChild(newScript, script);
+            });
+
             await AdminPage.SPA.setupWidgets();
         });
 

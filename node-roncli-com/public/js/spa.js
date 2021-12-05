@@ -181,6 +181,20 @@ class SPA {
         }
         document.getElementById("page-info").innerHTML = SPA.Template.renderTemplate(info, window[view].getInfo);
 
+        /** @type {NodeListOf<HTMLScriptElement>} */
+        const scripts = document.querySelectorAll("#page-html script");
+
+        scripts.forEach((script) => {
+            const newScript = document.createElement("script");
+
+            Array.from(script.attributes).forEach((attr) => {
+                newScript.setAttribute(attr.name, attr.value);
+            });
+
+            newScript.appendChild(document.createTextNode(script.innerHTML));
+            script.parentNode.replaceChild(newScript, script);
+        });
+
         window.scrollTo(0, 0);
     }
 
