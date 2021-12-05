@@ -98,7 +98,8 @@ class AdminFilesUploadAPI extends RouterBase {
                 // File does not exist, okay to proceed.
             }
 
-            await fs.rename(req.files[0].path, filePath);
+            await fs.copyFile(req.files[0].path, filePath);
+            await fs.unlink(req.files[0].path);
 
             const dir = new Directory(path.join(filePath, ".."));
 
