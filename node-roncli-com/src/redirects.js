@@ -25,6 +25,10 @@ module.exports = {
         path: path.join(__dirname, "../node_modules/monaco-editor/min/vs/base/worker/workerMain.js"),
         contentType: "text/javascript"
     },
+    "/js/monaco-editor/vs/basic-languages/css/css.js": {
+        path: path.join(__dirname, "../node_modules/monaco-editor/min/vs/basic-languages/css/css.js"),
+        contentType: "text/javascript"
+    },
     "/js/monaco-editor/vs/basic-languages/html/html.js": {
         path: path.join(__dirname, "../node_modules/monaco-editor/min/vs/basic-languages/html/html.js"),
         contentType: "text/javascript"
