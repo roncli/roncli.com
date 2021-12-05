@@ -145,6 +145,12 @@ class SPA {
             }
 
             SPA.Index.loading(false);
+
+            if (SPA.onComplete) {
+                SPA.onComplete();
+            }
+
+            SPA.onComplete = void 0;
         }).catch((err) => {
             window.location.href = path;
         });
@@ -328,6 +334,9 @@ SPA.Comments = typeof Comments === "undefined" ? require("./common/comments") : 
 /** @type {typeof import("./index")} */
 // @ts-ignore
 SPA.Index = typeof Index === "undefined" ? require("./index") : Index; // eslint-disable-line no-undef
+
+/** @type {function} */
+SPA.onComplete = null;
 
 /** @type {function} */
 SPA.onLogin = null;

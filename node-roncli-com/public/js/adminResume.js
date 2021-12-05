@@ -45,7 +45,9 @@ class AdminResume {
                 AdminResume.editor = void 0;
             };
 
-            AdminResume.editor.layout();
+            AdminResume.SPA.onComplete = () => {
+                AdminResume.editor.layout();
+            };
         });
 
         document.getElementById("save-json").addEventListener("click", async () => {

@@ -61,7 +61,9 @@ class AdminPage {
                 }, 1000);
             });
 
-            AdminPage.editor.layout();
+            AdminPage.SPA.onComplete = () => {
+                AdminPage.editor.layout();
+            };
 
             document.getElementById("preview").innerHTML = html;
             await AdminPage.SPA.setupWidgets();
