@@ -61,6 +61,8 @@ class AdminPage {
                 }, 1000);
             });
 
+            AdminPage.editor.layout();
+
             document.getElementById("preview").innerHTML = html;
             await AdminPage.SPA.setupWidgets();
         });
