@@ -1070,6 +1070,22 @@ div.pill.pill-static:focus {
     outline-offset: 0;
 }
 
+div.pill.green {
+    align-items: center;
+    row-gap: 0;
+    background-image: linear-gradient(to bottom, #576e3f 0, #384729 100%);
+    background-color: #384729;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.08);
+    color: white;
+    font-size: 12px;
+    min-height: 48px;
+}
+
+div.pill.green:hover {
+    background-color: #384729;
+}
+
+
 div.editor-container {
     width: 800px;
     height: 600px;

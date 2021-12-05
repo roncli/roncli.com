@@ -45,7 +45,7 @@ class CodingView {
                         <div class="grid grid-columns-3-fixed">
                             ${data.projects.map((p) => /* html */`
                                 <a class="content" href="${p.url}">
-                                    <div class="pill center">
+                                    <div class="pill green">
                                         <h3>${CodingView.Encoding.htmlEncode(p.title)}</h3>
                                         <div>${CodingView.Encoding.htmlEncode(p.description)}</div>
                                     </div>

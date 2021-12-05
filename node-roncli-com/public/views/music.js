@@ -59,37 +59,37 @@ class MusicView {
                     <div id="discography">
                         <div class="grid grid-columns-3-fixed">
                             <a class="content" href="/music/category/Classic">
-                                <div class="pill center">
+                                <div class="pill green">
                                     <h3>Classics</h3>
                                     <div>These are the timeless classics that define the music of The Nightstalker.</div>
                                 </div>
                             </a>
                             <a class="content" href="/music/category/Release">
-                                <div class="pill center">
+                                <div class="pill green">
                                     <h3>Releases</h3>
                                     <div>An archive of The Nightstalker's significant releases.</div>
                                 </div>
                             </a>
                             <a class="content" href="/music/category/Stripped Down">
-                                <div class="pill center">
+                                <div class="pill green">
                                     <h3>Stripped Down</h3>
                                     <div>Experience the raw emotion of The Nightstalker with this collection of stripped down recordings.</div>
                                 </div>
                             </a>
                             <a class="content" href="/music/category/Preview">
-                                <div class="pill center">
+                                <div class="pill green">
                                     <h3>Previews</h3>
                                     <div>Listen to clips and early versions of new works from The Nightstalker.</div>
                                 </div>
                             </a>
                             <a class="content" href="/music/category/Remake">
-                                <div class="pill center">
+                                <div class="pill green">
                                     <h3>Remakes</h3>
                                     <div>Here you will find new versions of old songs, touched up and re-imagined.</div>
                                 </div>
                             </a>
                             <a class="content" href="/music/category/B-Side">
-                                <div class="pill center">
+                                <div class="pill green">
                                     <h3>B-Sides</h3>
                                     <div>Not every song can be an instant classic.  These are some of the more obscure releases from The Nightstalker.</div>
                                 </div>
