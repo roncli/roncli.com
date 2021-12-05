@@ -101,6 +101,8 @@ class AdminFiles {
                 return;
             }
 
+            await AdminFiles.Template.loadTemplate("/views/adminFiles.js", "AdminFilesView");
+
             document.getElementById("page-html").innerHTML = AdminFiles.Template.renderTemplate(data, window.AdminFilesView.get);
 
             AdminFiles.Index.loading(false);
@@ -148,6 +150,8 @@ class AdminFiles {
 
                 return;
             }
+
+            await AdminFiles.Template.loadTemplate("/views/adminFiles.js", "AdminFilesView");
 
             document.getElementById("page-html").innerHTML = AdminFiles.Template.renderTemplate(data, window.AdminFilesView.get);
 
