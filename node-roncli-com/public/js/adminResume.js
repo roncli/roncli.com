@@ -46,7 +46,9 @@ class AdminResume {
             };
 
             AdminResume.SPA.onComplete = () => {
-                AdminResume.editor.layout();
+                if (AdminResume.editor) {
+                    AdminResume.editor.layout();
+                }
             };
         });
 

@@ -62,7 +62,9 @@ class AdminPage {
             });
 
             AdminPage.SPA.onComplete = () => {
-                AdminPage.editor.layout();
+                if (AdminPage.editor) {
+                    AdminPage.editor.layout();
+                }
             };
 
             document.getElementById("preview").innerHTML = html;
