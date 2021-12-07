@@ -48,16 +48,28 @@ class YouTube {
 
                 return res.data.items[0];
             })(), (async () => {
-                const res = await youtube.playlistItems.list({
-                    part: ["snippet"],
-                    playlistId: id
-                });
+                const items = [];
 
-                if (res.status !== 200) {
-                    throw new Error(`There was an error while getting YouTube playlist item from Google: status ${res.status}`);
+                let nextPageToken = "temp";
+
+                while (nextPageToken) {
+                    const res = await youtube.playlistItems.list({
+                        part: ["snippet"],
+                        playlistId: id,
+                        maxResults: 50,
+                        pageToken: nextPageToken === "temp" ? void 0 : nextPageToken || void 0
+                    });
+
+                    if (res.status !== 200) {
+                        throw new Error(`There was an error while getting YouTube playlist item from Google: status ${res.status}`);
+                    }
+
+                    nextPageToken = res.data.nextPageToken;
+
+                    items.push(...res.data.items);
                 }
 
-                return res.data.items;
+                return items;
             })()
         ]);
 
