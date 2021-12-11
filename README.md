@@ -14,6 +14,12 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 
 ## Version History
 
+### v2.0.0 Beta 2 - 12/11/2021
+
+* Various bug fixes found during go live.
+* Logging improvements for regular cache check.
+* Package updates.
+
 ### v2.0.0 Beta 1 - 12/1/2021
 
 This release is a complete rewrite of the website, and is a release candidate for version 2.0.0.
