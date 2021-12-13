@@ -85,18 +85,27 @@ class SteamGame {
         expire.setDate(expire.getDate() + 1);
 
         await Promise.all([
-            HashCache.add(`${process.env.REDIS_PREFIX}:steam:games`, games.map((game) => ({
-                key: game.appID.toString(),
-                value: game
-            })), expire),
-            SortedSetCache.add(`${process.env.REDIS_PREFIX}:steam:games:total`, games.map((game) => ({
-                score: game.playTime,
-                value: game
-            })), expire),
-            SortedSetCache.add(`${process.env.REDIS_PREFIX}:steam:games:recent`, games.filter((g) => g.playTime2 && g.playTime2 > 0).map((game) => ({
-                score: game.playTime2,
-                value: game
-            })), expire),
+            (async () => {
+                await Cache.remove([`${process.env.REDIS_PREFIX}:steam:games`]);
+                await HashCache.add(`${process.env.REDIS_PREFIX}:steam:games`, games.map((game) => ({
+                    key: game.appID.toString(),
+                    value: game
+                })), expire);
+            })(),
+            (async () => {
+                await Cache.remove([`${process.env.REDIS_PREFIX}:steam:games:total`]);
+                await SortedSetCache.add(`${process.env.REDIS_PREFIX}:steam:games:total`, games.map((game) => ({
+                    score: game.playTime,
+                    value: game
+                })), expire);
+            })(),
+            (async() => {
+                await Cache.remove([`${process.env.REDIS_PREFIX}:steam:games:recent`]);
+                await SortedSetCache.add(`${process.env.REDIS_PREFIX}:steam:games:recent`, games.filter((g) => g.playTime2 && g.playTime2 > 0).map((game) => ({
+                    score: game.playTime2,
+                    value: game
+                })), expire);
+            })(),
             ...games.map((game) => Cache.add(`${process.env.REDIS_PREFIX}:steam:game:${game.appID}`, game, expire))
         ]);
     }
