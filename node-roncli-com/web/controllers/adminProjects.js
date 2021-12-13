@@ -67,6 +67,7 @@ class AdminProjects extends RouterBase {
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({
+                title: "Projects - Admin - roncli.com",
                 css: [],
                 js: ["/js/sortable/sortable.js", "/js/adminProjects.js"],
                 views: [
@@ -81,7 +82,17 @@ class AdminProjects extends RouterBase {
             });
         } else {
             res.status(200).send(await Common.page(
-                "",
+                /* html */`
+                    <title>Projects - Admin - roncli.com</title>
+                    <meta name="og:description" content="Manage and edit projects on roncli.com." />
+                    <meta name="og:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="og:title" content="Projects Admin" />
+                    <meta name="og:type" content="website" />
+                    <meta name="twitter:card" content="summary" />
+                    <meta name="twitter:description" content="Manage and edit projects on roncli.com." />
+                    <meta name="twitter:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="twitter:title" content="Projects Admin" />
+                `,
                 void 0,
                 {js: ["/js/sortable/sortable.js", "/js/adminProjects.js"]},
                 AdminProjectsView.get(data),

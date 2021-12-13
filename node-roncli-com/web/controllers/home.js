@@ -210,6 +210,7 @@ class Home extends RouterBase {
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({
+                title: "roncli.com",
                 css: ["/css/home.css"],
                 js: [],
                 views: [
@@ -223,7 +224,17 @@ class Home extends RouterBase {
             });
         } else {
             res.status(200).send(await Common.page(
-                "",
+                /* html */`
+                    <title>roncli.com</title>
+                    <meta name="og:description" content="Welcome to roncli.com." />
+                    <meta name="og:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="og:title" content="roncli.com" />
+                    <meta name="og:type" content="website" />
+                    <meta name="twitter:card" content="summary" />
+                    <meta name="twitter:description" content="Welcome to roncli.com." />
+                    <meta name="twitter:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="twitter:title" content="roncli.com" />
+                `,
                 void 0,
                 {css: ["/css/home.css"]},
                 HomeView.get(data),

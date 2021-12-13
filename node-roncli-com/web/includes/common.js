@@ -60,6 +60,7 @@ class Common extends RouterBase {
         if (req.headers["content-type"] === "application/json") {
             if (req.method === "GET") {
                 res.status(404).json({
+                    title: "Page Not Found - roncli.com",
                     css: ["/css/error.css"],
                     views: [
                         {
@@ -75,7 +76,9 @@ class Common extends RouterBase {
             }
         } else {
             res.status(404).send(await Common.page(
-                "",
+                /* html */`
+                    <title>Page Not Found - roncli.com</title>
+                `,
                 void 0,
                 {css: ["/css/error.css"]},
                 NotFoundView.get(),

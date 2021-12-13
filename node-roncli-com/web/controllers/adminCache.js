@@ -60,6 +60,7 @@ class AdminCache extends RouterBase {
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({
+                title: "Cache - Admin - roncli.com",
                 css: [],
                 js: ["/js/adminCache.js"],
                 views: [
@@ -73,7 +74,17 @@ class AdminCache extends RouterBase {
             });
         } else {
             res.status(200).send(await Common.page(
-                "",
+                /* html */`
+                    <title>Cache - Admin - roncli.com</title>
+                    <meta name="og:description" content="Clear various caches on roncli.com." />
+                    <meta name="og:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="og:title" content="Cache Admin" />
+                    <meta name="og:type" content="website" />
+                    <meta name="twitter:card" content="summary" />
+                    <meta name="twitter:description" content="Clear various caches on roncli.com." />
+                    <meta name="twitter:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="twitter:title" content="Cache Admin" />
+                `,
                 void 0,
                 {js: ["/js/adminCache.js"]},
                 AdminCacheView.get(),

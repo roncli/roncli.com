@@ -65,6 +65,7 @@ class GamingSpeedruns extends RouterBase {
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({
+                title: "Speedrunning Records - Gaming - roncli.com",
                 css: [],
                 js: [],
                 views: [
@@ -78,7 +79,17 @@ class GamingSpeedruns extends RouterBase {
             });
         } else {
             res.status(200).send(await Common.page(
-                "",
+                /* html */`
+                    <title>Speedrunning Records - Gaming - roncli.com</title>
+                    <meta name="og:description" content="A list of all of roncli's speedrunning records." />
+                    <meta name="og:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="og:title" content="Speedrunning Records - Gaming" />
+                    <meta name="og:type" content="website" />
+                    <meta name="twitter:card" content="summary" />
+                    <meta name="twitter:description" content="A list of all of roncli's speedrunning records." />
+                    <meta name="twitter:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="twitter:title" content="Speedrunning Records - Gaming" />
+                `,
                 void 0,
                 {},
                 GamingSpeedrunsView.get(data),

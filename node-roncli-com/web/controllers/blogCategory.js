@@ -90,6 +90,7 @@ class BlogCategory extends RouterBase {
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({
+                title: "Blog - roncli.com",
                 css: ["/css/blog.css"],
                 js: ["/js/blog.js"],
                 views: [
@@ -113,7 +114,17 @@ class BlogCategory extends RouterBase {
             });
         } else {
             res.status(200).send(await Common.page(
-                "",
+                /* html */`
+                    <title>Blog - roncli.com</title>
+                    <meta name="og:description" content="The roncli.com blog." />
+                    <meta name="og:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="og:title" content="Blog" />
+                    <meta name="og:type" content="website" />
+                    <meta name="twitter:card" content="summary" />
+                    <meta name="twitter:description" content="The roncli.com blog." />
+                    <meta name="twitter:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="twitter:title" content="Blog" />
+                `,
                 void 0,
                 {
                     css: ["/css/blog.css"],

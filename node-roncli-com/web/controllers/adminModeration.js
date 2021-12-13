@@ -65,6 +65,7 @@ class AdminModeration extends RouterBase {
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({
+                title: "Moderation - Admin - roncli.com",
                 css: [],
                 js: ["/js/adminModeration.js"],
                 views: [
@@ -79,7 +80,17 @@ class AdminModeration extends RouterBase {
             });
         } else {
             res.status(200).send(await Common.page(
-                "",
+                /* html */`
+                    <title>Moderation - Admin - roncli.com</title>
+                    <meta name="og:description" content="Moderate posts on roncli.com." />
+                    <meta name="og:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="og:title" content="Moderation Admin" />
+                    <meta name="og:type" content="website" />
+                    <meta name="twitter:card" content="summary" />
+                    <meta name="twitter:description" content="Moderate posts on roncli.com." />
+                    <meta name="twitter:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="twitter:title" content="Moderation Admin" />
+                `,
                 void 0,
                 {js: ["/js/adminModeration.js"]},
                 AdminModerationView.get(data),

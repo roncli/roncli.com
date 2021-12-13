@@ -31,14 +31,11 @@ class IndexView {
         return /* html */`
             <html>
                 <head>
-                    <title>roncli.com</title>
                     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-                    <meta name="og:image" content="https://${host}/images/roncli.png" />
-                    <meta name="og:title" content="roncli.com" />
-                    <meta name="og:type" content="website" />
+                    <meta name="og:site_name" content="roncli.com" />
                     <meta name="og:url" content="https://${host}${encodeURI(originalUrl)}" />
-                    <meta name="twitter:card" content="summary" />
                     <meta name="twitter:creator" content="@roncli" />
+                    <meta name="twitter:url" content="https://${host}${encodeURI(originalUrl)}" />
                     <script src="https://w.soundcloud.com/player/api.js"></script>
                     <script src="https://www.youtube.com/iframe_api"></script>
                     ${head}

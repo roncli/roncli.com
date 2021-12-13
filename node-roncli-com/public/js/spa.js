@@ -58,6 +58,12 @@ class SPA {
 
             let promise;
 
+            if (data.title) {
+                document.title = data.title;
+            } else {
+                document.title = "roncli.com";
+            }
+
             if (window[data.view]) {
                 // Render the page.
                 await SPA.renderPage(data.data, data.info, data.view, data.comments);

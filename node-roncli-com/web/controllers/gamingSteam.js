@@ -72,6 +72,7 @@ class GamingSteam extends RouterBase {
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({
+                title: "Steam - Gaming - roncli.com",
                 css: ["/css/gamingSteam.css"],
                 js: ["/js/gamingSteam.js"],
                 views: [
@@ -94,7 +95,17 @@ class GamingSteam extends RouterBase {
             });
         } else {
             res.status(200).send(await Common.page(
-                "",
+                /* html */`
+                    <title>Steam - Gaming - roncli.com</title>
+                    <meta name="og:description" content="A list of roncli's Steam games collection." />
+                    <meta name="og:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="og:title" content="Steam - Gaming" />
+                    <meta name="og:type" content="website" />
+                    <meta name="twitter:card" content="summary" />
+                    <meta name="twitter:description" content="A list of roncli's Steam games collection." />
+                    <meta name="twitter:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="twitter:title" content="Steam - Gaming" />
+                `,
                 void 0,
                 {
                     css: ["/css/gamingSteam.css"],

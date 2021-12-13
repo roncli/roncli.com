@@ -4,6 +4,7 @@
  */
 
 const Common = require("../includes/common"),
+    Encoding = require("../../public/js/common/encoding"),
     Page = require("../../src/models/page"),
     RouterBase = require("hot-router").RouterBase,
     SteamGameModel = require("../../src/models/steamGame"),
@@ -82,6 +83,7 @@ class SteamGame extends RouterBase {
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({
+                title: `${game.name} - Gaming - roncli.com`,
                 css: ["/css/steamGame.css"],
                 js: [],
                 views: [
@@ -96,7 +98,17 @@ class SteamGame extends RouterBase {
             });
         } else {
             res.status(200).send(await Common.page(
-                "",
+                /* html */`
+                    <title>${Encoding.htmlEncode(game.name)} - Gaming - roncli.com</title>
+                    <meta name="og:description" content="roncli's progress in the game &quot;${Encoding.attributeEncode(game.name)}&quot;." />
+                    <meta name="og:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="og:title" content="${Encoding.attributeEncode(game.name)} - Gaming" />
+                    <meta name="og:type" content="website" />
+                    <meta name="twitter:card" content="summary" />
+                    <meta name="twitter:description" content="roncli's progress in the game &quot;${Encoding.attributeEncode(game.name)}&quot;." />
+                    <meta name="twitter:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="twitter:title" content="${Encoding.attributeEncode(game.name)} - Gaming" />
+                `,
                 void 0,
                 {css: ["/css/steamGame.css"]},
                 SteamGameView.get(data),

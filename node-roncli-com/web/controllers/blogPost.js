@@ -7,6 +7,7 @@ const Blog = require("../../src/models/blog"),
     BlogPostView = require("../../public/views/blogPost"),
     Comment = require("../../src/models/comment"),
     Common = require("../includes/common"),
+    Encoding = require("../../public/js/common/encoding"),
     RouterBase = require("hot-router").RouterBase,
     User = require("../../src/models/user");
 
@@ -107,6 +108,7 @@ class BlogPost extends RouterBase {
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({
+                title: `${post.post.title} - Blog - roncli.com`,
                 css: ["/css/blogPost.css"],
                 js: [],
                 views: [
@@ -126,7 +128,24 @@ class BlogPost extends RouterBase {
             });
         } else {
             res.status(200).send(await Common.page(
-                "",
+                /* html */`
+                    <title>${Encoding.htmlEncode(post.post.title)} - Blog - roncli.com</title>
+                    <meta name="article:author" content="https://www.facebook.com/roncli" />
+                    <meta name="article:publisher" content="https://www.facebook.com/roncli" />
+                    <meta name="article:published_time" content="${new Date(post.post.published).toISOString()}" />
+                    <meta name="article:section" content="Blog" />
+                    ${post.post.categories.map((c) => /* html */`
+                        <meta name="article:tag" content="${Encoding.attributeEncode(c)}" />
+                    `).join("")}
+                    <meta name="og:description" content="Read the post &quot;${Encoding.attributeEncode(post.post.title)}&quot; on the roncli.com blog." />
+                    <meta name="og:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="og:title" content="${Encoding.attributeEncode(post.post.title)}" />
+                    <meta name="og:type" content="article" />
+                    <meta name="twitter:card" content="summary" />
+                    <meta name="twitter:description" content="Read the post &quot;${Encoding.attributeEncode(post.post.title)}&quot; on the roncli.com blog." />
+                    <meta name="twitter:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="twitter:title" content="${Encoding.attributeEncode(post.post.title)}" />
+                `,
                 comments,
                 {
                     css: ["/css/blogPost.css"],

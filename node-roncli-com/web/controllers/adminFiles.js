@@ -122,6 +122,7 @@ class AdminFiles extends RouterBase {
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({
+                title: "Files - Admin - roncli.com",
                 css: [],
                 js: ["/js/adminFiles.js"],
                 views: [
@@ -137,7 +138,17 @@ class AdminFiles extends RouterBase {
             });
         } else {
             res.status(200).send(await Common.page(
-                "",
+                /* html */`
+                    <title>Files - Admin - roncli.com</title>
+                    <meta name="og:description" content="Manage the files directory on roncli.com." />
+                    <meta name="og:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="og:title" content="Files Admin" />
+                    <meta name="og:type" content="website" />
+                    <meta name="twitter:card" content="summary" />
+                    <meta name="twitter:description" content="Manage the files directory on roncli.com." />
+                    <meta name="twitter:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="twitter:title" content="Files Admin" />
+                `,
                 void 0,
                 {js: ["/js/adminFiles.js"]},
                 AdminFilesView.get(data),

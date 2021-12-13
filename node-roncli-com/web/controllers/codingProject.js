@@ -5,6 +5,7 @@
 
 const Common = require("../includes/common"),
     CodingProjectView = require("../../public/views/codingProject"),
+    Encoding = require("../../public/js/common/encoding"),
     Page = require("../../src/models/page"),
     Project = require("../../src/models/project"),
     RouterBase = require("hot-router").RouterBase,
@@ -91,6 +92,7 @@ class CodingProject extends RouterBase {
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({
+                title: `${project.title} - Coding - roncli.com`,
                 css: ["/css/codingProject.css"],
                 js: [],
                 views: [
@@ -105,7 +107,17 @@ class CodingProject extends RouterBase {
             });
         } else {
             res.status(200).send(await Common.page(
-                "",
+                /* html */`
+                    <title>${Encoding.htmlEncode(project.title)} - Coding - roncli.com</title>
+                    <meta name="og:description" content="Details about the project &quot;${Encoding.attributeEncode(project.title)}&quot;." />
+                    <meta name="og:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="og:title" content="${Encoding.attributeEncode(project.title)}" />
+                    <meta name="og:type" content="website" />
+                    <meta name="twitter:card" content="summary" />
+                    <meta name="twitter:description" content="Details about the project &quot;${Encoding.attributeEncode(project.title)}&quot;." />
+                    <meta name="twitter:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="twitter:title" content="${Encoding.attributeEncode(project.title)}" />
+                `,
                 void 0,
                 {css: ["/css/codingProject.css"]},
                 CodingProjectView.get(data),

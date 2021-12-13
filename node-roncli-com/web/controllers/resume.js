@@ -55,6 +55,7 @@ class Resume extends RouterBase {
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({
+                title: "Résumé - roncli.com",
                 css: ["/css/resume.css"],
                 js: ["/js/resume.js"],
                 views: [
@@ -68,7 +69,17 @@ class Resume extends RouterBase {
             });
         } else {
             res.status(200).send(await Common.page(
-                "",
+                /* html */`
+                    <title>Résumé - roncli.com</title>
+                    <meta name="og:description" content="The professional résumé of Ronald M. Clifford." />
+                    <meta name="og:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="og:title" content="Résumé" />
+                    <meta name="og:type" content="website" />
+                    <meta name="twitter:card" content="summary" />
+                    <meta name="twitter:description" content="The professional résumé of Ronald M. Clifford." />
+                    <meta name="twitter:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="twitter:title" content="Résumé" />
+                `,
                 void 0,
                 {
                     css: ["/css/resume.css"],

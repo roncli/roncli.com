@@ -65,6 +65,7 @@ class AdminRedirects extends RouterBase {
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({
+                title: "Redirects - Admin - roncli.com",
                 css: [],
                 js: ["/js/adminRedirects.js"],
                 views: [
@@ -79,7 +80,17 @@ class AdminRedirects extends RouterBase {
             });
         } else {
             res.status(200).send(await Common.page(
-                "",
+                /* html */`
+                    <title>Redirects - Admin - roncli.com</title>
+                    <meta name="og:description" content="Manage redirects on ronc.li." />
+                    <meta name="og:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="og:title" content="Redirects Admin" />
+                    <meta name="og:type" content="website" />
+                    <meta name="twitter:card" content="summary" />
+                    <meta name="twitter:description" content="Manage redirects on ronc.li." />
+                    <meta name="twitter:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="twitter:title" content="Redirects Admin" />
+                `,
                 void 0,
                 {js: ["/js/adminRedirects.js"]},
                 AdminRedirectsView.get(data),

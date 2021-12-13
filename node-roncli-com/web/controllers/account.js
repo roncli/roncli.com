@@ -58,6 +58,7 @@ class Account extends RouterBase {
         if (!user) {
             if (req.headers["content-type"] === "application/json") {
                 res.status(401).json({
+                    title: "Unauthorized - roncli.com",
                     css: ["/css/error.css"],
                     views: [
                         {
@@ -70,7 +71,9 @@ class Account extends RouterBase {
                 });
             } else {
                 res.status(401).send(await Common.page(
-                    "",
+                /* html */`
+                    <title>Unauthorized - roncli.com</title>
+                `,
                     void 0,
                     {css: ["/css/error.css"]},
                     UnauthorizedView.get(),
@@ -84,6 +87,7 @@ class Account extends RouterBase {
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({
+                title: "Account - roncli.com",
                 css: ["/css/account.css"],
                 js: ["/js/account.js"],
                 views: [
@@ -98,7 +102,17 @@ class Account extends RouterBase {
             });
         } else {
             res.status(200).send(await Common.page(
-                "",
+                /* html */`
+                    <title>Account - roncli.com</title>
+                    <meta name="og:description" content="View and update your roncli.com account." />
+                    <meta name="og:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="og:title" content="Account" />
+                    <meta name="og:type" content="website" />
+                    <meta name="twitter:card" content="summary" />
+                    <meta name="twitter:description" content="View and update your roncli.com account." />
+                    <meta name="twitter:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="twitter:title" content="Account" />
+                `,
                 void 0,
                 {
                     css: ["/css/account.css"],

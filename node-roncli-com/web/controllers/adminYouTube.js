@@ -64,6 +64,7 @@ class AdminYouTube extends RouterBase {
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({
+                title: "YouTube - Admin - roncli.com",
                 css: [],
                 js: ["/js/adminYouTube.js"],
                 views: [
@@ -78,7 +79,17 @@ class AdminYouTube extends RouterBase {
             });
         } else {
             res.status(200).send(await Common.page(
-                "",
+                /* html */`
+                    <title>YouTube - Admin - roncli.com</title>
+                    <meta name="og:description" content="Manage the YouTube playlists on roncli.com." />
+                    <meta name="og:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="og:title" content="YouTube Admin" />
+                    <meta name="og:type" content="website" />
+                    <meta name="twitter:card" content="summary" />
+                    <meta name="twitter:description" content="Manage the YouTube playlists on roncli.com." />
+                    <meta name="twitter:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="twitter:title" content="YouTube Admin" />
+                `,
                 void 0,
                 {js: ["/js/adminYouTube.js"]},
                 AdminYouTubeView.get(data),

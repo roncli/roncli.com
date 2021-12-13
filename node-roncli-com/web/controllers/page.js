@@ -5,6 +5,7 @@
 
 const Comment = require("../../src/models/comment"),
     Common = require("../includes/common"),
+    Encoding = require("../../public/js/common/encoding"),
     PageModel = require("../../src/models/page"),
     PageView = require("../../public/views/page"),
     RouterBase = require("hot-router").RouterBase,
@@ -68,6 +69,7 @@ class Page extends RouterBase {
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({
+                title: `${page.shortTitle} - roncli.com`,
                 css: [],
                 js: [],
                 views: [
@@ -83,7 +85,17 @@ class Page extends RouterBase {
             });
         } else {
             res.status(200).send(await Common.page(
-                "",
+                /* html */`
+                    <title>${Encoding.htmlEncode(page.shortTitle)} - roncli.com</title>
+                    <meta name="og:description" content="Welcome to roncli.com." />
+                    <meta name="og:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="og:title" content="${Encoding.attributeEncode(page.title)}" />
+                    <meta name="og:type" content="website" />
+                    <meta name="twitter:card" content="summary" />
+                    <meta name="twitter:description" content="Welcome to roncli.com." />
+                    <meta name="twitter:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="twitter:title" content="${Encoding.attributeEncode(page.title)}" />
+                `,
                 comments,
                 {},
                 PageView.get(data),

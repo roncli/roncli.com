@@ -66,6 +66,7 @@ class Admin extends RouterBase {
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({
+                title: "Admin - roncli.com",
                 css: [],
                 js: [],
                 views: [
@@ -79,7 +80,17 @@ class Admin extends RouterBase {
             });
         } else {
             res.status(200).send(await Common.page(
-                "",
+                /* html */`
+                    <title>Admin - roncli.com</title>
+                    <meta name="og:description" content="Administration for roncli.com." />
+                    <meta name="og:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="og:title" content="Admin" />
+                    <meta name="og:type" content="website" />
+                    <meta name="twitter:card" content="summary" />
+                    <meta name="twitter:description" content="Administration for roncli.com." />
+                    <meta name="twitter:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="twitter:title" content="Admin" />
+                `,
                 void 0,
                 {},
                 AdminView.get(data),

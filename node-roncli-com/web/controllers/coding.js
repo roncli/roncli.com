@@ -107,6 +107,7 @@ class Coding extends RouterBase {
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({
+                title: "Coding - roncli.com",
                 css: [],
                 js: [],
                 views: [
@@ -121,7 +122,17 @@ class Coding extends RouterBase {
             });
         } else {
             res.status(200).send(await Common.page(
-                "",
+                /* html */`
+                    <title>Coding - roncli.com</title>
+                    <meta name="og:description" content="Coding projects that roncli has worked on." />
+                    <meta name="og:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="og:title" content="Coding" />
+                    <meta name="og:type" content="website" />
+                    <meta name="twitter:card" content="summary" />
+                    <meta name="twitter:description" content="Coding projects that roncli has worked on." />
+                    <meta name="twitter:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="twitter:title" content="Coding" />
+                `,
                 void 0,
                 {},
                 CodingView.get(data),

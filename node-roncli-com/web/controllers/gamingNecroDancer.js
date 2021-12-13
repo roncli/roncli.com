@@ -79,6 +79,7 @@ class GamingNecroDancer extends RouterBase {
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({
+                title: "Crypt of the NecroDancer Records - Gaming - roncli.com",
                 css: [],
                 js: [],
                 views: [
@@ -93,7 +94,17 @@ class GamingNecroDancer extends RouterBase {
             });
         } else {
             res.status(200).send(await Common.page(
-                "",
+                /* html */`
+                    <title>Crypt of the NecroDancer Records - Gaming - roncli.com</title>
+                    <meta name="og:description" content="A list of all of roncli's records in Crypt of the NecroDancer." />
+                    <meta name="og:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="og:title" content="Crypt of the NecroDancer Records - Gaming" />
+                    <meta name="og:type" content="website" />
+                    <meta name="twitter:card" content="summary" />
+                    <meta name="twitter:description" content="A list of all of roncli's records in Crypt of the NecroDancer." />
+                    <meta name="twitter:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="twitter:title" content="Crypt of the NecroDancer Records - Gaming" />
+                `,
                 void 0,
                 {},
                 GamingNecroDancerView.get(data),

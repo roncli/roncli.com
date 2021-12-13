@@ -2,9 +2,10 @@ import Comment from "../../src/models/comment"
 
 declare namespace SPATypes {
     type SPAData<T1, T2> = {
+        title: string
         css: string[]
-        comments: Comment[]
         js: string[]
+        comments: Comment[]
         views: {
             name: string
             path: string

@@ -4,6 +4,7 @@
  */
 
 const Common = require("../includes/common"),
+    Encoding = require("../../public/js/common/encoding"),
     SpeedrunGameView = require("../../public/views/speedrunGame"),
     Page = require("../../src/models/page"),
     RouterBase = require("hot-router").RouterBase,
@@ -82,6 +83,7 @@ class SpeedrunGame extends RouterBase {
 
         if (req.headers["content-type"] === "application/json") {
             res.status(200).json({
+                title: `${speedruns.name} Speedruns - Gaming - roncli.com`,
                 css: [],
                 js: [],
                 views: [
@@ -96,7 +98,17 @@ class SpeedrunGame extends RouterBase {
             });
         } else {
             res.status(200).send(await Common.page(
-                "",
+                /* html */`
+                    <title>${Encoding.htmlEncode(speedruns.name)} Speedruns - Gaming - roncli.com</title>
+                    <meta name="og:description" content="roncli's speedruns of the game &quot;${Encoding.attributeEncode(speedruns.name)}&quot;." />
+                    <meta name="og:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="og:title" content="${Encoding.attributeEncode(speedruns.name)} Speedruns - Gaming" />
+                    <meta name="og:type" content="website" />
+                    <meta name="twitter:card" content="summary" />
+                    <meta name="twitter:description" content="roncli's speedruns of the game &quot;${Encoding.attributeEncode(speedruns.name)}&quot;." />
+                    <meta name="twitter:image" content="https://roncli.com/images/roncliLogo.png" />
+                    <meta name="twitter:title" content="${Encoding.attributeEncode(speedruns.name)} Speedruns - Gaming" />
+                `,
                 void 0,
                 {},
                 SpeedrunGameView.get(data),
