@@ -209,6 +209,9 @@ services:
   photoprism:
     container_name: roncli-photoprism
     build: ./photoprism
+    depends_on:
+      - mariadb
+      - logging
     networks:
       - roncli.com-network
     ports:
@@ -217,11 +220,52 @@ services:
       driver: "gelf"
       options:
         gelf-address: "udp://localhost:12201"
+    environment:
+      PHOTOPRISM_DATABASE_DRIVER: mysql
+      PHOTOPRISM_DATABASE_NAME: photoprism
+      PHOTOPRISM_DATABASE_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD_FILE
+      PHOTOPRISM_DATABASE_SERVER: mariadb:3306
+      PHOTOPRISM_DOWNLOAD_TOKEN: public
+      PHOTOPRISM_DATABASE_USER: photoprism
+      PHOTOPRISM_LOG_LEVEL: error
+      PHOTOPRISM_PUBLIC: "true"
+      PHOTOPRISM_SITE_AUTHOR: Ronald M. Clifford
+      PHOTOPRISM_SITE_CAPTION: Music. Coding. Gaming. Life.
+      PHOTOPRISM_SITE_TITLE: roncli.com Photos
+      PHOTOPRISM_SITE_URL: https://photos.roncli.com/
+    secrets:
+      - MYSQL_PASSWORD_FILE
     restart: always
     volumes:
       - /mnt/library:/photoprism/originals
       - /mnt/storage:/photoprism/storage
     entrypoint: /var/photoprism/start.sh
+
+  mariadb:
+    container_name: roncli-mariadb
+    build: ./mariadb
+    depends_on:
+      - logging
+    networks:
+      - roncli.com-network
+    ports:
+      - "3306:3306"
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://localhost:12201"
+    environment:
+      MYSQL_DATABASE: photoprism
+      MYSQL_PASSWORD_FILE: /run/secrets/MYSQL_PASSWORD_FILE
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/MYSQL_ROOT_PASSWORD_FILE
+      MYSQL_USER: photoprism
+    secrets:
+      - MYSQL_PASSWORD_FILE
+      - MYSQL_ROOT_PASSWORD_FILE
+    restart: always
+    volumes:
+      - /mnt/mariadb:/var/lib/mysql:rw
+    entrypoint: /var/mariadb/start.sh
 
 networks:
   roncli.com-network:
@@ -251,6 +295,10 @@ secrets:
     file: ./secrets/MONGO_INITDB_ROOT_PASSWORD_FILE
   MONGO_INITDB_ROOT_USERNAME_FILE:
     file: ./secrets/MONGO_INITDB_ROOT_USERNAME_FILE
+  MYSQL_PASSWORD_FILE:
+    file: ./secrets/MYSQL_PASSWORD_FILE
+  MYSQL_ROOT_PASSWORD_FILE:
+    file: ./secrets/MYSQL_ROOT_PASSWORD_FILE
   PHOTOS_USERNAME_FILE:
     file: ./secrets/PHOTOS_USERNAME_FILE
   PHOTOS_PASSWORD_FILE:
