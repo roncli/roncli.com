@@ -69,10 +69,7 @@ services:
 
   node-roncli-com:
     container_name: roncli-node-roncli-com
-    build:
-      context: ./node-roncli-com
-      args:
-        USE_AZURE_FILE_STORAGE: 1
+    build: ./node-roncli-com
     depends_on:
       - logging
       - db
@@ -90,9 +87,6 @@ services:
       BLOGGER_BLOG_ID: 10934322
       COOKIE_SECRET_FILE: /run/secrets/COOKIE_SECRET_FILE
       ENCRYPTION_KEY_FILE: /run/secrets/ENCRYPTION_KEY_FILE
-      FILES_URI: /run/secrets/FILES_URI
-      FILES_USERNAME: /run/secrets/FILES_USERNAME
-      FILES_PASSWORD: /run/secrets/FILES_PASSWORD
       GITHUB_TOKEN_FILE: /run/secrets/GITHUB_TOKEN_FILE
       GOOGLE_API_KEY_FILE: /run/secrets/GOOGLE_API_KEY_FILE
       MINIFY_CACHE: 1
@@ -114,7 +108,6 @@ services:
       TUMBLR_CONSUMER_KEY_FILE: /run/secrets/TUMBLR_CONSUMER_KEY_FILE
       TUMBLR_CONSUMER_SECRET_FILE: /run/secrets/TUMBLR_CONSUMER_SECRET_FILE
       TUMBLR_URL: roncli.tumblr.com
-      USE_AZURE_FILE_STORAGE: 1
       WEB_RONCLI_PASSWORD_FILE: /run/secrets/WEB_RONCLI_PASSWORD_FILE
       XIVAPI_API_KEY_FILE: /run/secrets/XIVAPI_API_KEY_FILE
     secrets:
@@ -123,9 +116,6 @@ services:
       - BLIZZARD_CLIENT_SECRET_FILE
       - COOKIE_SECRET_FILE
       - ENCRYPTION_KEY_FILE
-      - FILES_URI
-      - FILES_USERNAME
-      - FILES_PASSWORD
       - GITHUB_TOKEN_FILE
       - GOOGLE_API_KEY_FILE
       - REDIS_PASSWORD_FILE
@@ -138,6 +128,8 @@ services:
       - WEB_RONCLI_PASSWORD_FILE
       - XIVAPI_API_KEY_FILE
     restart: always
+    volumes:
+      - /mnt/files:/var/www/files:rw
     entrypoint: /var/www/start.sh
     privileged: true
 
@@ -225,22 +217,10 @@ services:
       driver: "gelf"
       options:
         gelf-address: "udp://localhost:12201"
-    environment:
-      LIBRARY_URI: /run/secrets/LIBRARY_URI
-      LIBRARY_USERNAME: /run/secrets/LIBRARY_USERNAME
-      LIBRARY_PASSWORD: /run/secrets/LIBRARY_PASSWORD
-      STORAGE_URI: /run/secrets/STORAGE_URI
-      STORAGE_USERNAME: /run/secrets/STORAGE_USERNAME
-      STORAGE_PASSWORD: /run/secrets/STORAGE_PASSWORD
-      USE_AZURE_FILE_STORAGE: 1
-    secrets:
-      - LIBRARY_URI
-      - LIBRARY_USERNAME
-      - LIBRARY_PASSWORD
-      - STORAGE_URI
-      - STORAGE_USERNAME
-      - STORAGE_PASSWORD
     restart: always
+    volumes:
+      - /mnt/library:/photoprism/originals
+      - /mnt/storage:/photoprism/storage
     entrypoint: /var/photoprism/start.sh
 
 networks:
@@ -263,22 +243,10 @@ secrets:
     file: ./secrets/COOKIE_SECRET_FILE
   ENCRYPTION_KEY_FILE:
     file: ./secrets/ENCRYPTION_KEY_FILE
-  FILES_URI:
-    file: ./secrets/FILES_URI
-  FILES_USERNAME:
-    file: ./secrets/FILES_USERNAME
-  FILES_PASSWORD:
-    file: ./secrets/FILES_PASSWORD
   GITHUB_TOKEN_FILE:
     file: ./secrets/GITHUB_TOKEN_FILE
   GOOGLE_API_KEY_FILE:
     file: ./secrets/GOOGLE_API_KEY_FILE
-  LIBRARY_URI:
-    file: ./secrets/LIBRARY_URI
-  LIBRARY_USERNAME:
-    file: ./secrets/LIBRARY_USERNAME
-  LIBRARY_PASSWORD:
-    file: ./secrets/LIBRARY_PASSWORD
   MONGO_INITDB_ROOT_PASSWORD_FILE:
     file: ./secrets/MONGO_INITDB_ROOT_PASSWORD_FILE
   MONGO_INITDB_ROOT_USERNAME_FILE:
@@ -297,12 +265,6 @@ secrets:
     file: ./secrets/SOUNDCLOUD_CLIENT_SECRET_FILE
   STEAM_API_KEY_FILE:
     file: ./secrets/STEAM_API_KEY_FILE
-  STORAGE_URI:
-    file: ./secrets/STORAGE_URI
-  STORAGE_USERNAME:
-    file: ./secrets/STORAGE_USERNAME
-  STORAGE_PASSWORD:
-    file: ./secrets/STORAGE_PASSWORD
   TUMBLR_CONSUMER_KEY_FILE:
     file: ./secrets/TUMBLR_CONSUMER_KEY_FILE
   TUMBLR_CONSUMER_SECRET_FILE:
