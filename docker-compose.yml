@@ -264,7 +264,8 @@ services:
       - MYSQL_ROOT_PASSWORD_FILE
     restart: always
     volumes:
-      - /mnt/mariadb:/var/lib/mysql:rw
+      # TODO: Use /mnt/mariadb when https://jira.mariadb.org/browse/MDEV-26970 is resolved.
+      - /mnt/mariadb_local:/var/lib/mysql:rw
     entrypoint: /var/mariadb/start.sh
 
 networks:
