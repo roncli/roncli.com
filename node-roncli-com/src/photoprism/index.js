@@ -34,6 +34,10 @@ class PhotoPrism {
             json: true
         });
 
+        if (res.statusCode === 404) {
+            return void 0;
+        }
+
         if (res.statusCode !== 200) {
             throw new Error(`There was an error while getting an album from PhotoPrism: status ${res.statusCode}`);
         }
