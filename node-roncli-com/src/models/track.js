@@ -145,6 +145,10 @@ class Track {
                 await Track.cacheSoundCloud();
             }
 
+            if (!await Cache.exists([`${process.env.REDIS_PREFIX}:soundcloud:tracks`])) {
+                return 0;
+            }
+
             return await SortedSetCache.count(`${process.env.REDIS_PREFIX}:soundcloud:tag:${category}`, "-inf", "+inf");
         } catch (err) {
             Log.error("There was an error while counting SoundCloud tracks by category.", {err});
