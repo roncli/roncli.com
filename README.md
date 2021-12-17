@@ -14,6 +14,13 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 
 ## Version History
 
+### v2.0.0 - 12/16/2021
+
+* Various bug fixes found during go live.
+* Updated favicon and other meta images.
+* Added metadata for sites like Twitter and Facebook to read.
+* Package updates.
+
 ### v2.0.0 Beta 2 - 12/11/2021
 
 * Various bug fixes found during go live.
