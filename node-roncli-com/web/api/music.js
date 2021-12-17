@@ -81,6 +81,11 @@ class MusicAPI extends RouterBase {
                     tracks = await Track.getTracks(page * Track.pageSize - Track.pageSize, Track.pageSize);
                 }
 
+                if (!tracks) {
+                    res.status(404).json({error: "Not found, category does not exist."});
+                    return;
+                }
+
                 res.status(200).json(tracks);
                 return;
             }
@@ -93,6 +98,11 @@ class MusicAPI extends RouterBase {
                     data = await Track.getTracksByCategoryByDate(category, date);
                 } else {
                     data = await Track.getTracksByDate(date);
+                }
+
+                if (!data) {
+                    res.status(404).json({error: "Not found, category does not exist."});
+                    return;
                 }
 
                 res.status(200).json(data);
@@ -108,6 +118,11 @@ class MusicAPI extends RouterBase {
                             tracks = await Track.getTracksByCategory(category, 0, -1);
                         } else {
                             tracks = await Track.getTracks(0, -1);
+                        }
+
+                        if (!tracks) {
+                            res.status(404).json({error: "Not found, category does not exist."});
+                            return;
                         }
 
                         const data = tracks.map((t) => t.uri);

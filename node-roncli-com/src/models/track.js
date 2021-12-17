@@ -338,14 +338,18 @@ class Track {
      */
     static async getTracksByCategory(category, offset, count) {
         try {
-            if (!await Cache.exists([`${process.env.REDIS_PREFIX}:soundcloud:tag:${category}`])) {
+            if (!await Cache.exists([`${process.env.REDIS_PREFIX}:soundcloud:tracks`])) {
                 await Track.cacheSoundCloud();
+            }
+
+            if (!await Cache.exists([`${process.env.REDIS_PREFIX}:soundcloud:tag:${category}`])) {
+                return void 0;
             }
 
             return (await SortedSetCache.getReverse(`${process.env.REDIS_PREFIX}:soundcloud:tag:${category}`, offset, offset + count - 1)).map((t) => new Track(t));
         } catch (err) {
             Log.error("There was an error while getting tracks by category.", {err});
-            return [];
+            return void 0;
         }
     }
 
@@ -363,8 +367,12 @@ class Track {
      * @returns {Promise<{page: number, tracks: Track[]}>} A promise that returns the list of tracks.
      */
     static async getTracksByCategoryByDate(category, date) {
-        if (!await Cache.exists([`${process.env.REDIS_PREFIX}:soundcloud:tag:${category}`])) {
+        if (!await Cache.exists([`${process.env.REDIS_PREFIX}:soundcloud:tracks`])) {
             await Track.cacheSoundCloud();
+        }
+
+        if (!await Cache.exists([`${process.env.REDIS_PREFIX}:soundcloud:tag:${category}`])) {
+            return void 0;
         }
 
         const count = await SortedSetCache.count(`${process.env.REDIS_PREFIX}:soundcloud:tag:${category}`, `(${date.getTime()}`, "+inf"),
