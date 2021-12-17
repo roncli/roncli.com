@@ -33,7 +33,7 @@
         "connect-redis": "6.0.0",
         "cookie-parser": "1.4.6",
         "editorjs-parser": "1.5.3",
-        "express": "4.17.1",
+        "express": "4.17.2",
         "express-session": "1.17.2",
         "googleapis": "92.0.0",
         "hot-router": "1.0.0-beta.8",
