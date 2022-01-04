@@ -27,7 +27,7 @@
         "@roncli/node-redis": "roncli/node-redis#v0.1.11",
         "@root/request": "1.8.0",
         "@xivapi/js": "roncli/xivapi-js#1e23375482e9a8db1d977ac510f65d2888dae2fb",
-        "blizzard.js": "4.1.1",
+        "blizzard.js": "4.2.0",
         "bootstrap-icons": "1.7.2",
         "compression": "1.7.4",
         "connect-redis": "6.0.0",
