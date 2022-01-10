@@ -62,6 +62,6 @@
         "@types/pbkdf2": "3.1.0",
         "@types/sortablejs": "1.10.7",
         "@types/steamapi": "2.2.2",
-        "ol": "6.10.0"
+        "ol": "6.11.0"
     }
 }
