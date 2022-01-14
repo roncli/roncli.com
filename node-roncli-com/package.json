@@ -25,7 +25,7 @@
         "@roncli/node-application-insights-logger": "roncli/node-application-insights-logger#v1.0.7",
         "@roncli/node-minify": "roncli/node-minify#v1.1.3",
         "@roncli/node-redis": "roncli/node-redis#v0.1.11",
-        "@root/request": "1.8.0",
+        "@root/request": "1.8.1",
         "@xivapi/js": "roncli/xivapi-js#1e23375482e9a8db1d977ac510f65d2888dae2fb",
         "blizzard.js": "4.2.0",
         "bootstrap-icons": "1.7.2",
