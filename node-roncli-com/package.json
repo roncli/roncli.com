@@ -26,7 +26,7 @@
         "@roncli/node-minify": "roncli/node-minify#v1.1.3",
         "@roncli/node-redis": "roncli/node-redis#v0.1.12",
         "@root/request": "1.8.1",
-        "@xivapi/js": "roncli/xivapi-js#1e23375482e9a8db1d977ac510f65d2888dae2fb",
+        "@xivapi/js": "0.4.0",
         "blizzard.js": "4.2.0",
         "bootstrap-icons": "1.8.1",
         "compression": "1.7.4",
