@@ -28,7 +28,7 @@
         "@root/request": "1.8.1",
         "@xivapi/js": "roncli/xivapi-js#1e23375482e9a8db1d977ac510f65d2888dae2fb",
         "blizzard.js": "4.2.0",
-        "bootstrap-icons": "1.8.0",
+        "bootstrap-icons": "1.8.1",
         "compression": "1.7.4",
         "connect-redis": "6.0.0",
         "cookie-parser": "1.4.6",
@@ -51,7 +51,7 @@
         "tumblr.js": "3.0.0"
     },
     "devDependencies": {
-        "@babel/core": "7.16.12",
+        "@babel/core": "7.17.0",
         "@babel/eslint-parser": "7.16.5",
         "@types/cookie-parser": "1.4.2",
         "@types/express": "4.17.13",
