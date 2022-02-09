@@ -18,7 +18,7 @@
     },
     "license": "MIT",
     "dependencies": {
-        "@roncli/node-application-insights-logger": "roncli/node-application-insights-logger#v1.0.7",
+        "@roncli/node-application-insights-logger": "roncli/node-application-insights-logger#v1.0.8",
         "@root/request": "1.8.1",
         "express": "4.17.2",
         "mongodb": "4.3.1"
