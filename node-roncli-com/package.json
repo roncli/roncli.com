@@ -35,7 +35,7 @@
         "editorjs-parser": "1.5.3",
         "express": "4.17.2",
         "express-session": "1.17.2",
-        "googleapis": "94.0.0",
+        "googleapis": "95.0.0",
         "hot-router": "1.0.0-beta.8",
         "html-minifier-terser": "6.1.0",
         "monaco-editor": "0.32.1",
