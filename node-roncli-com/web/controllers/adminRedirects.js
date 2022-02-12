@@ -92,7 +92,7 @@ class AdminRedirects extends RouterBase {
                     <meta name="twitter:title" content="Redirects Admin" />
                 `,
                 void 0,
-                {js: ["/js/adminRedirects.js"]},
+                {js: ["/views/adminRedirects.js", "/js/adminRedirects.js"]},
                 AdminRedirectsView.get(data),
                 AdminRedirectsView.getInfo(),
                 req,
