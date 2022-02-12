@@ -22,7 +22,7 @@
         "@editorjs/quote": "2.4.0",
         "@fontsource/archivo-narrow": "4.5.3",
         "@octokit/rest": "18.12.0",
-        "@roncli/node-application-insights-logger": "roncli/node-application-insights-logger#v1.0.7",
+        "@roncli/node-application-insights-logger": "roncli/node-application-insights-logger#v1.0.8",
         "@roncli/node-minify": "roncli/node-minify#v1.1.4",
         "@roncli/node-redis": "roncli/node-redis#v0.1.12",
         "@root/request": "1.8.1",
