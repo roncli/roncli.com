@@ -20,7 +20,7 @@ class AdminRedirects {
      * @returns {void}
      */
     static DOMContentLoaded() {
-        document.querySelectorAll("div#admin-files button.delete").forEach((el) => el.addEventListener("click", async () => {
+        document.querySelectorAll("div#admin-redirects button.delete").forEach((el) => el.addEventListener("click", async () => {
             const id = /** @type {HTMLButtonElement} */(el).dataset.id; // eslint-disable-line no-extra-parens
 
             AdminRedirects.Index.loading(true);
