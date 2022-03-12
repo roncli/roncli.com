@@ -14,6 +14,11 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 
 ## Version History
 
+### v2.0.2 - 3/11/2022
+
+* Implement database backup.
+* Package updates.
+
 ### v2.0.1 - 2/12/2022
 
 * Fixed a bug with deleting a redirect.
