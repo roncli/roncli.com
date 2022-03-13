@@ -1,7 +1,7 @@
 /**
  * @typedef {import("../../types/node/blogTypes").Title} BlogTypes.Title
- * @typedef {import("googleapis").blogger_v3.Schema$Comment} Google.Blogger.SchemaComment
- * @typedef {import("googleapis").blogger_v3.Schema$Post} Google.Blogger.SchemaPost
+ * @typedef {import("@googleapis/blogger").blogger_v3.Schema$Comment} Google.Blogger.SchemaComment
+ * @typedef {import("@googleapis/blogger").blogger_v3.Schema$Post} Google.Blogger.SchemaPost
  */
 
 const Blogger = require("../google/blogger"),

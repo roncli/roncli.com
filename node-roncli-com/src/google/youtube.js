@@ -1,15 +1,13 @@
 /**
- * @typedef {import("googleapis").youtube_v3.Schema$Playlist} Google.YouTube.Playlist
- * @typedef {import("googleapis").youtube_v3.Schema$PlaylistItem} Google.YouTube.PlaylistItem
- * @typedef {import("googleapis").youtube_v3.Schema$Video} Google.YouTube.Video
+ * @typedef {import("@googleapis/youtube").youtube_v3.Schema$Playlist} Google.YouTube.Playlist
+ * @typedef {import("@googleapis/youtube").youtube_v3.Schema$PlaylistItem} Google.YouTube.PlaylistItem
+ * @typedef {import("@googleapis/youtube").youtube_v3.Schema$Video} Google.YouTube.Video
  */
 
-const google = require("googleapis").google,
-
-    youtube = google.youtube({
-        version: "v3",
-        auth: process.env.GOOGLE_API_KEY
-    });
+const youtube = require("@googleapis/youtube").youtube({
+    version: "v3",
+    auth: process.env.GOOGLE_API_KEY
+});
 
 //  #   #                #####         #
 //  #   #                  #           #

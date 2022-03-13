@@ -1,8 +1,8 @@
 /**
- * @typedef {import("googleapis").blogger_v3.Params$Resource$Comments$List} Google.Blogger.ParamsResourceCommentsList
- * @typedef {import("googleapis").blogger_v3.Params$Resource$Posts$List} Google.Blogger.ParamsResourcePostsList
- * @typedef {import("googleapis").blogger_v3.Schema$Comment} Google.Blogger.SchemaComment
- * @typedef {import("googleapis").blogger_v3.Schema$Post} Google.Blogger.SchemaPost
+ * @typedef {import("@googleapis/blogger").blogger_v3.Params$Resource$Comments$List} Google.Blogger.ParamsResourceCommentsList
+ * @typedef {import("@googleapis/blogger").blogger_v3.Params$Resource$Posts$List} Google.Blogger.ParamsResourcePostsList
+ * @typedef {import("@googleapis/blogger").blogger_v3.Schema$Comment} Google.Blogger.SchemaComment
+ * @typedef {import("@googleapis/blogger").blogger_v3.Schema$Post} Google.Blogger.SchemaPost
  */
 
 const google = require("googleapis").google,
