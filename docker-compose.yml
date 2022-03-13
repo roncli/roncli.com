@@ -269,6 +269,27 @@ services:
       - /mnt/mariadb_local:/var/lib/mysql:rw
     entrypoint: /var/mariadb/start.sh
 
+  mail:
+    container_name: roncli-mail
+    build: ./mail
+    depends_on:
+      - logging
+    networks:
+      - roncli.com-network
+    ports:
+      - "25:25"
+    logging:
+      driver: "gelf"
+      options:
+        gelf-address: "udp://localhost:12201"
+    environment:
+      DOMAIN: roncli.com
+      SMF_CONFIG: "@roncli.com:roncli@gmail.com"
+    restart: always
+    volumes:
+      - certbot-conf:/etc/letsencrypt:rw
+    entrypoint: /var/mail/start.sh
+
 networks:
   roncli.com-network:
     driver: bridge
