@@ -433,7 +433,7 @@ class Resume {
         if (typeof obj === "string") {
             return /* html */`
                 <div class="key"><span class="quote">${typeof key === "string" ? "\"" : ""}</span><span class="title">${key}</span><span class="quote">${typeof key === "string" ? "\"" : ""}</span>:</div>
-                <div class="value"><span class="quote">"</span><span class="data">${obj}</span><span class="quote">"</span><span class="comma">${comma ? "," : ""}</span></div>
+                <div class="value"><span class="quote">"</span><span class="data">${Resume.replaceLinks(obj)}</span><span class="quote">"</span><span class="comma">${comma ? "," : ""}</span></div>
             `;
         } else if (obj instanceof Array) {
             // If the array is all strings, just display the full array.
@@ -448,7 +448,7 @@ class Resume {
                 <div class="key"><span class="quote">${typeof key === "string" ? "\"" : ""}</span><span class="title">${key}</span><span class="quote">${typeof key === "string" ? "\"" : ""}</span>:</div>
                 <div class="value"><div class="front-bracket">[</div>
                     ${obj.map((el, index) => /* html */`
-                        <div class="subvalue"><span class="quote">${typeof el === "string" ? "\"" : ""}</span>${el}<span class="quote">${typeof el === "string" ? "\"" : ""}</span><span class="comma">${index + 1 === obj.length ? "" : ","}</span></div>
+                        <div class="subvalue"><span class="quote">"</span>${Resume.replaceLinks(el)}<span class="quote">"</span><span class="comma">${index + 1 === obj.length ? "" : ","}</span></div>
                     `).join("")}
                 <div class="back-bracket">]<span class="comma">${comma ? "," : ""}</span></div></div>
             `;
@@ -529,6 +529,22 @@ class Resume {
 
             document.head.appendChild(script);
         });
+    }
+
+    //                   ##                      #      #          #
+    //                    #                      #                 #
+    // ###    ##   ###    #     ###   ##    ##   #     ##    ###   # #    ###
+    // #  #  # ##  #  #   #    #  #  #     # ##  #      #    #  #  ##    ##
+    // #     ##    #  #   #    # ##  #     ##    #      #    #  #  # #     ##
+    // #      ##   ###   ###    # #   ##    ##   ####  ###   #  #  #  #  ###
+    //             #
+    /**
+     * Replaces links with an anchor tag to the link.
+     * @param {string} str The text.
+     * @returns {string} The text with an anchor tag in place of links.
+     */
+    static replaceLinks(str) {
+        return str.replace(/^https?:\/\/.+$/, "<a target=\"_blank\" href=\"$&\">$&</a>");
     }
 
     //              #                      #  #
