@@ -5,12 +5,10 @@
  * @typedef {import("@googleapis/blogger").blogger_v3.Schema$Post} Google.Blogger.SchemaPost
  */
 
-const google = require("googleapis").google,
-
-    blogger = google.blogger({
-        version: "v3",
-        auth: process.env.GOOGLE_API_KEY
-    });
+const blogger = require("@googleapis/blogger").blogger({
+    version: "v3",
+    auth: process.env.GOOGLE_API_KEY
+});
 
 //  ####    ##
 //   #  #    #

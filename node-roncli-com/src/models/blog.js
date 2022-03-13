@@ -118,7 +118,7 @@ class Blog {
         ];
 
         for (const category of Object.keys(categories)) {
-            if (Object.prototype.hasOwnProperty.call(categories, category)) {
+            if (Object.hasOwn(categories, category)) {
                 promises.push(SortedSetCache.add(`${process.env.REDIS_PREFIX}:blogger:category:${category}`, categories[category], expire));
             }
         }
@@ -205,7 +205,7 @@ class Blog {
         ];
 
         for (const category of Object.keys(categories)) {
-            if (Object.prototype.hasOwnProperty.call(categories, category)) {
+            if (Object.hasOwn(categories, category)) {
                 promises.push(SortedSetCache.add(`${process.env.REDIS_PREFIX}:tumblr:category:${category}`, categories[category], expire));
             }
         }

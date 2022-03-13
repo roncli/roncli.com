@@ -3,7 +3,7 @@
         "allowJs": true,
         "checkJs": true,
         "esModuleInterop": true,
-        "lib": ["es2017"],
+        "lib": ["es2022"],
         "module": "commonjs",
         "moduleResolution": "node",
         "outDir": "./.vscode/ts",
