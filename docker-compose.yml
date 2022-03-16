@@ -285,6 +285,8 @@ services:
     environment:
       DOMAIN: roncli.com
       SMF_CONFIG: "@roncli.com:roncli@gmail.com"
+      SMF_POSTFIXMAIN_smtp_tls_wrappermode: "yes"
+      SMF_POSTFIXMAIN_smtp_tls_security_level: encrypt
       SMF_RELAYHOST: smtp.gmail.com:465
       SMTP_USERNAME: roncli@gmail.com
       SMTP_PASSWORD_FILE: /run/secrets/SMTP_PASSWORD_FILE
