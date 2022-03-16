@@ -11,4 +11,4 @@ then
     ln -s /etc/letsencrypt/live/$DOMAIN/privkey.pem /etc/postfix/cert/smtp.key
 fi
 
-SMF_RELAYHOSTAUTH="$SMTP_USERNAME:$(cat $SMTP_PASSWORD_FILE)" /entrypoint.sh
+SMF_RELAYAUTH="$SMTP_USERNAME:$(cat $SMTP_PASSWORD_FILE)" /entrypoint.sh
