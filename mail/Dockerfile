@@ -12,3 +12,6 @@ COPY ./*.sh /var/mail/
 
 # Allow start script to run.
 RUN chmod +x /var/mail/*.sh
+
+# Expose port 25.
+EXPOSE 25
