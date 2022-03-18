@@ -16,7 +16,6 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 
 ### v2.0.3 - 3/15/2022
 
-* Implement simple mail forwarder.
 * Fix fonts on résumé page.
 * Add links to résumé page.
 * Package updates.
