@@ -20,7 +20,7 @@
     "dependencies": {
         "@editorjs/editorjs": "2.23.2",
         "@editorjs/quote": "2.4.0",
-        "@fontsource/archivo-narrow": "4.5.4",
+        "@fontsource/archivo-narrow": "4.5.8",
         "@googleapis/blogger": "0.2.0",
         "@googleapis/youtube": "4.1.1",
         "@octokit/rest": "18.12.0",
