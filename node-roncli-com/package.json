@@ -35,7 +35,7 @@
         "connect-redis": "6.1.3",
         "cookie-parser": "1.4.6",
         "editorjs-parser": "1.5.3",
-        "express": "4.17.3",
+        "express": "4.18.1",
         "express-session": "1.17.2",
         "hot-router": "1.0.0-beta.9",
         "html-minifier-terser": "6.1.0",
