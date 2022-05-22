@@ -14,6 +14,10 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 
 ## Version History
 
+### v2.0.4 - 5/22/2022
+
+* Package updates.
+
 ### v2.0.3 - 3/15/2022
 
 * Fix fonts on résumé page.
