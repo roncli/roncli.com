@@ -17,6 +17,7 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 ### v2.0.4 - 5/22/2022
 
 * Package updates.
+* Update PhotoPrism's entry point location.
 
 ### v2.0.3 - 3/15/2022
 
