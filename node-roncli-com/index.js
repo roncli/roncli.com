@@ -2,6 +2,7 @@ const CacheData = require("./src/cacheData"),
     compression = require("compression"),
     connectRedis = require("connect-redis"),
     cookieParser = require("cookie-parser"),
+    Discord = require("./src/discord"),
     express = require("express"),
     expressSession = require("express-session"),
     fs = require("fs").promises,
@@ -13,6 +14,7 @@ const CacheData = require("./src/cacheData"),
     util = require("util"),
 
     Cache = Redis.Cache,
+    Listeners = require("./src/listeners"),
     Redirects = require("./src/redirects");
 
 process.on("unhandledRejection", (reason) => {
@@ -54,6 +56,13 @@ process.on("unhandledRejection", (reason) => {
         Log.error(`Redis error: ${err.message}`, {err: err.err});
     });
     await Cache.flush();
+
+    // Setup various listeners.
+    Listeners.setup();
+
+    // Startup Discord.
+    Discord.startup();
+    await Discord.connect();
 
     // Setup express app.
     const app = express();
