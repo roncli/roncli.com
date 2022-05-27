@@ -14,6 +14,10 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 
 ## Version History
 
+### v2.0.5 - 5/26/2022
+
+* Add barebones Discord bot.
+
 ### v2.0.4 - 5/22/2022
 
 * Package updates.
