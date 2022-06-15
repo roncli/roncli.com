@@ -55,16 +55,14 @@ class Project {
                 createdAt: new Date(r.created_at),
                 url: r.html_url
             })),
-            commits: repo.commits.map((c) => {
-                console.log(c);
-                return ({
-                    author: c.author ? c.author.name : c.commit.author.name,
-                    committer: c.committer ? c.committer.name : c.commit.committer.name,
-                    description: c.commit.message,
-                    createdAt: new Date(c.commit.committer.date),
-                    url: c.html_url,
-                    sha: c.sha
-                }); })
+            commits: repo.commits.map((c) => ({
+                author: c.author ? c.author.name : c.commit.author.name,
+                committer: c.committer ? c.committer.name : c.commit.committer.name,
+                description: c.commit.message,
+                createdAt: new Date(c.commit.committer.date),
+                url: c.html_url,
+                sha: c.sha
+            }))
         }, expire);
     }
 
