@@ -19,7 +19,7 @@
     "license": "MIT",
     "dependencies": {
         "@roncli/node-application-insights-logger": "roncli/node-application-insights-logger#v1.0.11",
-        "@root/request": "1.8.1",
+        "@root/request": "1.8.2",
         "express": "4.18.1",
         "mongodb": "4.7.0"
     },
