@@ -50,7 +50,8 @@
         "steamapi": "2.2.0",
         "svg-captcha": "1.4.0",
         "timeago.js": "4.0.2",
-        "tumblr.js": "3.0.0"
+        "tumblr.js": "3.0.0",
+        "twitter-api-v2": "1.12.2"
     },
     "devDependencies": {
         "@babel/core": "7.18.2",

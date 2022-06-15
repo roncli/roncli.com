@@ -177,7 +177,7 @@ class Discord {
 
         let msg;
         try {
-            msg = await Discord.richQueue(new DiscordJs.MessageEmbed({description: message}), channel);
+            msg = await Discord.richQueue(Discord.messageEmbed({description: message}), channel);
         } catch {}
         return msg;
     }
@@ -216,7 +216,10 @@ class Discord {
             return void 0;
         }
 
-        embed.setFooter(embed.footer ? embed.footer.text : "", Discord.icon);
+        embed.setFooter({
+            text: embed.footer ? embed.footer.text : "",
+            iconURL: embed.footer && embed.footer.iconURL || Discord.icon
+        });
 
         if (embed && embed.fields) {
             embed.fields.forEach((field) => {
