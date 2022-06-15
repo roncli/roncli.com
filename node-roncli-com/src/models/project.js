@@ -56,7 +56,7 @@ class Project {
                 url: r.html_url
             })),
             commits: repo.commits.map((c) => ({
-                author: c.author.name,
+                author: c.author ? c.author.name : c.committer.name,
                 committer: c.committer.name,
                 description: c.commit.message,
                 createdAt: new Date(c.commit.committer.date),
