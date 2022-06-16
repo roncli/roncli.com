@@ -22,7 +22,7 @@
         "@editorjs/quote": "2.4.0",
         "@fontsource/archivo-narrow": "4.5.8",
         "@googleapis/blogger": "0.2.0",
-        "@googleapis/youtube": "4.2.0",
+        "@googleapis/youtube": "5.0.0",
         "@octokit/rest": "18.12.0",
         "@roncli/node-application-insights-logger": "roncli/node-application-insights-logger#v1.0.11",
         "@roncli/node-minify": "roncli/node-minify#v1.1.8",
