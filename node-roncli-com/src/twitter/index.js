@@ -39,10 +39,10 @@ class Twitter {
             accessSecret: process.env.TWITTER_ACCESS_SECRET
         });
 
-        const roClient = client.readOnly,
+        const appClient = await client.appLogin(),
             tweets = [];
 
-        const timeline = await roClient.v2.userTimeline(process.env.TWITTER_ID, {
+        const timeline = await appClient.v2.userTimeline(process.env.TWITTER_ID, {
             "since_id": lastId,
             "max_results": 100,
             exclude: "replies",
