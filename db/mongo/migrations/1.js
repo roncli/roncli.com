@@ -1,5 +1,3 @@
-const roncli = db.getSiblingDB("roncli");
-
 // Create Twitter collection.
 roncli.createCollection("twitter", {
     validator: {
