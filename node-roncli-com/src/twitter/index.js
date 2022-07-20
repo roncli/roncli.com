@@ -39,7 +39,7 @@ class Twitter {
             accessSecret: process.env.TWITTER_ACCESS_SECRET
         });
 
-        const appClient = await client.appLogin(),
+        const appClient = (await client.appLogin()).readOnly,
             tweets = [];
 
         const timeline = await appClient.v2.userTimeline(process.env.TWITTER_ID, {
