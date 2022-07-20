@@ -4,7 +4,8 @@ const DiscordJs = require("discord.js"),
     util = require("util"),
 
     discord = new DiscordJs.Client({
-        intents: ["GUILDS", "GUILD_MESSAGES"]
+        intents: ["GUILDS", "GUILD_MESSAGES"],
+        retryLimit: 999999999
     });
 
 let readied = false;
