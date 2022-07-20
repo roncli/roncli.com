@@ -47,7 +47,7 @@ class Twitter {
             "max_results": 100,
             exclude: "replies",
             expansions: ["author_id"],
-            "tweet.fields": ["in_reply_to_user_id"],
+            "tweet.fields": ["in_reply_to_user_id", "created_at"],
             "user.fields": ["name", "profile_image_url"]
         });
 
@@ -73,7 +73,7 @@ class Twitter {
             }
 
             await Discord.richQueue(Discord.messageEmbed({
-                timestamp: new Date(),
+                timestamp: new Date(tweet.tweet.created_at),
                 thumbnail: {
                     url: tweet.author.profile_image_url.replace("_normal", ""),
                     width: 32,
