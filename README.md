@@ -14,6 +14,11 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 
 ## Version History
 
+### v2.0.6 - 7/19/2022
+
+* Discord bot now posts tweets to the Discord server.
+* Package updates.
+
 ### v2.0.5 - 5/26/2022
 
 * Add barebones Discord bot.
