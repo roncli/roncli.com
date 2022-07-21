@@ -18,7 +18,7 @@
     },
     "license": "MIT",
     "dependencies": {
-        "@editorjs/editorjs": "2.24.3",
+        "@editorjs/editorjs": "2.25.0",
         "@editorjs/quote": "2.4.0",
         "@fontsource/archivo-narrow": "4.5.8",
         "@googleapis/blogger": "0.2.0",
@@ -51,7 +51,7 @@
         "svg-captcha": "1.4.0",
         "timeago.js": "4.0.2",
         "tumblr.js": "3.0.0",
-        "twitter-api-v2": "1.12.2"
+        "twitter-api-v2": "1.12.3"
     },
     "devDependencies": {
         "@babel/core": "7.18.5",
@@ -65,6 +65,6 @@
         "@types/pbkdf2": "3.1.0",
         "@types/sortablejs": "1.13.0",
         "@types/steamapi": "2.2.2",
-        "ol": "6.14.1"
+        "ol": "6.15.1"
     }
 }
