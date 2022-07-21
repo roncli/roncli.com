@@ -18,7 +18,7 @@
     },
     "license": "MIT",
     "dependencies": {
-        "@editorjs/editorjs": "2.24.3",
+        "@editorjs/editorjs": "2.25.0",
         "@editorjs/quote": "2.4.0",
         "@fontsource/archivo-narrow": "4.5.8",
         "@googleapis/blogger": "0.2.0",
@@ -27,7 +27,7 @@
         "@roncli/node-application-insights-logger": "roncli/node-application-insights-logger#v1.0.11",
         "@roncli/node-minify": "roncli/node-minify#v1.1.8",
         "@roncli/node-redis": "roncli/node-redis#v0.1.14",
-        "@root/request": "1.8.2",
+        "@root/request": "1.8.3",
         "@xivapi/js": "0.4.1",
         "blizzard.js": "4.2.0",
         "bootstrap-icons": "1.8.3",
@@ -51,7 +51,7 @@
         "svg-captcha": "1.4.0",
         "timeago.js": "4.0.2",
         "tumblr.js": "3.0.0",
-        "twitter-api-v2": "1.12.2"
+        "twitter-api-v2": "1.12.3"
     },
     "devDependencies": {
         "@babel/core": "7.18.5",
