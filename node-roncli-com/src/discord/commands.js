@@ -1,11 +1,9 @@
 /**
  * @typedef {typeof import("./index")} Discord
- * @typedef {import("discord.js").GuildMember} DiscordJs.GuildMember
- * @typedef {import("discord.js").TextChannel} DiscordJs.TextChannel
- * @typedef {import("discord.js").User} DiscordJs.User
  */
 
-const pjson = require("../../package.json"),
+const DiscordJs = require("discord.js"),
+    pjson = require("../../package.json"),
     Warning = require("../errors/warning"),
 
     idMessageParse = /^<@!?(?<id>[0-9]+)> (?<command>[^ ]+)(?: (?<newMessage>.+))?$/;
@@ -36,7 +34,7 @@ class Commands {
      * @returns {boolean} Whether the channel is on the correct server.
      */
     static checkChannelIsOnServer(channel) {
-        return channel.type === "GUILD_TEXT" && channel.guild.name === process.env.DISCORD_GUILD;
+        return channel.type === DiscordJs.ChannelType.GuildText && channel.guild.name === process.env.DISCORD_GUILD;
     }
 
     //       #                 #     #  #              #                 ###           ##

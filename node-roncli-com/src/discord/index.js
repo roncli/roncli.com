@@ -4,8 +4,11 @@ const DiscordJs = require("discord.js"),
     util = require("util"),
 
     discord = new DiscordJs.Client({
-        intents: ["GUILDS", "GUILD_MESSAGES"],
-        retryLimit: 999999999
+        intents: [
+            DiscordJs.GatewayIntentBits.Guilds,
+            DiscordJs.GatewayIntentBits.GuildMessages
+        ],
+        rest: {retries: 999999999}
     });
 
 let readied = false;
@@ -178,25 +181,24 @@ class Discord {
 
         let msg;
         try {
-            msg = await Discord.richQueue(Discord.messageEmbed({description: message}), channel);
+            msg = await Discord.richQueue(Discord.embedBuilder({description: message}), channel);
         } catch {}
         return msg;
     }
 
-    //                                             ####        #              #
-    //                                             #           #              #
-    // # #    ##    ###    ###    ###   ###   ##   ###   # #   ###    ##    ###
-    // ####  # ##  ##     ##     #  #  #  #  # ##  #     ####  #  #  # ##  #  #
-    // #  #  ##      ##     ##   # ##   ##   ##    #     #  #  #  #  ##    #  #
-    // #  #   ##   ###    ###     # #  #      ##   ####  #  #  ###    ##    ###
-    //                                  ###
+    //             #              #  ###          #    ##       #
+    //             #              #  #  #               #       #
+    //  ##   # #   ###    ##    ###  ###   #  #  ##     #     ###   ##   ###
+    // # ##  ####  #  #  # ##  #  #  #  #  #  #   #     #    #  #  # ##  #  #
+    // ##    #  #  #  #  ##    #  #  #  #  #  #   #     #    #  #  ##    #
+    //  ##   #  #  ###    ##    ###  ###    ###  ###   ###    ###   ##   #
     /**
-     * Gets a new DiscordJs MessageEmbed object.
-     * @param {DiscordJs.MessageEmbedOptions} [options] The options to pass.
-     * @returns {DiscordJs.MessageEmbed} The MessageEmbed object.
+     * Gets a new DiscordJs EmbedBuilder object.
+     * @param {DiscordJs.EmbedData} [options] The options to pass.
+     * @returns {DiscordJs.EmbedBuilder} The EmbedBuilder object.
      */
-    static messageEmbed(options) {
-        return new DiscordJs.MessageEmbed(options);
+    static embedBuilder(options) {
+        return new DiscordJs.EmbedBuilder(options);
     }
 
     //        #          #      ##
@@ -208,7 +210,7 @@ class Discord {
     //                            #
     /**
      * Queues a rich embed message to be sent.
-     * @param {DiscordJs.MessageEmbed} embed The message to be sent.
+     * @param {DiscordJs.EmbedBuilder} embed The message to be sent.
      * @param {DiscordJs.TextChannel|DiscordJs.DMChannel|DiscordJs.GuildMember} channel The channel to send the message to.
      * @returns {Promise<DiscordJs.Message>} A promise that returns the sent message.
      */
@@ -218,23 +220,23 @@ class Discord {
         }
 
         embed.setFooter({
-            text: embed.footer ? embed.footer.text : "",
-            iconURL: embed.footer && embed.footer.iconURL || Discord.icon
+            text: embed.data && embed.data.footer ? embed.data.footer.text : "",
+            iconURL: embed.data && embed.data.footer && embed.data.footer.icon_url || Discord.icon
         });
 
-        if (embed && embed.fields) {
-            embed.fields.forEach((field) => {
+        if (embed && embed.data && embed.data.fields) {
+            embed.data.fields.forEach((field) => {
                 if (field.value && field.value.length > 1024) {
                     field.value = field.value.substring(0, 1024);
                 }
             });
         }
 
-        if (!embed.color) {
+        if (!embed.data || !embed.data.color) {
             embed.setColor(0x16f6f8);
         }
 
-        if (!embed.timestamp) {
+        if (!embed.data || !embed.data.timestamp) {
             embed.setTimestamp(new Date());
         }
 
@@ -286,7 +288,7 @@ class Discord {
         if (!guild) {
             return void 0;
         }
-        return /** @type {DiscordJs.TextChannel} */(guild.channels.cache.find((c) => c.name === name && c.type === "GUILD_TEXT")); // eslint-disable-line no-extra-parens
+        return /** @type {DiscordJs.TextChannel} */(guild.channels.cache.find((c) => c.name === name && c.type === DiscordJs.ChannelType.GuildText)); // eslint-disable-line no-extra-parens
     }
 
     //  #            ##

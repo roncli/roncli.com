@@ -72,8 +72,8 @@ class Twitter {
                 continue;
             }
 
-            await Discord.richQueue(Discord.messageEmbed({
-                timestamp: new Date(tweet.tweet.created_at),
+            await Discord.richQueue(Discord.embedBuilder({
+                timestamp: new Date(tweet.tweet.created_at).getTime(), // TODO: Remove .getTime() once this is fixed: https://github.com/discordjs/discord.js/issues/8323
                 thumbnail: {
                     url: tweet.author.profile_image_url.replace("_normal", ""),
                     width: 32,

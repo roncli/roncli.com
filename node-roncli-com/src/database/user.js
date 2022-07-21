@@ -57,7 +57,10 @@ class UserDb {
             salt = Hashing.getSalt(),
             hash = await Hashing.getHash(password, salt);
 
-        return db.collection("user").findOneAndUpdate({_id: MongoDb.ObjectId.createFromHexString(user.id)}, {$set: {password: {salt, hash}}});
+        return db.collection("user").findOneAndUpdate({_id: MongoDb.ObjectId.createFromHexString(user.id)}, {$set: {
+            "password.salt": salt,
+            "password.hash": hash
+        }});
     }
 
     //       #                             #  #
@@ -223,7 +226,10 @@ class UserDb {
             user.password.salt = Hashing.getSalt();
             user.password.hash = await Hashing.getHash(password, user.password.salt);
 
-            await db.collection("user").findOneAndUpdate({_id: user._id}, {$set: {password: user.password}});
+            await db.collection("user").findOneAndUpdate({_id: user._id}, {$set: {
+                "password.salt": user.password.salt,
+                "password.hash": user.password.hash
+            }});
         }
 
         /** @type {string} */

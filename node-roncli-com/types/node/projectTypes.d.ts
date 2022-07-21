@@ -17,7 +17,7 @@ declare namespace ProjectTypes {
     }
 
     type ProjectMongoData = {
-        _id: MongoDb.ObjectId
+        _id?: MongoDb.ObjectId
         url: string
         title: string
         projectUrl: string

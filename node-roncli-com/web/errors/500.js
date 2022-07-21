@@ -71,7 +71,7 @@ class ServerError extends RouterBase {
         } else {
             res.status(500).send(await Common.page(
                 "",
-                false,
+                void 0,
                 {css: ["/css/error.css"]},
                 ServerErrorView.get(),
                 ServerErrorView.getInfo(),

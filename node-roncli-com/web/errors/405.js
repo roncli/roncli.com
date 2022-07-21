@@ -69,7 +69,7 @@ class MethodNotAllowed extends RouterBase {
         } else {
             res.status(405).send(await Common.page(
                 "",
-                false,
+                void 0,
                 {css: ["/css/error.css"]},
                 MethodNotAllowedView.get(),
                 MethodNotAllowedView.getInfo(),

@@ -9,7 +9,7 @@ declare namespace RedirectTypes {
     }
 
     type RedirectMongoData = {
-        _id: MongoDb.ObjectId
+        _id?: MongoDb.ObjectId
         fromPath: string
         toUrl: string
         dateAdded: Date

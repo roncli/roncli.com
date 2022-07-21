@@ -97,7 +97,7 @@ class Common extends RouterBase {
     /**
      * Generates a webpage from the provided HTML using a common template.
      * @param {string} head The HTML to insert into the header.
-     * @param {Comment[]} comments Whether to include a comments section.
+     * @param {Comment[]} comments The comments to include.
      * @param {CommonTypes.Files} files The files to combine and minify.
      * @param {string} pageHtml The HTML to make a web page from.
      * @param {string} infoHtml The HTML to insert into the info panel.
