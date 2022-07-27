@@ -101,7 +101,7 @@ process.on("unhandledRejection", (reason) => {
         cssRoot: "/css/",
         jsRoot: "/js/",
         wwwRoot: path.join(__dirname, "public"),
-        caching: process.env.MINIFY_CACHE ? {
+        caching: +process.env.MINIFY_CACHE ? {
             get: async (key) => {
                 try {
                     return await Cache.get(key);
@@ -118,7 +118,7 @@ process.on("unhandledRejection", (reason) => {
             prefix: process.env.REDIS_PREFIX
         } : void 0,
         redirects: Redirects,
-        disableTagCombining: !process.env.MINIFY_ENABLED
+        disableTagCombining: !+process.env.MINIFY_ENABLED
     });
     app.get("/css", Minify.cssHandler);
     app.get("/js", Minify.jsHandler);

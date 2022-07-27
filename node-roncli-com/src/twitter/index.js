@@ -25,7 +25,7 @@ class Twitter {
      * @returns {Promise} A promise that resolves when the posts have been checked.
      */
     static async checkPosts() {
-        if (!process.env.TWITTER_ENABLED) {
+        if (!+process.env.TWITTER_ENABLED) {
             return;
         }
 
