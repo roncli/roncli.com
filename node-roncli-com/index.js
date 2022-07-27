@@ -11,6 +11,7 @@ const CacheData = require("./src/cacheData"),
     Minify = require("@roncli/node-minify"),
     path = require("path"),
     Redis = require("@roncli/node-redis"),
+    Twitch = require("./src/twitch"),
     Twitter = require("./src/twitter"),
     util = require("util"),
 
@@ -60,6 +61,9 @@ process.on("unhandledRejection", (reason) => {
 
     // Setup various listeners.
     Listeners.setup();
+
+    // Startup Twitch.
+    Twitch.connect();
 
     // Startup Discord.
     Discord.startup();
