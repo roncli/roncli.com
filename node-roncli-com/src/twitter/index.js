@@ -91,7 +91,7 @@ class Twitter {
 
         // Save the new last Tweet.
         twitter.lastId = tweets[tweets.length - 1].tweet.id;
-        twitter.save();
+        await twitter.save();
 
         setTimeout(Twitter.checkPosts, 300000);
     }
