@@ -221,7 +221,7 @@ class Discord {
         }
 
         embed.setFooter({
-            text: embed.data && embed.data.footer ? embed.data.footer.text : "",
+            text: embed.data && embed.data.footer ? embed.data.footer.text : "BotCli",
             iconURL: embed.data && embed.data.footer && embed.data.footer.icon_url || Discord.icon
         });
 
