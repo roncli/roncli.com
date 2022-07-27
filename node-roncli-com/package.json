@@ -28,6 +28,8 @@
         "@roncli/node-minify": "roncli/node-minify#v1.1.9",
         "@roncli/node-redis": "roncli/node-redis#v0.1.15",
         "@root/request": "1.8.3",
+        "@twurple/api": "5.1.8",
+        "@twurple/auth": "5.1.8",
         "@xivapi/js": "0.4.1",
         "blizzard.js": "4.2.0",
         "bootstrap-icons": "1.9.1",

@@ -8,12 +8,16 @@
 const Commands = require("../discord/commands"),
     Discord = require("../discord"),
     Log = require("@roncli/node-application-insights-logger"),
+    Twitch = require("../twitch"),
     Warning = require("../errors/warning"),
 
-    messageParse = /^!(?<cmd>[^ ]+)(?: +(?<args>.*[^ ]))? *$/;
+    messageParse = /^!(?<cmd>[^ ]+)(?: +(?<args>.*[^ ]))? *$/,
+    urlParse = /^https:\/\/www.twitch.tv\/(?<user>.+)$/;
 
 /** @type {Commands} */
 let commands;
+
+let lastAnnounced = 0;
 
 //  ####     #                                    #  #        #            #
 //   #  #                                         #  #                     #
@@ -63,6 +67,61 @@ class DiscordListener {
 
                 if (success) {
                     Log.verbose(`${message.channel} ${member}: ${text}`);
+                }
+            }
+        }
+    }
+
+    //                                                  #  #           #         #
+    //                                                  #  #           #         #
+    // ###   ###    ##    ###    ##   ###    ##    ##   #  #  ###    ###   ###  ###    ##
+    // #  #  #  #  # ##  ##     # ##  #  #  #     # ##  #  #  #  #  #  #  #  #   #    # ##
+    // #  #  #     ##      ##   ##    #  #  #     ##    #  #  #  #  #  #  # ##   #    ##
+    // ###   #      ##   ###     ##   #  #   ##    ##    ##   ###    ###   # #    ##   ##
+    // #                                                      #
+    /**
+     * Handles when a user's presence is updated in Discord.
+     * @param {DiscordJs.Presence} oldPresence The old presence.
+     * @param {DiscordJs.Presence} newPresence The new presence.
+     * @returns {Promise} A promise that resolves when the event has been processed.
+     */
+    static async presenceUpdate(oldPresence, newPresence) {
+        if (newPresence && newPresence.activities && newPresence.member && newPresence.guild && newPresence.guild.id === Discord.id && newPresence.member.user.username === process.env.DISCORD_ADMIN_USERNAME && newPresence.member.user.discriminator === process.env.DISCORD_ADMIN_DISCRIMINATOR) {
+            const oldActivity = oldPresence && oldPresence.activities && oldPresence.activities.find((p) => p.name === "Twitch") || void 0,
+                activity = newPresence.activities.find((p) => p.name === "Twitch");
+
+            if (activity && urlParse.test(activity.url)) {
+                if (!oldActivity) {
+                    if (new Date().getTime() - lastAnnounced < 300000) {
+                        lastAnnounced = new Date().getTime();
+                        return;
+                    }
+
+                    lastAnnounced = new Date().getTime();
+
+                    const user = await Twitch.twitchClient.users.getUserByName("roncli"),
+                        channel = await Twitch.twitchClient.channels.getChannelInfoById(user.id);
+
+                    await Discord.richQueue(Discord.embedBuilder({
+                        timestamp: Date.now(), // TODO: Use new Date() again once this is fixed: https://github.com/discordjs/discord.js/issues/8323
+                        thumbnail: {
+                            url: user.profilePictureUrl,
+                            width: 300,
+                            height: 300
+                        },
+                        url: `https://twitch.tv/${user.name}`,
+                        description: `Boom, bitches.  roncli is live on Twitch!  Watch at https://twitch.tv/${user.name}`,
+                        fields: [
+                            {
+                                name: "Stream Title",
+                                value: channel.title
+                            },
+                            {
+                                name: "Now Playing",
+                                value: activity.state
+                            }
+                        ]
+                    }), Discord.findTextChannelByName("stream-notifications"));
                 }
             }
         }
