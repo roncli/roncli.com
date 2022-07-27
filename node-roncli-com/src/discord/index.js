@@ -7,6 +7,7 @@ const DiscordJs = require("discord.js"),
         intents: [
             DiscordJs.GatewayIntentBits.Guilds,
             DiscordJs.GatewayIntentBits.GuildMessages,
+            DiscordJs.GatewayIntentBits.GuildPresences,
             DiscordJs.GatewayIntentBits.MessageContent
         ],
         rest: {retries: 999999999}

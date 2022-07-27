@@ -86,14 +86,14 @@ class DiscordListener {
      * @returns {Promise} A promise that resolves when the event has been processed.
      */
     static async presenceUpdate(oldPresence, newPresence) {
-        if (newPresence && newPresence.activities && newPresence.member && newPresence.guild && newPresence.guild.id === Discord.id && newPresence.member.user.username === process.env.DISCORD_ADMIN_USERNAME && newPresence.member.user.discriminator === process.env.DISCORD_ADMIN_DISCRIMINATOR) {
+        if (newPresence && newPresence.activities && newPresence.member && newPresence.guild && newPresence.guild.id === Discord.id && Discord.isOwner(newPresence.member)) {
             const oldActivity = oldPresence && oldPresence.activities && oldPresence.activities.find((p) => p.name === "Twitch") || void 0,
                 activity = newPresence.activities.find((p) => p.name === "Twitch");
 
             if (activity && urlParse.test(activity.url)) {
                 if (!oldActivity) {
-                    if (new Date().getTime() - lastAnnounced < 300000) {
-                        lastAnnounced = new Date().getTime();
+                    if (Date.now() - lastAnnounced < 300000) {
+                        lastAnnounced = Date.now();
                         return;
                     }
 
