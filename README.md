@@ -14,6 +14,13 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 
 ## Version History
 
+### v2.0.8 - 7/27/2022
+
+* Discord bot now posts Twitch go live notifications to the Discord server.
+* Add exception handling to Twitter notifications.
+* More updates for Discord.js v14 compatibility.
+* Package updates.
+
 ### v2.0.7 - 7/24/2022
 
 * Package updates.
