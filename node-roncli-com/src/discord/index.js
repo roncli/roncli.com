@@ -6,7 +6,8 @@ const DiscordJs = require("discord.js"),
     discord = new DiscordJs.Client({
         intents: [
             DiscordJs.GatewayIntentBits.Guilds,
-            DiscordJs.GatewayIntentBits.GuildMessages
+            DiscordJs.GatewayIntentBits.GuildMessages,
+            DiscordJs.GatewayIntentBits.MessageContent
         ],
         rest: {retries: 999999999}
     });
