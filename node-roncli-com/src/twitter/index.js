@@ -1,4 +1,5 @@
 const Discord = require("../discord"),
+    Log = require("@roncli/node-application-insights-logger"),
     TwitterModel = require("../models/twitter"),
     TwitterApi = require("twitter-api-v2").TwitterApi;
 
@@ -28,70 +29,74 @@ class Twitter {
             return;
         }
 
-        // Get the last Tweet.
-        const twitter = await TwitterModel.get(),
-            lastId = twitter.lastId;
+        try {
+            // Get the last Tweet.
+            const twitter = await TwitterModel.get(),
+                lastId = twitter.lastId;
 
-        const client = new TwitterApi({
-            appKey: process.env.TWITTER_API_KEY,
-            appSecret: process.env.TWITTER_API_SECRET,
-            accessToken: process.env.TWITTER_ACCESS_TOKEN,
-            accessSecret: process.env.TWITTER_ACCESS_SECRET
-        });
-
-        const appClient = (await client.appLogin()).readOnly,
-            tweets = [];
-
-        const timeline = await appClient.v2.userTimeline(process.env.TWITTER_ID, {
-            "since_id": lastId,
-            "max_results": 100,
-            exclude: "replies",
-            expansions: ["author_id"],
-            "tweet.fields": ["in_reply_to_user_id", "created_at"],
-            "user.fields": ["name", "profile_image_url"]
-        });
-
-        for await (const tweet of timeline) {
-            tweets.push({
-                tweet,
-                author: timeline.includes.userById(tweet.author_id)
+            const client = new TwitterApi({
+                appKey: process.env.TWITTER_API_KEY,
+                appSecret: process.env.TWITTER_API_SECRET,
+                accessToken: process.env.TWITTER_ACCESS_TOKEN,
+                accessSecret: process.env.TWITTER_ACCESS_SECRET
             });
-        }
 
-        tweets.sort((a, b) => a.tweet.id.localeCompare(b.tweet.id));
+            const appClient = (await client.appLogin()).readOnly,
+                tweets = [];
 
-        if (tweets.length === 0) {
-            return;
-        }
+            const timeline = await appClient.v2.userTimeline(process.env.TWITTER_ID, {
+                "since_id": lastId,
+                "max_results": 100,
+                exclude: "replies",
+                expansions: ["author_id"],
+                "tweet.fields": ["in_reply_to_user_id", "created_at"],
+                "user.fields": ["name", "profile_image_url"]
+            });
 
-        const channel = Discord.findTextChannelByName("social-media");
-
-        for (const tweet of tweets) {
-            // Skip all replies.
-            if (tweet.tweet.in_reply_to_user_id) {
-                continue;
+            for await (const tweet of timeline) {
+                tweets.push({
+                    tweet,
+                    author: timeline.includes.userById(tweet.author_id)
+                });
             }
 
-            await Discord.richQueue(Discord.embedBuilder({
-                timestamp: new Date(tweet.tweet.created_at).getTime(), // TODO: Remove .getTime() once this is fixed: https://github.com/discordjs/discord.js/issues/8323
-                thumbnail: {
-                    url: tweet.author.profile_image_url.replace("_normal", ""),
-                    width: 32,
-                    height: 32
-                },
-                url: `https://twitter.com/${tweet.author.username}/status/${tweet.tweet.id}`,
-                title: `${tweet.author.name} (${tweet.author.username})`,
-                description: tweet.tweet.text,
-                footer: {
-                    text: "Twitter",
-                    iconURL: "https://roncli.com/images/twitter-logo.png"
-                }
-            }), channel);
-        }
+            tweets.sort((a, b) => a.tweet.id.localeCompare(b.tweet.id));
 
-        // Save the new last Tweet.
-        twitter.lastId = tweets[tweets.length - 1].tweet.id;
-        await twitter.save();
+            if (tweets.length === 0) {
+                return;
+            }
+
+            const channel = Discord.findTextChannelByName("social-media");
+
+            for (const tweet of tweets) {
+                // Skip all replies.
+                if (tweet.tweet.in_reply_to_user_id) {
+                    continue;
+                }
+
+                await Discord.richQueue(Discord.embedBuilder({
+                    timestamp: new Date(tweet.tweet.created_at).getTime(), // TODO: Remove .getTime() once this is fixed: https://github.com/discordjs/discord.js/issues/8323
+                    thumbnail: {
+                        url: tweet.author.profile_image_url.replace("_normal", ""),
+                        width: 32,
+                        height: 32
+                    },
+                    url: `https://twitter.com/${tweet.author.username}/status/${tweet.tweet.id}`,
+                    title: `${tweet.author.name} (${tweet.author.username})`,
+                    description: tweet.tweet.text,
+                    footer: {
+                        text: "Twitter",
+                        iconURL: "https://roncli.com/images/twitter-logo.png"
+                    }
+                }), channel);
+            }
+
+            // Save the new last Tweet.
+            twitter.lastId = tweets[tweets.length - 1].tweet.id;
+            await twitter.save();
+        } catch (err) {
+            Log.error("There was a problem checking Twitter.", {err});
+        }
 
         setTimeout(Twitter.checkPosts, 300000);
     }
