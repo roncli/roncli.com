@@ -48,8 +48,8 @@ class Twitter {
                 "since_id": lastId,
                 "max_results": 100,
                 exclude: "replies",
-                expansions: ["author_id"],
-                "tweet.fields": ["in_reply_to_user_id", "created_at"],
+                expansions: ["author_id", "referenced_tweets.id.author_id"],
+                "tweet.fields": ["in_reply_to_user_id", "created_at", "referenced_tweets"],
                 "user.fields": ["name", "profile_image_url"]
             });
 
