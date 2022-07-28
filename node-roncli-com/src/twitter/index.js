@@ -58,11 +58,13 @@ class Twitter {
                     const retweet = timeline.includes.tweetById(tweet.referenced_tweets[0].id);
 
                     tweets.push({
+                        id: tweet.id,
                         tweet: retweet,
                         author: timeline.includes.userById(retweet.author_id)
                     });
                 } else {
                     tweets.push({
+                        id: tweet.id,
                         tweet,
                         author: timeline.includes.userById(tweet.author_id)
                     });
@@ -98,7 +100,7 @@ class Twitter {
                 }
 
                 // Save the new last Tweet.
-                twitter.lastId = tweets[tweets.length - 1].tweet.id;
+                twitter.lastId = tweets[tweets.length - 1].id;
                 await twitter.save();
             }
         } catch (err) {
