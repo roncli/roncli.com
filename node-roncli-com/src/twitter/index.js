@@ -60,40 +60,38 @@ class Twitter {
                 });
             }
 
-            tweets.sort((a, b) => a.tweet.id.localeCompare(b.tweet.id));
+            if (tweets.length > 0) {
+                tweets.sort((a, b) => a.tweet.id.localeCompare(b.tweet.id));
 
-            if (tweets.length === 0) {
-                return;
-            }
+                const channel = Discord.findTextChannelByName("social-media");
 
-            const channel = Discord.findTextChannelByName("social-media");
+                for (const tweet of tweets) {
+                    // Skip all replies.
+                    if (tweet.tweet.in_reply_to_user_id) {
+                        continue;
+                    }
 
-            for (const tweet of tweets) {
-                // Skip all replies.
-                if (tweet.tweet.in_reply_to_user_id) {
-                    continue;
+                    await Discord.richQueue(Discord.embedBuilder({
+                        timestamp: new Date(tweet.tweet.created_at).getTime(), // TODO: Remove .getTime() once this is fixed: https://github.com/discordjs/discord.js/issues/8323
+                        thumbnail: {
+                            url: tweet.author.profile_image_url.replace("_normal", ""),
+                            width: 32,
+                            height: 32
+                        },
+                        url: `https://twitter.com/${tweet.author.username}/status/${tweet.tweet.id}`,
+                        title: `${tweet.author.name} (${tweet.author.username})`,
+                        description: tweet.tweet.text,
+                        footer: {
+                            text: "Twitter",
+                            iconURL: "https://roncli.com/images/twitter-logo.png"
+                        }
+                    }), channel);
                 }
 
-                await Discord.richQueue(Discord.embedBuilder({
-                    timestamp: new Date(tweet.tweet.created_at).getTime(), // TODO: Remove .getTime() once this is fixed: https://github.com/discordjs/discord.js/issues/8323
-                    thumbnail: {
-                        url: tweet.author.profile_image_url.replace("_normal", ""),
-                        width: 32,
-                        height: 32
-                    },
-                    url: `https://twitter.com/${tweet.author.username}/status/${tweet.tweet.id}`,
-                    title: `${tweet.author.name} (${tweet.author.username})`,
-                    description: tweet.tweet.text,
-                    footer: {
-                        text: "Twitter",
-                        iconURL: "https://roncli.com/images/twitter-logo.png"
-                    }
-                }), channel);
+                // Save the new last Tweet.
+                twitter.lastId = tweets[tweets.length - 1].tweet.id;
+                await twitter.save();
             }
-
-            // Save the new last Tweet.
-            twitter.lastId = tweets[tweets.length - 1].tweet.id;
-            await twitter.save();
         } catch (err) {
             Log.error("There was a problem checking Twitter.", {err});
         }
