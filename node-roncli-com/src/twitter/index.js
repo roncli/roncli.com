@@ -54,10 +54,19 @@ class Twitter {
             });
 
             for await (const tweet of timeline) {
-                tweets.push({
-                    tweet,
-                    author: timeline.includes.userById(tweet.author_id)
-                });
+                if (tweet.referenced_tweets && tweet.referenced_tweets[0].type === "retweeted") {
+                    const retweet = timeline.includes.tweetById(tweet.referenced_tweets[0].id);
+
+                    tweets.push({
+                        tweet: retweet,
+                        author: timeline.includes.userById(retweet.author_id)
+                    });
+                } else {
+                    tweets.push({
+                        tweet,
+                        author: timeline.includes.userById(tweet.author_id)
+                    });
+                }
             }
 
             if (tweets.length > 0) {
@@ -79,7 +88,7 @@ class Twitter {
                             height: 32
                         },
                         url: `https://twitter.com/${tweet.author.username}/status/${tweet.tweet.id}`,
-                        title: `${tweet.author.name} (${tweet.author.username})`,
+                        title: `${tweet.author.name} - @${tweet.author.username}`,
                         description: tweet.tweet.text,
                         footer: {
                             text: "Twitter",
