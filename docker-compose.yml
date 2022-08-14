@@ -94,6 +94,7 @@ services:
       ENCRYPTION_KEY_FILE: /run/secrets/ENCRYPTION_KEY_FILE
       GITHUB_TOKEN_FILE: /run/secrets/GITHUB_TOKEN_FILE
       GOOGLE_API_KEY_FILE: /run/secrets/GOOGLE_API_KEY_FILE
+      MASTONDON_ENABLED: 1
       MINIFY_CACHE: 1
       MINIFY_ENABLED: 1
       NODE_ENV: production

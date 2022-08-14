@@ -506,7 +506,7 @@ class Resume {
 
         link.rel = "stylesheet";
         link.type = "text/css";
-        link.href = "https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.9.0/css/ol.css";
+        link.href = "https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.15.1/css/ol.css";
 
         document.head.appendChild(link);
 
@@ -514,7 +514,7 @@ class Resume {
         const script = document.createElement("script");
 
         script.type = "text/javascript";
-        script.src = "https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.9.0/build/ol.js";
+        script.src = "https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.15.1/build/ol.js";
 
         return new Promise((resolve, reject) => {
             try {
