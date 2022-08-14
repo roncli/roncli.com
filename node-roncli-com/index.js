@@ -12,7 +12,6 @@ const CacheData = require("./src/cacheData"),
     path = require("path"),
     Redis = require("@roncli/node-redis"),
     Twitch = require("./src/twitch"),
-    Twitter = require("./src/twitter"),
     util = require("util"),
 
     Cache = Redis.Cache,
@@ -170,9 +169,6 @@ process.on("unhandledRejection", (reason) => {
 
     // Start caching data.
     setTimeout(CacheData.checkCache, 1);
-
-    // Start checking Twitter.
-    setTimeout(Twitter.checkPosts, 1);
 
     app.listen(port);
     Log.info(`Server PID ${process.pid} listening on port ${port}.`);

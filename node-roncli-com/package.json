@@ -42,6 +42,7 @@
         "express-session": "1.17.3",
         "hot-router": "1.0.0",
         "html-minifier-terser": "6.1.0",
+        "megalodon": "4.1.0",
         "monaco-editor": "0.34.0",
         "mongodb": "4.8.1",
         "multer": "1.4.4",
