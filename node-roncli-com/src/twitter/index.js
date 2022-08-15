@@ -1,5 +1,5 @@
 /**
- * @typedef {{id: string, tweet: TwitterApi.TweetV2, author: TwitterApi.UserV2, medias?: TwitterApi.MediaObjectV2[], inReplyTo?: TwitterApi.UserV2}} Tweet
+ * @typedef {import("../../types/node/twitterTypes").Tweet} TwitterTypes.Tweet
  */
 
 const TwitterApi = require("twitter-api-v2");
@@ -50,10 +50,10 @@ class Twitter {
     /**
      * Gets the newest Twitter posts based on the last received ID.
      * @param {string} lastId The last tweet ID.
-     * @returns {Promise<Tweet[]>} A list of Twitter posts.
+     * @returns {Promise<TwitterTypes.Tweet[]>} A list of Twitter posts.
      */
     static async getNewPosts(lastId) {
-        /** @type {Tweet[]} */
+        /** @type {TwitterTypes.Tweet[]} */
         const tweets = [];
 
         const timeline = await client.v2.userTimeline(process.env.TWITTER_ID, {
@@ -72,13 +72,15 @@ class Twitter {
                 tweets.push({
                     id: tweet.id,
                     tweet: retweet,
-                    author: timeline.includes.userById(retweet.author_id)
+                    author: timeline.includes.userById(retweet.author_id),
+                    createdAt: new Date(tweet.created_at)
                 });
             } else {
                 tweets.push({
                     id: tweet.id,
                     tweet,
-                    author: timeline.includes.userById(tweet.author_id)
+                    author: timeline.includes.userById(tweet.author_id),
+                    createdAt: new Date(tweet.created_at)
                 });
             }
         }
@@ -95,10 +97,10 @@ class Twitter {
     //  ###
     /**
      * Gets the Twitter timeline.
-     * @returns {Promise<Tweet[]>} A list of Twitter posts.
+     * @returns {Promise<TwitterTypes.Tweet[]>} A list of Twitter posts.
      */
     static async getTimeline() {
-        /** @type {Tweet[]} */
+        /** @type {TwitterTypes.Tweet[]} */
         const tweets = [];
 
         const timeline = await client.v2.userTimeline(process.env.TWITTER_ID, {
@@ -107,7 +109,7 @@ class Twitter {
             expansions: ["author_id", "attachments.media_keys", "referenced_tweets.id.author_id"],
             "tweet.fields": ["in_reply_to_user_id", "attachments", "created_at", "referenced_tweets"],
             "user.fields": ["name", "profile_image_url"],
-            "media.fields": ["type", "url"]
+            "media.fields": ["type", "url", "variants"]
         });
 
         for (const tweet of timeline.tweets) {
@@ -118,6 +120,7 @@ class Twitter {
                     id: tweet.id,
                     tweet: retweet,
                     author: timeline.includes.userById(retweet.author_id),
+                    createdAt: new Date(tweet.created_at),
                     medias: timeline.includes.medias(retweet),
                     inReplyTo: tweet.in_reply_to_user_id && timeline.includes.userById(tweet.in_reply_to_user_id) || void 0
                 });
@@ -126,6 +129,7 @@ class Twitter {
                     id: tweet.id,
                     tweet,
                     author: timeline.includes.userById(tweet.author_id),
+                    createdAt: new Date(tweet.created_at),
                     medias: timeline.includes.medias(tweet),
                     inReplyTo: tweet.in_reply_to_user_id && timeline.includes.userById(tweet.in_reply_to_user_id) || void 0
                 });

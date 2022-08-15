@@ -1,3 +1,10 @@
+/**
+ * @typedef {import("../../types/node/mastodonTypes".Post} MastodonTypes.Post
+ * @typedef {import("../../types/node/microblogTypes").MicroblogData} MicroblogTypes.MicroblogData
+ * @typedef {import("../../types/node/twitterTypes").Tweet} TwitterTypes.Tweet
+ * @typedef {import("twitter-api-v2").MediaVariantsV2} TwitterApi.MediaVariantsV2
+ */
+
 const Cache = require("@roncli/node-redis").Cache,
     Discord = require("../discord"),
     Log = require("@roncli/node-application-insights-logger"),
@@ -44,7 +51,7 @@ class Microblog {
         const posts = await Mastodon.getNewPosts(lastId);
 
         if (posts.length > 0) {
-            posts.sort((a, b) => a.id.localeCompare(b.id));
+            posts.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
             const channel = Discord.findTextChannelByName("social-media");
 
@@ -54,8 +61,6 @@ class Microblog {
                     continue;
                 }
 
-                const match = serverMatch.exec(post.post.account.url);
-
                 await Discord.richQueue(Discord.embedBuilder({
                     timestamp: new Date(post.post.created_at),
                     thumbnail: {
@@ -64,7 +69,7 @@ class Microblog {
                         height: 80
                     },
                     url: post.post.url,
-                    title: `${post.post.account.display_name} - ${match ? `@${match.groups.username}@${match.groups.server}` : `@${post.post.account.username}`}`,
+                    title: `${post.post.account.display_name} - ${Microblog.getMastodonAccountName(post.post.account.url) ?? `@${post.post.account.username}`}`,
                     description: post.post.content,
                     footer: {
                         text: "Mastodon",
@@ -78,16 +83,28 @@ class Microblog {
             await mastodon.save();
         }
 
-        const key = `${process.env.REDIS_PREFIX}:mastodon:timeline`;
-        if (posts.length > 0 || await Cache.ttl(key) < 86400) {
-            // Get the timeline and save to cache.
-            const timeline = await Mastodon.getTimeline(),
-                expire = new Date();
-
-            expire.setDate(expire.getDate() + 1);
-
-            Cache.add(key, timeline, expire);
+        if (posts.length > 0 || await Cache.ttl(`${process.env.REDIS_PREFIX}:mastodon:timeline`) < 86400) {
+            await Microblog.cacheMastodonTimeline();
         }
+    }
+
+    //                   #           #  #                #             #              ###    #                ##     #
+    //                   #           ####                #             #               #                       #
+    //  ##    ###   ##   ###    ##   ####   ###   ###   ###    ##    ###   ##   ###    #    ##    # #    ##    #    ##    ###    ##
+    // #     #  #  #     #  #  # ##  #  #  #  #  ##      #    #  #  #  #  #  #  #  #   #     #    ####  # ##   #     #    #  #  # ##
+    // #     # ##  #     #  #  ##    #  #  # ##    ##    #    #  #  #  #  #  #  #  #   #     #    #  #  ##     #     #    #  #  ##
+    //  ##    # #   ##   #  #   ##   #  #   # #  ###      ##   ##    ###   ##   #  #   #    ###   #  #   ##   ###   ###   #  #   ##
+    /**
+     * Caches the Mastodon timeline.
+     * @returns {Promise} A promise that resolves when the Mastodon timeline has been cached.
+     */
+    static async cacheMastodonTimeline() {
+        const timeline = await Mastodon.getTimeline(),
+            expire = new Date();
+
+        expire.setDate(expire.getDate() + 1);
+
+        Cache.add(`${process.env.REDIS_PREFIX}:mastodon:timeline`, timeline, expire);
     }
 
     //                   #           #  #   #                      #     ##
@@ -146,7 +163,7 @@ class Microblog {
         const tweets = await Twitter.getNewPosts(lastId);
 
         if (tweets.length > 0) {
-            tweets.sort((a, b) => a.id.localeCompare(b.id));
+            tweets.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
             const channel = Discord.findTextChannelByName("social-media");
 
@@ -178,16 +195,194 @@ class Microblog {
             await twitter.save();
         }
 
-        const key = `${process.env.REDIS_PREFIX}:twitter:timeline`;
-        if (tweets.length > 0 || await Cache.ttl(key) < 86400) {
-            // Get the timeline and save to cache.
-            const timeline = await Twitter.getTimeline(),
-                expire = new Date();
-
-            expire.setDate(expire.getDate() + 1);
-
-            Cache.add(key, timeline, expire);
+        if (tweets.length > 0 || await Cache.ttl(`${process.env.REDIS_PREFIX}:twitter:timeline`) < 86400) {
+            await Microblog.cacheTwitterTimeline();
         }
+    }
+
+    //                   #           ###          #     #     #                ###    #                ##     #
+    //                   #            #                 #     #                 #                       #
+    //  ##    ###   ##   ###    ##    #    #  #  ##    ###   ###    ##   ###    #    ##    # #    ##    #    ##    ###    ##
+    // #     #  #  #     #  #  # ##   #    #  #   #     #     #    # ##  #  #   #     #    ####  # ##   #     #    #  #  # ##
+    // #     # ##  #     #  #  ##     #    ####   #     #     #    ##    #      #     #    #  #  ##     #     #    #  #  ##
+    //  ##    # #   ##   #  #   ##    #    ####  ###     ##    ##   ##   #      #    ###   #  #   ##   ###   ###   #  #   ##
+    /**
+     * Caches the Twitter timeline.
+     * @returns {Promise} A promise that resolves when the Twitter timeline has been cached.
+     */
+    static async cacheTwitterTimeline() {
+        const timeline = await Twitter.getTimeline(),
+            expire = new Date();
+
+        expire.setDate(expire.getDate() + 1);
+
+        Cache.add(`${process.env.REDIS_PREFIX}:twitter:timeline`, timeline, expire);
+    }
+
+    //              #    #  #                #             #               ##                                  #    #  #
+    //              #    ####                #             #              #  #                                 #    ## #
+    //  ###   ##   ###   ####   ###   ###   ###    ##    ###   ##   ###   #  #   ##    ##    ##   #  #  ###   ###   ## #   ###  # #    ##
+    // #  #  # ##   #    #  #  #  #  ##      #    #  #  #  #  #  #  #  #  ####  #     #     #  #  #  #  #  #   #    # ##  #  #  ####  # ##
+    //  ##   ##     #    #  #  # ##    ##    #    #  #  #  #  #  #  #  #  #  #  #     #     #  #  #  #  #  #   #    # ##  # ##  #  #  ##
+    // #      ##     ##  #  #   # #  ###      ##   ##    ###   ##   #  #  #  #   ##    ##    ##    ###  #  #    ##  #  #   # #  #  #   ##
+    //  ###
+    /**
+     * Gets the Mastodon account name from the account's URL.
+     * @param {string} url The account's URL.
+     * @returns {string} The Mastodon account name.
+     */
+    static getMastodonAccountName(url) {
+        if (!url) {
+            return void 0;
+        }
+
+        const match = serverMatch.exec(url);
+
+        return match ? `@${match.groups.username}@${match.groups.server}` : void 0;
+    }
+
+    //              #    #  #                #             #              ###    #                ##     #
+    //              #    ####                #             #               #                       #
+    //  ###   ##   ###   ####   ###   ###   ###    ##    ###   ##   ###    #    ##    # #    ##    #    ##    ###    ##
+    // #  #  # ##   #    #  #  #  #  ##      #    #  #  #  #  #  #  #  #   #     #    ####  # ##   #     #    #  #  # ##
+    //  ##   ##     #    #  #  # ##    ##    #    #  #  #  #  #  #  #  #   #     #    #  #  ##     #     #    #  #  ##
+    // #      ##     ##  #  #   # #  ###      ##   ##    ###   ##   #  #   #    ###   #  #   ##   ###   ###   #  #   ##
+    //  ###
+    /**
+     * Get the Mastodon timeline.
+     * @returns {Promise<Microblog[]>} A promise that returns the Mastodon timeline.
+     */
+    static async getMastodonTimeline() {
+        if (!await Cache.exists([`${process.env.REDIS_PREFIX}:mastodon:timeline`])) {
+            await Microblog.cacheMastodonTimeline();
+        }
+
+        /**
+         * @type {MastodonTypes.Post[]}
+         */
+        const timeline = await Cache.get(`${process.env.REDIS_PREFIX}:mastodon:timeline`);
+
+        return timeline.map((post) => new Microblog({
+            url: post.post.url,
+            name: post.post.account.display_name,
+            username: Microblog.getMastodonAccountName(post.post.account.url),
+            avatarUrl: post.post.account.avatar,
+            profileUrl: post.post.account.url,
+            inReplyToUsername: void 0,
+            inReplyToUrl: void 0,
+            post: post.post.content,
+            createdAt: post.createdAt,
+            displayDate: new Date(post.post.created_at),
+            media: post.post.media_attachments.map((a) => ({type: a.type, url: a.url}))
+        }));
+    }
+
+    //              #    #  #   #                      #     ##
+    //              #    ####                          #      #
+    //  ###   ##   ###   ####  ##     ##   ###    ##   ###    #     ##    ###
+    // #  #  # ##   #    #  #   #    #     #  #  #  #  #  #   #    #  #  #  #
+    //  ##   ##     #    #  #   #    #     #     #  #  #  #   #    #  #   ##
+    // #      ##     ##  #  #  ###    ##   #      ##   ###   ###    ##   #
+    //  ###                                                               ###
+    /**
+     * Retrieves the microblog.
+     * @returns {Promise<Microblog[]>} A promise that returns the microblog.
+     */
+    static async getMicroblog() {
+        const [mastodon, twitter] = await Promise.all([
+            (() => Microblog.getMastodonTimeline())(),
+            (() => Microblog.getTwitterTimeline())()
+        ]);
+
+        return [].concat(mastodon, twitter).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+    }
+
+    //              #    ###          #     #     #                #  #           #   #          ###                 #    #  #               #                 #    #  #        ##
+    //              #     #                 #     #                ####           #              #  #                #    #  #                                 #    #  #         #
+    //  ###   ##   ###    #    #  #  ##    ###   ###    ##   ###   ####   ##    ###  ##     ###  ###    ##    ###   ###   #  #   ###  ###   ##     ###  ###   ###   #  #  ###    #
+    // #  #  # ##   #     #    #  #   #     #     #    # ##  #  #  #  #  # ##  #  #   #    #  #  #  #  # ##  ##      #    #  #  #  #  #  #   #    #  #  #  #   #    #  #  #  #   #
+    //  ##   ##     #     #    ####   #     #     #    ##    #     #  #  ##    #  #   #    # ##  #  #  ##      ##    #     ##   # ##  #      #    # ##  #  #   #    #  #  #      #
+    // #      ##     ##   #    ####  ###     ##    ##   ##   #     #  #   ##    ###  ###    # #  ###    ##   ###      ##   ##    # #  #     ###    # #  #  #    ##   ##   #     ###
+    //  ###
+    /**
+     * Gets the URL for the best variant for a media.
+     * @param {TwitterApi.MediaVariantsV2[]} variants
+     * @returns {string} The URL for the variant.
+     */
+    static getTwitterMediaBestVariantUrl(variants) {
+        if (!variants) {
+            return void 0;
+        }
+
+        const variantsWithVideo = variants.filter((v) => v.content_type === "video/mp4" && v.bit_rate !== void 0);
+
+        if (variantsWithVideo.length === 0) {
+            return void 0;
+        }
+
+        variantsWithVideo.sort((a, b) => b.bit_rate - a.bit_rate);
+
+        return variantsWithVideo[0].url;
+    }
+
+    //              #    ###          #     #     #                ###    #                ##     #
+    //              #     #                 #     #                 #                       #
+    //  ###   ##   ###    #    #  #  ##    ###   ###    ##   ###    #    ##    # #    ##    #    ##    ###    ##
+    // #  #  # ##   #     #    #  #   #     #     #    # ##  #  #   #     #    ####  # ##   #     #    #  #  # ##
+    //  ##   ##     #     #    ####   #     #     #    ##    #      #     #    #  #  ##     #     #    #  #  ##
+    // #      ##     ##   #    ####  ###     ##    ##   ##   #      #    ###   #  #   ##   ###   ###   #  #   ##
+    //  ###
+    /**
+     * Get the Twitter timeline.
+     * @returns {Promise<Microblog[]>} A promise that returns the Twitter timeline.
+     */
+    static async getTwitterTimeline() {
+        if (!await Cache.exists([`${process.env.REDIS_PREFIX}:twitter:timeline`])) {
+            await Microblog.cacheTwitterTimeline();
+        }
+
+        /**
+         * @type {TwitterTypes.Tweet[]}
+         */
+        const timeline = await Cache.get(`${process.env.REDIS_PREFIX}:mastodon:timeline`);
+
+        return timeline.map((post) => new Microblog({
+            url: `https://twitter.com/_/status/${post.id}`,
+            name: post.author.name,
+            username: `@${post.author.username}`,
+            avatarUrl: post.author.profile_image_url,
+            profileUrl: post.author.url,
+            inReplyToUsername: post.inReplyTo ? `@${post.inReplyTo.username}` : void 0,
+            inReplyToUrl: post.tweet.referenced_tweets && post.tweet.referenced_tweets.length > 0 ? `https://twitter.com/_/status/${post.tweet.referenced_tweets[0].id}` : void 0,
+            post: post.tweet.text,
+            createdAt: post.createdAt,
+            displayDate: new Date(post.tweet.created_at),
+            media: post.medias.map((m) => ({type: m.type, url: m.url ?? Microblog.getTwitterMediaBestVariantUrl(m.variants)}))
+        }));
+    }
+
+    //                           #                       #
+    //                           #                       #
+    //  ##    ##   ###    ###   ###   ###   #  #   ##   ###    ##   ###
+    // #     #  #  #  #  ##      #    #  #  #  #  #      #    #  #  #  #
+    // #     #  #  #  #    ##    #    #     #  #  #      #    #  #  #
+    //  ##    ##   #  #  ###      ##  #      ###   ##     ##   ##   #
+    /**
+     * Creates a new microblog object.
+     * @param {MicroblogTypes.MicroblogData} data The microblog data.
+     */
+    constructor(data) {
+        this.url = data.url;
+        this.name = data.name;
+        this.username = data.username;
+        this.avatarUrl = data.avatarUrl;
+        this.profileUrl = data.profileUrl;
+        this.inReplyToUsername = data.inReplyToUsername;
+        this.inReplyToUrl = data.inReplyToUrl;
+        this.post = data.post;
+        this.createdAt = data.createdAt;
+        this.displayDate = data.displayDate;
+        this.media = data.media;
     }
 }
 

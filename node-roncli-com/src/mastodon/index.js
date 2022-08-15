@@ -1,5 +1,5 @@
 /**
- * @typedef {{id: string, post: Megalodon.Entity.Status}} MastodonPost
+ * @typedef {import("../../types/node/mastodonTypes").Post} MastodonTypes.Post
  */
 
 const Megalodon = require("megalodon"),
@@ -26,10 +26,10 @@ class Mastodon {
     /**
      * Gets the newest Mastodon posts based on the last received ID.
      * @param {string} lastId The last post ID.
-     * @returns {Promise<MastodonPost[]>} A list of Mastodon posts.
+     * @returns {Promise<MastodonTypes.Post[]>} A list of Mastodon posts.
      */
     static async getNewPosts(lastId) {
-        /** @type {MastodonPost[]} */
+        /** @type {MastodonTypes.Post[]} */
         const posts = [];
 
         /** @type {Megalodon.Entity.Status[]} */
@@ -52,12 +52,14 @@ class Mastodon {
                     if (post.reblog) {
                         posts.push({
                             id: post.id,
-                            post: post.reblog
+                            post: post.reblog,
+                            createdAt: new Date(post.created_at)
                         });
                     } else {
                         posts.push({
                             id: post.id,
-                            post
+                            post,
+                            createdAt: new Date(post.created_at)
                         });
                     }
                 }
@@ -78,10 +80,10 @@ class Mastodon {
     //  ###
     /**
      * Gets the Mastodon timeline.
-     * @returns {Promise<MastodonPost[]>} A list of Mastodon posts.
+     * @returns {Promise<MastodonTypes.Post[]>} A list of Mastodon posts.
      */
     static async getTimeline() {
-        /** @type {MastodonPost[]} */
+        /** @type {MastodonTypes.Post[]} */
         const posts = [];
 
         const timeline = await client.getAccountStatuses(process.env.MASTODON_ID, {limit: 40, "exclude_replies": true});
@@ -94,12 +96,14 @@ class Mastodon {
             if (post.reblog) {
                 posts.push({
                     id: post.id,
-                    post: post.reblog
+                    post: post.reblog,
+                    createdAt: new Date(post.created_at)
                 });
             } else {
                 posts.push({
                     id: post.id,
-                    post
+                    post,
+                    createdAt: new Date(post.created_at)
                 });
             }
         }

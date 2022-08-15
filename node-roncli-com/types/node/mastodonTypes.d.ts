@@ -1,4 +1,5 @@
 import MongoDb from "mongodb"
+import Entity from "megalodon"
 
 declare namespace MastodonTypes {
     type MastodonData = {
@@ -9,6 +10,12 @@ declare namespace MastodonTypes {
     type MastodonMongoData = {
         _id: MongoDb.ObjectId
         lastId: string
+    }
+
+    type Post = {
+        id: string
+        post: Entity.Status
+        createdAt: Date
     }
 }
 
