@@ -38,7 +38,7 @@ class Encoding {
      * @returns {string} The encoded string.
      */
     static htmlEncode(str) {
-        return str && str.replace(/&/gm, "&amp;").replace(/</gm, "&lt;").replace(/[\u0080-\uFFFF]/gm, (i) => `&#${i.charCodeAt(0)};`) || "";
+        return str && str.replace(/&/gm, "&amp;").replace(/</gm, "&lt;").replace(/[\u0080-\u1FFF]/gm, (i) => `&#${i.charCodeAt(0)};`) || "";
     }
 
     //   #          ####                       #

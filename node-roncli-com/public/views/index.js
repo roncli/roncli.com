@@ -26,7 +26,7 @@ class IndexView {
      * @returns {string} An HTML string of the page.
      */
     static get(data) {
-        const {head, pageHtml, infoHtml, host, originalUrl, year, version, user, userLinks, contacts, comments} = data;
+        const {head, pageHtml, infoHtml, host, originalUrl, year, version, user, userLinks, contacts, comments, microblog} = data;
 
         return /* html */`
             <html>
@@ -81,15 +81,26 @@ class IndexView {
                                     </div>
                                 </div>
                             </div>
-                            <div id="twitter">
+                            <div id="microblog">
                                 <div class="info-panel">
-                                    <div class="info-panel-title rounded-top">Twitter</div>
-                                    <div class="info-panel-body" style="padding: 0;">
-                                        <a class="twitter-timeline" data-width="180" data-height="350" data-chrome="transparent noheader nofooter" data-theme="light" href="https://twitter.com/roncli?ref_src=twsrc%5Etfw">Tweets by roncli</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+                                    <div class="info-panel-title rounded-top">Social Media</div>
+                                    <div class="info-panel-body" id="microblog-posts" style="padding: 0;">
+                                        ${IndexView.MicroblogView.get(microblog)}
+                                    </div>
+                                    <div class="info-panel-list">
+                                        <a class="contents" href="https://twitter.com/roncli" target="_blank">
+                                            <div class="grid-tight grid-middle grid-columns-2 microblog-address">
+                                                <div class="left"><img class="microblog-logo" src="/images/twitter-logo.png" /></div>
+                                                <div class="center">@roncli</div>
+                                            </div>
+                                        </a>
                                     </div>
                                     <div class="info-panel-list rounded-bottom">
-                                        <a class="contents" href="https://twitter.com/roncli" target="_blank">
-                                            <div class="center">@roncli</div>
+                                        <a class="contents" href="https://mastodon.social/web/@roncli" target="_blank">
+                                            <div class="grid-tight grid-middle grid-columns-2 microblog-address">
+                                                <div class="left"><img class="microblog-logo" src="/images/mastodon-logo.png" /></div>
+                                                <div class="center">@roncli@mastodon.social</div>
+                                            </div>
                                         </a>
                                     </div>
                                 </div>
@@ -167,6 +178,10 @@ IndexView.CommentsView = typeof UserView === "undefined" ? require("./comment/co
 /** @type {typeof import("../js/common/encoding")} */
 // @ts-ignore
 IndexView.Encoding = typeof Encoding === "undefined" ? require("../js/common/encoding") : Encoding; // eslint-disable-line no-undef
+
+/** @type {typeof import("./home/microblog")} */
+// @ts-ignore
+IndexView.MicroblogView = typeof MicroblogView === "undefined" ? require("./home/microblog") : MicroblogView; // eslint-disable-line no-undef
 
 /** @type {typeof import("./index/user")} */
 // @ts-ignore

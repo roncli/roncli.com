@@ -9,6 +9,7 @@
 const Contact = require("../../src/models/contact"),
     HtmlMinifierTerser = require("html-minifier-terser"),
     IndexView = require("../../public/views/index"),
+    Microblog = require("../../src/models/microblog"),
     Minify = require("@roncli/node-minify"),
     NotFoundView = require("../../public/views/404"),
     pjson = require("../../package.json"),
@@ -156,6 +157,11 @@ class Common extends RouterBase {
             <link rel="shortcut icon" href="/images/favicon.ico">
         `;
 
+        const [contacts, microblog] = await Promise.all([
+            (() => Contact.getAll())(),
+            (() => Microblog.getMicroblog())()
+        ]);
+
         return HtmlMinifierTerser.minify(
             IndexView.get({
                 head,
@@ -167,8 +173,9 @@ class Common extends RouterBase {
                 version: pjson.version,
                 user,
                 userLinks,
-                contacts: await Contact.getAll(),
-                comments
+                contacts,
+                comments,
+                microblog
             }),
             {
                 collapseBooleanAttributes: true,

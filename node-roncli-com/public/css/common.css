@@ -117,9 +117,107 @@ body.fullscreen {
     padding: 0;
 }
 
-#page-body #twitter {
+#page-body #microblog {
     grid-column: 2;
     grid-row: 5;
+}
+
+#page-body #microblog #microblog-posts {
+    display: grid;
+    width: 180px;
+    height: 350px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    grid-template-columns: 100%;
+    grid-gap: 0;
+}
+
+#page-body #microblog #microblog-posts .microblog-post {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 32px auto;
+    grid-gap: 4px;
+    padding: 4px 2px;
+    border-bottom: solid 1px #cccccc;
+}
+
+#page-body #microblog #microblog-posts .microblog-post:last-child {
+    border-bottom: none;
+}
+
+#page-body #microblog #microblog-posts .microblog-post .microblog-post-avatar {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    width: 32px;
+    height: 32px;
+}
+
+#page-body #microblog #microblog-posts .microblog-post .microblog-post-avatar img {
+    width: 32px;
+    height: 32px;
+}
+
+#page-body #microblog #microblog-posts .microblog-post .microblog-post-name {
+    grid-column: 2;
+    grid-row: 1;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+#page-body #microblog #microblog-posts .microblog-post .microblog-post-username {
+    grid-column: 2;
+    grid-row: 2;
+    display: grid;
+    grid-template-columns: 16px auto;
+    grid-gap: 4px;
+    align-items: center;
+}
+
+#page-body #microblog #microblog-posts .microblog-post .microblog-post-text {
+    grid-column: 1 / span 2;
+    grid-row: 3;
+    word-break: break-word;
+}
+
+#page-body #microblog #microblog-posts .microblog-post .microblog-post-text p {
+    margin-bottom: 12px;
+}
+
+#page-body #microblog #microblog-posts .microblog-post .microblog-post-text p:last-child {
+    margin-bottom: 0;
+}
+
+#page-body #microblog #microblog-posts .microblog-post .microblog-post-media {
+    grid-column: 1 / span 2;
+    grid-row: 4;
+    display: grid;
+    grid-template-columns: auto;
+    justify-items: center;
+}
+
+#page-body #microblog #microblog-posts .microblog-post .microblog-post-media img,
+#page-body #microblog #microblog-posts .microblog-post .microblog-post-media video {
+    max-width: 100%;
+}
+
+#page-body #microblog #microblog-posts .microblog-post .microblog-post-actions {
+    grid-column: 1 / span 2;
+    grid-row: 5;
+}
+
+#page-body #microblog #microblog-posts .microblog-post .microblog-post-date {
+    grid-column: 1 / span 2;
+    grid-row: 6;
+    text-align: center;
+}
+
+#page-body #microblog .microblog-address {
+    grid-template-columns: 16px auto;
+}
+
+#page-body #microblog img.microblog-logo {
+    width: 16px;
+    height: 16px;
 }
 
 #page-body #contacts {
@@ -140,7 +238,7 @@ body.fullscreen {
 
     #page-body #page-info,
     #page-body #share,
-    #page-body #twitter,
+    #page-body #microblog,
     #page-body #contacts,
     #page-body #discord {
         display: none;

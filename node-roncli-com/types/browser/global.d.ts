@@ -58,6 +58,7 @@ import IndexView from "../../public/views/index"
 import LoginView from "../../public/views/index/login"
 import MediaView from "../../public/views/media/media"
 import MethodNotAllowedView from "../../public/views/405"
+import MicroblogView from "../../public/views/home/microblog"
 import Modal from "../../public/js/common/modal"
 import ModalView from "../../public/views/index/modal"
 import Music from "../../public/js/music"
@@ -148,6 +149,7 @@ declare global {
         LoginView: typeof LoginView
         MediaView: typeof MediaView
         MethodNotAllowedView: typeof MethodNotAllowedView
+        MicroblogView: typeof MicroblogView
         Modal: typeof Modal
         ModalView: typeof ModalView
         monaco: any

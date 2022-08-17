@@ -4,6 +4,7 @@ import Comment from "../../src/models/comment"
 import Contact from "../../src/models/contact"
 import Feature from "../../src/models/feature"
 import GithubTypes from "../node/githubTypes"
+import Microblog from "../../src/models/microblog"
 import NecroDancer from "../../src/models/necrodancer"
 import Page from "../../src/models/page"
 import PageTypes from "../node/pageTypes"
@@ -253,6 +254,7 @@ declare namespace ViewTypes {
         }[]
         contacts: Contact[]
         comments: Comment[]
+        microblog: Microblog[]
     }
 
     type MusicCategoryViewParameters = {

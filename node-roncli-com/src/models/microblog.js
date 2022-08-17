@@ -1,5 +1,5 @@
 /**
- * @typedef {import("../../types/node/mastodonTypes".Post} MastodonTypes.Post
+ * @typedef {import("../../types/node/mastodonTypes").Post} MastodonTypes.Post
  * @typedef {import("../../types/node/microblogTypes").MicroblogData} MicroblogTypes.MicroblogData
  * @typedef {import("../../types/node/twitterTypes").Tweet} TwitterTypes.Tweet
  * @typedef {import("twitter-api-v2").MediaVariantsV2} TwitterApi.MediaVariantsV2
@@ -104,7 +104,7 @@ class Microblog {
 
         expire.setDate(expire.getDate() + 1);
 
-        Cache.add(`${process.env.REDIS_PREFIX}:mastodon:timeline`, timeline, expire);
+        await Cache.add(`${process.env.REDIS_PREFIX}:mastodon:timeline`, timeline, expire);
     }
 
     //                   #           #  #   #                      #     ##
@@ -211,12 +211,14 @@ class Microblog {
      * @returns {Promise} A promise that resolves when the Twitter timeline has been cached.
      */
     static async cacheTwitterTimeline() {
+        await Twitter.getClient();
+
         const timeline = await Twitter.getTimeline(),
             expire = new Date();
 
         expire.setDate(expire.getDate() + 1);
 
-        Cache.add(`${process.env.REDIS_PREFIX}:twitter:timeline`, timeline, expire);
+        await Cache.add(`${process.env.REDIS_PREFIX}:twitter:timeline`, timeline, expire);
     }
 
     //              #    #  #                #             #               ##                                  #    #  #
@@ -263,6 +265,8 @@ class Microblog {
         const timeline = await Cache.get(`${process.env.REDIS_PREFIX}:mastodon:timeline`);
 
         return timeline.map((post) => new Microblog({
+            id: post.id,
+            source: "mastodon",
             url: post.post.url,
             name: post.post.account.display_name,
             username: Microblog.getMastodonAccountName(post.post.account.url),
@@ -289,12 +293,17 @@ class Microblog {
      * @returns {Promise<Microblog[]>} A promise that returns the microblog.
      */
     static async getMicroblog() {
-        const [mastodon, twitter] = await Promise.all([
-            (() => Microblog.getMastodonTimeline())(),
-            (() => Microblog.getTwitterTimeline())()
-        ]);
+        try {
+            const [mastodon, twitter] = await Promise.all([
+                (() => Microblog.getMastodonTimeline())(),
+                (() => Microblog.getTwitterTimeline())()
+            ]);
 
-        return [].concat(mastodon, twitter).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+            return [].concat(mastodon, twitter).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+        } catch (err) {
+            Log.error("There was an error while getting the microblog.", {err});
+            return [];
+        }
     }
 
     //              #    ###          #     #     #                #  #           #   #          ###                 #    #  #               #                 #    #  #        ##
@@ -344,9 +353,11 @@ class Microblog {
         /**
          * @type {TwitterTypes.Tweet[]}
          */
-        const timeline = await Cache.get(`${process.env.REDIS_PREFIX}:mastodon:timeline`);
+        const timeline = await Cache.get(`${process.env.REDIS_PREFIX}:twitter:timeline`);
 
         return timeline.map((post) => new Microblog({
+            id: post.id,
+            source: "twitter",
             url: `https://twitter.com/_/status/${post.id}`,
             name: post.author.name,
             username: `@${post.author.username}`,
@@ -357,7 +368,7 @@ class Microblog {
             post: post.tweet.text,
             createdAt: post.createdAt,
             displayDate: new Date(post.tweet.created_at),
-            media: post.medias.map((m) => ({type: m.type, url: m.url ?? Microblog.getTwitterMediaBestVariantUrl(m.variants)}))
+            media: post.medias.map((m) => ({type: m.type, url: m.url || Microblog.getTwitterMediaBestVariantUrl(m.variants)}))
         }));
     }
 
@@ -372,6 +383,8 @@ class Microblog {
      * @param {MicroblogTypes.MicroblogData} data The microblog data.
      */
     constructor(data) {
+        this.id = data.id;
+        this.source = data.source;
         this.url = data.url;
         this.name = data.name;
         this.username = data.username;

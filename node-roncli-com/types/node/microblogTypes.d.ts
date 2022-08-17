@@ -1,5 +1,7 @@
 declare namespace MicroblogTypes {
     type MicroblogData = {
+        id: string
+        source: string
         url: string
         name: string
         username: string

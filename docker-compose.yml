@@ -94,7 +94,7 @@ services:
       ENCRYPTION_KEY_FILE: /run/secrets/ENCRYPTION_KEY_FILE
       GITHUB_TOKEN_FILE: /run/secrets/GITHUB_TOKEN_FILE
       GOOGLE_API_KEY_FILE: /run/secrets/GOOGLE_API_KEY_FILE
-      MASTONDON_ENABLED: 1
+      MASTODON_ENABLED: 1
       MASTODON_ID: "532113"
       MASTODON_SERVER: "https://mastodon.social"
       MINIFY_CACHE: 1
