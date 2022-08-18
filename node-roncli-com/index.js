@@ -6,6 +6,7 @@ const CacheData = require("./src/cacheData"),
     express = require("express"),
     expressSession = require("express-session"),
     fs = require("fs").promises,
+    Glimesh = require("./src/glimesh"),
     HotRouter = require("hot-router"),
     Log = require("@roncli/node-application-insights-logger"),
     Minify = require("@roncli/node-minify"),
@@ -67,6 +68,9 @@ process.on("unhandledRejection", (reason) => {
     // Startup Discord.
     Discord.startup();
     await Discord.connect();
+
+    // Startup Glimesh.
+    Glimesh.connect();
 
     // Setup express app.
     const app = express();
