@@ -1,5 +1,5 @@
 # Get MariaDB v10.7.
-FROM mariadb:10.7
+FROM mariadb:10.8.3
 
 # Create /var/mariadb directory.
 RUN mkdir -p /var/mariadb
