@@ -19,6 +19,12 @@ updates:
       time: "05:00"
       timezone: "America/Los_Angeles"
   - package-ecosystem: "docker"
+    directory: /mariadb/
+    schedule:
+      interval: "daily"
+      time: "05:00"
+      timezone: "America/Los_Angeles"
+  - package-ecosystem: "docker"
     directory: /nginx/
     schedule:
       interval: "daily"
@@ -32,6 +38,12 @@ updates:
       timezone: "America/Los_Angeles"
   - package-ecosystem: "docker"
     directory: /node-roncli-com/
+    schedule:
+      interval: "daily"
+      time: "05:00"
+      timezone: "America/Los_Angeles"
+  - package-ecosystem: "docker"
+    directory: /photoprism/
     schedule:
       interval: "daily"
       time: "05:00"

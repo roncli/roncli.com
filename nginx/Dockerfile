@@ -1,5 +1,5 @@
 # Get nginx stable Alpine.
-FROM nginx:stable-alpine
+FROM nginx:1.22.0-alpine
 
 # Get packages.
 RUN apk update && apk add openssl && apk add apache2-utils
