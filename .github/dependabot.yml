@@ -18,6 +18,9 @@ updates:
       interval: "daily"
       time: "05:00"
       timezone: "America/Los_Angeles"
+    ignore:
+      - dependency-name: "node"
+        versions: ["17.x", "18.x", "19.x", "20.x"]
   - package-ecosystem: "docker"
     directory: /mariadb/
     schedule:
@@ -36,12 +39,18 @@ updates:
       interval: "daily"
       time: "05:00"
       timezone: "America/Los_Angeles"
+    ignore:
+      - dependency-name: "node"
+        versions: ["17.x", "18.x", "19.x", "20.x"]
   - package-ecosystem: "docker"
     directory: /node-roncli-com/
     schedule:
       interval: "daily"
       time: "05:00"
       timezone: "America/Los_Angeles"
+    ignore:
+      - dependency-name: "node"
+        versions: ["17.x", "18.x", "19.x", "20.x"]
   - package-ecosystem: "docker"
     directory: /photoprism/
     schedule:
