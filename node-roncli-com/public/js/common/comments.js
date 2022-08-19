@@ -82,8 +82,7 @@ class Comments {
             minHeight: 20,
             tools: {
                 quote: {
-                    class: Comments.Quote,
-                    toolbox: false
+                    class: Comments.Quote
                 }
             }
         });
