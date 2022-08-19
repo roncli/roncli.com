@@ -3,7 +3,9 @@ body {
 }
 
 body.fullscreen {
-    overflow-y: hidden;
+    overflow: hidden;
+    max-height: 100%;
+    height: 100%;
 }
 
 #page {
