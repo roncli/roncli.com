@@ -30,7 +30,7 @@ class AdminCacheView {
                     </div>
                     <div style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center;">
                         <button class="btn" style="font-size: 20px;" data-cache="blog">Blogger & Tumblr Cache</button>
-                        <button class="btn" style="font-size: 20px;" data-cache="toofz">Crypt of the NecroDancer Cache</button>
+                        <button class="btn" style="font-size: 20px;" data-cache="necrolab">Crypt of the NecroDancer Cache</button>
                         <button class="btn" style="font-size: 20px;" data-cache="d3">Diablo III Cache</button>
                         <button class="btn" style="font-size: 20px;" data-cache="ff14">Final Fantasy XIV Online Cache</button>
                         <button class="btn" style="font-size: 20px;" data-cache="github">GitHub Cache</button>

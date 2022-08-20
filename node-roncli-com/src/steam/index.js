@@ -15,7 +15,7 @@ const SteamApi = require("steamapi");
 //  #   #   #  #  #      #   #  # # #
 //   ###     ##    ###    ####  #   #
 /**
- * A class that handles calls to Toofz's API.
+ * A class that handles calls to Steam's API.
  */
 class Steam {
     //              #     ##                        #   ##

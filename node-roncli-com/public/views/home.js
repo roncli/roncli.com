@@ -147,7 +147,7 @@ class HomeView {
                             <div class="grid-tight grid-columns-2">
                                 ${data.necrodancer.map((run) => /* html */`
                                     <div class="left">#${run.rank} ${HomeView.Encoding.htmlEncode(run.name)}</div>
-                                    <div class="right"><a href="${run.url}" target="_blank">${run.run === "deathless" ? `${Math.floor(run.score / 100)} Wins` : run.run === "score" || run.run === "seeded-score" ? `$${run.score}` : HomeView.Time.formatTimespan((100000000 - run.score) / 1000, 3)}</a></div>
+                                    <div class="right"><a href="${run.url}" target="_blank">${run.run === "Deathless" ? `${run.score} Win${run.score === 1 ? "" : "s"}${run.end && run.end.zone && run.end.level ? `, ${run.end.zone}-${run.end.level}` : ""}` : run.run === "Score" || run.run === "Seeded Score" ? `$${run.score}` : HomeView.Time.formatTimespan(run.score, 3)}</a></div>
                                 `).join("")}
                             </div>
                         ` : ""}

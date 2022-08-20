@@ -43,11 +43,11 @@ class CacheData {
             })(),
             (async () => {
                 try {
-                    if (await Cache.ttl(`${process.env.REDIS_PREFIX}:toofz:runs`) < 1800) {
-                        await NecroDancer.cacheToofz();
+                    if (await Cache.ttl(`${process.env.REDIS_PREFIX}:necrolab:runs`) < 1800) {
+                        await NecroDancer.cacheNecrolab();
                     }
                 } catch (err) {
-                    Log.error("There was a problem checking the Toofz cache.", {err});
+                    Log.error("There was a problem checking the Necrolab cache.", {err});
                 }
             })(),
             (async () => {

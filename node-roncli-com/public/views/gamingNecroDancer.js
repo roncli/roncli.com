@@ -29,11 +29,11 @@ class GamingNecroDancerView {
      * @returns {string} An HTML string of the page.
      */
     static get(data) {
-        const deathless = data.necroDancer.filter((run) => run.run === "deathless").sort((a, b) => a.rank - b.rank || b.score - a.score),
-            score = data.necroDancer.filter((run) => run.run === "score").sort((a, b) => a.rank - b.rank || b.score - a.score),
-            seededScore = data.necroDancer.filter((run) => run.run === "seeded-score").sort((a, b) => a.rank - b.rank || b.score - a.score),
-            speed = data.necroDancer.filter((run) => run.run === "speed").sort((a, b) => a.rank - b.rank || b.score - a.score),
-            seededSpeed = data.necroDancer.filter((run) => run.run === "seeded-speed").sort((a, b) => a.rank - b.rank || b.score - a.score);
+        const deathless = data.necroDancer.filter((run) => run.run === "Deathless").sort((a, b) => a.rank - b.rank || b.score - a.score),
+            score = data.necroDancer.filter((run) => run.run === "Score").sort((a, b) => a.rank - b.rank || b.score - a.score),
+            seededScore = data.necroDancer.filter((run) => run.run === "Seeded Score").sort((a, b) => a.rank - b.rank || b.score - a.score),
+            speed = data.necroDancer.filter((run) => run.run === "Speed").sort((a, b) => a.rank - b.rank || b.score - a.score),
+            seededSpeed = data.necroDancer.filter((run) => run.run === "Seeded Speed").sort((a, b) => a.rank - b.rank || b.score - a.score);
 
         return /* html */`
             <div class="grid">
@@ -49,7 +49,7 @@ class GamingNecroDancerView {
                         ${speed.map((run) => /* html */`
                             <div class="right">#${run.rank}</div>
                             <div class="left">${GamingNecroDancerView.Encoding.htmlEncode(run.name)}</div>
-                            <div class="right"><a href="${run.url}" target="_blank">${GamingNecroDancerView.Time.formatTimespan((100000000 - run.score) / 1000, 3)}</a></div>
+                            <div class="right"><a href="${run.url}" target="_blank">${GamingNecroDancerView.Time.formatTimespan(run.score, 3)}</a></div>
                         `).join("")}
                     </div>
                     <div class="panel-body center pad-top"><h3>Deathless Runs</h3></div>
@@ -57,7 +57,7 @@ class GamingNecroDancerView {
                         ${deathless.map((run) => /* html */`
                             <div class="right">#${run.rank}</div>
                             <div class="left">${GamingNecroDancerView.Encoding.htmlEncode(run.name)}</div>
-                            <div class="right"><a href="${run.url}" target="_blank">${Math.floor(run.score / 100)} Wins</a></div>
+                            <div class="right"><a href="${run.url}" target="_blank">${run.score} Win${run.score === 1 ? "" : "s"}${run.end && run.end.zone && run.end.level ? `, ${run.end.zone}-${run.end.level}` : ""}</a></div>
                         `).join("")}
                     </div>
                     <div class="panel-body center pad-top"><h3>Score Runs</h3></div>
@@ -73,7 +73,7 @@ class GamingNecroDancerView {
                         ${seededSpeed.map((run) => /* html */`
                             <div class="right">#${run.rank}</div>
                             <div class="left">${GamingNecroDancerView.Encoding.htmlEncode(run.name)}</div>
-                            <div class="right"><a href="${run.url}" target="_blank">${GamingNecroDancerView.Time.formatTimespan((100000000 - run.score) / 1000, 3)}</a></div>
+                            <div class="right"><a href="${run.url}" target="_blank">${GamingNecroDancerView.Time.formatTimespan(run.score, 3)}</a></div>
                         `).join("")}
                     </div>
                     <div class="panel-body center pad-top"><h3>Seeded Score Runs</h3></div>

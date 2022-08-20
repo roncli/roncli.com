@@ -176,7 +176,6 @@ declare global {
         SPA: typeof SPA
         Template: typeof Template
         Time: typeof Time
-        twttr: any
         UnauthorizedView: typeof UnauthorizedView
         UserView: typeof UserView
         YouTubeView: typeof YouTubeView

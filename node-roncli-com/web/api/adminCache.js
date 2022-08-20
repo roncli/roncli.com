@@ -103,6 +103,11 @@ class AdminCacheAPI extends RouterBase {
                     await Repository.cacheEvents();
                     res.sendStatus(204);
                     break;
+                case "necrolab":
+                    await NecroDancer.clearCache();
+                    await NecroDancer.cacheNecrolab();
+                    res.sendStatus(204);
+                    break;
                 case "soundcloud":
                     await Track.clearCache();
                     await Track.cacheSoundCloud();
@@ -116,11 +121,6 @@ class AdminCacheAPI extends RouterBase {
                 case "steam":
                     await SteamGame.clearCache();
                     await SteamGame.cacheGames();
-                    res.sendStatus(204);
-                    break;
-                case "toofz":
-                    await NecroDancer.clearCache();
-                    await NecroDancer.cacheToofz();
                     res.sendStatus(204);
                     break;
                 case "wow":

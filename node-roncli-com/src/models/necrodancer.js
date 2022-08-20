@@ -4,8 +4,8 @@
 
 const Cache = require("@roncli/node-redis").Cache,
     Log = require("@roncli/node-application-insights-logger"),
-    SortedSetCache = require("@roncli/node-redis").SortedSetCache,
-    Toofz = require("../toofz");
+    Necrolab = require("../necrolab"),
+    SortedSetCache = require("@roncli/node-redis").SortedSetCache;
 
 //  #   #                              ####
 //  #   #                               #  #
@@ -18,35 +18,29 @@ const Cache = require("@roncli/node-redis").Cache,
  * A class that represents a Crypt of the NecroDancer run.
  */
 class NecroDancer {
-    //                   #           ###                 #
-    //                   #            #                 # #
-    //  ##    ###   ##   ###    ##    #     ##    ##    #    ####
-    // #     #  #  #     #  #  # ##   #    #  #  #  #  ###     #
-    // #     # ##  #     #  #  ##     #    #  #  #  #   #     #
-    //  ##    # #   ##   #  #   ##    #     ##    ##    #    ####
+    //                   #           #  #                          ##          #
+    //                   #           ## #                           #          #
+    //  ##    ###   ##   ###    ##   ## #   ##    ##   ###    ##    #     ###  ###
+    // #     #  #  #     #  #  # ##  # ##  # ##  #     #  #  #  #   #    #  #  #  #
+    // #     # ##  #     #  #  ##    # ##  ##    #     #     #  #   #    # ##  #  #
+    //  ##    # #   ##   #  #   ##   #  #   ##    ##   #      ##   ###    # #  ###
     /**
      * Caches the Crypt of the NecroDancer runs.
      * @returns {Promise} A promise that resolves when the runs have been cached.
      */
-    static async cacheToofz() {
-        // Get the runs from Toofz.
-        const runs = (await Toofz.getPlayer()).entries.map((run) => ({
-            score: run.rank,
-            value: {
-                name: run.leaderboard.display_name,
-                rank: run.rank,
-                score: run.score,
-                run: run.leaderboard.run,
-                end: run.end,
-                url: `https://crypt.toofz.com/leaderboards/${run.leaderboard.product}/${run.leaderboard.character}/${run.leaderboard.run}/${run.leaderboard.mode}?id=76561197996696153`
-            }
-        }));
+    static async cacheNecrolab() {
+        // Get the runs from Necrolab.
+        const rank = await Necrolab.getRank("roncli"),
+            runs = (await Necrolab.getRuns(rank)).map((run) => ({
+                score: run.rank,
+                value: run
+            }));
 
         // Save to cache.
         const expire = new Date();
         expire.setDate(expire.getDate() + 1);
 
-        await SortedSetCache.add(`${process.env.REDIS_PREFIX}:toofz:runs`, runs, expire);
+        await SortedSetCache.add(`${process.env.REDIS_PREFIX}:necrolab:runs`, runs, expire);
     }
 
     //       ##                       ##               #
@@ -56,11 +50,11 @@ class NecroDancer {
     // #      #    ##    # ##  #     #  #  # ##  #     #  #  ##
     //  ##   ###    ##    # #  #      ##    # #   ##   #  #   ##
     /**
-     * Clears the Toofz cache.
+     * Clears the Necrolab cache.
      * @returns {Promise} A promise that resolves when the cache has been cleared.
      */
     static async clearCache() {
-        const blogKeys = await Cache.getAllKeys(`${process.env.REDIS_PREFIX}:toofz:*`);
+        const blogKeys = await Cache.getAllKeys(`${process.env.REDIS_PREFIX}:necrolab:*`);
         if (blogKeys.length > 0) {
             await Cache.remove(blogKeys);
         }
@@ -81,11 +75,11 @@ class NecroDancer {
      */
     static async getRuns(offset, count) {
         try {
-            if (!await Cache.exists([`${process.env.REDIS_PREFIX}:toofz:runs`])) {
-                await NecroDancer.cacheToofz();
+            if (!await Cache.exists([`${process.env.REDIS_PREFIX}:necrolab:runs`])) {
+                await NecroDancer.cacheNecrolab();
             }
 
-            return (await SortedSetCache.get(`${process.env.REDIS_PREFIX}:toofz:runs`, offset, offset + count - 1)).map((s) => new NecroDancer(s));
+            return (await SortedSetCache.get(`${process.env.REDIS_PREFIX}:necrolab:runs`, offset, offset + count - 1)).map((s) => new NecroDancer(s));
         } catch (err) {
             Log.error("There was an error while getting NecroDancer runs.", {err});
             return void 0;
