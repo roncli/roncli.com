@@ -14,6 +14,19 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 
 ## Version History
 
+### v2.1.0 - 8/20/2022
+* Replaced Twitter panel with combined Twitter/Mastodon social media panel.
+* Replaced Toofz API calls with Necrolab API calls.
+* NecroDancer records now show Synchrony with Amplified records only.
+* Discord bot now posts Mastodon posts to the Discord server.
+* Discord bot now posts Glimesh go live notifications to the Discord server.
+* Dockerfiles now use specific versions instead of latest versions, image versions are now handled by dependabot.
+* Fix Tweets to load more than once per application lifetime.
+* Fix retweet display from the bot.
+* Fix for résumé page on MacOS Safari.
+* Fix for comments editor which broke single page application since v2.0.7.
+* Package updates.
+
 ### v2.0.8 - 7/27/2022
 
 * Discord bot now posts Twitch go live notifications to the Discord server.
