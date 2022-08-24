@@ -168,7 +168,7 @@ class Necrolab {
                 level: run.end.level
             },
             url: run.url,
-            name: `${tagTypes.find((t) => t.slug === "character").tags.find((t) => t.slug === run.tags.character).name} ${run.tags.mode === "any" ? "" : `${tagTypes.find((t) => t.slug === "mode").tags.find((t) => t.slug === run.tags.mode).name} `}${run.tags.seededtype === "unseeded" ? "" : `${tagTypes.find((t) => t.slug === "seeded-type").tags.find((t) => t.slug === run.tags.seededtype).name} `}${tagTypes.find((t) => t.slug === "category").tags.find((t) => t.slug === run.tags.category).name} ${tagTypes.find((t) => t.slug === "release").tags.find((t) => t.slug === run.tags.release).name}`,
+            name: `${tagTypes.find((t) => t.slug === "character").tags.find((t) => t.slug === run.tags.character).name} ${run.tags.percent === "low-percent" ? "Low% " : ""}${run.tags.mode === "any" ? "" : `${tagTypes.find((t) => t.slug === "mode").tags.find((t) => t.slug === run.tags.mode).name} `}${run.tags.seededtype === "unseeded" ? "" : `${tagTypes.find((t) => t.slug === "seeded-type").tags.find((t) => t.slug === run.tags.seededtype).name} `}${tagTypes.find((t) => t.slug === "category").tags.find((t) => t.slug === run.tags.category).name} ${tagTypes.find((t) => t.slug === "release").tags.find((t) => t.slug === run.tags.release).name}`,
             run: `${run.tags.seededtype === "unseeded" ? "" : `${tagTypes.find((t) => t.slug === "seeded-type").tags.find((t) => t.slug === run.tags.seededtype).name} `}${tagTypes.find((t) => t.slug === "category").tags.find((t) => t.slug === run.tags.category).name}`
         }));
     }
