@@ -40,6 +40,7 @@ class NecroDancer {
         const expire = new Date();
         expire.setDate(expire.getDate() + 1);
 
+        await Cache.remove([`${process.env.REDIS_PREFIX}:necrolab:runs`]);
         await SortedSetCache.add(`${process.env.REDIS_PREFIX}:necrolab:runs`, runs, expire);
     }
 
