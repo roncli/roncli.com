@@ -14,6 +14,10 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 
 ## Version History
 
+### v2.1.1 - 8/25/2022
+* Bug fixes for Necrolab.
+* Package updates.
+
 ### v2.1.0 - 8/20/2022
 * Replaced Twitter panel with combined Twitter/Mastodon social media panel.
 * Replaced Toofz API calls with Necrolab API calls.
