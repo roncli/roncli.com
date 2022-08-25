@@ -37,7 +37,7 @@ class Glimesh {
 
         client.on("open", () => {
             // Start the heartbeats.
-            this.sendHeartbeat();
+            Glimesh.sendHeartbeat();
 
             // Join the absinthe control topic.
             client.send(JSON.stringify(["main", "join", "__absinthe__:control", "phx_join", {}]));
@@ -49,7 +49,7 @@ class Glimesh {
             switch (topic) {
                 case "phoenix":
                     if (ref === "heartbeat" && event === "phx_reply" && payload.status === "ok") {
-                        this.sendHeartbeat();
+                        Glimesh.sendHeartbeat();
                     }
                     break;
                 case "__absinthe__:control":
