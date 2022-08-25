@@ -2,7 +2,7 @@ const admin = db.getSiblingDB("admin");
 const roncli = db.getSiblingDB("roncli");
 
 // Update this with the latest migration number.
-const currentMigration = 1;
+const currentMigration = 2;
 
 // Check to see if the migration collection exists yet.  If not, create it.
 const found = roncli.getCollectionInfos({name: "migration"}).length;

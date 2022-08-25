@@ -1,4 +1,4 @@
-# Get MariaDB v10.7.
+# Get MariaDB.
 FROM mariadb:10.9.2
 
 # Create /var/mariadb directory.
