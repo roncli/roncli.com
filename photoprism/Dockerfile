@@ -1,5 +1,5 @@
 # Get PhotoPrism latest.
-FROM photoprism/photoprism:220730-bookworm
+FROM photoprism/photoprism:220901-bookworm
 
 # Create /var/photoprism directory.
 RUN mkdir -p /var/photoprism
