@@ -255,6 +255,24 @@ class Discord {
         return msg;
     }
 
+    //                          #          ####                     #
+    //                          #          #                        #
+    //  ##   ###    ##    ###  ###    ##   ###   # #    ##   ###   ###
+    // #     #  #  # ##  #  #   #    # ##  #     # #   # ##  #  #   #
+    // #     #     ##    # ##   #    ##    #     # #   ##    #  #   #
+    //  ##   #      ##    # #    ##   ##   ####   #     ##   #  #    ##
+    /**
+     * Creates a new event on the Discord server.
+     * @param {DiscordJs.GuildScheduledEventCreateOptions} data The event data.
+     * @returns {Promise<DiscordJs.GuildScheduledEvent>} A promise that returns the event.
+     */
+    static createEvent(data) {
+        if (!guild) {
+            return void 0;
+        }
+        return guild.scheduledEvents.create(data);
+    }
+
     //   #    #             #   ##          #    ##       #  #  #              #                 ###         ###      #
     //  # #                 #  #  #               #       #  ####              #                 #  #         #       #
     //  #    ##    ###    ###  #     #  #  ##     #     ###  ####   ##   # #   ###    ##   ###   ###   #  #   #     ###
@@ -291,6 +309,21 @@ class Discord {
             return void 0;
         }
         return /** @type {DiscordJs.TextChannel} */(guild.channels.cache.find((c) => c.name === name && c.type === DiscordJs.ChannelType.GuildText)); // eslint-disable-line no-extra-parens
+    }
+
+    //              #    ####                     #
+    //              #    #                        #
+    //  ###   ##   ###   ###   # #    ##   ###   ###    ###
+    // #  #  # ##   #    #     # #   # ##  #  #   #    ##
+    //  ##   ##     #    #     # #   ##    #  #   #      ##
+    // #      ##     ##  ####   #     ##   #  #    ##  ###
+    //  ###
+    /**
+     * Gets all Discord events.
+     * @returns {Promise<DiscordJs.GuildScheduledEvent[]>} A promise that returns the Discord events.
+     */
+    static async getEvents() {
+        return Array.from((await guild.scheduledEvents.fetch()).values());
     }
 
     //  #            ##

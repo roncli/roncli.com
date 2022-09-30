@@ -59,7 +59,7 @@ class YouTube {
                     });
 
                     if (res.status !== 200) {
-                        throw new Error(`There was an error while getting YouTube playlist item from Google: status ${res.status}`);
+                        throw new Error(`There was an error while getting YouTube playlist items from Google: status ${res.status}`);
                     }
 
                     nextPageToken = res.data.nextPageToken;

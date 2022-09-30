@@ -96,6 +96,7 @@ services:
       GLIMESH_CHANNEL_ID: "1122"
       GLIMESH_CLIENT_ID_FILE: /run/secrets/GLIMESH_CLIENT_ID_FILE
       GOOGLE_API_KEY_FILE: /run/secrets/GOOGLE_API_KEY_FILE
+      GOOGLE_CALENDAR_ID: 80oou8kcaphor5ckesrrh1j5lo@group.calendar.google.com
       MASTODON_ENABLED: 1
       MASTODON_ID: "532113"
       MASTODON_SERVER: "https://mastodon.social"

@@ -1,4 +1,5 @@
 const CacheData = require("./src/cacheData"),
+    Calendar = require("./src/models/calendar"),
     compression = require("compression"),
     connectRedis = require("connect-redis"),
     cookieParser = require("cookie-parser"),
@@ -173,6 +174,9 @@ process.on("unhandledRejection", (reason) => {
 
     // Start caching data.
     setTimeout(CacheData.checkCache, 1);
+
+    // start checking event data.
+    setTimeout(Calendar.checkEvents, 1);
 
     app.listen(port);
     Log.info(`Server PID ${process.pid} listening on port ${port}.`);
