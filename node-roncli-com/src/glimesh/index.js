@@ -67,8 +67,10 @@ class Glimesh {
         client.on("close", (code, reason) => {
             Log.warn("The Glimesh websocket was closed.", {properties: {code, reason: reason ? reason.toString("utf8") : void 0}});
 
-            client.terminate();
-            client = void 0;
+            if (client) {
+                client.terminate();
+                client = void 0;
+            }
             setTimeout(Glimesh.connect, 30000);
         });
 
