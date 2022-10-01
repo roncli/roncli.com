@@ -14,6 +14,11 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 
 ## Version History
 
+### v2.1.2 - 10/1/2022
+* Add Discord scheduled events from the Google calendar for roncli Gaming.
+* Minor bug fix with logging into Glimesh.
+* Package updates.
+
 ### v2.1.1 - 8/25/2022
 * Bug fixes for Necrolab.
 * Package updates.
