@@ -30,7 +30,7 @@ class Calendar {
 
             // Remove Discord events that don't exist in Google events.
             for (const event of discordEvents) {
-                if (!googleEvents.find((e) => new Date(e.start.dateTime).getTime() === event.scheduledStartAt.getTime() && new Date(e.end.dateTime).getTime() === event.scheduledEndAt.getTime() && e.summary === event.name)) {
+                if (event.scheduledStartAt.getTime() > Date.now() && !googleEvents.find((e) => new Date(e.start.dateTime).getTime() === event.scheduledStartAt.getTime() && new Date(e.end.dateTime).getTime() === event.scheduledEndAt.getTime() && e.summary === event.name)) {
                     await event.delete();
                 }
             }
