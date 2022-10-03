@@ -171,19 +171,23 @@ class Home extends RouterBase {
         ]);
 
         if (projects) {
-            for (const commit of commits) {
-                const project = projects.find((p) => `${p.github.user}/${p.github.repository}` === commit.repo.name);
+            if (commits && commits.length) {
+                for (const commit of commits) {
+                    const project = projects.find((p) => `${p.github.user}/${p.github.repository}` === commit.repo.name);
 
-                if (project) {
-                    commit.url = project.url;
+                    if (project) {
+                        commit.url = project.url;
+                    }
                 }
             }
 
-            for (const release of releases) {
-                const project = projects.find((p) => `${p.github.user}/${p.github.repository}` === release.repo.name);
+            if (releases && releases.length) {
+                for (const release of releases) {
+                    const project = projects.find((p) => `${p.github.user}/${p.github.repository}` === release.repo.name);
 
-                if (project) {
-                    release.url = project.url;
+                    if (project) {
+                        release.url = project.url;
+                    }
                 }
             }
         }
