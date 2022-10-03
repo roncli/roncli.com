@@ -54,12 +54,12 @@ class Glimesh {
                     break;
                 case "__absinthe__:control":
                     if (joinRef === "main" && event === "phx_reply" && payload.status === "ok") {
-                        await this.handleAPI(ref, payload);
+                        await Glimesh.handleAPI(ref, payload);
                     }
                     break;
                 case subscriptionId:
                     if (event === "subscription:data") {
-                        this.handleSubscription(payload);
+                        Glimesh.handleSubscription(payload);
                     }
             }
         });
