@@ -55,7 +55,7 @@ class Calendar {
                             return false;
                         }
 
-                        if (new Date(e.end.dateTime).getTime() === event.scheduledEndAt.getTime()) {
+                        if (new Date(e.end.dateTime).getTime() !== event.scheduledEndAt.getTime()) {
                             return false;
                         }
                     } else if (event.scheduledEndAt) {
@@ -97,7 +97,7 @@ class Calendar {
                             return false;
                         }
 
-                        if (e.scheduledEndAt.getTime() === new Date(event.end.dateTime).getTime()) {
+                        if (e.scheduledEndAt.getTime() !== new Date(event.end.dateTime).getTime()) {
                             return false;
                         }
                     } else if (event.end && event.end.dateTime) {
