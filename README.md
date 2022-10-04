@@ -14,6 +14,13 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 
 ## Version History
 
+### v2.1.3 - 10/4/2022
+* Fix for Mastodon showing HTML in Discord.
+* Fix for Google Calendar deleting and recreating Discord events.
+* Fix for GitHub releases and commits when there are no releases and commits available.
+* Fix for Glimesh occasionally failing.
+* Package updates.
+
 ### v2.1.2 - 10/1/2022
 * Add Discord scheduled events from the Google calendar for roncli Gaming.
 * Minor bug fix with logging into Glimesh.
