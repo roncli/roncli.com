@@ -30,7 +30,7 @@
         "@roncli/node-redis": "roncli/node-redis#v0.1.16",
         "@root/request": "1.9.2",
         "@twurple/api": "5.2.5",
-        "@twurple/auth": "5.2.4",
+        "@twurple/auth": "5.2.5",
         "@xivapi/js": "0.4.1",
         "blizzard.js": "4.3.0",
         "bootstrap-icons": "1.9.1",
