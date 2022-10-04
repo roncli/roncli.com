@@ -26,6 +26,21 @@ class Encoding {
         return str && `${str}`.replace(/"/g, "&#34;") || "";
     }
 
+    // #      #          ##    ###                        #
+    // #      #           #    #  #                       #
+    // ###   ###   # #    #    #  #   ##    ##    ##    ###   ##
+    // #  #   #    ####   #    #  #  # ##  #     #  #  #  #  # ##
+    // #  #   #    #  #   #    #  #  ##    #     #  #  #  #  ##
+    // #  #    ##  #  #  ###   ###    ##    ##    ##    ###   ##
+    /**
+     * HTML-decodes a string.
+     * @param {string} str The string.
+     * @returns {string} The encoded string.
+     */
+    static htmlDecode(str) {
+        return str && str.replace(/&amp;/gm, "&").replace(/&gt;/gm, ">").replace(/&lt;/gm, "<").replace(/&quot;/gm, "'").replace(/&#39;/gm, "'").replace(/&#[0-9]+/gm, (i) => String.fromCharCode(+i)) || "";
+    }
+
     // #      #          ##    ####                       #
     // #      #           #    #                          #
     // ###   ###   # #    #    ###   ###    ##    ##    ###   ##
