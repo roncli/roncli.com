@@ -7,6 +7,7 @@
 
 const Cache = require("@roncli/node-redis").Cache,
     Discord = require("../discord"),
+    HtmlToText = require("html-to-text"),
     Log = require("@roncli/node-application-insights-logger"),
     Mastodon = require("../mastodon"),
     MastodonModel = require("./mastodon"),
@@ -70,7 +71,7 @@ class Microblog {
                     },
                     url: post.post.url,
                     title: `${post.post.account.display_name} - ${Microblog.getMastodonAccountName(post.post.account.url) ?? `@${post.post.account.username}`}`,
-                    description: post.post.content,
+                    description: HtmlToText.convert(post.post.content),
                     footer: {
                         text: "Mastodon",
                         iconURL: "https://roncli.com/images/mastodon-logo.png"
