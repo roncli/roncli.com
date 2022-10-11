@@ -20,7 +20,7 @@
     "dependencies": {
         "@roncli/node-application-insights-logger": "roncli/node-application-insights-logger#v1.0.12",
         "@root/request": "1.9.2",
-        "express": "4.18.1",
+        "express": "4.18.2",
         "mongodb": "4.10.0"
     },
     "devDependencies": {
