@@ -1,6 +1,7 @@
 const Discord = require("../discord"),
     DiscordJs = require("discord.js"),
     Encoding = require("../../public/js/common/encoding"),
+    HtmlToText = require("html-to-text"),
     Log = require("@roncli/node-application-insights-logger"),
     GoogleCalendar = require("../google/calendar");
 
@@ -113,7 +114,7 @@ class Calendar {
                         scheduledEndTime: new Date(event.end.dateTime),
                         privacyLevel: DiscordJs.GuildScheduledEventPrivacyLevel.GuildOnly,
                         entityType: DiscordJs.GuildScheduledEventEntityType.External,
-                        description: Encoding.htmlDecode(event.description),
+                        description: HtmlToText.convert(Encoding.htmlDecode(event.description), {selectors: [{selector: "a", format: "inline"}]}),
                         entityMetadata: {location: event.location},
                         reason: "New event."
                     });
