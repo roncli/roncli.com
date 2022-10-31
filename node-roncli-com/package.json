@@ -21,7 +21,7 @@
         "@editorjs/editorjs": "2.25.0",
         "@editorjs/quote": "2.4.0",
         "@fontsource/archivo-narrow": "4.5.10",
-        "@googleapis/blogger": "0.3.2",
+        "@googleapis/blogger": "1.0.0",
         "@googleapis/calendar": "2.0.0",
         "@googleapis/youtube": "6.0.0",
         "@octokit/rest": "19.0.5",
