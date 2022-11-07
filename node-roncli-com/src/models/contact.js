@@ -29,7 +29,7 @@ class Contact {
      */
     static async getAll() {
         try {
-            return (await ContactDb.getAll()).map((c) => new Contact(c));
+            return (await ContactDb.getAll()).map((c) => new Contact(c)).sort((a, b) => a.title.localeCompare(b.title));
         } catch (err) {
             Log.error("There was an error while getting all contacts.", {err});
             return [];
