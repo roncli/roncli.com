@@ -14,6 +14,10 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 
 ## Version History
 
+### v2.1.5 - 11/6/2022
+* Sort contacts by title.
+* Package updates.
+
 ### v2.1.4 - 10/28/2022
 * Fixed bug with links in Mastodon posts.
 * Fixed bug with HTML in Google calendar event descriptions.
