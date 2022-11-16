@@ -72,7 +72,7 @@ class Microblog {
                         },
                         url: post.post.url,
                         title: `${post.post.account.display_name} - ${Microblog.getMastodonAccountName(post.post.account.url) ?? `@${post.post.account.username}`}`,
-                        description: HtmlToText.convert(post.post.content, {selectors: [{selector: "a", format: "inline"}]}),
+                        description: HtmlToText.convert(post.post.content, {selectors: [{selector: "a", format: "inline"}], wordwrap: false}),
                         footer: {
                             text: "Mastodon",
                             iconURL: "https://roncli.com/images/mastodon-logo.png"
