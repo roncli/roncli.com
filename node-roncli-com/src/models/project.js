@@ -105,7 +105,6 @@ class Project {
         return new Project(data);
     }
 
-
     //              #     ##   ##    ##
     //              #    #  #   #     #
     //  ###   ##   ###   #  #   #     #

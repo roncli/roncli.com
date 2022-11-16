@@ -19,6 +19,10 @@ import Track from "../../src/models/track"
 import User from "../../src/models/user"
 
 declare namespace ViewTypes {
+    type AdminContactsViewParameters = {
+        contacts: Contact[]
+    }
+
     type AdminFilesViewParameters = {
         path: string
         entries: {

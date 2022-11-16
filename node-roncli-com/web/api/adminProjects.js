@@ -213,7 +213,7 @@ class AdminProjectsAPI extends RouterBase {
             try {
                 await Project.cacheRepository(req.body.user, req.body.repository);
             } catch (err) {
-                res.status(409).json({error: "Conflict, GitHub project does not.", message: "Could not find the specified repository on GitHub.  Please try again."});
+                res.status(409).json({error: "Conflict, GitHub project does not exist.", message: "Could not find the specified repository on GitHub.  Please try again."});
                 return;
             }
 

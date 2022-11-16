@@ -6,6 +6,8 @@ import AccountView from "../../public/views/account"
 import AddErrorView from "../../public/views/media/addError"
 import AdminCache from "../../public/js/adminCache"
 import AdminCacheView from "../../public/views/adminCache"
+import AdminContacts from "../../public/js/adminContacts"
+import AdminContactsView from "../../public/views/adminContacts"
 import AdminFiles from "../../public/js/adminFiles"
 import AdminFilesView from "../../public/views/adminFiles"
 import AdminFrontPage from "../../public/js/adminFrontPage"
@@ -97,6 +99,8 @@ declare global {
         AddErrorView: typeof AddErrorView
         AdminCache: typeof AdminCache
         AdminCacheView: typeof AdminCacheView
+        AdminContacts: typeof AdminContacts
+        AdminContactsView: typeof AdminContactsView
         AdminFiles: typeof AdminFiles
         AdminFilesView: typeof AdminFilesView
         AdminFrontPage: typeof AdminFrontPage

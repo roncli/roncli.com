@@ -31,6 +31,9 @@ class AdminView {
                 <a href="/admin/cache" class="contents">
                     <div class="pill"><i class="bi-server"></i> Cache</div>
                 </a>
+                <a href="/admin/contacts" class="contents">
+                    <div class="pill"><i class="bi-person-lines-fill"></i> Contacts</div>
+                </a>
                 <a href="/admin/files" class="contents">
                     <div class="pill"><i class="bi-folder"></i> Files</div>
                 </a>
