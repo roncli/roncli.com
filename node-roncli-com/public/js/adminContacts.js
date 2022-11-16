@@ -24,7 +24,7 @@ class AdminContacts {
             const url = /** @type {HTMLInputElement} */(document.getElementById("add-contact-url")).value, // eslint-disable-line no-extra-parens
                 title = /** @type {HTMLInputElement} */(document.getElementById("add-contact-title")).value; // eslint-disable-line no-extra-parens
 
-            if (!url || url === "" || !url.startsWith("http://") || !url.startsWith("https://") || !url.startsWith("mailto:")) {
+            if (!url || url === "" || !url.startsWith("http://") && !url.startsWith("https://") && !url.startsWith("mailto:")) {
                 await AdminContacts.Index.showModal("Invalid URL", "You must enter a valid URL or email, starting with http or mailto.");
                 return;
             }
@@ -124,10 +124,6 @@ class AdminContacts {
 /** @type {typeof import("./index")} */
 // @ts-ignore
 AdminContacts.Index = typeof Index === "undefined" ? require("./index") : Index; // eslint-disable-line no-undef
-
-/** @type {typeof import("../../node_modules/@types/sortablejs")} */
-// @ts-ignore
-AdminContacts.Sortable = typeof Sortable === "undefined" ? require("../../node_modules/sortablejs/Sortable") : Sortable; // eslint-disable-line no-undef
 
 /** @type {typeof import("./spa")} */
 // @ts-ignore

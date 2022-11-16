@@ -46,7 +46,7 @@ class AdminContactsView {
                 </div>
                 <div id="contact-list" class="panel-body rounded-bottom">
                     ${data.contacts.map((contact) => /* html */`
-                        <div class="pill grid" style="grid-template-columns: 1fr auto; align-items: center;" data-id="${contact.id}">
+                        <div class="pill pill-static grid" style="grid-template-columns: 1fr auto; align-items: center;" data-id="${contact.id}">
                             <div>
                                 <a href="${contact.value}">${AdminContactsView.Encoding.htmlEncode(contact.title)}</a>
                             </div>
