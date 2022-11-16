@@ -67,7 +67,6 @@ roncli.createCollection("changeAuthorization", {
                 },
                 data: {
                     bsonType: "object",
-                    required: [],
                     additionalProperties: true,
                     properties: {}
                 },
