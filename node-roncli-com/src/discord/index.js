@@ -109,17 +109,19 @@ class Discord {
             Log.error("Disconnected from Discord.", {err: ev instanceof Error ? ev : new Error(util.inspect(ev))});
         });
 
-        discord.on("messageCreate", (message) => {
-            eventEmitter.emit("message", message);
-        });
+        if (+process.env.DISCORD_ENABLED) {
+            discord.on("messageCreate", (message) => {
+                eventEmitter.emit("message", message);
+            });
 
-        discord.on("presenceUpdate", (oldPresence, newPresence) => {
-            eventEmitter.emit("presenceUpdate", oldPresence, newPresence);
-        });
+            discord.on("presenceUpdate", (oldPresence, newPresence) => {
+                eventEmitter.emit("presenceUpdate", oldPresence, newPresence);
+            });
 
-        discord.on("voiceStateUpdate", (oldState, newState) => {
-            eventEmitter.emit("voiceStateUpdate", oldState, newState);
-        });
+            discord.on("voiceStateUpdate", (oldState, newState) => {
+                eventEmitter.emit("voiceStateUpdate", oldState, newState);
+            });
+        }
 
         discord.on("error", (err) => {
             if (err.message === "read ECONNRESET") {

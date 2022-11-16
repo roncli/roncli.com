@@ -54,29 +54,31 @@ class Microblog {
         if (posts.length > 0) {
             posts.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
-            const channel = Discord.findTextChannelByName("social-media");
+            if (+process.env.DISCORD_ENABLED) {
+                const channel = Discord.findTextChannelByName("social-media");
 
-            for (const post of posts) {
-                // Skip all replies.
-                if (post.post.in_reply_to_id) {
-                    continue;
-                }
-
-                await Discord.richQueue(Discord.embedBuilder({
-                    timestamp: new Date(post.post.created_at),
-                    thumbnail: {
-                        url: post.post.account.avatar,
-                        width: 80,
-                        height: 80
-                    },
-                    url: post.post.url,
-                    title: `${post.post.account.display_name} - ${Microblog.getMastodonAccountName(post.post.account.url) ?? `@${post.post.account.username}`}`,
-                    description: HtmlToText.convert(post.post.content, {selectors: [{selector: "a", format: "inline"}]}),
-                    footer: {
-                        text: "Mastodon",
-                        iconURL: "https://roncli.com/images/mastodon-logo.png"
+                for (const post of posts) {
+                    // Skip all replies.
+                    if (post.post.in_reply_to_id) {
+                        continue;
                     }
-                }), channel);
+
+                    await Discord.richQueue(Discord.embedBuilder({
+                        timestamp: new Date(post.post.created_at),
+                        thumbnail: {
+                            url: post.post.account.avatar,
+                            width: 80,
+                            height: 80
+                        },
+                        url: post.post.url,
+                        title: `${post.post.account.display_name} - ${Microblog.getMastodonAccountName(post.post.account.url) ?? `@${post.post.account.username}`}`,
+                        description: HtmlToText.convert(post.post.content, {selectors: [{selector: "a", format: "inline"}]}),
+                        footer: {
+                            text: "Mastodon",
+                            iconURL: "https://roncli.com/images/mastodon-logo.png"
+                        }
+                    }), channel);
+                }
             }
 
             // Save the new last post.
@@ -166,29 +168,31 @@ class Microblog {
         if (tweets.length > 0) {
             tweets.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
 
-            const channel = Discord.findTextChannelByName("social-media");
+            if (+process.env.DISCORD_ENABLED) {
+                const channel = Discord.findTextChannelByName("social-media");
 
-            for (const tweet of tweets) {
-                // Skip all replies.
-                if (tweet.tweet.in_reply_to_user_id) {
-                    continue;
-                }
-
-                await Discord.richQueue(Discord.embedBuilder({
-                    timestamp: new Date(tweet.tweet.created_at),
-                    thumbnail: {
-                        url: tweet.author.profile_image_url.replace("_normal", ""),
-                        width: 80,
-                        height: 80
-                    },
-                    url: `https://twitter.com/${tweet.author.username}/status/${tweet.tweet.id}`,
-                    title: `${tweet.author.name} - @${tweet.author.username}`,
-                    description: tweet.tweet.text,
-                    footer: {
-                        text: "Twitter",
-                        iconURL: "https://roncli.com/images/twitter-logo.png"
+                for (const tweet of tweets) {
+                    // Skip all replies.
+                    if (tweet.tweet.in_reply_to_user_id) {
+                        continue;
                     }
-                }), channel);
+
+                    await Discord.richQueue(Discord.embedBuilder({
+                        timestamp: new Date(tweet.tweet.created_at),
+                        thumbnail: {
+                            url: tweet.author.profile_image_url.replace("_normal", ""),
+                            width: 80,
+                            height: 80
+                        },
+                        url: `https://twitter.com/${tweet.author.username}/status/${tweet.tweet.id}`,
+                        title: `${tweet.author.name} - @${tweet.author.username}`,
+                        description: tweet.tweet.text,
+                        footer: {
+                            text: "Twitter",
+                            iconURL: "https://roncli.com/images/twitter-logo.png"
+                        }
+                    }), channel);
+                }
             }
 
             // Save the new last Tweet.

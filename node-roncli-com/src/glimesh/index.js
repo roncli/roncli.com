@@ -33,6 +33,10 @@ class Glimesh {
      * @returns {void}
      */
     static connect() {
+        if (!+process.env.DISCORD_ENABLED) {
+            return;
+        }
+
         client = new ws.WebSocket(`wss://glimesh.tv/api/graph/websocket?vsn=2.0.0&client_id=${process.env.GLIMESH_CLIENT_ID}`);
 
         client.on("open", () => {
@@ -96,6 +100,9 @@ class Glimesh {
      * @returns {Promise} A promise that resolves when the API response is handled.
      */
     static async handleAPI(ref, payload) {
+        if (!+process.env.DISCORD_ENABLED) {
+            return;
+        }
         switch (ref) {
             case "join":
                 // This is a confirmation that we have joined the absinthe control topic.  Subscribe to channel status changes.
@@ -143,6 +150,10 @@ class Glimesh {
      * @param {object} payload The subscription update payload.
      */
     static handleSubscription(payload) {
+        if (!+process.env.DISCORD_ENABLED) {
+            return;
+        }
+
         if (payload.subscriptionId === subscriptionId && payload.result.data.channel.status === "LIVE") {
             // We are live, query the channel API so we can send our go live announcement.
             client.send(JSON.stringify(["main", "channel-api", "__absinthe__:control", "doc", {query: `query {channel(id: "${process.env.GLIMESH_CHANNEL_ID}") {category {name} subcategory {name} title updatedAt streamer {avatarUrl displayname}}}`}]));
@@ -160,6 +171,10 @@ class Glimesh {
      * @returns {void}
      */
     static sendHeartbeat() {
+        if (!+process.env.DISCORD_ENABLED) {
+            return;
+        }
+
         if (client) {
             // Clear heartbeat timeout.
             if (heartbeatTimeout) {

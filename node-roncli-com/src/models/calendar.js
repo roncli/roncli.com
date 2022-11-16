@@ -26,6 +26,10 @@ class Calendar {
      * Checks the Google Calendar events and posts Discord events accordingly.
      */
     static async checkEvents() {
+        if (!+process.env.DISCORD_ENABLED) {
+            return;
+        }
+
         try {
             const googleEvents = await GoogleCalendar.getEvents(),
                 discordEvents = await Discord.getEvents();
