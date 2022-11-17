@@ -14,6 +14,13 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 
 ## Version History
 
+### v2.1.6 - 11/16/2022
+* Added contacts admin page.
+* Added the ability to disable Discord.
+* Fix bugs related to latest MongoDb.
+* Mastodon posts mirrored to Discord no longer do line wraps.
+* Package updates.
+
 ### v2.1.5 - 11/6/2022
 * Sort contacts by title.
 * Package updates.
