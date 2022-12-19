@@ -10,6 +10,7 @@ RUN mkdir -p /var/nginx/work
 # Copy scripts.
 COPY ./*.sh /var/nginx/
 COPY ./conf/*.conf /var/nginx/conf/
+COPY ./nostr/*.json /var/nginx/nostr/
 
 # Allow start script to run.
 RUN chmod +x /var/nginx/*.sh
