@@ -43,7 +43,7 @@
         "express-session": "1.17.3",
         "hot-router": "1.0.1",
         "html-minifier-terser": "7.1.0",
-        "html-to-text": "9.0.2",
+        "html-to-text": "9.0.3",
         "megalodon": "5.0.1",
         "monaco-editor": "0.34.1",
         "mongodb": "4.12.1",
