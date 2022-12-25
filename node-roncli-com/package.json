@@ -73,6 +73,6 @@
         "@types/sortablejs": "1.15.0",
         "@types/steamapi": "2.2.2",
         "@types/ws": "8.5.3",
-        "ol": "7.1.0"
+        "ol": "7.2.2"
     }
 }
