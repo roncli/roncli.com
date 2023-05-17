@@ -18,7 +18,7 @@
     },
     "license": "MIT",
     "dependencies": {
-        "@editorjs/editorjs": "2.26.4",
+        "@editorjs/editorjs": "2.27.0",
         "@editorjs/quote": "2.5.0",
         "@fontsource/archivo-narrow": "4.5.12",
         "@googleapis/blogger": "1.1.0",
