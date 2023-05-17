@@ -42,7 +42,7 @@
         "express": "4.18.2",
         "express-session": "1.17.3",
         "hot-router": "1.0.1",
-        "html-minifier-terser": "7.1.0",
+        "html-minifier-terser": "7.2.0",
         "html-to-text": "9.0.5",
         "megalodon": "6.0.2",
         "monaco-editor": "0.34.1",
