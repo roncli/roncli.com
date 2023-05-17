@@ -71,12 +71,12 @@ class SteamGameView {
                         </div>
                     `}
                 </div>
+                ${data.page ? /* html */`
+                    <div>
+                        ${data.page.page}
+                    </div>
+                ` : ""}
             </div>
-            ${data.page ? /* html */`
-                <div>
-                    ${data.page.page}
-                </div>
-            ` : ""}
         `;
     }
 
