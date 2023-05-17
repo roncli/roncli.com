@@ -23,7 +23,7 @@
         "@fontsource/archivo-narrow": "4.5.12",
         "@googleapis/blogger": "1.1.0",
         "@googleapis/calendar": "3.0.0",
-        "@googleapis/youtube": "8.0.1",
+        "@googleapis/youtube": "9.0.0",
         "@octokit/rest": "19.0.5",
         "@roncli/node-application-insights-logger": "roncli/node-application-insights-logger#v1.0.14",
         "@roncli/node-minify": "roncli/node-minify#v1.1.11",
