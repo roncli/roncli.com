@@ -196,7 +196,9 @@ class Resume {
 
         // Fade objects in.
         for (const el of Resume.elements) {
-            el.style.transition = "all 0.5s ease-in-out";
+            if (!Resume.isIOS) {
+                el.style.transition = "all 0.5s ease-in-out";
+            }
             el.style.transform = "-webkit-transform: translate3D(0, 0, 0)";
             el.style.opacity = "1";
         }
@@ -265,14 +267,18 @@ class Resume {
                 /** @type {HTMLElement} */
                 const ellipsis = el.querySelector(".ellipsis");
 
-                ellipsis.style.transition = "all 0.5s ease-in-out";
+                if (!Resume.isIOS) {
+                    ellipsis.style.transition = "all 0.5s ease-in-out";
+                }
                 ellipsis.style.transform = "-webkit-transform: translate3D(0, 0, 0)";
                 ellipsis.style.opacity = "0";
 
                 /** @type {HTMLElement} */
                 const comma = el.querySelector(".comma");
                 if (comma) {
-                    comma.style.transition = "all 0.5s ease-in-out";
+                    if (!Resume.isIOS) {
+                        comma.style.transition = "all 0.5s ease-in-out";
+                    }
                     comma.style.transform = "-webkit-transform: translate3D(0, 0, 0)";
                     comma.style.opacity = "0";
                 }
@@ -591,7 +597,9 @@ class Resume {
 
         // Fade out the elements to remove.
         Resume.elements.forEach((el) => {
-            el.style.transition = "all 0.5s ease-in-out";
+            if (!Resume.isIOS) {
+                el.style.transition = "all 0.5s ease-in-out";
+            }
             el.style.transform = "-webkit-transform: translate3D(0, 0, 0)";
             el.style.opacity = "0";
         });
@@ -760,6 +768,8 @@ Resume.currentRoot = [];
 
 /** @type {HTMLDivElement[]} */
 Resume.elements = [];
+
+Resume.isIOS = (/iPad|iPhone|iPod/).test(navigator.userAgent);
 
 /** @type {object} */
 Resume.json = null;
