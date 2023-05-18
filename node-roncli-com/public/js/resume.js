@@ -62,7 +62,7 @@ class Resume {
             totalHeight += el.clientHeight;
         }
 
-        const maxHeight = jsonRoot.clientHeight - 126;
+        const maxHeight = jsonRoot.clientHeight - 102;
 
         let scale = maxHeight / totalHeight,
             done = false;
@@ -72,7 +72,7 @@ class Resume {
 
             for (const el of Resume.elements) {
                 el.style.whiteSpace = "inherit";
-                el.style.width = `${jsonRoot.clientWidth / scale}px`;
+                el.style.width = `${(jsonRoot.clientWidth - 35) / scale}px`;
 
                 height += el.clientHeight;
             }
@@ -88,12 +88,12 @@ class Resume {
         // Calculate the best width to use.
         for (const el of Resume.elements) {
             el.style.whiteSpace = "inherit";
-            el.style.width = `${jsonRoot.clientWidth / scale}px`;
+            el.style.width = `${(jsonRoot.clientWidth - 35) / scale}px`;
             el.style.transform = `scale(${scale})`;
             el.style.opacity = "0";
         }
 
-        let width = jsonRoot.clientWidth / scale;
+        let width = (jsonRoot.clientWidth - 35) / scale;
 
         for (let step = 1024; step >= 1; step /= 2) {
             let height = 0;
@@ -132,10 +132,10 @@ class Resume {
             maxWidth = Math.max(maxWidth, el.clientWidth);
         }
 
-        let top = 81;
+        let top = 57;
 
         for (const el of Resume.elements) {
-            el.style.left = `${jsonRoot.clientWidth / 2 - maxWidth * scale / 2}px`;
+            el.style.left = `${35 + (jsonRoot.clientWidth - 35) / 2 - maxWidth * scale / 2}px`;
             el.style.top = `${top}px`;
             el.style.width = `${maxWidth}px`;
 
@@ -368,14 +368,14 @@ class Resume {
         }
 
         keyClone.style.left = `${left}px`;
-        keyClone.style.top = "36px";
-        keyClone.style.transform = "scale(0.05)";
+        keyClone.style.top = "24px";
+        keyClone.style.transform = "scale(0.0333)";
 
-        left += 0.05 * keyClone.getBoundingClientRect().width / scale + 10;
+        left += 0.0333 * keyClone.getBoundingClientRect().width / scale + 10;
 
         frontClone.style.left = `${left}px`;
-        frontClone.style.top = "36px";
-        frontClone.style.transform = "scale(0.05)";
+        frontClone.style.top = "24px";
+        frontClone.style.transform = "scale(0.0333)";
 
         let top = 0;
 
@@ -396,7 +396,7 @@ class Resume {
 
         backClone.style.left = `${left}px`;
         backClone.style.top = `${top}px`;
-        backClone.style.transform = "scale(0.05)";
+        backClone.style.transform = "scale(0.0333)";
 
         await Resume.sleep(500);
 
@@ -729,8 +729,8 @@ class Resume {
         frontBrace.style.transform = "-webkit-transform: translate3D(0, 0, 0)";
         frontBrace.style.width = `${braceWidth}px`;
         frontBrace.style.height = `${braceHeight}px`;
-        frontBrace.style.top = "36px";
-        frontBrace.style.transform = "scale(0.05)";
+        frontBrace.style.top = "24px";
+        frontBrace.style.transform = "scale(0.0333)";
 
         backBrace.style.transition = "all 0.5s ease-in-out";
         backBrace.style.transform = "-webkit-transform: translate3D(0, 0, 0)";
@@ -738,7 +738,7 @@ class Resume {
         backBrace.style.height = `${braceHeight}px`;
         backBrace.style.left = `${maxWidth - braceWidth * 0.05}px`;
         backBrace.style.top = `${maxHeight - braceHeight * 0.05}px`;
-        backBrace.style.transform = "scale(0.05)";
+        backBrace.style.transform = "scale(0.0333)";
 
         await Resume.sleep(500);
 
