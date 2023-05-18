@@ -1,7 +1,7 @@
 const CacheData = require("./src/cacheData"),
     Calendar = require("./src/models/calendar"),
     compression = require("compression"),
-    connectRedis = require("connect-redis"),
+    ConnectRedis = require("connect-redis").default,
     cookieParser = require("cookie-parser"),
     Discord = require("./src/discord"),
     express = require("express"),
@@ -84,7 +84,7 @@ process.on("unhandledRejection", (reason) => {
     app.use(compression());
     app.use(cookieParser(process.env.COOKIE_SECRET));
     app.use(expressSession({
-        store: new (connectRedis(expressSession))({
+        store: new ConnectRedis({
             client: await Redis.getClient(),
             prefix: `${process.env.REDIS_PREFIX}:sess:`,
             ttl: 86400
