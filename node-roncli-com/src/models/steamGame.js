@@ -248,7 +248,6 @@ class SteamGame {
         this.name = data.name;
         this.playtimeTotal = data.playTime;
         this.playtimeTwoWeeks = data.playTime2;
-        this.logoUrl = data.logoURL;
         this.iconUrl = data.iconURL;
 
         /** @type {SteamAPI.Achievement} */
@@ -274,10 +273,6 @@ class SteamGame {
         }
 
         this.achievements = await Cache.get(`${process.env.REDIS_PREFIX}:steam:achievements:${this.appId}`);
-
-        if (!this.achievements.headerUrl) {
-            this.achievements.headerUrl = this.logoUrl;
-        }
     }
 }
 
