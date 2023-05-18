@@ -3,7 +3,7 @@ const path = require("path");
 /** @type {{[x: string]: {path: string, contentType: string, replace?: {[x: string]: string}}}} */
 module.exports = {
     "/js/editor.js/editor.js": {
-        path: path.join(__dirname, "../node_modules/@editorjs/editorjs/dist/editor.js"),
+        path: path.join(__dirname, "../node_modules/@editorjs/editorjs/dist/editorjs.umd.js"),
         contentType: "text/javascript",
         replace: {
             "tags:e": "tags:e,keepNestedBlockElements:true"
