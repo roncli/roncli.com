@@ -60,7 +60,7 @@
         "ws": "8.13.0"
     },
     "devDependencies": {
-        "@babel/core": "7.21.8",
+        "@babel/core": "7.22.1",
         "@babel/eslint-parser": "7.21.8",
         "@types/cookie-parser": "1.4.3",
         "@types/express": "4.17.17",
