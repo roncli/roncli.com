@@ -5,7 +5,7 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 ## Features
 
 * User account creation and management.
-* Third party connections to Blizzard, GitHub, SoundCloud, speedrun.com, Steam, Toofz, and XIVAPI.
+* Third party connections to Blizzard, Discord, Google, GitHub, Mastodon, Necrolab, SoundCloud, speedrun.com, Steam, Twitter, and XIVAPI.
 * Complete admin section to manage the website.
 * Animated résumé page.
 * Web server solution through nginx.
@@ -13,6 +13,15 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 * Photo storage solution through PhotoPrism.
 
 ## Version History
+
+### v2.1.7 - 5/29/2023
+* Remove fade transitions for the résumé when on iOS to prevent a crash with Safari.
+* Make résumé more mobile-friendly.
+* Don't allow music player tab to overlap text on the résumé.
+* Add nostr.json verification.
+* Update Steam games list to not use the API anymore since Steam discontinued that field in their API.
+* Fix a display bug for a Steam game that has page data.
+* Package updates.
 
 ### v2.1.6 - 11/16/2022
 * Added contacts admin page.
