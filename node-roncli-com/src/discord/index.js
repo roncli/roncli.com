@@ -345,7 +345,7 @@ class Discord {
      * @returns {boolean} Whether the user is the owner.
      */
     static isOwner(member) {
-        return !!roncliRole.members.find((m) => m.id === member.id);
+        return !!(member && roncliRole.members.find((m) => m.id === member.id));
     }
 }
 
