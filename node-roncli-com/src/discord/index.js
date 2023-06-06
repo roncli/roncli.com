@@ -20,6 +20,9 @@ let guild;
 
 const eventEmitter = new events.EventEmitter();
 
+/** @type {DiscordJs.Role} */
+let roncliRole;
+
 //  ####     #                                    #
 //   #  #                                         #
 //   #  #   ##     ###    ###    ###   # ##    ## #
@@ -97,6 +100,8 @@ class Discord {
             Log.verbose("Connected to Discord.");
 
             guild = discord.guilds.cache.find((g) => g.name === process.env.DISCORD_GUILD);
+
+            roncliRole = guild.roles.cache.find((r) => r.name === "roncli");
 
             eventEmitter.emit("ready");
 
@@ -340,7 +345,7 @@ class Discord {
      * @returns {boolean} Whether the user is the owner.
      */
     static isOwner(member) {
-        return member && member.user.username === process.env.DISCORD_ADMIN_USERNAME && member.user.discriminator === process.env.DISCORD_ADMIN_DISCRIMINATOR;
+        return !!roncliRole.members.find((m) => m.id === member.id);
     }
 }
 
