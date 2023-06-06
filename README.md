@@ -14,6 +14,10 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 
 ## Version History
 
+### v2.1.8 - 6/6/2023
+* Updates required for removal of Discord discriminator.
+* Package updates.
+
 ### v2.1.7 - 5/29/2023
 * Remove fade transitions for the résumé when on iOS to prevent a crash with Safari.
 * Make résumé more mobile-friendly.
