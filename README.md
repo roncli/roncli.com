@@ -5,7 +5,7 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 ## Features
 
 * User account creation and management.
-* Third party connections to Blizzard, Discord, Google, GitHub, Mastodon, Necrolab, SoundCloud, speedrun.com, Steam, Twitter, and XIVAPI.
+* Third party connections to Blizzard, Discord, Google, GitHub, Mastodon, Necrolab, SoundCloud, speedrun.com, Steam, and XIVAPI.
 * Complete admin section to manage the website.
 * Animated résumé page.
 * Web server solution through nginx.
@@ -13,6 +13,10 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 * Photo storage solution through PhotoPrism.
 
 ## Version History
+
+### v2.1.9 - 6/11/2023
+* Removed Twitter support.
+* Package updates.
 
 ### v2.1.8 - 6/6/2023
 * Updates required for removal of Discord discriminator.
