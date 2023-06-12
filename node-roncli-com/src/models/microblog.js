@@ -1,8 +1,6 @@
 /**
  * @typedef {import("../../types/node/mastodonTypes").Post} MastodonTypes.Post
  * @typedef {import("../../types/node/microblogTypes").MicroblogData} MicroblogTypes.MicroblogData
- * @typedef {import("../../types/node/twitterTypes").Tweet} TwitterTypes.Tweet
- * @typedef {import("twitter-api-v2").MediaVariantsV2} TwitterApi.MediaVariantsV2
  */
 
 const Cache = require("@roncli/node-redis").Cache,
@@ -11,8 +9,6 @@ const Cache = require("@roncli/node-redis").Cache,
     Log = require("@roncli/node-application-insights-logger"),
     Mastodon = require("../mastodon"),
     MastodonModel = require("./mastodon"),
-    Twitter = require("../twitter"),
-    TwitterModel = require("./twitter"),
 
     serverMatch = /https?:\/\/(?<server>.+)\/@(?<username>.+)$/i;
 
@@ -122,108 +118,11 @@ class Microblog {
      * @returns {Promise} A promise that resolves when the microbog posts have been cached.
      */
     static async cacheMicroblog() {
-        await Promise.all([
-            (async () => {
-                try {
-                    await Microblog.cacheTwitter();
-                } catch (err) {
-                    Log.error("There was a problem checking Twitter.", {err});
-                }
-            })(),
-            (async () => {
-                try {
-                    await Microblog.cacheMastodon();
-                } catch (err) {
-                    Log.error("There was a problem checking Mastodon.", {err});
-                }
-            })()
-        ]);
-    }
-
-    //                   #           ###          #     #     #
-    //                   #            #                 #     #
-    //  ##    ###   ##   ###    ##    #    #  #  ##    ###   ###    ##   ###
-    // #     #  #  #     #  #  # ##   #    #  #   #     #     #    # ##  #  #
-    // #     # ##  #     #  #  ##     #    ####   #     #     #    ##    #
-    //  ##    # #   ##   #  #   ##    #    ####  ###     ##    ##   ##   #
-    /**
-     * Caches the Twitter posts.
-     * @returns {Promise} A promise that resolves when the Twitter posts have been cached.
-     */
-    static async cacheTwitter() {
-        if (!+process.env.TWITTER_ENABLED) {
-            return;
+        try {
+            await Microblog.cacheMastodon();
+        } catch (err) {
+            Log.error("There was a problem checking Mastodon.", {err});
         }
-
-        // Get the client.
-        await Twitter.getClient();
-
-        // Get the last Tweet.
-        const twitter = await TwitterModel.get(),
-            lastId = twitter.lastId;
-
-        // Check the timeline for new posts.
-        const tweets = await Twitter.getNewPosts(lastId);
-
-        if (tweets.length > 0) {
-            tweets.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
-
-            if (+process.env.DISCORD_ENABLED) {
-                const channel = Discord.findTextChannelByName("social-media");
-
-                for (const tweet of tweets) {
-                    // Skip all replies.
-                    if (tweet.tweet.in_reply_to_user_id) {
-                        continue;
-                    }
-
-                    await Discord.richQueue(Discord.embedBuilder({
-                        timestamp: new Date(tweet.tweet.created_at),
-                        thumbnail: {
-                            url: tweet.author.profile_image_url.replace("_normal", ""),
-                            width: 80,
-                            height: 80
-                        },
-                        url: `https://twitter.com/${tweet.author.username}/status/${tweet.tweet.id}`,
-                        title: `${tweet.author.name} - @${tweet.author.username}`,
-                        description: tweet.tweet.text,
-                        footer: {
-                            text: "Twitter",
-                            iconURL: "https://roncli.com/images/twitter-logo.png"
-                        }
-                    }), channel);
-                }
-            }
-
-            // Save the new last Tweet.
-            twitter.lastId = tweets[tweets.length - 1].id;
-            await twitter.save();
-        }
-
-        if (tweets.length > 0 || await Cache.ttl(`${process.env.REDIS_PREFIX}:twitter:timeline`) < 86400) {
-            await Microblog.cacheTwitterTimeline();
-        }
-    }
-
-    //                   #           ###          #     #     #                ###    #                ##     #
-    //                   #            #                 #     #                 #                       #
-    //  ##    ###   ##   ###    ##    #    #  #  ##    ###   ###    ##   ###    #    ##    # #    ##    #    ##    ###    ##
-    // #     #  #  #     #  #  # ##   #    #  #   #     #     #    # ##  #  #   #     #    ####  # ##   #     #    #  #  # ##
-    // #     # ##  #     #  #  ##     #    ####   #     #     #    ##    #      #     #    #  #  ##     #     #    #  #  ##
-    //  ##    # #   ##   #  #   ##    #    ####  ###     ##    ##   ##   #      #    ###   #  #   ##   ###   ###   #  #   ##
-    /**
-     * Caches the Twitter timeline.
-     * @returns {Promise} A promise that resolves when the Twitter timeline has been cached.
-     */
-    static async cacheTwitterTimeline() {
-        await Twitter.getClient();
-
-        const timeline = await Twitter.getTimeline(),
-            expire = new Date();
-
-        expire.setDate(expire.getDate() + 1);
-
-        await Cache.add(`${process.env.REDIS_PREFIX}:twitter:timeline`, timeline, expire);
     }
 
     //              #    #  #                #             #               ##                                  #    #  #
@@ -299,82 +198,13 @@ class Microblog {
      */
     static async getMicroblog() {
         try {
-            const [mastodon, twitter] = await Promise.all([
-                (() => Microblog.getMastodonTimeline())(),
-                (() => Microblog.getTwitterTimeline())()
-            ]);
+            const mastodon = await Microblog.getMastodonTimeline();
 
-            return [].concat(mastodon, twitter).sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+            return mastodon.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
         } catch (err) {
             Log.error("There was an error while getting the microblog.", {err});
             return [];
         }
-    }
-
-    //              #    ###          #     #     #                #  #           #   #          ###                 #    #  #               #                 #    #  #        ##
-    //              #     #                 #     #                ####           #              #  #                #    #  #                                 #    #  #         #
-    //  ###   ##   ###    #    #  #  ##    ###   ###    ##   ###   ####   ##    ###  ##     ###  ###    ##    ###   ###   #  #   ###  ###   ##     ###  ###   ###   #  #  ###    #
-    // #  #  # ##   #     #    #  #   #     #     #    # ##  #  #  #  #  # ##  #  #   #    #  #  #  #  # ##  ##      #    #  #  #  #  #  #   #    #  #  #  #   #    #  #  #  #   #
-    //  ##   ##     #     #    ####   #     #     #    ##    #     #  #  ##    #  #   #    # ##  #  #  ##      ##    #     ##   # ##  #      #    # ##  #  #   #    #  #  #      #
-    // #      ##     ##   #    ####  ###     ##    ##   ##   #     #  #   ##    ###  ###    # #  ###    ##   ###      ##   ##    # #  #     ###    # #  #  #    ##   ##   #     ###
-    //  ###
-    /**
-     * Gets the URL for the best variant for a media.
-     * @param {TwitterApi.MediaVariantsV2[]} variants
-     * @returns {string} The URL for the variant.
-     */
-    static getTwitterMediaBestVariantUrl(variants) {
-        if (!variants) {
-            return void 0;
-        }
-
-        const variantsWithVideo = variants.filter((v) => v.content_type === "video/mp4" && v.bit_rate !== void 0);
-
-        if (variantsWithVideo.length === 0) {
-            return void 0;
-        }
-
-        variantsWithVideo.sort((a, b) => b.bit_rate - a.bit_rate);
-
-        return variantsWithVideo[0].url;
-    }
-
-    //              #    ###          #     #     #                ###    #                ##     #
-    //              #     #                 #     #                 #                       #
-    //  ###   ##   ###    #    #  #  ##    ###   ###    ##   ###    #    ##    # #    ##    #    ##    ###    ##
-    // #  #  # ##   #     #    #  #   #     #     #    # ##  #  #   #     #    ####  # ##   #     #    #  #  # ##
-    //  ##   ##     #     #    ####   #     #     #    ##    #      #     #    #  #  ##     #     #    #  #  ##
-    // #      ##     ##   #    ####  ###     ##    ##   ##   #      #    ###   #  #   ##   ###   ###   #  #   ##
-    //  ###
-    /**
-     * Get the Twitter timeline.
-     * @returns {Promise<Microblog[]>} A promise that returns the Twitter timeline.
-     */
-    static async getTwitterTimeline() {
-        if (!await Cache.exists([`${process.env.REDIS_PREFIX}:twitter:timeline`])) {
-            await Microblog.cacheTwitterTimeline();
-        }
-
-        /**
-         * @type {TwitterTypes.Tweet[]}
-         */
-        const timeline = await Cache.get(`${process.env.REDIS_PREFIX}:twitter:timeline`);
-
-        return timeline.map((post) => new Microblog({
-            id: post.id,
-            source: "twitter",
-            url: `https://twitter.com/_/status/${post.id}`,
-            name: post.author.name,
-            username: `@${post.author.username}`,
-            avatarUrl: post.author.profile_image_url,
-            profileUrl: post.author.url,
-            inReplyToUsername: post.inReplyTo ? `@${post.inReplyTo.username}` : void 0,
-            inReplyToUrl: post.tweet.referenced_tweets && post.tweet.referenced_tweets.length > 0 ? `https://twitter.com/_/status/${post.tweet.referenced_tweets[0].id}` : void 0,
-            post: post.tweet.text,
-            createdAt: post.createdAt,
-            displayDate: new Date(post.tweet.created_at),
-            media: post.medias.map((m) => ({type: m.type, url: m.url || Microblog.getTwitterMediaBestVariantUrl(m.variants)}))
-        }));
     }
 
     //                           #                       #
