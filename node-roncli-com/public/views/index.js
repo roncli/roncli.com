@@ -87,14 +87,6 @@ class IndexView {
                                     <div class="info-panel-body" id="microblog-posts" style="padding: 0;">
                                         ${IndexView.MicroblogView.get(microblog)}
                                     </div>
-                                    <div class="info-panel-list">
-                                        <a class="contents" href="https://twitter.com/roncli" target="_blank">
-                                            <div class="grid-tight grid-middle grid-columns-2 microblog-address">
-                                                <div class="left"><img class="microblog-logo" src="/images/twitter-logo.png" /></div>
-                                                <div class="center">@roncli</div>
-                                            </div>
-                                        </a>
-                                    </div>
                                     <div class="info-panel-list rounded-bottom">
                                         <a class="contents" href="https://mastodon.social/web/@roncli" target="_blank">
                                             <div class="grid-tight grid-middle grid-columns-2 microblog-address">
