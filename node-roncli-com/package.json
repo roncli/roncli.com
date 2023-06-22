@@ -50,7 +50,7 @@
         "multer": "1.4.4",
         "nodemailer": "6.9.3",
         "pbkdf2": "3.1.2",
-        "sanitize-html": "2.10.0",
+        "sanitize-html": "2.11.0",
         "sortablejs": "1.15.0",
         "steamapi": "2.2.0",
         "svg-captcha": "1.4.0",
