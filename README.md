@@ -14,6 +14,10 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 
 ## Version History
 
+### v2.1.10 - 7/7/2023
+* Removed Glimesh support.
+* Package updates.
+
 ### v2.1.9 - 6/11/2023
 * Removed Twitter support.
 * Package updates.
