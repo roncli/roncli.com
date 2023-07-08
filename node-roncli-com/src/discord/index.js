@@ -330,6 +330,9 @@ class Discord {
      * @returns {Promise<DiscordJs.GuildScheduledEvent[]>} A promise that returns the Discord events.
      */
     static async getEvents() {
+        if (!guild) {
+            return [];
+        }
         return Array.from((await guild.scheduledEvents.fetch()).values());
     }
 
