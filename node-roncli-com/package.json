@@ -22,7 +22,7 @@
         "@editorjs/quote": "2.5.0",
         "@fontsource/archivo-narrow": "5.0.4",
         "@googleapis/blogger": "1.1.0",
-        "@googleapis/calendar": "6.0.0",
+        "@googleapis/calendar": "7.0.0",
         "@googleapis/youtube": "9.0.0",
         "@octokit/rest": "19.0.13",
         "@roncli/node-application-insights-logger": "roncli/node-application-insights-logger#v1.0.14",
