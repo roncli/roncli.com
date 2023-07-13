@@ -14,6 +14,12 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 
 ## Version History
 
+### v2.1.11 - 7/12/2023
+* Updates required for upgrades of MariaDB.
+* Fixed bug with Archivo Narrow not showing in some browsers.
+* Fixed bug with a properly-formatted Soundcloud track URL that should cause a 404 error instead causing a 500 error.
+* Package updates.
+
 ### v2.1.10 - 7/7/2023
 * Removed Glimesh support.
 * Package updates.
