@@ -233,6 +233,10 @@ class Track {
             /** @type {{track: TrackTypes.TrackInfo, publishDate: Date, tagList: string[]}} */
             const track = await Cache.get(`${process.env.REDIS_PREFIX}:soundcloud:track:${id}`);
 
+            if (!track) {
+                return void 0;
+            }
+
             const [mainNav, categoryNavs] = await Promise.all([
                 (async () => {
                     const rank = await SortedSetCache.rankReverse(`${process.env.REDIS_PREFIX}:soundcloud:tracks`, track);
@@ -293,7 +297,7 @@ class Track {
                 })()
             ]);
 
-            return track ? new Track(track, mainNav, categoryNavs) : void 0;
+            return new Track(track, mainNav, categoryNavs);
         } catch (err) {
             Log.error("There was an error while getting a track.", {err});
             return void 0;
