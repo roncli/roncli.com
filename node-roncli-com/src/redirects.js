@@ -101,8 +101,28 @@ module.exports = {
         path: path.join(__dirname, "../node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2"),
         contentType: "font/woff2"
     },
-    "/css/files/archivo-narrow-all-400-normal.woff": {
-        path: path.join(__dirname, "../node_modules/@fontsource/archivo-narrow/files/archivo-narrow-all-400-normal.woff"),
+    "/css/files/archivo-narrow-vietnamese-400-normal.woff": {
+        path: path.join(__dirname, "../node_modules/@fontsource/archivo-narrow/files/archivo-narrow-vietnamese-400-normal.woff"),
+        contentType: "font/woff"
+    },
+    "/css/files/archivo-narrow-latin-ext-400-normal.woff": {
+        path: path.join(__dirname, "../node_modules/@fontsource/archivo-narrow/files/archivo-narrow-latin-ext-400-normal.woff"),
+        contentType: "font/woff"
+    },
+    "/css/files/archivo-narrow-latin-400-normal.woff": {
+        path: path.join(__dirname, "../node_modules/@fontsource/archivo-narrow/files/archivo-narrow-latin-400-normal.woff"),
+        contentType: "font/woff"
+    },
+    "/css/files/archivo-narrow-vietnamese-700-normal.woff": {
+        path: path.join(__dirname, "../node_modules/@fontsource/archivo-narrow/files/archivo-narrow-vietnamese-700-normal.woff"),
+        contentType: "font/woff"
+    },
+    "/css/files/archivo-narrow-latin-ext-700-normal.woff": {
+        path: path.join(__dirname, "../node_modules/@fontsource/archivo-narrow/files/archivo-narrow-latin-ext-700-normal.woff"),
+        contentType: "font/woff"
+    },
+    "/css/files/archivo-narrow-latin-700-normal.woff": {
+        path: path.join(__dirname, "../node_modules/@fontsource/archivo-narrow/files/archivo-narrow-latin-700-normal.woff"),
         contentType: "font/woff"
     },
     "/css/files/archivo-narrow-vietnamese-400-normal.woff2": {
@@ -116,10 +136,6 @@ module.exports = {
     "/css/files/archivo-narrow-latin-400-normal.woff2": {
         path: path.join(__dirname, "../node_modules/@fontsource/archivo-narrow/files/archivo-narrow-latin-400-normal.woff2"),
         contentType: "font/woff2"
-    },
-    "/css/files/archivo-narrow-all-700-normal.woff": {
-        path: path.join(__dirname, "../node_modules/@fontsource/archivo-narrow/files/archivo-narrow-all-700-normal.woff"),
-        contentType: "font/woff"
     },
     "/css/files/archivo-narrow-vietnamese-700-normal.woff2": {
         path: path.join(__dirname, "../node_modules/@fontsource/archivo-narrow/files/archivo-narrow-vietnamese-700-normal.woff2"),
