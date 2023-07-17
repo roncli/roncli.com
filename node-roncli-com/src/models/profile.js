@@ -114,6 +114,9 @@ class Profile {
      * @returns {Promise} A promise that resolves when the WoW data is cached.
      */
     static async cacheWoW() {
+        // Temporarily disable WoW lookups.
+        return;
+
         // Retrieve the data from Blizzard.
         const data = await Blizzard.getWowCharacter();
 
@@ -166,6 +169,9 @@ class Profile {
      * @returns {Promise} A promise that resolves when the WoW achievement is cached.
      */
     static async cacheWoWAchievement(id) {
+        // Temporarily disable WoW lookups.
+        return;
+
         // Retrieve the data from Blizzard.
         const data = await Blizzard.getWowAchievement(id);
 
