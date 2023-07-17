@@ -14,6 +14,10 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 
 ## Version History
 
+### v2.1.12 - 7/17/2023
+* Temporarily disable WoW lookups.
+* Package updates.
+
 ### v2.1.11 - 7/12/2023
 * Updates required for upgrades of MariaDB.
 * Fixed bug with Archivo Narrow not showing in some browsers.
