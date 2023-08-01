@@ -14,6 +14,9 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 
 ## Version History
 
+### v2.1.13 - 7/31/2023
+* Package updates.
+
 ### v2.1.12 - 7/17/2023
 * Temporarily disable WoW lookups.
 * Package updates.
