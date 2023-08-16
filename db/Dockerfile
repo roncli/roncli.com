@@ -1,5 +1,5 @@
 # Get mongo latest.
-FROM mongo:6.0.8
+FROM mongo:6.0.9
 
 # Create /docker-entrypoint-initdb.d directory.
 RUN mkdir -p /docker-entrypoint-initdb.d
