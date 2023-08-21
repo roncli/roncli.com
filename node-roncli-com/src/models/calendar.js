@@ -119,7 +119,7 @@ class Calendar {
                         privacyLevel: DiscordJs.GuildScheduledEventPrivacyLevel.GuildOnly,
                         entityType: DiscordJs.GuildScheduledEventEntityType.External,
                         description: HtmlToText.convert(Encoding.htmlDecode(event.description), {selectors: [{selector: "a", format: "inline"}]}),
-                        entityMetadata: {location: event.location},
+                        entityMetadata: {location: event.location || "https://twitch.tv/roncli"},
                         reason: "New event."
                     });
                 }
