@@ -42,7 +42,10 @@ class AdminFilesUploadAPI extends RouterBase {
 
         route.middleware = [
             multer({
-                dest: os.tmpdir()
+                dest: os.tmpdir(),
+                limits: {
+                    fileSize: 1073741824
+                }
             }).any()
         ];
 
