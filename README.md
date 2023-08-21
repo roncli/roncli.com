@@ -14,6 +14,11 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 
 ## Version History
 
+### v2.1.14 - 8/20/2023
+* Default location of Discord events to https://twitch.tv/roncli.
+* Allow up to 1 GB file uploads.
+* Package updates.
+
 ### v2.1.13 - 7/31/2023
 * Package updates.
 
