@@ -1,5 +1,5 @@
 # Get MariaDB.
-FROM mariadb:11.0.3
+FROM mariadb:11.1.2
 
 # Create /var/mariadb directory.
 RUN mkdir -p /var/mariadb
