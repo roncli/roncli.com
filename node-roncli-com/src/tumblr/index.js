@@ -2,7 +2,6 @@ const TumblrJs = require("tumblr.js");
 
 const tumblr = TumblrJs.createClient({
     "consumer_key": process.env.TUMBLR_CONSUMER_KEY,
-    "consumer_secret": process.env.TUMBLR_CONSUMER_SECRET,
     returnPromises: true
 });
 
