@@ -1,6 +1,6 @@
 /**
- * @typedef {import("../../types/node/ProjectTypes").ProjectData} ProjectTypes.ProjectData
- * @typedef {import("../../types/node/ProjectTypes").RepositoryData} ProjectTypes.RepositoryData
+ * @typedef {import("../../types/node/projectTypes").ProjectData} ProjectTypes.ProjectData
+ * @typedef {import("../../types/node/projectTypes").RepositoryData} ProjectTypes.RepositoryData
  */
 
 const Cache = require("@roncli/node-redis").Cache,
