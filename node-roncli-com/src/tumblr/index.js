@@ -1,17 +1,10 @@
-/**
- * @typedef {import("../../types/modules/tumblr").TumblrClient_Fixed} Tumblr.TumblrClient
- */
-
 const TumblrJs = require("tumblr.js");
 
-/** @type {Tumblr.TumblrClient} */
-const tumblr = /** @type {Tumblr.TumblrClient} */(TumblrJs.createClient({ // eslint-disable-line no-extra-parens
-    credentials: {
-        "consumer_key": process.env.TUMBLR_CONSUMER_KEY,
-        "consumer_secret": process.env.TUMBLR_CONSUMER_SECRET
-    },
+const tumblr = TumblrJs.createClient({
+    "consumer_key": process.env.TUMBLR_CONSUMER_KEY,
+    "consumer_secret": process.env.TUMBLR_CONSUMER_SECRET,
     returnPromises: true
-}));
+});
 
 //  #####                #       ##
 //    #                  #        #
