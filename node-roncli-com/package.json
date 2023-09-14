@@ -55,7 +55,7 @@
         "steamapi": "2.4.2",
         "svg-captcha": "1.4.0",
         "timeago.js": "4.0.2",
-        "tumblr.js": "3.0.0",
+        "tumblr.js": "4.0.1",
         "ws": "8.14.1"
     },
     "devDependencies": {
