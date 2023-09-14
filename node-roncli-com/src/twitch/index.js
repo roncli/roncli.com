@@ -70,7 +70,7 @@ class Twitch {
      * @returns {void}
      */
     static login() {
-        authProvider = new TwitchAuth.ClientCredentialsAuthProvider(process.env.TWITCH_CLIENTID, process.env.TWITCH_CLIENTSECRET);
+        authProvider = new TwitchAuth.AppTokenAuthProvider(process.env.TWITCH_CLIENTID, process.env.TWITCH_CLIENTSECRET);
 
         twitchClient = new TwitchClient({
             authProvider,
