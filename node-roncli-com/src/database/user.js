@@ -36,7 +36,7 @@ class UserDb {
     static async changeEmail(user, email) {
         const db = await Db.get();
 
-        return db.collection("user").findOneAndUpdate({_id: MongoDb.ObjectId.createFromHexString(user.id)}, {$set: {email}});
+        await db.collection("user").findOneAndUpdate({_id: MongoDb.ObjectId.createFromHexString(user.id)}, {$set: {email}});
     }
 
     //       #                             ###                                            #
@@ -57,7 +57,7 @@ class UserDb {
             salt = Hashing.getSalt(),
             hash = await Hashing.getHash(password, salt);
 
-        return db.collection("user").findOneAndUpdate({_id: MongoDb.ObjectId.createFromHexString(user.id)}, {$set: {
+        await db.collection("user").findOneAndUpdate({_id: MongoDb.ObjectId.createFromHexString(user.id)}, {$set: {
             "password.salt": salt,
             "password.hash": hash
         }});
@@ -79,7 +79,7 @@ class UserDb {
     static async changeUsername(user, username) {
         const db = await Db.get();
 
-        return db.collection("user").findOneAndUpdate({_id: MongoDb.ObjectId.createFromHexString(user.id)}, {$set: {username}});
+        await db.collection("user").findOneAndUpdate({_id: MongoDb.ObjectId.createFromHexString(user.id)}, {$set: {username}});
     }
 
     //       #                 #     ####               #    ##    ####         #            #
@@ -395,7 +395,7 @@ class UserDb {
 
         const data = await db.collection("user").findOneAndUpdate({_id: MongoDb.ObjectId.createFromHexString(userId)}, {$set: {dateValidated: new Date()}}, {returnDocument: "after"});
 
-        return data && data.value && !!data.value.dateValidated;
+        return data && !!data.dateValidated;
     }
 }
 
