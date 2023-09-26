@@ -70,7 +70,7 @@
         "@types/nodemailer": "6.4.11",
         "@types/pbkdf2": "3.1.0",
         "@types/sortablejs": "1.15.2",
-        "@types/steamapi": "2.2.2",
+        "@types/steamapi": "2.2.3",
         "@types/ws": "8.5.5",
         "ol": "8.1.0"
     }
