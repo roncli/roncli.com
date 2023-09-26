@@ -24,7 +24,7 @@
         "@googleapis/blogger": "1.1.4",
         "@googleapis/calendar": "9.3.1",
         "@googleapis/youtube": "11.0.1",
-        "@octokit/rest": "20.0.1",
+        "@octokit/rest": "20.0.2",
         "@roncli/node-application-insights-logger": "roncli/node-application-insights-logger#v1.0.16",
         "@roncli/node-minify": "roncli/node-minify#v1.2.0",
         "@roncli/node-redis": "roncli/node-redis#v0.1.18",
