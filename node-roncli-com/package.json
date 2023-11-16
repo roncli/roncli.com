@@ -71,7 +71,7 @@
         "@types/pbkdf2": "3.1.2",
         "@types/sortablejs": "1.15.4",
         "@types/steamapi": "2.2.4",
-        "@types/ws": "8.5.8",
+        "@types/ws": "8.5.9",
         "ol": "8.2.0"
     }
 }
