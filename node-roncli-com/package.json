@@ -45,7 +45,7 @@
         "html-minifier-terser": "7.2.0",
         "html-to-text": "9.0.5",
         "megalodon": "9.1.1",
-        "monaco-editor": "0.43.0",
+        "monaco-editor": "0.44.0",
         "mongodb": "6.2.0",
         "multer": "1.4.4",
         "nodemailer": "6.9.7",
