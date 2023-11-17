@@ -46,7 +46,7 @@
         "html-to-text": "9.0.5",
         "megalodon": "9.1.1",
         "monaco-editor": "0.44.0",
-        "mongodb": "6.2.0",
+        "mongodb": "6.3.0",
         "multer": "1.4.4",
         "nodemailer": "6.9.7",
         "pbkdf2": "3.1.2",
