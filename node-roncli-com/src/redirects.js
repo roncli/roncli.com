@@ -10,7 +10,7 @@ module.exports = {
         }
     },
     "/js/editor.js/quote.js": {
-        path: path.join(__dirname, "../node_modules/@editorjs/quote/dist/bundle.js"),
+        path: path.join(__dirname, "../node_modules/@editorjs/quote/dist/quote.umd.js"),
         contentType: "text/javascript"
     },
     "/js/monaco-editor/vs/loader.js": {
