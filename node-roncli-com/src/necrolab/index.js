@@ -32,8 +32,11 @@ class Necrolab {
      */
     static async getRank(name) {
         const res = await request.get({
-            uri: `https://necrolab.com/api/rankings/steam/all-time-any-percent-synchrony-amplified-single-player-ost/all/entries?search=${name}`,
-            json: true
+            uri: `https://www.necrolab.com/api/rankings/steam/all-time~any-percent~synchrony-amplified~single-player~ost/all/entries?search=${name}`,
+            json: true,
+            auth: {
+                bearer: process.env.NECROLAB_TOKEN
+            }
         });
 
         if (res.statusCode !== 200) {
@@ -63,8 +66,11 @@ class Necrolab {
                  */
                 async () => {
                     const res = await request.get({
-                        uri: `https://necrolab.com/api/rankings/steam/all-time-any-percent-synchrony-amplified-single-player-ost/all/entries/${rank}/leaderboards/time?limit=10000`,
-                        json: true
+                        uri: `https://www.necrolab.com/api/rankings/steam/all-time~any-percent~synchrony-amplified~single-player~ost/all/entries/${rank}/leaderboards/time?limit=10000`,
+                        json: true,
+                        auth: {
+                            bearer: process.env.NECROLAB_TOKEN
+                        }
                     });
 
                     if (res.statusCode !== 200) {
@@ -86,8 +92,11 @@ class Necrolab {
                  */
                 async () => {
                     const res = await request.get({
-                        uri: `https://necrolab.com/api/rankings/steam/all-time-any-percent-synchrony-amplified-single-player-ost/all/entries/${rank}/leaderboards/score?limit=10000`,
-                        json: true
+                        uri: `https://www.necrolab.com/api/rankings/steam/all-time~any-percent~synchrony-amplified~single-player~ost/all/entries/${rank}/leaderboards/score?limit=10000`,
+                        json: true,
+                        auth: {
+                            bearer: process.env.NECROLAB_TOKEN
+                        }
                     });
 
                     if (res.statusCode !== 200) {
@@ -109,8 +118,11 @@ class Necrolab {
                  */
                 async () => {
                     const res = await request.get({
-                        uri: `https://necrolab.com/api/rankings/steam/all-time-any-percent-synchrony-amplified-single-player-ost/all/entries/${rank}/leaderboards/wins?limit=10000`,
-                        json: true
+                        uri: `https://www.necrolab.com/api/rankings/steam/all-time~any-percent~synchrony-amplified~single-player~ost/all/entries/${rank}/leaderboards/wins?limit=10000`,
+                        json: true,
+                        auth: {
+                            bearer: process.env.NECROLAB_TOKEN
+                        }
                     });
 
                     if (res.statusCode !== 200) {
@@ -192,8 +204,11 @@ class Necrolab {
         }
 
         const res = await request.get({
-            uri: "https://necrolab.com/api/filters",
-            json: true
+            uri: "https://www.necrolab.com/api/filters",
+            json: true,
+            auth: {
+                bearer: process.env.NECROLAB_TOKEN
+            }
         });
 
         if (res.statusCode !== 200) {

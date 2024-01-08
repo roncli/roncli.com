@@ -100,6 +100,7 @@ services:
       MASTODON_SERVER: "https://mastodon.social"
       MINIFY_CACHE: 1
       MINIFY_ENABLED: 1
+      NECROLAB_TOKEN_FILE: /run/secrets/NECROLAB_TOKEN_FILE
       NODE_ENV: production
       PHOTOS_URL: https://photos.roncli.com
       PORT: 3030
@@ -129,6 +130,7 @@ services:
       - ENCRYPTION_KEY_FILE
       - GITHUB_TOKEN_FILE
       - GOOGLE_API_KEY_FILE
+      - NECROLAB_TOKEN_FILE
       - REDIS_PASSWORD_FILE
       - SMTP_PASSWORD_FILE
       - SOUNDCLOUD_CLIENT_ID_FILE
@@ -315,6 +317,8 @@ secrets:
     file: ./secrets/MYSQL_PASSWORD_FILE
   MYSQL_ROOT_PASSWORD_FILE:
     file: ./secrets/MYSQL_ROOT_PASSWORD_FILE
+  NECROLAB_TOKEN_FILE:
+    file: ./secrets/NECROLAB_TOKEN_FILE
   PHOTOS_USERNAME_FILE:
     file: ./secrets/PHOTOS_USERNAME_FILE
   PHOTOS_PASSWORD_FILE:
