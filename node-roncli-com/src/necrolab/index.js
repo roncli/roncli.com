@@ -227,7 +227,7 @@ class Necrolab {
                     slug: tag.slug
                 }))
             })), expire))(),
-            (() => Cache.add(`${process.env.REDIS_PREFIX}:necrolab:tags:regex`, res.body.data.platforms[0].tag_types.map((type) => `(?<${type.slug.replace(/-/g, "")}>${type.tags.map((tag) => `${tag.slug}`).join("|")})`).join("-")))()
+            (() => Cache.add(`${process.env.REDIS_PREFIX}:necrolab:tags:regex`, res.body.data.platforms[0].tag_types.map((type) => `(?<${type.slug.replace(/-/g, "")}>${type.tags.map((tag) => `${tag.slug}`).join("|")})`).join("~")))()
         ]);
 
     }
