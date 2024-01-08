@@ -168,7 +168,7 @@ class Necrolab {
                     return level ? +level.value : void 0;
                 })()
             },
-            url: `https://necrolab.com/leaderboards?platform=steam&tags=${run.slug}&memes=${run.meme}`,
+            url: `https://www.necrolab.com/leaderboards?platform=steam&tags=${run.slug}&memes=${run.meme}`,
             tags: slugMatch.exec(run.slug).groups
         })).filter((r) => r.tags.type === "all-time" && r.tags.release === "synchrony-amplified" && r.tags.multiplayertype === "single-player" && ["ost", "no-beat", "double-tempo"].indexOf(r.tags.soundtrack) !== -1);
 
