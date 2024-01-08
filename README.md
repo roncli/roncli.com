@@ -14,6 +14,10 @@ The website for roncli.com.  You can see this site in action at https://roncli.c
 
 ## Version History
 
+### v2.1.18 - 1/7/2024
+* Updated Necrolab URLs.
+* Package updates.
+
 ### v2.1.17 - 11/19/2023
 * Fixed bug with blog comments.
 * Package updates.

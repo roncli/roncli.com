@@ -1,6 +1,6 @@
 {
     "name": "roncli.com-logging",
-    "version": "2.1.17",
+    "version": "2.1.18",
     "description": "gelf logging for roncli.com.",
     "homepage": "https://github.com/roncli/roncli.com",
     "bugs": {
