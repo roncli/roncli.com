@@ -31,7 +31,7 @@
         "@root/request": "1.9.2",
         "@twurple/api": "7.0.7",
         "@twurple/auth": "7.0.7",
-        "@xivapi/js": "0.4.4",
+        "@xivapi/js": "0.4.5",
         "blizzard.js": "4.5.0",
         "bootstrap-icons": "1.11.3",
         "compression": "1.7.4",
