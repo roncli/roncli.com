@@ -51,7 +51,7 @@
         "nodemailer": "6.9.8",
         "pbkdf2": "3.1.2",
         "sanitize-html": "2.11.0",
-        "sortablejs": "1.15.1",
+        "sortablejs": "1.15.2",
         "steamapi": "2.4.2",
         "svg-captcha": "1.4.0",
         "timeago.js": "4.0.2",
