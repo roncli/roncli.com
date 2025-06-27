@@ -23,7 +23,7 @@
         "graygelf": "2.0.0"
     },
     "devDependencies": {
-        "@babel/core": "7.27.4",
+        "@babel/core": "7.27.7",
         "@babel/eslint-parser": "7.27.5",
         "@types/dockerode": "3.3.41",
         "@types/node": "24.0.4"
