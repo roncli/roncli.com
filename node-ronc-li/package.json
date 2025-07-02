@@ -24,7 +24,7 @@
         "mongodb": "6.3.0"
     },
     "devDependencies": {
-        "@babel/core": "7.27.7",
+        "@babel/core": "7.28.0",
         "@babel/eslint-parser": "7.27.5",
         "@types/express": "5.0.3"
     }
