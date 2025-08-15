@@ -21,7 +21,7 @@
         "@roncli/node-application-insights-logger": "roncli/node-application-insights-logger#v1.0.17",
         "@root/request": "1.9.2",
         "express": "5.1.0",
-        "mongodb": "6.3.0"
+        "mongodb": "6.18.0"
     },
     "devDependencies": {
         "@babel/core": "7.28.3",
