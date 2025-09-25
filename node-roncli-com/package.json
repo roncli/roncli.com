@@ -36,7 +36,7 @@
         "bootstrap-icons": "1.11.3",
         "compression": "1.7.4",
         "connect-redis": "7.1.1",
-        "cookie-parser": "1.4.6",
+        "cookie-parser": "1.4.7",
         "discord.js": "14.22.1",
         "editorjs-parser": "1.5.3",
         "express": "5.1.0",
@@ -61,7 +61,7 @@
     "devDependencies": {
         "@babel/core": "7.23.9",
         "@babel/eslint-parser": "7.23.10",
-        "@types/cookie-parser": "1.4.6",
+        "@types/cookie-parser": "1.4.9",
         "@types/express": "5.0.1",
         "@types/express-session": "1.18.2",
         "@types/html-minifier-terser": "7.0.2",
