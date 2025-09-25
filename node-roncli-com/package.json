@@ -20,7 +20,7 @@
     "dependencies": {
         "@editorjs/editorjs": "2.31.0",
         "@editorjs/quote": "2.6.0",
-        "@fontsource/archivo-narrow": "5.0.18",
+        "@fontsource/archivo-narrow": "5.2.8",
         "@googleapis/blogger": "4.0.0",
         "@googleapis/calendar": "12.0.0",
         "@googleapis/youtube": "29.0.0",
