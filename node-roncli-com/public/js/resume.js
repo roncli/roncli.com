@@ -512,7 +512,7 @@ class Resume {
 
         link.rel = "stylesheet";
         link.type = "text/css";
-        link.href = "https://cdn.jsdelivr.net/npm/ol@v8.2.0/ol.css";
+        link.href = "https://cdn.jsdelivr.net/npm/ol@v10.6.1/ol.css";
 
         document.head.appendChild(link);
 
@@ -520,7 +520,7 @@ class Resume {
         const script = document.createElement("script");
 
         script.type = "text/javascript";
-        script.src = "https://cdn.jsdelivr.net/npm/ol@v8.2.0/dist/ol.js";
+        script.src = "https://cdn.jsdelivr.net/npm/ol@v10.6.1/dist/ol.js";
 
         return new Promise((resolve, reject) => {
             try {
