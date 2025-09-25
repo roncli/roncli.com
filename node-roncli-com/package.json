@@ -32,7 +32,7 @@
         "@twurple/api": "7.4.0",
         "@twurple/auth": "7.4.0",
         "@xivapi/js": "0.4.5",
-        "blizzard.js": "4.5.0",
+        "blizzard.js": "4.6.0",
         "bootstrap-icons": "1.13.1",
         "compression": "1.7.4",
         "connect-redis": "9.0.0",
