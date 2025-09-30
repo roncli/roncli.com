@@ -67,7 +67,7 @@
         "@types/html-minifier-terser": "7.0.2",
         "@types/html-to-text": "9.0.4",
         "@types/multer": "2.0.0",
-        "@types/nodemailer": "7.0.1",
+        "@types/nodemailer": "7.0.2",
         "@types/pbkdf2": "3.1.2",
         "@types/sortablejs": "1.15.8",
         "@types/steamapi": "2.2.5",
