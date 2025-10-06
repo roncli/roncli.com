@@ -48,7 +48,7 @@
         "monaco-editor": "0.53.0",
         "mongodb": "6.20.0",
         "multer": "2.0.2",
-        "nodemailer": "7.0.6",
+        "nodemailer": "7.0.7",
         "pbkdf2": "3.1.5",
         "sanitize-html": "2.17.0",
         "sortablejs": "1.15.6",
