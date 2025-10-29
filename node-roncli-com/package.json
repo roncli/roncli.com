@@ -37,7 +37,7 @@
         "compression": "1.8.1",
         "connect-redis": "9.0.0",
         "cookie-parser": "1.4.7",
-        "discord.js": "14.22.1",
+        "discord.js": "14.24.1",
         "editorjs-parser": "1.5.3",
         "express": "5.1.0",
         "express-session": "1.18.2",
