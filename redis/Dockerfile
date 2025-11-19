@@ -1,5 +1,5 @@
 # Get nginx stable Alpine.
-FROM redis:8.2.3-alpine
+FROM redis:8.4.0-alpine
 
 # Create /var/redis directory.
 RUN mkdir -p /var/redis
