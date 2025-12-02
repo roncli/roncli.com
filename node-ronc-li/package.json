@@ -20,12 +20,12 @@
     "dependencies": {
         "@roncli/node-application-insights-logger": "roncli/node-application-insights-logger#v1.1.1",
         "@root/request": "1.9.2",
-        "express": "5.1.0",
+        "express": "5.2.1",
         "mongodb": "6.20.0"
     },
     "devDependencies": {
         "@babel/core": "7.28.5",
         "@babel/eslint-parser": "7.28.5",
-        "@types/express": "5.0.5"
+        "@types/express": "5.0.6"
     }
 }
