@@ -25,7 +25,7 @@
         "@googleapis/calendar": "12.0.0",
         "@googleapis/youtube": "29.0.0",
         "@octokit/rest": "22.0.0",
-        "@roncli/node-application-insights-logger": "roncli/node-application-insights-logger#v1.1.1",
+        "@roncli/node-application-insights-logger": "roncli/node-application-insights-logger#v2.0.1",
         "@roncli/node-minify": "roncli/node-minify#v1.2.4",
         "@roncli/node-redis": "roncli/node-redis#v0.1.20",
         "@root/request": "1.9.2",
