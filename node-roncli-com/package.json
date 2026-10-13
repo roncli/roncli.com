@@ -34,7 +34,7 @@
         "@xivapi/js": "0.4.5",
         "blizzard.js": "4.6.0",
         "bootstrap-icons": "1.13.1",
-        "compression": "1.8.1",
+        "compression": "1.8.2",
         "connect-redis": "9.0.0",
         "cookie-parser": "1.4.7",
         "discord.js": "14.22.1",
